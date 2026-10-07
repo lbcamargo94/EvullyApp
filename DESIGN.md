@@ -50,19 +50,22 @@ Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 
 | Token | Uso | Claro | Escuro |
 |---|---|---|---|
-| `background` | Fundo da janela | `#F7F8FC` | `#0E1120` |
-| `surface` | Cartões, painéis | `#FFFFFF` | `#161A2E` |
-| `surface-muted` | Áreas secundárias | `#EEF0F8` | `#1E2340` |
-| `border` | Bordas e divisórias | `#DDE1EE` | `#2A3052` |
-| `text` | Texto principal | `#161A2E` | `#E8EAF4` |
-| `text-muted` | Texto secundário | `#5B6280` | `#A2A8C6` |
+| `background` | Fundo da janela | `#F7F8FC` | `#0A0A0A` |
+| `surface` | Cartões, painéis | `#FFFFFF` | `#171717` |
+| `surface-muted` | Áreas secundárias, item ativo do menu | `#EEF0F8` | `#262626` |
+| `border` | Bordas e divisórias | `#DDE1EE` | `#2A2A2A` |
+| `text` | Texto principal | `#161A2E` | `#FAFAFA` |
+| `text-muted` | Texto secundário | `#5B6280` | `#A1A1A1` |
 | `brand` | Ações principais, foco, destaque | `#5457D6` | `#8B8EF0` |
-| `brand-foreground` | Texto sobre `brand` | `#FFFFFF` | `#0E1120` |
+| `brand-foreground` | Texto sobre `brand` | `#FFFFFF` | `#0A0A0A` |
 | `positive` | Variação favorável (§7.6 do README) | `#1A7A4A` | `#4CC38A` |
 | `caution` | Variação contrária (nunca vermelho) | `#9A5B00` | `#F0B54A` |
-| `neutral` | Variação neutra ou estável | `#6B7190` | `#8D93B3` |
+| `neutral` | Variação neutra ou estável | `#6B7190` | `#A1A1A1` |
 | `danger` | Somente ações destrutivas (apagar perfil) | `#C2413B` | `#F07A74` |
 | `focus-ring` | Anel de foco | `brand` | `brand` |
+
+O **tema escuro segue a paleta neutra do shadcn/ui** (cinzas puros, sem
+tom azulado); o índigo aparece só como destaque (`brand`).
 
 Regras:
 
