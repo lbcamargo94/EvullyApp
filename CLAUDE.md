@@ -63,6 +63,7 @@ Same for any doc over ~300 lines.
 | Tests (desktop tests run under Electron) | `npm test` |
 | Format | `npm run format` / `npm run format:check` |
 | Docs references | `npm run docs:check` |
+| Copyleft license check | `npm run licenses:check` |
 | Build / installer | `npm run build` / `npm run dist` |
 | Regenerate tokens.css after editing tokens.json | `npm run build -w @evully/tokens` |
 

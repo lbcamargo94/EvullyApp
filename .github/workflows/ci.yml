@@ -23,8 +23,7 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run docs:check
-      - name: Licenses (block copyleft, ARCHITECTURE.md §8)
-        run: npx --yes license-checker-rseidelmann --production --excludePrivatePackages --failOn "GPL-2.0;GPL-3.0;AGPL-3.0;LGPL-3.0;SSPL-1.0"
+      - run: npm run licenses:check
       - run: npm audit --omit=dev --audit-level=high
       - run: npm run dist
       - uses: actions/upload-artifact@v4

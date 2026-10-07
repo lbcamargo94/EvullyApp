@@ -19,7 +19,8 @@
     "test": "npm run test --workspaces --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "docs:check": "node scripts/check-docs.mjs"
+    "docs:check": "node scripts/check-docs.mjs",
+    "licenses:check": "node scripts/check-licenses.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.0",
