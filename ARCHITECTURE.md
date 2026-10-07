@@ -242,6 +242,7 @@ licenças e `npm audit`.
 | 06/10/2026 | UUID v7 | Ordenado pelo tempo; índices eficientes; sincronização sem conflito. |
 | 06/10/2026 | Clean Architecture pragmática + monólito modular | Regras independentes de framework, sem cerimônia excessiva. |
 | 06/10/2026 | Licença proprietária | Intenção comercial. |
+| 06/10/2026 | Padronização do Claude Code: `CLAUDE.md` curto, skills `evully-task` e `evully-docs-sync`, permissões em `.claude/settings.json`, verificação de docs por script | Agente consistente e economia de tokens: regras carregadas sempre são mínimas; o detalhe fica nos docs e nas skills, lidos sob demanda. |
 
 Novas decisões arquiteturais são adicionadas a esta tabela com data e
 motivo.

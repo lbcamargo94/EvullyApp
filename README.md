@@ -350,7 +350,8 @@ packages/domain/tests/ testes das regras de negócio
 ```
 
 Documentação na raiz: `README.md` (especificação), `ARCHITECTURE.md`,
-`FRONTEND.md`, `BACKEND.md`, `DESIGN.md`, `SECURITY.md`, `LICENSE` e, a partir do código,
+`FRONTEND.md`, `BACKEND.md`, `DESIGN.md`, `SECURITY.md`, `LICENSE`,
+`CLAUDE.md` (guia do agente Claude Code, com skills em `.claude/skills/`) e, a partir do código,
 `CHANGELOG.md` e `THIRD_PARTY_NOTICES`.
 
 Regras:
