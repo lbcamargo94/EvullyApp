@@ -50,10 +50,10 @@ Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 
 | Token | Uso | Claro | Escuro |
 |---|---|---|---|
-| `background` | Fundo da janela | `#F7F8FC` | `#0A0A0A` |
-| `surface` | Cartões, painéis | `#FFFFFF` | `#171717` |
-| `surface-muted` | Áreas secundárias, item ativo do menu | `#EEF0F8` | `#262626` |
-| `border` | Bordas e divisórias | `#DDE1EE` | `#2A2A2A` |
+| `background` | Fundo da janela | `#EFEFFC` | `#0A0A0A` |
+| `surface` | Cartões, painéis | `#FAFAFF` | `#171717` |
+| `surface-muted` | Áreas secundárias, item ativo do menu | `#E8E8FA` | `#262626` |
+| `border` | Bordas e divisórias | `#DCDDF2` | `#2A2A2A` |
 | `text` | Texto principal | `#161A2E` | `#FAFAFA` |
 | `text-muted` | Texto secundário | `#5B6280` | `#A1A1A1` |
 | `brand` | Ações principais, foco, destaque | `#5457D6` | `#8B8EF0` |
@@ -64,7 +64,8 @@ Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 | `danger` | Somente ações destrutivas (apagar perfil) | `#C2413B` | `#F07A74` |
 | `focus-ring` | Anel de foco | `brand` | `brand` |
 
-O **tema escuro segue a paleta neutra do shadcn/ui** (cinzas puros, sem
+O **tema claro usa o índigo da marca em tom bem claro** no fundo e nas
+superfícies, no lugar do branco puro. O **tema escuro segue a paleta neutra do shadcn/ui** (cinzas puros, sem
 tom azulado); o índigo aparece só como destaque (`brand`).
 
 Regras:
