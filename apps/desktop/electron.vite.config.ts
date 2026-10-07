@@ -44,5 +44,6 @@ export default defineConfig({
   },
   renderer: {
     plugins: [react(), tailwindcss(), contentSecurityPolicy()],
+    build: { minify: true },
   },
 });

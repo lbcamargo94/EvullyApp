@@ -5,13 +5,9 @@ import log from 'electron-log/main';
 import {
   ipcChannels,
   type IpcChannel,
-  type IpcInput,
+  type IpcHandlers,
   type IpcOutput,
 } from '../shared/ipc-channels';
-
-export type IpcHandlers = {
-  [C in IpcChannel]: (input: IpcInput<C>) => Promise<IpcOutput<C>> | IpcOutput<C>;
-};
 
 /**
  * Registers one handler per declared channel. Input is validated with the

@@ -3,6 +3,8 @@ import log from 'electron-log/main';
 import { join } from 'node:path';
 import { openDatabase } from '../database/connection';
 import { migrateToLatest } from '../database/migrator';
+import { systemClock, uuidV7Generator } from '../modules/shared/system-adapters';
+import { buildIpcHandlers } from './composition-root';
 import { registerIpcHandlers } from './ipc-router';
 import { configureDataDirectory, databaseFile } from './paths';
 
@@ -49,15 +51,16 @@ async function start(): Promise<void> {
   const applied = await migrateToLatest(db);
   if (applied.length) log.info(`migrations applied: ${applied.join(', ')}`);
 
-  registerIpcHandlers(
-    {
-      'app:info': () => ({
-        version: app.getVersion(),
-        environment: app.isPackaged ? 'production' : 'development',
-      }),
-    },
-    isTrustedSender,
-  );
+  const handlers = buildIpcHandlers({
+    db,
+    clock: systemClock,
+    ids: uuidV7Generator,
+    appInfo: () => ({
+      version: app.getVersion(),
+      environment: app.isPackaged ? 'production' : 'development',
+    }),
+  });
+  registerIpcHandlers(handlers, isTrustedSender);
 
   createWindow();
   app.on('activate', () => {

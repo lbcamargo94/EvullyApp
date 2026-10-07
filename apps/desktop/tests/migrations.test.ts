@@ -20,7 +20,7 @@ describe('database', () => {
 
   it('applies all migrations on a new database, then nothing on the second run', async () => {
     const db = tempDb();
-    expect(await migrateToLatest(db)).toEqual(['0001_initial']);
+    expect(await migrateToLatest(db)).toEqual(['0001_initial', '0002_profiles_settings']);
     expect(await migrateToLatest(db)).toEqual([]);
     await db.destroy();
   });

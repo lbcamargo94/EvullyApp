@@ -1,11 +1,13 @@
 import type { Kysely } from 'kysely';
 import { Migrator, type Migration, type MigrationProvider } from 'kysely/migration';
 import * as m0001 from './migrations/0001_initial';
+import * as m0002 from './migrations/0002_profiles_settings';
 
 // Migrations are imported statically so they are bundled into the app.
 // Never edit a published migration; add a new one (README §6.4).
 const migrations: Record<string, Migration> = {
   '0001_initial': m0001,
+  '0002_profiles_settings': m0002,
 };
 
 const provider: MigrationProvider = { getMigrations: async () => migrations };
