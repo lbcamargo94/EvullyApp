@@ -13,6 +13,7 @@ sempre que uma decisão mudar.
 
 **Licença:** proprietária, todos os direitos reservados ([LICENSE](LICENSE)).
 **Segurança:** modelo e regras em [SECURITY.md](SECURITY.md).
+**Design:** identidade visual e design system em [DESIGN.md](DESIGN.md).
 
 ---
 
@@ -253,7 +254,9 @@ A numeração pode ser ajustada, mas o princípio incremental permanece.
 | Build | electron-vite 5 + **Vite 7** | electron-vite 5 não suporta Vite 8; Vite fica fixado na 7. |
 | UI | React + TypeScript | Reaproveitável na versão web. |
 | Linguagem | **TypeScript 6.0.x** | typescript-eslint ainda não suporta TS ≥ 6.1. |
-| Estilo | Tailwind CSS 4 + componentes no estilo shadcn/ui | Interface limpa e reutilizável na web. |
+| Estilo | Tailwind CSS 4 + **shadcn/ui** (sobre Radix) | Mesmo design system no desktop, no web e no celular (ver [DESIGN.md](DESIGN.md)). |
+| Ícones | Lucide | Traço consistente; licença ISC. |
+| Monorepo | npm workspaces | Compartilhar tokens e componentes entre desktop, web e celular. |
 | Banco | SQLite via **better-sqlite3** | Síncrono, estável, rápido. Precisa ser recompilado para o Electron. |
 | Acesso a dados | **Kysely** | Query builder tipado, migrations embutidas, suporta PostgreSQL. |
 | Validação | zod | Validação de toda entrada que atravessa o IPC. |
@@ -291,10 +294,28 @@ SQLite
 - Na versão web, o mesmo contrato da UI passa a ser atendido por uma API
   HTTP no lugar do IPC.
 
-### 5.3 Estrutura de pastas
+### 5.3 Estrutura do repositório
+
+Monorepo com npm workspaces desde a V0.1. Cada pasta entra na fase em que
+for necessária.
 
 ```text
-src/
+EvullyApp/
+  apps/
+    desktop/            Electron (V0.1)
+    web/                Next.js: app logado + site público (Fase 2)
+    mobile/             Capacitor, empacotando o app web (Fase 3)
+  packages/
+    tokens/             cores, fontes, espaçamentos (CSS + JSON) (V0.1)
+    ui/                 componentes shadcn/ui + componentes Evully (V0.1)
+    contracts/          tipos e schemas compartilhados (Fase 2)
+  backend/              API ASP.NET Core (Fase 2, §29)
+```
+
+Estrutura interna de `apps/desktop`:
+
+```text
+apps/desktop/src/
   shared/        contratos IPC, DTOs, tipos comuns (sem Node e sem React)
   domain/        regras puras e testáveis
   database/      conexão, schema tipado, migrations, seed
@@ -303,11 +324,19 @@ src/
   main/          ciclo de vida do Electron, janelas, IPC, caminhos, logs
   preload/       ponte segura entre main e renderer
   renderer/
-    components/  componentes visuais reutilizáveis
     features/    telas e fluxos por módulo
     lib/         cliente da API, contextos
-tests/           testes de domínio, repositórios e migrations
+apps/desktop/tests/   testes de domínio, repositórios e migrations
 ```
+
+Regras:
+
+- `packages/ui` e `packages/tokens` não dependem de Electron nem de
+  Next.js. Componentes recebem dados por props.
+- Componentes visuais reutilizáveis ficam em `packages/ui`; telas ficam
+  em cada app.
+- O CLI do shadcn/ui é configurado para gerar componentes em
+  `packages/ui`.
 
 ### 5.4 Diretório de dados
 
@@ -1528,6 +1557,9 @@ doméstico.
 
 ## 16. UX/UI
 
+A identidade visual, os tokens, os componentes e as regras entre
+plataformas estão em [DESIGN.md](DESIGN.md).
+
 ### 16.1 Diretrizes
 
 - limpa, moderna e rápida;
@@ -1911,10 +1943,17 @@ Somente após validação do desktop.
 Stack planejada:
 
 ```text
-Frontend   Next.js + React + TypeScript (reaproveita componentes da Fase 1)
-Backend    API em ASP.NET Core (C#) + EF Core
+App web    Next.js + React + TypeScript + Tailwind + shadcn/ui (apps/web)
+Site       páginas públicas no mesmo projeto Next.js (apresentação,
+           download do desktop, planos)
+Celular    PWA do app web (instalável pelo navegador)
+Backend    API em ASP.NET Core (C#) + EF Core (backend/)
 Banco      PostgreSQL
 ```
+
+O PWA resolve cedo o registro pelo celular (§33.2), sem lojas de
+aplicativos. Os componentes de `packages/ui` são reaproveitados no app
+web e no site.
 
 O contrato tipado usado hoje pelo IPC passa a ser atendido pela API
 HTTP. As regras de `domain/` são portadas para C# junto com seus testes,
@@ -1933,6 +1972,14 @@ importar sem conflito de IDs.
 
 Somente depois de validação por uso real. Nenhuma destas
 funcionalidades deve complicar a Fase 1.
+
+### 30.0 Aplicativos para lojas
+
+O app web é empacotado com **Capacitor** (`apps/mobile`) para Play Store
+e App Store, reaproveitando os mesmos componentes. O Capacitor dá acesso
+a notificações, câmera (fotos de progresso) e integrações como Apple
+Health e Health Connect. React Native só será considerado se o Capacitor
+não atender a algum requisito, porque exigiria refazer os componentes.
 
 ### 30.1 Recursos candidatos
 
