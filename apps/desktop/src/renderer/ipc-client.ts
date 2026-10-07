@@ -29,4 +29,15 @@ export const ipcEvullyClient: EvullyClient = {
   app: {
     info: () => call('app:info', undefined),
   },
+  profiles: {
+    list: () => call('profiles:list', undefined),
+    get: (id) => call('profiles:get', { id }),
+    create: (input) => call('profiles:create', input),
+    update: (input) => call('profiles:update', input),
+  },
+  settings: {
+    get: () => call('settings:get', undefined),
+    update: (input) => call('settings:update', input),
+    acceptHealthNotice: () => call('settings:accept-health-notice', undefined),
+  },
 };

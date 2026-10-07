@@ -1,15 +1,64 @@
-import { EvullyClientProvider, type EvullyClient } from '@evully/app-core';
+import {
+  CurrentProfileProvider,
+  EvullyClientProvider,
+  useAppSettings,
+  type EvullyClient,
+} from '@evully/app-core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
-import { WelcomeScreen } from './features/app/welcome-screen';
+import { useState, type ComponentType, type ReactNode } from 'react';
+import { Navigate, Route, Routes } from 'react-router';
+import { ProfileCreateScreen } from './features/profiles/profile-create-screen';
+import { ProfileEditScreen } from './features/profiles/profile-edit-screen';
+import { ProfileSelectScreen } from './features/profiles/profile-select-screen';
+import { AppShell } from './features/shell/app-shell';
+import { HealthNoticeScreen } from './features/shell/health-notice-screen';
+import { HomeScreen } from './features/shell/home-screen';
 
-export function App({ client }: { client: EvullyClient }) {
-  const [queryClient] = useState(() => new QueryClient());
+/**
+ * Root of the shared screens. Each platform passes its data client and router
+ * (HashRouter on Electron, BrowserRouter on the web) — FRONTEND.md §3.4.
+ */
+export function App({
+  client,
+  Router,
+}: {
+  client: EvullyClient;
+  Router: ComponentType<{ children: ReactNode }>;
+}) {
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: { queries: { retry: false } } }),
+  );
   return (
     <EvullyClientProvider client={client}>
       <QueryClientProvider client={queryClient}>
-        <WelcomeScreen />
+        <CurrentProfileProvider>
+          <Router>
+            <HealthNoticeGate>
+              <AppRoutes />
+            </HealthNoticeGate>
+          </Router>
+        </CurrentProfileProvider>
       </QueryClientProvider>
     </EvullyClientProvider>
+  );
+}
+
+function HealthNoticeGate({ children }: { children: ReactNode }) {
+  const { data: settings } = useAppSettings();
+  if (!settings) return null;
+  return settings.healthNoticeAcceptedAt ? children : <HealthNoticeScreen />;
+}
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/profiles" element={<ProfileSelectScreen />} />
+      <Route path="/profiles/new" element={<ProfileCreateScreen />} />
+      <Route path="/app" element={<AppShell />}>
+        <Route index element={<HomeScreen />} />
+        <Route path="profile" element={<ProfileEditScreen />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/profiles" replace />} />
+    </Routes>
   );
 }
