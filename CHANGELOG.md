@@ -6,6 +6,10 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.1.0-alpha.1] - 2026-10-07
+
+Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
+
 ### Added
 - Estrutura do monorepo TypeScript (npm workspaces): `apps/desktop`,
   `packages/domain`, `contracts`, `tokens`, `ui`, `app-core`, `app-web`.
@@ -16,3 +20,7 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 - Design tokens gerados de `tokens.json` e base do shadcn/ui (`Button`).
 - Regras de fronteira da arquitetura no ESLint, CI no GitHub Actions e
   instalador Windows (`Evully-Setup-<versão>.exe`).
+- Verificação de licenças copyleft (`npm run licenses:check`).
+
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.1...HEAD
+[0.1.0-alpha.1]: https://github.com/lbcamargo94/EvullyApp/releases/tag/v0.1.0-alpha.1
