@@ -570,9 +570,10 @@ Princípios:
   proposta, e tudo pode ser alterado depois.
 - **Pode ser refeito** a qualquer momento, e é oferecido novamente quando
   um projeto termina. Cada nova configuração gera histórico (§28).
-- **Só pergunta o que a versão atual usa.** Quando um módulo novo for
-  lançado (nutrição, treino, ciclo…), o app oferece as perguntas daquele
-  módulo, sem refazer o questionário inteiro.
+- **Só configura o que a versão atual tem.** Recursos futuros aparecem
+  apenas como interesse, identificados como "em breve" (§8.2.4). Quando
+  um módulo novo for lançado (nutrição, treino, ciclo…), o app oferece as
+  perguntas daquele módulo, sem refazer o questionário inteiro.
 - **Sexo nunca restringe.** Ele apenas pré-seleciona sugestões; qualquer
   opção fica disponível para qualquer perfil.
 - **Sem perguntas clínicas** (doenças, medicamentos, gestação) na Fase 1.
@@ -588,7 +589,8 @@ Princípios:
 | 3 | Dê um nome e um prazo ao seu projeto | Nome, início, prazo | `projects` |
 | 4 | Quais áreas do corpo você quer acompanhar? | Múltipla escolha: Barriga/cintura · Quadril/glúteos · Braços · Pernas · Tórax/costas | Medidas acompanhadas e sua ordem |
 | 5 | Como você prefere ver o seu peso? | Tendência (recomendado) · Peso do dia · Prefiro não ver o peso no painel | `weight_display` |
-| 6 | Tem algo que você gostaria de acompanhar e não encontrou? (opcional) | Texto livre | `profile_questionnaires.answers` — sugestão de produto, não altera a configuração |
+| 6 | Recursos em breve: o que você gostaria de usar? (opcional) | Ver §8.2.4 | Registra interesse; nada é ativado agora |
+| 7 | Tem algo que você gostaria de acompanhar e não encontrou? (opcional) | Texto livre | `profile_questionnaires.answers` — sugestão de produto, não altera a configuração |
 | — | Resumo | "Seu Evully ficará assim: …" | [Aceitar] / [Ajustar] |
 
 #### 8.2.2 Regras da V0.1 (`tracking-rules@1`)
@@ -627,6 +629,24 @@ Nenhum projeto é criado (o painel convida a criar um e todos os
 indicadores ficam neutros, §7.6), a medida acompanhada é a cintura e o
 peso é exibido em tendência. O questionário fica disponível em
 Configurações — Acompanhamento.
+
+#### 8.2.4 Recursos em breve (passo 6)
+
+Perguntas de interesse sobre recursos que ainda não existem. As respostas
+ficam em `answers` e servem para priorizar o roadmap e, quando o recurso
+for lançado, **oferecer** a ativação a quem demonstrou interesse. Nada é
+ativado automaticamente, e dados sensíveis exigem consentimento explícito
+no momento da ativação.
+
+| Pergunta | Exibição | Respostas |
+|---|---|---|
+| Você gostaria de acompanhar o **ciclo menstrual** para entender variações de peso? | Exibida quando o sexo é feminino ou não informado. Para os demais perfis, fica disponível em Configurações — Acompanhamento. | Sim · Não · Talvez depois |
+| Você gostaria de registrar **fotos de progresso**? | Todos os perfis | Sim · Não · Talvez depois |
+| Você gostaria de proteger seu perfil com um **PIN**? | Todos os perfis | Sim · Não |
+| Onde você prefere **registrar o peso**? | Todos os perfis | Computador · Celular · Tanto faz |
+
+Na versão em que cada recurso for lançado, o app mostra uma vez, a quem
+respondeu "Sim" ou "Talvez depois": "O recurso X chegou. Deseja ativar?".
 
 ### 8.3 Tabelas
 
@@ -1555,6 +1575,7 @@ app; o banco guarda apenas metadados e caminho relativo.
 - peso do dia, peso inicial, diferença;
 - média móvel de 7 dias;
 - regras do questionário (respostas → configuração), por versão de regra;
+- exibição condicional de perguntas (ex.: ciclo conforme o sexo informado);
 - direção dos indicadores por objetivo;
 - configuração vigente em uma data;
 - leitura e validação de CSV (formatos de data, decimal e separador);
@@ -2023,9 +2044,8 @@ Decisões que serão tomadas quando a versão correspondente começar.
 | Data-alvo da V0.1. | O quanto antes; sem data fixa. |
 
 Nenhuma pendência bloqueia os wireframes da V0.1. As preferências de
-cada pessoa são resolvidas pelo questionário (§8.2); as ideias de
-funcionalidades novas são coletadas pelo passo 6 e pelo uso real
-(§33.1).
+cada pessoa são resolvidas pelo questionário (§8.2); o interesse em
+recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
 
 **Demais questões:**
 
@@ -2054,8 +2074,9 @@ registro pelo celular). Elas são descobertas assim:
 
 - o **primeiro uso real do questionário** pelo segundo perfil serve como
   teste de usabilidade;
-- o passo 6 do questionário coleta o que a pessoa queria acompanhar e
-  não encontrou;
+- o passo 6 do questionário registra interesse em ciclo, fotos, PIN e
+  registro pelo celular (§8.2.4), e o passo 7 coleta o que a pessoa
+  queria acompanhar e não encontrou;
 - depois de 1 a 2 semanas de uso, uma conversa curta com as perguntas
   abaixo decide as questões em aberto da tabela anterior.
 
@@ -2081,7 +2102,7 @@ Depois da conversa, as decisões são registradas neste documento.
 | Banco colocado em pasta sincronizada e usado por dois computadores. | Alto: corrupção. | Não suportado e explicado na interface ao escolher pastas; sincronização só na Fase 2 (§2.5). |
 | O questionário aumenta o escopo da V0.1. | Médio: atrasa a entrega. | Só perguntas que a V0.1 usa; regras simples e tabeladas (§8.2.2). |
 | Testes com `ELECTRON_RUN_AS_NODE` não funcionarem com alguma ferramenta. | Baixo. | Alternativa: compilar o better-sqlite3 também para o Node e alternar antes dos testes. |
-| Segundo perfil não se identificar com o app. | Alto. | Questionário configurável; segundo perfil como primeiro testador; passo 6 e conversa após 1 a 2 semanas de uso (§33.1). |
+| Segundo perfil não se identificar com o app. | Alto. | Questionário configurável; segundo perfil como primeiro testador; passos 6 e 7 e conversa após 1 a 2 semanas de uso (§33.1). |
 
 ---
 
