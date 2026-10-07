@@ -58,8 +58,8 @@ Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 | `text-muted` | Texto secundário | `#5B6280` | `#A2A8C6` |
 | `brand` | Ações principais, foco, destaque | `#5457D6` | `#8B8EF0` |
 | `brand-foreground` | Texto sobre `brand` | `#FFFFFF` | `#0E1120` |
-| `positive` | Variação favorável (§7.6 do README) | `#1F8A55` | `#4CC38A` |
-| `caution` | Variação contrária (nunca vermelho) | `#B26A00` | `#F0B54A` |
+| `positive` | Variação favorável (§7.6 do README) | `#1A7A4A` | `#4CC38A` |
+| `caution` | Variação contrária (nunca vermelho) | `#9A5B00` | `#F0B54A` |
 | `neutral` | Variação neutra ou estável | `#6B7190` | `#8D93B3` |
 | `danger` | Somente ações destrutivas (apagar perfil) | `#C2413B` | `#F07A74` |
 | `focus-ring` | Anel de foco | `brand` | `brand` |
