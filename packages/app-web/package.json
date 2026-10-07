@@ -1,0 +1,25 @@
+{
+  "name": "@evully/app-web",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@evully/app-core": "*",
+    "@evully/ui": "*",
+    "@tanstack/react-query": "^5.104.1"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "^19.3.0"
+  }
+}

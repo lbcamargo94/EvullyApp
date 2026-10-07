@@ -1,0 +1,9 @@
+*.md
+package-lock.json
+node_modules
+out
+dist
+release
+coverage
+.claude
+packages/tokens/tokens.css

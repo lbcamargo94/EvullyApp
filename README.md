@@ -253,14 +253,14 @@ A numeração pode ser ajustada, mas o princípio incremental permanece.
 
 | Área | Escolha | Motivo |
 |---|---|---|
-| Shell desktop | Electron | Requisito do projeto. |
+| Shell desktop | Electron (versão exata fixada) | Requisito do projeto. O electron-builder exige versão exata. |
 | Build | electron-vite 5 + **Vite 7** | electron-vite 5 não suporta Vite 8; Vite fica fixado na 7. |
 | UI | React + TypeScript | Reaproveitável na versão web. |
 | Linguagem | **TypeScript 6.0.x** | typescript-eslint ainda não suporta TS ≥ 6.1. |
 | Estilo | Tailwind CSS 4 + **shadcn/ui** (sobre Radix) | Mesmo design system no desktop, no web e no celular (ver [DESIGN.md](DESIGN.md)). |
 | Ícones | Lucide | Traço consistente; licença ISC. |
 | Monorepo | npm workspaces | Compartilhar tokens e componentes entre desktop, web e celular. |
-| Banco | SQLite via **better-sqlite3** | Síncrono, estável, rápido. Precisa ser recompilado para o Electron. |
+| Banco | SQLite via **better-sqlite3** 13 | Síncrono, estável, rápido. Usa Node-API: o mesmo binário funciona no Node e no Electron, sem recompilar (`npmRebuild: false`). |
 | Acesso a dados | **Kysely** | Query builder tipado, migrations embutidas, suporta PostgreSQL. |
 | Validação | zod | Validação de toda entrada que atravessa o IPC. |
 | Gráficos | Recharts | Simples e suficiente para séries temporais. |
@@ -2260,7 +2260,7 @@ Depois da conversa, as decisões são registradas neste documento.
 | Banco colocado em pasta sincronizada e usado por dois computadores. | Alto: corrupção. | Não suportado e explicado na interface ao escolher pastas; sincronização só na Fase 2 (§2.5). |
 | O questionário aumenta o escopo da V0.1. | Médio: atrasa a entrega. | Só perguntas que a V0.1 usa; regras simples e tabeladas (§8.2.2). |
 | Testes com `ELECTRON_RUN_AS_NODE` não funcionarem com alguma ferramenta. | Baixo. | Alternativa: compilar o better-sqlite3 também para o Node e alternar antes dos testes. |
-| Empacotamento com electron-builder em monorepo (npm workspaces) com módulo nativo. | Médio: build quebrado. | Validar o instalador logo no início da V0.1 (primeiro marco), antes das funcionalidades. |
+| Empacotamento com electron-builder em monorepo (npm workspaces) com módulo nativo. | Resolvido em 07/10/2026. | Instalador gerado e app empacotado validado: abre, cria o banco e aplica as migrations. |
 | Segundo perfil não se identificar com o app. | Alto. | Questionário configurável; segundo perfil como primeiro testador; passos 6 e 7 e conversa após 1 a 2 semanas de uso (§33.1). |
 
 ---

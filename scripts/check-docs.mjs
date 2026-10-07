@@ -9,7 +9,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const docs = readdirSync(root).filter((f) => f.endsWith('.md'));
 const text = Object.fromEntries(docs.map((f) => [f, readFileSync(join(root, f), 'utf8')]));
 const sections = Object.fromEntries(
-  docs.map((f) => [f, new Set([...text[f].matchAll(/^#+ (\d+(?:\.\d+)*)[ .]/gm)].map((m) => m[1]))]),
+  docs.map((f) => [
+    f,
+    new Set([...text[f].matchAll(/^#+ (\d+(?:\.\d+)*)[ .]/gm)].map((m) => m[1])),
+  ]),
 );
 
 const problems = [];
@@ -19,12 +22,15 @@ for (const file of docs) {
     const where = `${file}:${i + 1}`;
 
     for (const [, target] of line.matchAll(/\]\(([^)#\s]+\.md)(?:#[^)]*)?\)/g)) {
-      if (!existsSync(join(root, target))) problems.push(`${where} link para arquivo inexistente: ${target}`);
+      if (!existsSync(join(root, target)))
+        problems.push(`${where} link para arquivo inexistente: ${target}`);
     }
 
     // Uma referência pertence ao documento citado mais recentemente na mesma
     // linha (link .md ou "README"); sem citação, ao próprio arquivo ou ao README.
-    const tokens = [...line.matchAll(/\[[^\]]*\]\(([A-Z]+\.md)[^)]*\)|\b(README)\b|§(\d+(?:\.\d+)*)/g)];
+    const tokens = [
+      ...line.matchAll(/\[[^\]]*\]\(([A-Z]+\.md)[^)]*\)|\b(README)\b|§(\d+(?:\.\d+)*)/g),
+    ];
     let context = null;
     for (const [, linked, readme, ref] of tokens) {
       if (linked) context = linked;

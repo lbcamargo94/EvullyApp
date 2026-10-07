@@ -1,0 +1,18 @@
+# Changelog
+
+Todas as mudanças relevantes do Evully. Formato baseado em
+[Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/); versões seguem
+[SemVer](https://semver.org/lang/pt-BR/) alinhado ao roadmap (`0.1.0` = V0.1).
+
+## [Unreleased]
+
+### Added
+- Estrutura do monorepo TypeScript (npm workspaces): `apps/desktop`,
+  `packages/domain`, `contracts`, `tokens`, `ui`, `app-core`, `app-web`.
+- Desktop Electron seguro (contextIsolation, sandbox, CSP, fuses), IPC
+  tipado e validado com zod, banco SQLite com migrations (Kysely) e pasta
+  de dados separada em desenvolvimento (`Evully-dev`).
+- Regra de domínio `projectTimeline` ("Dia X de Y") com testes.
+- Design tokens gerados de `tokens.json` e base do shadcn/ui (`Button`).
+- Regras de fronteira da arquitetura no ESLint, CI no GitHub Actions e
+  instalador Windows (`Evully-Setup-<versão>.exe`).
