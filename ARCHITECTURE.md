@@ -61,12 +61,13 @@ Regras derivadas:
 
 ## 3. Onde cada camada vive
 
-| Camada | Desktop (`apps/desktop`) | API (`apps/api`, Fase 2) | Web/celular (`apps/web`, `apps/mobile`) |
-|---|---|---|---|
-| Domínio | `packages/domain` | `packages/domain` | `packages/domain` (apenas cálculos de exibição) |
-| Aplicação | `src/modules/*/application`, `ports` | `src/modules/*/application`, `ports` | — (a regra roda na API) |
-| Adaptadores | `src/modules/*/adapters` (Kysely + SQLite, handlers IPC) + `IpcEvullyClient` | `src/modules/*/adapters` (Kysely + PostgreSQL, controllers) | `HttpEvullyClient` (`packages/api-client`) |
-| Interface | `packages/app` + `packages/ui`, montados pelo shell `src/renderer` | — | `packages/app` + `packages/ui`, montados pelo shell `apps/web` |
+| Camada | Desktop (`apps/desktop`) | API (`apps/api`, Fase 2) | Web (`apps/web`, Fase 2) | Mobile (`apps/mobile`, Fase 3) |
+|---|---|---|---|---|
+| Domínio | `packages/domain` | `packages/domain` | `packages/domain` (cálculos de exibição) | `packages/domain` |
+| Aplicação | `src/modules/*/application`, `ports` | `src/modules/*/application`, `ports` | — (a regra roda na API) | casos de uso locais para os dados offline |
+| Adaptadores | `src/modules/*/adapters` (Kysely + SQLite, handlers IPC) + `IpcEvullyClient` | `src/modules/*/adapters` (Kysely + PostgreSQL, controllers) | `HttpEvullyClient` (`packages/api-client`) | `MobileEvullyClient` (Kysely + `expo-sqlite`, sincronização) |
+| Lógica de tela | `packages/app-core` | — | `packages/app-core` | `packages/app-core` |
+| Interface | `packages/app-web` + `packages/ui`, montados pelo shell `src/renderer` | — | `packages/app-web` + `packages/ui`, montados pelo shell `apps/web` | telas em `apps/mobile` + `packages/ui-native` |
 | Composition root | `src/main/composition-root.ts` (manual) | módulos NestJS (`*.module.ts`) | — |
 
 Quando um caso de uso for idêntico no desktop e na API, ele poderá ser
@@ -98,12 +99,16 @@ apps/desktop/src/
         weight-ipc-handlers.ts
     backup/
     settings/
-  renderer/              shell: monta packages/app com o IpcEvullyClient
+  renderer/              shell: monta packages/app-web com o IpcEvullyClient
 
-packages/app/src/
-  features/              telas e fluxos por módulo (body, tracking…)
+packages/app-core/src/
+  features/              hooks, view models e fluxos por módulo (body, tracking…)
   client/                interface EvullyClient (port de dados da interface)
-  routes/, providers/    rotas, TanStack Query, perfil atual, tema
+  i18n/, format/         textos pt-BR e formatação (Intl)
+
+packages/app-web/src/
+  features/              telas web por módulo, desenhando o que o app-core entrega
+  routes/, providers/    React Router, TanStack Query, perfil atual, tema
 ```
 
 ### 4.2 API (Fase 2)
@@ -205,8 +210,11 @@ A arquitetura é garantida pelo CI, não só pela documentação.
 | `packages/contracts` | `packages/contracts`, `zod` |
 | `*/application`, `*/ports` | domínio, contratos, ports |
 | `*/adapters` | aplicação, ports, domínio, contratos, bibliotecas de infraestrutura |
-| `packages/app` | `packages/ui`, `packages/tokens`, contratos, domínio (sem Electron, sem Node, sem `fetch` direto: dados só via `EvullyClient`) |
-| `renderer`, `apps/web`, `apps/mobile` (shells) | `packages/app` e a implementação de `EvullyClient` da plataforma |
+| `packages/app-core` | contratos, domínio, TanStack Query (sem DOM, `react-dom`, shadcn, React Native, Electron, Node ou `fetch` direto: dados só via `EvullyClient`) |
+| `packages/app-web` | `packages/app-core`, `packages/ui`, `packages/tokens` |
+| `packages/ui-native` | `packages/tokens`, React Native, NativeWind |
+| `renderer`, `apps/web` (shells) | `packages/app-web` e a implementação de `EvullyClient` da plataforma |
+| `apps/mobile` | `packages/app-core`, `packages/ui-native`, `MobileEvullyClient` |
 | `apps/site` | `packages/ui`, `packages/tokens` |
 | `packages/ui` | `packages/tokens`, React, Radix, Tailwind |
 
@@ -227,8 +235,9 @@ licenças e `npm audit`.
 | 06/10/2026 | SQLite com Kysely | Tipado, migrations, mesmo query builder no PostgreSQL. |
 | 06/10/2026 | Monorepo TypeScript (npm workspaces) | Regras e componentes compartilhados entre plataformas. |
 | 06/10/2026 | Backend NestJS (Fastify) + PostgreSQL | Mesma linguagem; regras compartilhadas; estrutura para crescer. C# descartado para o produto. |
-| 06/10/2026 | Celular via PWA e depois Capacitor | Reaproveita Tailwind + shadcn/ui; React Native exigiria refazer componentes. |
-| 06/10/2026 | Site em Next.js (`apps/site`); app web como SPA React + Vite (`apps/web`); telas compartilhadas em `packages/app` | O Capacitor exige arquivos estáticos; a mesma SPA serve à web, ao celular e ao desktop. Next.js fica onde SEO importa. |
+| 06/10/2026 | Site em Next.js (`apps/site`); app web como SPA React + Vite (`apps/web`) | A mesma SPA serve à web e ao desktop. Next.js fica onde SEO importa. |
+| 06/10/2026 | Celular: PWA na Fase 2; React Native com Expo na Fase 3 | Experiência nativa, SQLite local, Health e build de iOS sem Mac. Capacitor descartado. |
+| 06/10/2026 | Lógica de tela em `packages/app-core`, telas web em `packages/app-web` | Compartilhar a lógica entre web e React Native; só o visual é duplicado. |
 | 06/10/2026 | UUID v7 | Ordenado pelo tempo; índices eficientes; sincronização sem conflito. |
 | 06/10/2026 | Clean Architecture pragmática + monólito modular | Regras independentes de framework, sem cerimônia excessiva. |
 | 06/10/2026 | Licença proprietária | Intenção comercial. |

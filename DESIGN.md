@@ -2,8 +2,8 @@
 
 Identidade visual, design system e regras de interface para todas as
 plataformas: desktop (Electron), app web (React + Vite, PWA), site
-(Next.js) e celular (Capacitor). O planejamento dessas interfaces está em
-[FRONTEND.md](FRONTEND.md). Complementa a especificação no [README](README.md).
+(Next.js) e apps Android/iOS (React Native com Expo). O planejamento
+dessas interfaces está em [FRONTEND.md](FRONTEND.md). Complementa a especificação no [README](README.md).
 
 ## 1. Identidade
 
@@ -26,15 +26,17 @@ Tokens primitivos    paleta, escala de espaçamento, raios, sombras, fontes
       ↓
 Tokens semânticos    surface, text, border, brand, positive, caution, neutral…
       ↓              (definidos para tema claro e escuro)
-Componentes base     shadcn/ui: Button, Input, Select, Dialog, Card, Tabs,
-      ↓              Toast (Sonner), Tooltip, DropdownMenu…
+Componentes base     web: shadcn/ui (packages/ui)
+      ↓              nativo: react-native-reusables + NativeWind (packages/ui-native)
 Componentes Evully   StatCard, TrendIndicator, MeasurementField, WeightChart,
       ↓              ProfileAvatar, QuestionnaireStep, EmptyState…
-Telas                packages/app (compartilhadas) e apps/site
+      ↓              (mesmo nome e mesmas props na web e no nativo)
+Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 ```
 
-- `packages/tokens`: tokens em CSS (variáveis) e JSON. Alimentam o
-  `@theme` do Tailwind 4.
+- `packages/tokens`: tokens em JSON (fonte única), exportados como
+  variáveis CSS para o `@theme` do Tailwind 4 e como preset para o
+  NativeWind no React Native.
 - `packages/ui`: componentes base (gerados pelo CLI do shadcn/ui) e
   componentes Evully.
 - **Tokens são a única fonte de cor, fonte, espaçamento e raio.** Nenhum

@@ -231,7 +231,7 @@ Este é o **único** roadmap do projeto.
 | V2.x | App web + site + PWA + API NestJS + autenticação + PostgreSQL + sincronização |
 | V2.x | Evully Cloud + IA server-side |
 | V2.x | WhatsApp oficial / push / e-mail |
-| V3.x | SaaS comercial + planos + billing + apps nas lojas (Capacitor) |
+| V3.x | SaaS comercial + planos + billing + apps nativos Android/iOS (React Native com Expo) |
 
 Regras:
 
@@ -309,11 +309,13 @@ EvullyApp/
   apps/
     desktop/            Electron: shell do desktop (V0.1)
     web/                React + Vite: app web / PWA (Fase 2)
-    mobile/             Capacitor: apps Android e iOS com a build do web (Fase 3)
+    mobile/             React Native com Expo: apps Android e iOS (Fase 3)
     site/               Next.js: site público (Fase 2)
     api/                API NestJS (Fase 2, §29)
   packages/
-    app/                telas e fluxos compartilhados por desktop, web e celular (V0.1)
+    app-core/           lógica das telas sem visual: hooks, view models, textos (V0.1)
+    app-web/            telas com shadcn/ui para desktop e web (V0.1)
+    ui-native/          componentes React Native (Fase 3)
     api-client/         cliente HTTP da API (Fase 2)
     domain/             regras de negócio puras em TypeScript (V0.1)
     contracts/          schemas zod e tipos compartilhados (V0.1)
@@ -340,7 +342,7 @@ apps/desktop/src/
       application/   casos de uso
       ports/         interfaces (repositórios, relógio…)
       adapters/      repositórios Kysely, handlers IPC
-  renderer/      shell: monta packages/app com o cliente IPC
+  renderer/      shell: monta packages/app-web com o cliente IPC
                  (IpcEvullyClient) e cuida do que é exclusivo do Electron
 apps/desktop/tests/    testes de repositórios, migrations e fluxos
 packages/domain/tests/ testes das regras de negócio
@@ -356,9 +358,11 @@ Regras:
   React, NestJS nem de banco. Recebe dados e devolve resultados.
 - `packages/contracts` contém os schemas zod usados para validar
   entradas no desktop (IPC), na API e nos formulários.
-- `packages/app` contém as telas e usa a interface `EvullyClient` para
-  obter dados; cada plataforma fornece a implementação (IPC no desktop,
-  HTTP na web e no celular). Ver [FRONTEND.md](FRONTEND.md), §3.
+- `packages/app-core` contém a lógica das telas sem visual e obtém dados
+  pela interface `EvullyClient`; cada plataforma fornece a implementação
+  (IPC no desktop, HTTP na web, SQLite local com sincronização no
+  celular). `packages/app-web` desenha essa lógica com shadcn/ui. Ver
+  [FRONTEND.md](FRONTEND.md), §3.
 - `packages/ui` e `packages/tokens` não dependem de Electron nem de
   Next.js. Componentes recebem dados por props.
 - Componentes visuais reutilizáveis ficam em `packages/ui`; telas ficam
@@ -1985,7 +1989,7 @@ Somente após validação do desktop.
 
 ```text
 App web    React + Vite + Tailwind + shadcn/ui, PWA (apps/web), com as
-           telas de packages/app
+           telas de packages/app-web
 Site       Next.js (apps/site): apresentação, planos, download do
            desktop, ajuda, termos e privacidade
 Celular    o próprio PWA, instalável pelo navegador
@@ -2040,7 +2044,7 @@ Controller (HTTP + schema zod)            adapter
 
 ```text
 App web (PWA)     ─┐
-Capacitor (celular)├── HTTPS ──▶ API NestJS ──▶ PostgreSQL
+App mobile (RN)   ├── HTTPS ──▶ API NestJS ──▶ PostgreSQL
 Desktop (sync)    ─┘                  └──────▶ Storage S3 · Fila pg-boss
 ```
 
@@ -2075,11 +2079,11 @@ funcionalidades deve complicar a Fase 1.
 
 ### 30.0 Aplicativos para lojas
 
-O app web é empacotado com **Capacitor** (`apps/mobile`) para Play Store
-e App Store, reaproveitando as mesmas telas (ver [FRONTEND.md](FRONTEND.md), §6). O Capacitor dá acesso
-a notificações, câmera (fotos de progresso) e integrações como Apple
-Health e Health Connect. React Native só será considerado se o Capacitor
-não atender a algum requisito, porque exigiria refazer os componentes.
+Apps nativos para Play Store e App Store em **React Native com Expo**
+(`apps/mobile`), com telas próprias sobre a mesma lógica compartilhada
+(`packages/app-core`), banco local com sincronização, notificações,
+câmera, biometria, Apple Health e Health Connect. Compilação de iOS na
+nuvem (EAS Build), sem Mac. Detalhes em [FRONTEND.md](FRONTEND.md), §6.
 
 ### 30.1 Recursos candidatos
 
