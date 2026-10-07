@@ -260,6 +260,7 @@ A numeração pode ser ajustada, mas o princípio incremental permanece.
 | Gráficos | Recharts | Simples e suficiente para séries temporais. |
 | Roteamento | React Router (HashRouter) | Compatível com `file://` no app empacotado. |
 | Testes | Vitest | Rodando com `ELECTRON_RUN_AS_NODE=1` para usar o mesmo binário do better-sqlite3. |
+| Testes E2E | Playwright (suporte a Electron) | Fluxos críticos da §18.3 no app real. |
 | Qualidade | ESLint + typescript-eslint + Prettier | — |
 | Instalador | electron-builder (NSIS) | Gera `Evully-Setup.exe`. |
 
@@ -350,7 +351,31 @@ WeightForm (react-hook-form + schema zod)
   ← { ok: true, data }                  TanStack Query atualiza dashboard e lista
 ```
 
-### 5.6 Segurança
+### 5.6 Ferramentas e fluxo de trabalho
+
+| Tema | Padrão |
+|---|---|
+| Node.js | Versão LTS ativa, fixada em `.nvmrc` e em `engines` do `package.json`. |
+| Gerenciador de pacotes | npm, com `package-lock.json` versionado. |
+| Formatação | Prettier, aplicado no CI e no editor. |
+| Commits | Conventional Commits (`feat:`, `fix:`, `docs:`…). |
+| Versões | SemVer alinhado ao roadmap (`0.1.0` = V0.1) e `CHANGELOG.md` no formato Keep a Changelog. |
+| Branches | `main` sempre estável; trabalho em branches `feat/…` e `fix/…` integradas por pull request. |
+| CI | GitHub Actions em `windows-latest`: lint, typecheck, testes, verificação de licenças, `npm audit` e build. |
+| Backlog | Milestones por versão e uma issue por história de usuário no GitHub. |
+
+### 5.7 Requisitos não funcionais (Fase 1)
+
+| Requisito | Meta |
+|---|---|
+| Sistema | Windows 10 e 11, 64 bits. |
+| Resolução mínima | 1280 × 720, com layout utilizável até 1024 px de largura. |
+| Abertura | Até 3 s até a tela de seleção de perfil em um computador comum. |
+| Operações | Gravações e consultas da V0.1 em até 200 ms com 5 anos de dados. |
+| Offline | Todas as funções da Fase 1 funcionam sem internet. |
+| Idioma | Português do Brasil (§16.1). |
+
+### 5.8 Segurança
 
 O modelo de ameaças, as camadas de proteção (Electron, IPC, banco,
 segredos, logs, dependências, distribuição) e o checklist por versão
@@ -531,6 +556,11 @@ Quem está usando?
 [ Lucas ]
 [ + Adicionar perfil ]
 ```
+
+Na primeira abertura do app, um **aviso de saúde** é exibido e precisa ser
+confirmado uma vez por instalação: o Evully é uma ferramenta de registro
+e planejamento e não substitui médico, nutricionista ou educador físico.
+O texto fica disponível depois em Configurações — Sobre.
 
 Regras de privacidade entre perfis:
 
