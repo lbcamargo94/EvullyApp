@@ -1,8 +1,9 @@
 # Design do Evully
 
 Identidade visual, design system e regras de interface para todas as
-plataformas: desktop (Electron), app web e site (Next.js) e celular (PWA
-e Capacitor). Complementa a especificação no [README](README.md).
+plataformas: desktop (Electron), app web (React + Vite, PWA), site
+(Next.js) e celular (Capacitor). O planejamento dessas interfaces está em
+[FRONTEND.md](FRONTEND.md). Complementa a especificação no [README](README.md).
 
 ## 1. Identidade
 
@@ -29,7 +30,7 @@ Componentes base     shadcn/ui: Button, Input, Select, Dialog, Card, Tabs,
       ↓              Toast (Sonner), Tooltip, DropdownMenu…
 Componentes Evully   StatCard, TrendIndicator, MeasurementField, WeightChart,
       ↓              ProfileAvatar, QuestionnaireStep, EmptyState…
-Telas                cada app (apps/desktop, apps/web)
+Telas                packages/app (compartilhadas) e apps/site
 ```
 
 - `packages/tokens`: tokens em CSS (variáveis) e JSON. Alimentam o

@@ -15,6 +15,7 @@ sempre que uma decisão mudar.
 **Segurança:** modelo e regras em [SECURITY.md](SECURITY.md).
 **Design:** identidade visual e design system em [DESIGN.md](DESIGN.md).
 **Arquitetura:** camadas, módulos e regras de código em [ARCHITECTURE.md](ARCHITECTURE.md).
+**Frontend:** site, app web e apps Android/iOS em [FRONTEND.md](FRONTEND.md).
 
 ---
 
@@ -306,11 +307,14 @@ for necessária.
 ```text
 EvullyApp/
   apps/
-    desktop/            Electron (V0.1)
-    web/                Next.js: app logado + site público (Fase 2)
-    mobile/             Capacitor, empacotando o app web (Fase 3)
+    desktop/            Electron: shell do desktop (V0.1)
+    web/                React + Vite: app web / PWA (Fase 2)
+    mobile/             Capacitor: apps Android e iOS com a build do web (Fase 3)
+    site/               Next.js: site público (Fase 2)
     api/                API NestJS (Fase 2, §29)
   packages/
+    app/                telas e fluxos compartilhados por desktop, web e celular (V0.1)
+    api-client/         cliente HTTP da API (Fase 2)
     domain/             regras de negócio puras em TypeScript (V0.1)
     contracts/          schemas zod e tipos compartilhados (V0.1)
     tokens/             cores, fontes, espaçamentos (CSS + JSON) (V0.1)
@@ -336,9 +340,8 @@ apps/desktop/src/
       application/   casos de uso
       ports/         interfaces (repositórios, relógio…)
       adapters/      repositórios Kysely, handlers IPC
-  renderer/
-    features/    telas e fluxos por módulo
-    lib/         cliente IPC tipado, TanStack Query, contextos
+  renderer/      shell: monta packages/app com o cliente IPC
+                 (IpcEvullyClient) e cuida do que é exclusivo do Electron
 apps/desktop/tests/    testes de repositórios, migrations e fluxos
 packages/domain/tests/ testes das regras de negócio
 ```
@@ -353,6 +356,9 @@ Regras:
   React, NestJS nem de banco. Recebe dados e devolve resultados.
 - `packages/contracts` contém os schemas zod usados para validar
   entradas no desktop (IPC), na API e nos formulários.
+- `packages/app` contém as telas e usa a interface `EvullyClient` para
+  obter dados; cada plataforma fornece a implementação (IPC no desktop,
+  HTTP na web e no celular). Ver [FRONTEND.md](FRONTEND.md), §3.
 - `packages/ui` e `packages/tokens` não dependem de Electron nem de
   Next.js. Componentes recebem dados por props.
 - Componentes visuais reutilizáveis ficam em `packages/ui`; telas ficam
@@ -1978,16 +1984,17 @@ Somente após validação do desktop.
 ### 29.1 Plataformas
 
 ```text
-App web    Next.js + React + TypeScript + Tailwind + shadcn/ui (apps/web)
-Site       páginas públicas no mesmo projeto Next.js (apresentação,
-           download do desktop, planos)
-Celular    PWA do app web (instalável pelo navegador)
+App web    React + Vite + Tailwind + shadcn/ui, PWA (apps/web), com as
+           telas de packages/app
+Site       Next.js (apps/site): apresentação, planos, download do
+           desktop, ajuda, termos e privacidade
+Celular    o próprio PWA, instalável pelo navegador
 Backend    API NestJS + PostgreSQL (apps/api)
 ```
 
 O PWA resolve cedo o registro pelo celular (§33.2), sem lojas de
-aplicativos. Os componentes de `packages/ui` são reaproveitados no app
-web e no site.
+aplicativos. O planejamento completo do site, do app web e dos apps
+Android/iOS está em [FRONTEND.md](FRONTEND.md).
 
 Entram: autenticação, contas, acesso pelo celular, backend/API,
 sincronização, armazenamento remoto, segurança web e importação do
@@ -2032,7 +2039,7 @@ Controller (HTTP + schema zod)            adapter
 ```
 
 ```text
-Next.js (web/PWA) ─┐
+App web (PWA)     ─┐
 Capacitor (celular)├── HTTPS ──▶ API NestJS ──▶ PostgreSQL
 Desktop (sync)    ─┘                  └──────▶ Storage S3 · Fila pg-boss
 ```
@@ -2040,7 +2047,7 @@ Desktop (sync)    ─┘                  └──────▶ Storage S3 ·
 Regras:
 
 - **Toda regra de negócio fica em `packages/domain` e é executada pela
-  API.** O Next.js só exibe dados e nunca acessa o banco.
+  API.** O app web e o site só exibem dados e nunca acessam o banco.
 - **API sem estado**: escala horizontalmente com várias instâncias atrás
   de um balanceador. Sessões e filas ficam no PostgreSQL.
 - **Modelo de contas**: Conta → Família → Perfis. Autorização verificada
@@ -2069,7 +2076,7 @@ funcionalidades deve complicar a Fase 1.
 ### 30.0 Aplicativos para lojas
 
 O app web é empacotado com **Capacitor** (`apps/mobile`) para Play Store
-e App Store, reaproveitando os mesmos componentes. O Capacitor dá acesso
+e App Store, reaproveitando as mesmas telas (ver [FRONTEND.md](FRONTEND.md), §6). O Capacitor dá acesso
 a notificações, câmera (fotos de progresso) e integrações como Apple
 Health e Health Connect. React Native só será considerado se o Capacitor
 não atender a algum requisito, porque exigiria refazer os componentes.

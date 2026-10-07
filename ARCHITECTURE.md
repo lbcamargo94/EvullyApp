@@ -3,7 +3,8 @@
 Como o código do Evully é organizado e quais regras ele deve seguir em
 todas as aplicações (desktop, API, web e celular). Complementa a
 especificação no [README](README.md), as regras de segurança em
-[SECURITY.md](SECURITY.md) e o design system em [DESIGN.md](DESIGN.md).
+[SECURITY.md](SECURITY.md), o design system em [DESIGN.md](DESIGN.md) e
+o planejamento do frontend em [FRONTEND.md](FRONTEND.md).
 
 ## 1. Visão geral
 
@@ -60,12 +61,12 @@ Regras derivadas:
 
 ## 3. Onde cada camada vive
 
-| Camada | Desktop (`apps/desktop`) | API (`apps/api`, Fase 2) | Web/celular (`apps/web`, Fase 2) |
+| Camada | Desktop (`apps/desktop`) | API (`apps/api`, Fase 2) | Web/celular (`apps/web`, `apps/mobile`) |
 |---|---|---|---|
 | Domínio | `packages/domain` | `packages/domain` | `packages/domain` (apenas cálculos de exibição) |
 | Aplicação | `src/modules/*/application`, `ports` | `src/modules/*/application`, `ports` | — (a regra roda na API) |
-| Adaptadores | `src/modules/*/adapters` (Kysely + SQLite, handlers IPC) | `src/modules/*/adapters` (Kysely + PostgreSQL, controllers) | cliente HTTP |
-| Interface | `src/renderer` (React) + `packages/ui` | — | `app/` (Next.js) + `packages/ui` |
+| Adaptadores | `src/modules/*/adapters` (Kysely + SQLite, handlers IPC) + `IpcEvullyClient` | `src/modules/*/adapters` (Kysely + PostgreSQL, controllers) | `HttpEvullyClient` (`packages/api-client`) |
+| Interface | `packages/app` + `packages/ui`, montados pelo shell `src/renderer` | — | `packages/app` + `packages/ui`, montados pelo shell `apps/web` |
 | Composition root | `src/main/composition-root.ts` (manual) | módulos NestJS (`*.module.ts`) | — |
 
 Quando um caso de uso for idêntico no desktop e na API, ele poderá ser
@@ -97,9 +98,12 @@ apps/desktop/src/
         weight-ipc-handlers.ts
     backup/
     settings/
-  renderer/
-    features/            telas por módulo
-    lib/                 cliente IPC tipado, TanStack Query, contextos
+  renderer/              shell: monta packages/app com o IpcEvullyClient
+
+packages/app/src/
+  features/              telas e fluxos por módulo (body, tracking…)
+  client/                interface EvullyClient (port de dados da interface)
+  routes/, providers/    rotas, TanStack Query, perfil atual, tema
 ```
 
 ### 4.2 API (Fase 2)
@@ -201,7 +205,9 @@ A arquitetura é garantida pelo CI, não só pela documentação.
 | `packages/contracts` | `packages/contracts`, `zod` |
 | `*/application`, `*/ports` | domínio, contratos, ports |
 | `*/adapters` | aplicação, ports, domínio, contratos, bibliotecas de infraestrutura |
-| `renderer`, `apps/web` | `packages/ui`, `packages/tokens`, contratos, domínio, cliente da API |
+| `packages/app` | `packages/ui`, `packages/tokens`, contratos, domínio (sem Electron, sem Node, sem `fetch` direto: dados só via `EvullyClient`) |
+| `renderer`, `apps/web`, `apps/mobile` (shells) | `packages/app` e a implementação de `EvullyClient` da plataforma |
+| `apps/site` | `packages/ui`, `packages/tokens` |
 | `packages/ui` | `packages/tokens`, React, Radix, Tailwind |
 
 Exemplos que fazem o CI falhar: importar `kysely` em
@@ -221,7 +227,8 @@ licenças e `npm audit`.
 | 06/10/2026 | SQLite com Kysely | Tipado, migrations, mesmo query builder no PostgreSQL. |
 | 06/10/2026 | Monorepo TypeScript (npm workspaces) | Regras e componentes compartilhados entre plataformas. |
 | 06/10/2026 | Backend NestJS (Fastify) + PostgreSQL | Mesma linguagem; regras compartilhadas; estrutura para crescer. C# descartado para o produto. |
-| 06/10/2026 | Web em Next.js; celular via PWA e depois Capacitor | Reaproveita Tailwind + shadcn/ui; React Native exigiria refazer componentes. |
+| 06/10/2026 | Celular via PWA e depois Capacitor | Reaproveita Tailwind + shadcn/ui; React Native exigiria refazer componentes. |
+| 06/10/2026 | Site em Next.js (`apps/site`); app web como SPA React + Vite (`apps/web`); telas compartilhadas em `packages/app` | O Capacitor exige arquivos estáticos; a mesma SPA serve à web, ao celular e ao desktop. Next.js fica onde SEO importa. |
 | 06/10/2026 | UUID v7 | Ordenado pelo tempo; índices eficientes; sincronização sem conflito. |
 | 06/10/2026 | Clean Architecture pragmática + monólito modular | Regras independentes de framework, sem cerimônia excessiva. |
 | 06/10/2026 | Licença proprietária | Intenção comercial. |
