@@ -288,7 +288,7 @@ SQLite
 - O renderer não acessa Node, arquivos nem banco. Ele só chama a API
   exposta pelo preload, com `contextIsolation` ativo e `nodeIntegration`
   desligado.
-- Toda chamada IPC tem contrato tipado em `shared/` e entrada validada
+- Toda chamada IPC tem contrato tipado (`apps/desktop/src/shared/`, com schemas de `packages/contracts`) e entrada validada
   com zod no main.
 - A regra de negócio NÃO fica em componentes React.
 - Na versão web, o mesmo contrato da UI passa a ser atendido por uma API
@@ -305,19 +305,24 @@ EvullyApp/
     desktop/            Electron (V0.1)
     web/                Next.js: app logado + site público (Fase 2)
     mobile/             Capacitor, empacotando o app web (Fase 3)
+    api/                API NestJS (Fase 2, §29)
   packages/
+    domain/             regras de negócio puras em TypeScript (V0.1)
+    contracts/          schemas zod e tipos compartilhados (V0.1)
     tokens/             cores, fontes, espaçamentos (CSS + JSON) (V0.1)
     ui/                 componentes shadcn/ui + componentes Evully (V0.1)
-    contracts/          tipos e schemas compartilhados (Fase 2)
-  backend/              API ASP.NET Core (Fase 2, §29)
 ```
+
+Todo o projeto usa **TypeScript**: desktop, web, celular e backend
+compartilham as mesmas regras (`packages/domain`) e os mesmos contratos
+(`packages/contracts`). Um cálculo existe em um único lugar e produz o
+mesmo resultado em todas as plataformas.
 
 Estrutura interna de `apps/desktop`:
 
 ```text
 apps/desktop/src/
-  shared/        contratos IPC, DTOs, tipos comuns (sem Node e sem React)
-  domain/        regras puras e testáveis
+  shared/        mapa de canais IPC do desktop (usa schemas de packages/contracts)
   database/      conexão, schema tipado, migrations, seed
   repositories/  acesso a dados por entidade
   services/      casos de uso (orquestram domínio + repositórios)
@@ -326,11 +331,16 @@ apps/desktop/src/
   renderer/
     features/    telas e fluxos por módulo
     lib/         cliente da API, contextos
-apps/desktop/tests/   testes de domínio, repositórios e migrations
+apps/desktop/tests/   testes de repositórios, migrations e fluxos
+packages/domain/tests/ testes das regras de negócio
 ```
 
 Regras:
 
+- `packages/domain` é TypeScript puro: não depende de Electron, Node,
+  React, NestJS nem de banco. Recebe dados e devolve resultados.
+- `packages/contracts` contém os schemas zod usados para validar
+  entradas no desktop (IPC), na API e nos formulários.
 - `packages/ui` e `packages/tokens` não dependem de Electron nem de
   Next.js. Componentes recebem dados por props.
 - Componentes visuais reutilizáveis ficam em `packages/ui`; telas ficam
@@ -361,10 +371,10 @@ memória ou temporários.
 | Tema | Padrão |
 |---|---|
 | Montagem das dependências | **Composition root manual** em `main/`, sem container de DI. Serviços dependem de *interfaces* de repositório, o que permite testes com implementações falsas e, na Fase 2, a troca por uma API. |
-| IPC | **Mapa de canais tipado** em `shared/` (ex.: `'weights:create'` → entrada/saída). Cada canal tem um schema zod; os handlers são registrados a partir do mapa. O renderer usa uma API tipada (`api.weights.create(...)`). Não existe canal genérico de SQL ou de arquivos. |
+| IPC | **Mapa de canais tipado** em `shared/` (ex.: `'weights:create'` → entrada/saída). Cada canal usa um schema zod de `packages/contracts`; os handlers são registrados a partir do mapa. O renderer usa uma API tipada (`api.weights.create(...)`). Não existe canal genérico de SQL ou de arquivos. |
 | Erros | Serviços lançam erros de domínio tipados (`ValidationError`, `NotFoundError`, `ConflictError`). A camada IPC converte para `{ ok: true, data }` ou `{ ok: false, error: { code, message } }`. Stack traces vão para o log, nunca para a tela. |
 | Dados no renderer | **TanStack Query** para cache, carregamento e invalidação após gravações. |
-| Formulários | **react-hook-form + zod**, reaproveitando os schemas de `shared/`. A validação é escrita uma vez e roda nos dois lados. |
+| Formulários | **react-hook-form + zod**, reaproveitando os schemas de `packages/contracts`. A validação é escrita uma vez e roda na tela, no IPC e, na Fase 2, na API. |
 | Tempo | Um `Clock` injetado nos serviços. Nenhuma regra chama `new Date()` diretamente, para que "hoje" seja controlável nos testes. |
 | Logs | **electron-log** em `%APPDATA%\Evully\logs`, com rotação. Mensagens não contêm dados pessoais (peso, medidas, nomes). |
 
@@ -421,7 +431,7 @@ Toda tabela possui, salvo indicação em contrário:
 
 | Coluna | Tipo | Regra |
 |---|---|---|
-| `id` | TEXT (UUID v4) | Chave primária. Facilita sincronização futura. |
+| `id` | TEXT (UUID v7) | Chave primária gerada pela aplicação. Ordenada pelo tempo, o que mantém índices eficientes no PostgreSQL, e permite sincronizar sem conflito de IDs. |
 | `created_at` | TEXT (ISO 8601, UTC) | Preenchido na criação. |
 | `updated_at` | TEXT (ISO 8601, UTC) | Atualizado em toda alteração. |
 | `deleted_at` | TEXT (ISO 8601, UTC), nulo | Soft delete em entidades com dados do usuário. |
@@ -477,7 +487,7 @@ parciais**, porque no SQLite valores `NULL` não colidem em `UNIQUE`.
 
 ## 7. Regras de data e cálculo
 
-Todas as regras abaixo são implementadas em `domain/` e possuem testes.
+Todas as regras abaixo são implementadas em `packages/domain` e possuem testes.
 
 ### 7.1 Projeto
 
@@ -612,7 +622,7 @@ ao objetivo, sem IA e sem padrões fixos por sexo.
 ```text
 Respostas
    ↓
-Regras determinísticas (domain/, versionadas e testadas)
+Regras determinísticas (packages/domain, versionadas e testadas)
    ↓
 Proposta: "Seu Evully ficará assim"
    ↓  [Aceitar]  [Ajustar]
@@ -1940,31 +1950,98 @@ A análise de uma data passada usa a meta vigente naquela data.
 
 Somente após validação do desktop.
 
-Stack planejada:
+### 29.1 Plataformas
 
 ```text
 App web    Next.js + React + TypeScript + Tailwind + shadcn/ui (apps/web)
 Site       páginas públicas no mesmo projeto Next.js (apresentação,
            download do desktop, planos)
 Celular    PWA do app web (instalável pelo navegador)
-Backend    API em ASP.NET Core (C#) + EF Core (backend/)
-Banco      PostgreSQL
+Backend    API NestJS + PostgreSQL (apps/api)
 ```
 
 O PWA resolve cedo o registro pelo celular (§33.2), sem lojas de
 aplicativos. Os componentes de `packages/ui` são reaproveitados no app
 web e no site.
 
-O contrato tipado usado hoje pelo IPC passa a ser atendido pela API
-HTTP. As regras de `domain/` são portadas para C# junto com seus testes,
-que servem de especificação executável.
-
 Entram: autenticação, contas, acesso pelo celular, backend/API,
 sincronização, armazenamento remoto, segurança web e importação do
 histórico desktop ("Exportar conta" no desktop → "Importar dados do
 Evully Desktop" na web), incluindo perfis, pesos, medidas, alimentos,
-refeições, treinos, séries, cardio, hábitos e sono. Os UUIDs permitem
-importar sem conflito de IDs.
+refeições, treinos, séries, cardio, hábitos e sono.
+
+### 29.2 Backend — tecnologia
+
+| Área | Escolha | Motivo |
+|---|---|---|
+| Runtime | Node.js LTS | Mesma linguagem de todo o projeto. |
+| Framework | **NestJS** com adaptador **Fastify** | Módulos, injeção de dependência, guards e interceptors prontos para um monólito modular; Fastify para desempenho. |
+| Validação | **zod** (via `nestjs-zod`) | Reaproveita os schemas de `packages/contracts`; não usar `class-validator`. |
+| Banco | **PostgreSQL** + **Kysely** (`pg`) | Mesmo query builder do desktop; migrations próprias para PostgreSQL. |
+| Documentação da API | OpenAPI gerado a partir dos schemas zod | Para integrações e testes; os clientes TS usam `packages/contracts` diretamente. |
+| Autenticação | **Better Auth** (MIT, dados no nosso banco), a confirmar no início da Fase 2 | E-mail/senha, login Google/Apple, 2FA, sessões para web e tokens para celular e desktop, organizações (família). Alternativa gerenciada: Auth0 ou Clerk (custo por usuário). |
+| Erros | ProblemDetails (RFC 9457) | Mesmo formato `{ code, message }` usado no IPC. |
+| Filas e tarefas | **pg-boss** (fila sobre o PostgreSQL) | Lembretes, e-mails e relatórios sem Redis. BullMQ + Redis só se a escala exigir. |
+| Arquivos | Armazenamento compatível com S3, URLs assinadas | Fotos e exames fora do banco. |
+| Logs e métricas | pino + OpenTelemetry | Sem dados pessoais nos logs. |
+| Testes | Vitest + Testcontainers (PostgreSQL real) + supertest | Os testes de `packages/domain` já cobrem as regras. |
+
+### 29.3 Backend — arquitetura
+
+**Monólito modular.** Uma API, sem estado, com módulos que espelham os do
+desktop. Sem microsserviços.
+
+```text
+apps/api/src/
+  main.ts                 bootstrap (Fastify, segurança, OpenAPI)
+  common/                 auth guards, entitlements, erros, logging, config
+  modules/
+    accounts/             contas, famílias, perfis, concessões
+    tracking/             questionário e configurações
+    body/                 pesos, medidas, etiquetas
+    sync/                 sincronização com o desktop
+    billing/              planos, assinaturas, webhooks de pagamento
+    nutrition/ training/ …  (conforme o roadmap)
+  database/               conexão Kysely, migrations PostgreSQL
+```
+
+Cada módulo segue o mesmo fluxo do desktop:
+
+```text
+Controller (HTTP + schema zod)
+  → Service (caso de uso)
+  → packages/domain (regras puras)
+  → Repository (Kysely)
+  → PostgreSQL
+```
+
+```text
+Next.js (web/PWA) ─┐
+Capacitor (celular)├── HTTPS ──▶ API NestJS ──▶ PostgreSQL
+Desktop (sync)    ─┘                  └──────▶ Storage S3 · Fila pg-boss
+```
+
+Regras:
+
+- **Toda regra de negócio fica em `packages/domain` e é executada pela
+  API.** O Next.js só exibe dados e nunca acessa o banco.
+- **API sem estado**: escala horizontalmente com várias instâncias atrás
+  de um balanceador. Sessões e filas ficam no PostgreSQL.
+- **Modelo de contas**: Conta → Família → Perfis. Autorização verificada
+  por recurso em toda consulta, com testes de isolamento. Acesso de
+  profissionais por **concessões** revogáveis pelo cliente (§30.5).
+- **Sincronização com o desktop**: o desktop continua offline-first. Ao
+  entrar com uma conta, envia e recebe alterações por endpoints de
+  sincronização, usando UUIDs, `updated_at` e soft delete. Regra inicial:
+  a alteração mais recente vence, com aviso em caso de conflito.
+- **Segurança**: HTTPS, CORS restrito, rate limiting, segredos fora do
+  código, auditoria. O [SECURITY.md](SECURITY.md) será ampliado antes do
+  início da Fase 2.
+- **Hospedagem**: contêiner Docker em uma plataforma gerenciada, com
+  PostgreSQL gerenciado na **região São Paulo**. Provedor escolhido no
+  início da Fase 2.
+- **IA (Coach)**: chamada apenas pela API; chaves nunca chegam ao
+  cliente.
 
 ---
 
@@ -2033,6 +2110,25 @@ fase comercial futura, o Evully pode ser oferecido a profissionais
 Requisitos que isso impõe desde já, e que a V0.1 cumpre: configuração
 como dado e não código, histórico de configurações, campo `source` e
 regras versionadas.
+
+### 30.6 Planos, assinaturas e pagamentos
+
+Preparação para faturar com assinaturas, sem implementar antes da hora:
+
+- **Entitlements desacoplados**: uma camada responde "o plano desta conta
+  permite X?" (ex.: guard `@RequiresEntitlement('advanced_analytics')`).
+  Telas e regras consultam entitlements, nunca o nome do plano. Criar ou
+  mudar planos não exige alterar código de funcionalidades.
+- **Pagamentos no Brasil**: Pix e cartão recorrente por um provedor como
+  Stripe, Asaas ou Mercado Pago, integrado por webhooks idempotentes no
+  módulo `billing`.
+- **Lojas de aplicativos**: assinaturas compradas dentro dos apps seguem
+  as regras da Apple e do Google. Um serviço como **RevenueCat** unifica
+  assinaturas da web, App Store e Play Store em um único status por
+  conta.
+- **Métricas de negócio**: retenção, conversão Free → Pro e cancelamentos,
+  sem dados de saúde nos eventos.
+- **Multi-tenancy e LGPD** (§27, §29.3) são pré-requisitos para vender.
 
 ---
 
@@ -2201,7 +2297,9 @@ comercial.
 ### Resumo para a IA de código
 
 > Construa incrementalmente o Evully, um aplicativo desktop fitness
-> local-first, multi-perfil, com React + TypeScript + Electron + SQLite.
+> local-first, multi-perfil, com React + TypeScript + Electron + SQLite,
+> em um monorepo TypeScript cujas regras de negócio (`packages/domain`)
+> serão compartilhadas com o app web, o celular e a API NestJS.
 > Priorize integridade dos dados, separação entre domínio/UI/persistência,
 > migrations, backup e possibilidade futura de migração para
 > Web/PostgreSQL. Não implemente SaaS, pagamentos, cloud ou recursos

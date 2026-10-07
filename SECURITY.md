@@ -45,7 +45,7 @@ Fora de escopo na Fase 1:
 
 ### 2.2 IPC
 
-- Apenas os canais declarados no mapa tipado de `shared/`.
+- Apenas os canais declarados no mapa tipado (`apps/desktop/src/shared/`).
 - Toda entrada é validada com zod no processo main, mesmo que o renderer
   já tenha validado.
 - A origem da chamada (`event.senderFrame`) é conferida.
