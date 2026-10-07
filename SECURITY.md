@@ -33,7 +33,8 @@ Fora de escopo na Fase 1:
   (`setWindowOpenHandler`). Links externos, quando existirem, abrem no
   navegador padrão somente após validação da URL.
 - DevTools desabilitado no build de produção.
-- **Electron Fuses** no build empacotado:
+- **Electron Fuses** no build empacotado (os testes usam o binário de
+  desenvolvimento, onde `RunAsNode` continua disponível):
   - `RunAsNode` desligado;
   - `EnableNodeOptionsEnvironmentVariable` desligado;
   - `EnableNodeCliInspectArguments` desligado;
@@ -65,6 +66,10 @@ Fora de escopo na Fase 1:
   `PRAGMA integrity_check` e rejeitar entradas do zip com caminhos
   absolutos ou `..` (zip slip).
 - Backups nunca sobrescrevem arquivos sem confirmação.
+- A única exclusão física é "Apagar perfil definitivamente", que exige
+  confirmação digitada e cria backup antes (README, §8.3.1).
+- Desenvolvimento usa diretório de dados separado (`Evully-dev`); seed e
+  testes nunca tocam nos dados reais.
 
 ### 2.4 Dados em repouso
 
@@ -82,7 +87,8 @@ Fora de escopo na Fase 1:
 ### 2.6 Logs
 
 - Gravados com electron-log em `%APPDATA%\Evully\logs`, com rotação.
-- Não registram dados pessoais: nomes, pesos, medidas, exames, notas.
+- Não registram dados pessoais: nomes, pesos, medidas, exames, notas,
+  respostas de questionários e, no futuro, dados de ciclo menstrual.
   Registram apenas eventos, códigos de erro e IDs técnicos.
 
 ### 2.7 Dependências (cadeia de suprimentos)
@@ -108,8 +114,9 @@ Fora de escopo na Fase 1:
 ### 2.9 Repositório
 
 - Repositório privado no GitHub.
-- Branch `main` protegida; mudanças via pull request quando houver mais
-  de um colaborador.
+- Branch `main` protegida quando o plano do GitHub permitir (em
+  repositórios privados, regras de proteção exigem plano pago); até lá,
+  mudanças relevantes via pull request por disciplina.
 - Autenticação em dois fatores obrigatória na conta do titular.
 
 ## 3. Checklist por versão

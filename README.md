@@ -9,7 +9,7 @@ Este documento é a **especificação do produto** e a referência para todo o
 desenvolvimento. Ele é versionado junto com o código e deve ser atualizado
 sempre que uma decisão mudar.
 
-**Fase atual:** V0.1 — Fundação + perfis + peso + medidas + dashboard + backup mínimo.
+**Fase atual:** V0.1 — Fundação + perfis + questionário de acompanhamento + peso + medidas + dashboard + backup mínimo.
 
 **Licença:** proprietária, todos os direitos reservados ([LICENSE](LICENSE)).
 **Segurança:** modelo e regras em [SECURITY.md](SECURITY.md).
@@ -171,9 +171,15 @@ documento os termos são:
 | **Projeto** | Período com objetivo e prazo, ex.: "Shape de Praia, 05/10/2026 → 06/12/2026". | `projects` |
 | **Meta nutricional** | Calorias, macros e água diários vigentes a partir de uma data. | `nutrition_targets` (V0.2) |
 | **Meta corporal** | Valor-alvo de peso ou medida, opcionalmente ligado a um projeto. | `body_targets` (futuro) |
+| **Objetivo** | Direção do projeto: perder gordura, ganhar massa, recomposição ou manter. | `projects.objective` |
+| **Questionário de acompanhamento** | Perguntas que o usuário responde para configurar o próprio acompanhamento. | `profile_questionnaires` |
+| **Configuração de acompanhamento** | O que o perfil acompanha e como o painel se apresenta, com histórico. | `tracking_configs` |
+| **Área de foco** | Região do corpo que o usuário quer acompanhar (cintura, quadril, braços, pernas, tórax). | `tracking_configs.focus_areas` |
+| **Direção** | Se subir, descer ou nenhum dos dois é favorável para um indicador, conforme o objetivo. | derivado (§7.6) |
 | **Pesagem** | Um registro de peso. | `body_weights` |
+| **Etiqueta** | Marcador opcional que explica uma pesagem (ex.: "Retenção"). | `tags` |
 | **Sessão de medidas** | Um conjunto de medidas tomadas no mesmo momento. | `body_measurements` |
-| **Tipo de medida** | Abdômen, peitoral, bíceps direito etc. | `measurement_types` |
+| **Tipo de medida** | Cintura, quadril, braço relaxado direito etc. | `measurement_types` |
 | **Peso do dia** | Valor de peso considerado para um dia (ver §7.2). | derivado |
 
 > A tabela antes chamada `goals` passa a se chamar `projects`.
@@ -186,7 +192,7 @@ Este é o **único** roadmap do projeto.
 
 | Versão | Escopo |
 |---|---|
-| **V0.1** | Fundação + perfis + projetos + peso + medidas + dashboard + backup mínimo |
+| **V0.1** | Fundação + perfis + questionário de acompanhamento + projetos + peso + medidas + dashboard adaptável + backup mínimo |
 | V0.2 | Nutrição: alimentos, refeições, metas nutricionais |
 | V0.3 | Treino: exercícios, planos, execução, séries, progressão |
 | V0.4 | Cardio + hábitos |
@@ -296,6 +302,11 @@ photos/        (futuro)
 attachments/   (futuro)
 ```
 
+Em desenvolvimento, o app usa um diretório separado (`Evully-dev`),
+definido antes de abrir o banco. Seed, testes manuais e experimentos
+nunca tocam nos dados reais. Os testes automatizados usam bancos em
+memória ou temporários.
+
 ### 5.5 Padrões de implementação
 
 | Tema | Padrão |
@@ -346,6 +357,20 @@ Toda tabela com dados pessoais possui `profile_id` com chave estrangeira
 para `profiles`. As seções seguintes descrevem apenas as colunas
 específicas de cada tabela.
 
+Exceções:
+
+- **Catálogos do sistema** (ex.: `measurement_types`): sem `profile_id`
+  e sem `deleted_at`; desativados com `is_active`.
+- **Tabelas de ligação** (ex.: `body_weight_tags`): sem `updated_at` e
+  sem `deleted_at`; a ligação é criada ou removida.
+- **Tabelas de histórico** (`tracking_configs`, `profile_questionnaires`,
+  `nutrition_targets`): somente inserção. Registros nunca são editados
+  nem excluídos pela interface.
+
+Restrições de unicidade com coluna que pode ser nula (ex.:
+`settings.profile_id`) ou que ignoram registros excluídos usam **índices
+parciais**, porque no SQLite valores `NULL` não colidem em `UNIQUE`.
+
 ### 6.2 Datas
 
 - **Data local** (o dia do calendário do usuário): `TEXT` no formato
@@ -390,7 +415,17 @@ Todas as regras abaixo são implementadas em `domain/` e possuem testes.
 - Antes do início, exibir "Começa em N dias". Depois do prazo, exibir
   "Prazo encerrado".
 - Cada perfil tem no máximo **um projeto ativo**. O projeto atual é o
-  projeto ativo.
+  projeto ativo. Para criar outro, o atual precisa ser concluído ou
+  arquivado.
+- Ao concluir um projeto, o app oferece refazer o questionário de
+  acompanhamento.
+- Alterar as datas de um projeto apenas recalcula os indicadores; nenhum
+  registro é alterado.
+
+### 7.1.1 Registros retroativos
+
+Pesagens e medidas podem ser registradas com data passada (ex.: dados
+anotados antes de o app existir), mas nunca com data futura.
 
 ### 7.2 Peso
 
@@ -412,12 +447,39 @@ Todas as regras abaixo são implementadas em `domain/` e possuem testes.
   que contém aquele tipo.
 - **Diferença** de um tipo = última medida − primeira medida daquele tipo
   dentro do projeto atual.
+- Medidas desativadas no perfil deixam de aparecer, mas seu histórico é
+  preservado e volta a aparecer se forem reativadas.
 
 ### 7.4 Idade
 
 Calculada a partir de `birth_date` na data de referência. Nunca é gravada.
 
-### 7.5 Sono (V0.5)
+### 7.5 Configuração vigente
+
+A configuração de acompanhamento vigente em uma data D é o registro de
+`tracking_configs` com maior `effective_from` ≤ D (desempate pelo
+`created_at` mais recente). Análises de datas passadas usam a
+configuração vigente naquela data.
+
+### 7.6 Direção dos indicadores
+
+A cor de uma variação depende do objetivo do projeto atual:
+
+| Indicador | Perder gordura | Ganhar massa | Recomposição | Manter / saúde |
+|---|---|---|---|---|
+| Peso | ↓ favorável | ↑ favorável | neutro | neutro |
+| Cintura, abdômen | ↓ favorável | neutro | ↓ favorável | neutro |
+| Quadril | neutro | ↑ favorável | neutro | neutro |
+| Braços, pernas, tórax | neutro | ↑ favorável | ↑ favorável | neutro |
+| Pescoço | neutro | neutro | neutro | neutro |
+
+- **Favorável**: verde. **Contrária**: âmbar suave, nunca vermelho, e sem
+  mensagens alarmistas. **Neutra**: cinza.
+- Variações com valor absoluto menor que 0,1 são exibidas como "estável".
+- A cor nunca é a única informação: sempre há seta e valor com sinal.
+- Sem projeto ativo, todos os indicadores são neutros.
+
+### 7.7 Sono (V0.5)
 
 - Uma noite de sono pertence ao **dia em que a pessoa acorda**
   (`sleep_date` = data local de `wake_time`).
@@ -434,9 +496,12 @@ Calculada a partir de `birth_date` na data de referência. Nunca é gravada.
 ```text
 Abrir Evully
       ↓
-Selecionar perfil
-      ↓
-Dashboard
+Quem está usando?  ──── + Adicionar perfil
+      ↓                        ↓
+      ↓              Questionário de acompanhamento (§8.2)
+      ↓              passo 1 obrigatório, demais opcionais
+      ↓                        ↓
+      └──────────→  Dashboard
 ```
 
 Tela inicial:
@@ -448,11 +513,102 @@ Quem está usando?
 [ + Adicionar perfil ]
 ```
 
-Não há login nem senha na Fase 1. Perfis separam os dados, mas **não são
-uma barreira de segurança**: quem usa a conta do Windows acessa todos os
-perfis (ver [SECURITY.md](SECURITY.md)).
+Regras de privacidade entre perfis:
 
-### 8.2 Tabelas
+- A tela de seleção mostra **apenas nome e avatar**, nunca dados (peso,
+  medidas, projeto).
+- Após um período sem uso, o app volta para a tela de seleção.
+  Padrão: 15 minutos; configurável ou desligável em Configurações.
+- Não há login nem senha na Fase 1. Perfis separam os dados, mas **não
+  são uma barreira de segurança**: quem usa a conta do Windows acessa
+  todos os perfis (ver [SECURITY.md](SECURITY.md)). Um PIN opcional é
+  questão em aberto (§33).
+
+### 8.2 Questionário de acompanhamento
+
+O usuário configura o próprio acompanhamento respondendo a um
+questionário curto. As respostas passam por **regras determinísticas**
+que geram uma **proposta de configuração**. O app se adapta ao perfil e
+ao objetivo, sem IA e sem padrões fixos por sexo.
+
+```text
+Respostas
+   ↓
+Regras determinísticas (domain/, versionadas e testadas)
+   ↓
+Proposta: "Seu Evully ficará assim"
+   ↓  [Aceitar]  [Ajustar]
+Configuração de acompanhamento do perfil (com histórico)
+   ↓
+Dashboard, medidas e gráficos se adaptam
+```
+
+Princípios:
+
+- **Opcional a partir do passo 2.** É possível pular e configurar tudo
+  manualmente depois; nesse caso valem os padrões da §8.2.3.
+- **Proposta, não imposição.** Nada é aplicado sem o usuário aceitar a
+  proposta, e tudo pode ser alterado depois.
+- **Pode ser refeito** a qualquer momento, e é oferecido novamente quando
+  um projeto termina. Cada nova configuração gera histórico (§28).
+- **Só pergunta o que a versão atual usa.** Quando um módulo novo for
+  lançado (nutrição, treino, ciclo…), o app oferece as perguntas daquele
+  módulo, sem refazer o questionário inteiro.
+- **Sexo nunca restringe.** Ele apenas pré-seleciona sugestões; qualquer
+  opção fica disponível para qualquer perfil.
+- **Sem perguntas clínicas** (doenças, medicamentos, gestação) na Fase 1.
+- A configuração é **dado (JSON), não código**. O mesmo formato será
+  usado por modelos criados por profissionais no futuro (§30.5).
+
+#### 8.2.1 Perguntas da V0.1
+
+| Passo | Pergunta | Respostas | O que configura |
+|---|---|---|---|
+| 1 | Dados básicos (**obrigatório**; só o nome é exigido) | Nome, data de nascimento, sexo (opcional), altura | `profiles` |
+| 2 | Qual é o seu objetivo agora? | Perder gordura · Ganhar massa · Recomposição (perder gordura e ganhar massa) · Manter / saúde | `projects.objective` e a **direção** dos indicadores (§7.6) |
+| 3 | Dê um nome e um prazo ao seu projeto | Nome, início, prazo | `projects` |
+| 4 | Quais áreas do corpo você quer acompanhar? | Múltipla escolha: Barriga/cintura · Quadril/glúteos · Braços · Pernas · Tórax/costas | Medidas acompanhadas e sua ordem |
+| 5 | Como você prefere ver o seu peso? | Tendência (recomendado) · Peso do dia · Prefiro não ver o peso no painel | `weight_display` |
+| — | Resumo | "Seu Evully ficará assim: …" | [Aceitar] / [Ajustar] |
+
+#### 8.2.2 Regras da V0.1 (`tracking-rules@1`)
+
+**Áreas de foco → medidas** (na ordem em que as áreas foram escolhidas):
+
+| Área de foco | Medidas ativadas |
+|---|---|
+| Barriga/cintura | Cintura, Abdômen |
+| Quadril/glúteos | Quadril |
+| Braços | Braço relaxado D/E; Bíceps contraído D/E quando o objetivo for ganhar massa ou recomposição |
+| Pernas | Coxa D/E, Panturrilha D/E |
+| Tórax/costas | Tórax/busto |
+
+- **Cintura** vem pré-selecionada para qualquer objetivo, porque é a
+  medida mais útil para acompanhar mudança de gordura corporal. O usuário
+  pode desmarcar.
+- Se nenhuma área for escolhida, o perfil acompanha apenas a cintura.
+
+**Exibição do peso:**
+
+| Resposta | Painel |
+|---|---|
+| Tendência | Número principal = média de 7 dias; peso do dia em destaque secundário. |
+| Peso do dia | Número principal = peso do dia; média de 7 dias em destaque secundário. |
+| Prefiro não ver | Painel sem peso; destaca as medidas. A página Peso continua acessível normalmente. |
+
+**Etiquetas padrão** criadas para o perfil (§8.3, `tags`): Retenção,
+Refeição salgada, Pós-treino, Viagem, Doente. Se o sexo informado for
+feminino, "Ciclo menstrual" também é sugerida. Todas podem ser editadas,
+removidas ou criadas.
+
+#### 8.2.3 Padrões quando o questionário é pulado
+
+Nenhum projeto é criado (o painel convida a criar um e todos os
+indicadores ficam neutros, §7.6), a medida acompanhada é a cintura e o
+peso é exibido em tendência. O questionário fica disponível em
+Configurações — Acompanhamento.
+
+### 8.3 Tabelas
 
 #### `profiles`
 
@@ -460,7 +616,7 @@ perfis (ver [SECURITY.md](SECURITY.md)).
 |---|---|
 | `name` | Obrigatório. |
 | `birth_date` | Opcional. Usada para idade e, no futuro, TMB. |
-| `sex` | Opcional: `male`, `female` ou nulo. |
+| `sex` | Opcional: `male`, `female` ou nulo. Só pré-seleciona sugestões e, no futuro, alimenta fórmulas. |
 | `height_cm` | Opcional. |
 | `avatar_path` | Opcional. Caminho relativo ao diretório de dados. |
 | `unit_system` | `metric` (padrão). Afeta apenas exibição. |
@@ -471,10 +627,51 @@ perfis (ver [SECURITY.md](SECURITY.md)).
 |---|---|
 | `profile_id` | Obrigatório. |
 | `name` | Obrigatório. |
+| `objective` | `fat_loss`, `muscle_gain`, `recomposition`, `maintenance`. |
 | `start_date` | Obrigatória. |
 | `target_date` | Obrigatória, maior ou igual a `start_date`. |
 | `status` | `active`, `completed`, `archived`. No máximo um `active` por perfil. |
 | `notes` | Opcional. |
+
+#### `profile_questionnaires`
+
+| Coluna | Regra |
+|---|---|
+| `profile_id` | Obrigatório. |
+| `questionnaire_code` | Ex.: `tracking`. Módulos futuros terão seus próprios códigos. |
+| `questionnaire_version` | Versão das perguntas respondidas. |
+| `answers` | JSON com as respostas. |
+| `status` | `completed` ou `skipped`. |
+| `completed_at` | Instante. |
+
+#### `tracking_configs`
+
+Configuração de acompanhamento vigente a partir de uma data. Uma
+alteração cria um novo registro; os anteriores nunca são editados.
+
+| Coluna | Regra |
+|---|---|
+| `profile_id` | Obrigatório. |
+| `effective_from` | Data local a partir da qual vale. A vigente é a de maior `effective_from` ≤ hoje (desempate por `created_at`). |
+| `weight_display` | `trend`, `daily`, `hidden`. |
+| `focus_areas` | JSON, lista ordenada: `waist`, `hips`, `arms`, `legs`, `chest`. |
+| `enabled_modules` | JSON, lista de módulos opcionais ligados. Vazia na V0.1. |
+| `source` | `questionnaire`, `manual`, `template`, `professional`. |
+| `rule_version` | Ex.: `tracking-rules@1`. Nulo quando `source = manual`. |
+| `questionnaire_id` | FK opcional para `profile_questionnaires`. |
+
+#### `profile_measurement_types`
+
+Medidas que cada perfil acompanha e em que ordem aparecem.
+
+| Coluna | Regra |
+|---|---|
+| `profile_id` | Obrigatório. |
+| `measurement_type_id` | FK para `measurement_types`. |
+| `sort_order` | Ordem no formulário e no painel. |
+| `is_active` | Desativar uma medida esconde o campo, mas preserva o histórico. |
+
+Único por `(profile_id, measurement_type_id)`.
 
 #### `body_weights`
 
@@ -486,31 +683,50 @@ perfis (ver [SECURITY.md](SECURITY.md)).
 | `weight_kg` | Obrigatório, 20–400. |
 | `notes` | Opcional. |
 
+#### `tags` e `body_weight_tags`
+
+Etiquetas opcionais que explicam variações (ex.: "Retenção").
+
+| Tabela | Colunas |
+|---|---|
+| `tags` | `profile_id`, `name` (único por perfil entre os não excluídos), `sort_order` |
+| `body_weight_tags` | `body_weight_id`, `tag_id` — único por par |
+
 #### `measurement_types`
 
 Catálogo do sistema, sem `profile_id` e sem `deleted_at`.
 
 | Coluna | Regra |
 |---|---|
-| `code` | Único. Ex.: `abdomen`. |
+| `code` | Único. Ex.: `waist`. |
 | `name` | Nome exibido. |
+| `body_region` | `waist`, `hips`, `arms`, `legs`, `chest`, `other`. Usado pelas regras de foco. |
 | `unit` | `cm`. |
-| `sort_order` | Ordem de exibição. |
-| `is_active` | Tipos inativos não aparecem nos formulários. |
+| `instructions` | Como medir, exibido como dica no formulário. |
+| `sort_order` | Ordem padrão. |
+| `is_active` | Tipos inativos não podem ser escolhidos (para descontinuar um tipo sem apagar histórico). |
 
 Tipos iniciais (criados pela migration):
 
-| code | name | ativo |
-|---|---|---|
-| `abdomen` | Abdômen/cintura | sim |
-| `chest` | Peitoral | sim |
-| `right_biceps` | Bíceps direito | sim |
-| `left_biceps` | Bíceps esquerdo | sim |
-| `right_thigh` | Coxa direita | sim |
-| `left_thigh` | Coxa esquerda | sim |
-| `glutes` | Glúteos/quadril | sim |
-| `calves` | Panturrilhas | não |
-| `neck` | Pescoço | não |
+| code | Nome | Região | Como medir |
+|---|---|---|---|
+| `waist` | Cintura | waist | Parte mais estreita do tronco, entre as costelas e o umbigo, ao fim de uma expiração normal. |
+| `abdomen` | Abdômen | waist | Na altura do umbigo, com o abdômen relaxado. |
+| `hips` | Quadril | hips | Parte mais larga dos glúteos, em pé com os pés juntos. |
+| `chest` | Tórax/busto | chest | Parte mais larga do tórax, na linha dos mamilos, braços relaxados. |
+| `right_arm` | Braço relaxado direito | arms | Ponto médio entre ombro e cotovelo, braço solto ao lado do corpo. |
+| `left_arm` | Braço relaxado esquerdo | arms | Idem, lado esquerdo. |
+| `right_biceps` | Bíceps contraído direito | arms | Ponto mais alto do bíceps, braço flexionado e contraído. |
+| `left_biceps` | Bíceps contraído esquerdo | arms | Idem, lado esquerdo. |
+| `right_thigh` | Coxa direita | legs | Ponto médio entre a virilha e o joelho, em pé. |
+| `left_thigh` | Coxa esquerda | legs | Idem, lado esquerdo. |
+| `right_calf` | Panturrilha direita | legs | Parte mais larga da panturrilha, em pé. |
+| `left_calf` | Panturrilha esquerda | legs | Idem, lado esquerdo. |
+| `neck` | Pescoço | other | Logo abaixo do pomo de adão, olhando para a frente. |
+
+Dicas gerais exibidas no formulário: medir sempre no mesmo horário
+(de preferência pela manhã, em jejum), com a fita rente à pele sem
+apertar, e do mesmo lado do corpo.
 
 Tipos personalizados por perfil ficam para depois (coluna `profile_id`
 nula = tipo do sistema).
@@ -535,55 +751,93 @@ Uma sessão de medidas.
 | `value_cm` | 5–300. |
 
 Único por `(measurement_id, measurement_type_id)`. Uma sessão precisa ter
-pelo menos um valor.
+pelo menos um valor; nenhum campo é obrigatório individualmente.
 
 #### `settings`
 
 | Coluna | Regra |
 |---|---|
 | `profile_id` | Nulo para configurações globais. |
-| `key` | Ex.: `theme`, `last_profile_id`. |
+| `key` | Ex.: `theme`, `inactivity_lock_minutes`. |
 | `value` | JSON em texto. |
 
 Único por `(profile_id, key)`.
 
-### 8.3 Telas
+### 8.3.1 Exclusão de perfil
+
+- **Arquivar perfil** (padrão): soft delete. O perfil some da tela de
+  seleção, os dados são preservados e ele pode ser restaurado em
+  Configurações.
+- **Apagar definitivamente**: exige digitar o nome do perfil para
+  confirmar, cria um backup automático antes e remove todos os dados do
+  perfil em uma transação. É a única exclusão física do app.
+
+### 8.4 Telas
 
 | Tela | Conteúdo |
 |---|---|
-| Seleção de perfil | Lista de perfis + "Adicionar perfil". |
+| Seleção de perfil | Nomes e avatares + "Adicionar perfil". Nenhum dado pessoal. |
 | Cadastro/edição de perfil | Campos de `profiles`. |
-| Dashboard | Ver §8.4. |
-| Peso | Registrar, editar e excluir pesagens; lista; gráfico. |
-| Medidas | Registrar sessão de medidas; histórico; gráfico do abdômen. |
-| Configurações | Projeto (criar, editar, concluir), tema claro/escuro, backup, versão do app. |
+| Questionário de acompanhamento | Passos da §8.2.1 e resumo com Aceitar/Ajustar. |
+| Dashboard | Ver §8.5. |
+| Peso | Registrar, editar e excluir pesagens; etiquetas; lista; gráfico. |
+| Medidas | Registrar sessão com as medidas do perfil (com dicas de como medir); histórico; gráfico por medida. |
+| Configurações — Acompanhamento | Objetivo, áreas de foco, medidas acompanhadas e ordem, exibição do peso, etiquetas, refazer questionário. |
+| Configurações — Projeto | Criar, editar e concluir projeto. |
+| Configurações — Geral | Tema claro/escuro, retorno à seleção de perfil por inatividade, backup, versão do app. |
 
 No topo de todas as telas: `Perfil atual: Lucas ▼`. Trocar de perfil
 nunca mistura registros.
 
-### 8.4 Dashboard V0.1
+### 8.5 Dashboard V0.1
+
+O painel se adapta à configuração do perfil. Exemplos:
+
+**Perfil A** — objetivo *perder gordura*, peso em *tendência*, foco em
+barriga, braços e pernas:
 
 ```text
 SHAPE DE PRAIA
-Dia 18 / 63 · faltam 45 dias
+Dia 18 de 63 · faltam 45 dias
 
-Peso atual       89.8 kg
-Peso inicial     92.0 kg
-Diferença        −2.2 kg
-Média 7 dias     90.1 kg
+Tendência de peso    90,1 kg   ▼ 1,9 kg      (verde)
+Peso de hoje         89,8 kg
+Peso inicial         92,0 kg
 
-Abdômen          93.4 cm (−2.6 cm)
+Cintura              93,4 cm   ▼ 2,6 cm      (verde)
+Braço relaxado D     38,0 cm   — 0,0 cm      (neutro)
+Coxa D               59,5 cm   ▼ 0,5 cm      (neutro)
 ```
 
-Sem projeto ativo, o dashboard convida a criar um.
+**Perfil B** — objetivo *recomposição*, peso *oculto*, foco em quadril e
+barriga:
 
-### 8.5 Gráficos
+```text
+PROJETO VERÃO
+Dia 18 de 63 · faltam 45 dias
 
-- Peso do dia ao longo do tempo;
-- média móvel de 7 dias (sobreposta ao peso);
-- abdômen ao longo do tempo.
+Cintura              71,0 cm   ▼ 1,5 cm      (verde)
+Quadril              98,0 cm   ▲ 0,5 cm      (neutro)
+Abdômen              80,2 cm   ▼ 1,0 cm      (verde)
+```
 
-### 8.6 Backup mínimo
+Regras:
+
+- Mostra até **3 medidas**, as primeiras na ordem do perfil.
+- A variação é calculada desde o início do projeto (§7.3) e colorida
+  conforme a direção do objetivo (§7.6).
+- Sem projeto ativo, o painel convida a criar um.
+- Sem dados suficientes, cada indicador mostra "dados insuficientes" em
+  vez de zero.
+
+### 8.6 Gráficos
+
+- Peso do dia e média móvel de 7 dias no mesmo gráfico, com marcadores
+  nas pesagens que têm etiquetas;
+- uma medida por vez ao longo do tempo, com seletor entre as medidas do
+  perfil (padrão: a primeira da ordem).
+
+### 8.7 Backup mínimo
 
 - Botão "Fazer backup" em Configurações.
 - O banco é copiado com `VACUUM INTO` (nunca copiando o arquivo aberto).
@@ -598,37 +852,46 @@ manifest.json   { app_version, schema_version, created_at, sha256 }
   sobrescrito sem confirmação.
 - Restauração fica para a V0.7.
 
-### 8.7 Seed de desenvolvimento
+### 8.8 Seed de desenvolvimento
 
-Executado apenas por comando de desenvolvimento, nunca no app instalado.
+Executado apenas por comando de desenvolvimento, sobre o banco de
+desenvolvimento (§5.4), nunca no app instalado.
 
 ```text
-Perfil:   Lucas · masculino · 175 cm · data de nascimento configurável
-Projeto:  Shape de Praia · 05/10/2026 → 06/12/2026 · ativo
-Peso:     92.0 kg em 05/10/2026
+Perfil:      Lucas · masculino · 175 cm · data de nascimento configurável
+Projeto:     Shape de Praia · perder gordura · 05/10/2026 → 06/12/2026 · ativo
+Acompanh.:   foco em barriga, braços, pernas, tórax, quadril · peso em tendência
+Peso:        92,0 kg em 05/10/2026
 Medidas em 05/10/2026:
-  Abdômen 96 · Peitoral 115 · Bíceps D 42 · Bíceps E 42.5
-  Coxa D 60 · Coxa E 61 · Glúteos 109
+  Abdômen 96 · Tórax 115 · Bíceps contraído D 42 · Bíceps contraído E 42,5
+  Coxa D 60 · Coxa E 61 · Quadril 109
 ```
 
-O segundo perfil não é criado pelo seed; ele é criado pela interface.
+O segundo perfil não é criado pelo seed; ele é criado pela interface,
+passando pelo questionário.
+
 As metas nutricionais do seed estão em §9.7 e entram na V0.2.
 
-### 8.8 Critérios de aceite V0.1
+### 8.9 Critérios de aceite V0.1
 
 1. O aplicativo abre no Windows.
 2. O usuário cria dois perfis.
-3. O usuário alterna entre perfis.
-4. Dados de um perfil não aparecem no outro.
-5. O usuário registra peso.
-6. O usuário registra medidas.
-7. Os dados permanecem após reiniciar.
-8. O dashboard mostra o peso atual.
-9. O dashboard mostra a evolução básica (§8.4).
-10. O banco SQLite é criado automaticamente.
-11. As migrations funcionam e são testadas.
-12. Erros básicos são tratados e registrados em log.
-13. Existe backup manual.
+3. Ao criar um perfil, o usuário responde ao questionário (ou pula) e
+   aceita a proposta de configuração.
+4. Perfis com respostas diferentes veem medidas e painéis diferentes.
+5. O usuário alterna entre perfis, e a tela de seleção não mostra dados.
+6. Dados de um perfil não aparecem no outro.
+7. O usuário registra, edita e exclui pesagens, com etiquetas.
+8. O usuário registra medidas, vendo apenas as do seu perfil.
+9. O usuário altera a configuração de acompanhamento, e o histórico de
+   configurações é preservado.
+10. Os dados permanecem após reiniciar.
+11. O dashboard mostra o peso conforme `weight_display` e a evolução
+    básica colorida pela direção do objetivo.
+12. O banco SQLite é criado automaticamente.
+13. As migrations funcionam e são testadas.
+14. Erros básicos são tratados e registrados em log.
+15. Existe backup manual.
 
 Não começar nutrição ou treino antes de esse núcleo estar confiável.
 
@@ -640,6 +903,13 @@ Não começar nutrição ou treino antes de esse núcleo estar confiável.
 
 Permitir planejar e registrar alimentação sem transformar o aplicativo em
 uma plataforma nutricional complexa.
+
+### Questionário do módulo
+
+Ao ativar o módulo, o app oferece perguntas próprias (§8.2), por exemplo:
+número de refeições por dia, restrições alimentares declaradas pelo
+usuário (sem perguntas clínicas) e se deseja acompanhar água. As regras
+correspondentes configuram as refeições padrão e o painel.
 
 ### 9.2 Alimentos — `foods`
 
@@ -736,7 +1006,7 @@ separado, que não bloqueia a V0.2.
 ### 9.9 Dashboard nutricional
 
 ```text
-Calorias      1680 / 2400 kcal
+Calorias      1.680 / 2.400 kcal
 Proteína       132 / 190 g
 Carboidratos   xxx / meta
 Gorduras        xx / meta
@@ -745,6 +1015,12 @@ Gorduras        xx / meta
 ---
 
 ## 10. V0.3 — Treino
+
+### Questionário do módulo
+
+Ao ativar o módulo: experiência, dias disponíveis por semana, local
+(academia, casa) e equipamentos. As regras sugerem planos-modelo; o
+usuário decide (§10.6, §21.2).
 
 ### 10.1 Biblioteca de exercícios — `exercises`
 
@@ -977,11 +1253,11 @@ sono.
 
 ```text
 profile_id
-sleep_date          data em que a pessoa acorda (§7.5)
+sleep_date          data em que a pessoa acorda (§7.7)
 bed_time
 sleep_time          nulo
 wake_time
-duration_minutes    derivado (§7.5)
+duration_minutes    derivado (§7.7)
 quality             nulo
 notes
 ```
@@ -1017,16 +1293,16 @@ Deve responder rapidamente:
 
 ```text
 SHAPE DE PRAIA
-Dia 18 / 63
+Dia 18 de 63
 
-Peso       89.8 kg   −2.2 kg desde o início
-Abdômen    93.4 cm   −2.6 cm
+Tendência  90,1 kg   −1,9 kg desde o início
+Cintura    93,4 cm   −2,6 cm
 
 HOJE
-Calorias   1680 / 2400
-Proteína    132 / 190 g
-Água        2.1 / 3.5 L
-Passos     6420 / 8000
+Calorias   1.680 / 2.400
+Proteína     132 / 190 g
+Água         2,1 / 3,5 L
+Passos     6.420 / 8.000
 Sono       7h12 / 8h
 Treino     18:00 — PULL
 
@@ -1048,8 +1324,8 @@ testáveis:
 
 ```text
 Últimos 14 dias
-Peso médio:      −0.62 kg/semana
-Abdômen:         −1.2 cm
+Peso médio:      −0,62 kg/semana
+Cintura:         −1,2 cm
 Treinos:         9/10 concluídos
 Proteína média:  188 g/dia
 Sono médio:      7h31
@@ -1115,7 +1391,14 @@ doméstico.
 - desktop-first na Fase 1, já considerando responsividade para a web;
 - evitar excesso de informação;
 - modo claro/escuro;
-- acessibilidade básica (contraste, foco visível, navegação por teclado).
+- acessibilidade básica (contraste, foco visível, navegação por teclado,
+  cor nunca como única informação);
+- interface em **português do Brasil**; números e datas formatados com
+  `Intl` em `pt-BR` (ex.: `89,8 kg`, `06/12/2026`). Código, banco e
+  identificadores ficam em inglês;
+- tom neutro e encorajador: sem vermelho para resultados, sem mensagens
+  de culpa e sem linguagem alarmista;
+- a tela de seleção de perfil nunca exibe dados pessoais (§8.1).
 
 ### 16.2 Navegação
 
@@ -1146,8 +1429,10 @@ No topo: `Perfil atual: Lucas ▼`.
 | Grupo | Tabelas | Versão |
 |---|---|---|
 | Perfis | `profiles`, `projects`, `settings` | V0.1 |
-| Corpo | `body_weights`, `measurement_types`, `body_measurements`, `body_measurement_values` | V0.1 |
-| Corpo | `progress_photos`, `body_targets`, `body_composition_records` | futuro |
+| Acompanhamento | `profile_questionnaires`, `tracking_configs`, `profile_measurement_types` | V0.1 |
+| Acompanhamento | `tracking_templates` (modelos para profissionais) | V3.x |
+| Corpo | `body_weights`, `tags`, `body_weight_tags`, `measurement_types`, `body_measurements`, `body_measurement_values` | V0.1 |
+| Corpo | `progress_photos`, `body_targets`, `body_composition_records`, `cycle_logs` | futuro |
 | Nutrição | `nutrition_targets`, `foods`, `meal_templates`, `meal_template_items`, `food_logs` | V0.2 |
 | Nutrição | `recipes`, `recipe_items` | V0.2+ |
 | Treino | `exercises`, `workout_plans`, `workout_days`, `workout_plan_exercises`, `workout_sessions`, `exercise_performances`, `exercise_sets` | V0.3 |
@@ -1176,6 +1461,9 @@ app; o banco guarda apenas metadados e caminho relativo.
 - dias do projeto;
 - peso do dia, peso inicial, diferença;
 - média móvel de 7 dias;
+- regras do questionário (respostas → configuração), por versão de regra;
+- direção dos indicadores por objetivo;
+- configuração vigente em uma data;
 - cálculo de macros e soma de refeições;
 - duração do sono;
 - progressão dupla;
@@ -1185,14 +1473,17 @@ app; o banco guarda apenas metadados e caminho relativo.
 
 - migrations do zero até a última;
 - isolamento entre perfis em todos os repositórios;
-- soft delete;
+- soft delete, arquivamento e exclusão definitiva de perfil;
+- histórico de configurações (inserção apenas);
 - backup e, a partir da V0.7, restauração.
 
 ### 18.3 Fluxos críticos (interface)
 
 ```text
 criar perfil
+responder ao questionário e aceitar a proposta
 registrar peso
+registrar medidas
 registrar refeição
 iniciar treino
 salvar série
@@ -1206,7 +1497,8 @@ confirmar persistência
 
 ## 19. Critérios de aceite da Fase Desktop
 
-Ao final da V1.0 o usuário deve conseguir: criar perfis; criar projetos;
+Ao final da V1.0 o usuário deve conseguir: criar perfis; configurar o
+acompanhamento pelo questionário; criar projetos;
 registrar peso e medidas; acompanhar gráficos; cadastrar alimentos;
 montar e registrar refeições; acompanhar macros; criar planos de treino;
 executar treinos registrando séries, cargas, repetições e RIR; consultar
@@ -1267,6 +1559,11 @@ Camada determinística que transforma métricas em sinais, por exemplo:
 
 Cada recomendação armazena os dados que a originaram, regra/versão,
 data, status e decisão do usuário.
+
+Recomendações também podem sugerir mudanças na configuração de
+acompanhamento (ex.: "sua cintura está estável há 3 semanas; quer
+acompanhar também o quadril?"). Se aceitas, geram um novo registro em
+`tracking_configs`.
 
 ---
 
@@ -1431,8 +1728,8 @@ enviar exames ou dados sensíveis sem consentimento explícito.
 
 ## 27. Privacidade, consentimento e dados sensíveis
 
-Dados de saúde, exames, medidas, fotos, dieta e treino podem ser
-sensíveis. O produto comercial segue privacy by design e a LGPD.
+Dados de saúde, exames, medidas, fotos, dieta, treino, respostas de
+questionários e dados de ciclo menstrual podem ser sensíveis. O produto comercial segue privacy by design e a LGPD.
 
 Princípios: minimização; finalidade clara; consentimento quando
 aplicável (separado para IA); exportação e exclusão; criptografia em
@@ -1452,8 +1749,8 @@ impeçam.
 
 ## 28. Histórico e rastreabilidade
 
-Preferir histórico a sobrescrita para tudo que afeta análises: metas
-nutricionais e corporais, programas de treino, recomendações e decisões,
+Preferir histórico a sobrescrita para tudo que afeta análises:
+configurações de acompanhamento, metas nutricionais e corporais, programas de treino, recomendações e decisões,
 métodos de BF, preferências de notificação, consentimentos e resultados
 laboratoriais corrigidos.
 
@@ -1523,6 +1820,27 @@ Evully Desktop, Web, Mobile, Analytics, Coach, Health, Reminders,
 Couple/Family, Pro e Cloud representam posicionamento, não microsserviços
 separados.
 
+### 30.5 Evully para profissionais
+
+Na Fase 1 cada usuário configura o próprio acompanhamento (§8.2). Em uma
+fase comercial futura, o Evully pode ser oferecido a profissionais
+(personal trainers, nutricionistas) para uso com seus clientes:
+
+- o profissional cria **modelos de acompanhamento**
+  (`tracking_templates`), por exemplo "Recomposição — iniciante", usando
+  o **mesmo formato JSON** de `tracking_configs`;
+- com autorização do cliente, aplica um modelo ao perfil dele; a
+  configuração resultante é registrada com `source = professional` e
+  passa pelo mesmo fluxo de proposta → aceite;
+- o profissional acompanha a evolução dos clientes com permissões
+  granulares, trilha de auditoria e sem acesso a dados que o cliente não
+  compartilhou (ex.: ciclo menstrual, exames);
+- o cliente pode revogar o acesso a qualquer momento.
+
+Requisitos que isso impõe desde já, e que a V0.1 cumpre: configuração
+como dado e não código, histórico de configurações, campo `source` e
+regras versionadas.
+
 ---
 
 ## 31. O que NÃO fazer
@@ -1547,6 +1865,10 @@ A IA de desenvolvimento NÃO deve:
 - tratar estimativa de BF como medição exata;
 - interpretar correlação como causalidade;
 - implementar WhatsApp por automação de navegador;
+- criar telas, regras ou padrões fixos por sexo (sexo só pré-seleciona
+  sugestões);
+- aplicar uma configuração de acompanhamento sem o aceite do usuário;
+- mostrar dados pessoais na tela de seleção de perfil;
 - implementar funcionalidades futuras antes da fase atual estar estável.
 
 ---
@@ -1593,19 +1915,63 @@ executável quando aplicável.
 
 ## 33. Questões em aberto
 
-Decisões que serão tomadas quando a versão correspondente começar:
+Decisões que serão tomadas quando a versão correspondente começar.
+
+**Pendentes antes do código da V0.1:**
+
+| Questão | Observação |
+|---|---|
+| Os dois perfis usam **o mesmo computador**? | Se não, cada computador terá seu banco e os dados não se encontram até a Fase 2. Afeta o planejamento conjunto (marmitas, lista de compras). |
+| **Importação de CSV** de pesos e medidas na V0.1? | O projeto "Shape de Praia" começou em 05/10/2026, antes do app. Alternativa: digitar como registros retroativos (§7.1.1). |
+| **Backup automático** ao fechar o app, para uma pasta escolhida, mantendo as últimas N cópias? | Reduz o maior risco de um app local: perda do disco. |
+| Data de nascimento do seed. | Pode ser provisória. |
+| Data-alvo da V0.1. | — |
+
+**Demais questões:**
 
 | Questão | Versão |
 |---|---|
 | Água é registrada como hábito de quantidade ou como parte da nutrição? | V0.2 / V0.4 |
 | Passos vêm de hábitos, de cardio ou de ambos? | V0.4 |
 | O catálogo de alimentos é compartilhado entre perfis da casa ou por perfil? | V0.2 |
-| Metas nutricionais aceitam faixa (ex.: água 3–3.5 L) ou só valor único? | V0.2 |
+| Metas nutricionais aceitam faixa (ex.: água 3–3,5 L) ou só valor único? | V0.2 |
 | Fotos de progresso são criptografadas em disco? | futuro |
 | Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.4 |
-| PIN opcional por perfil? | futuro |
 | Assinatura de código (Authenticode) do instalador. | V1.0 |
 | Tipos de medida personalizados por perfil. | futuro |
+| Acompanhamento do ciclo menstrual (opcional, ativado no perfil): registrar início do ciclo, mostrar fases no gráfico de peso, comparar o mesmo ponto entre ciclos. Dado sensível: privado, fora dos logs, exportação só com escolha explícita. Sem previsões nem interpretações. | após conversa (V0.1.1 ou V0.4) |
+| Status "pausado" no projeto (gestação, lesão, viagem): congela a contagem de dias e as diferenças, sem incentivar perda de peso no período. | após conversa |
+| Prioridade das fotos de progresso. | após conversa |
+| Registro de bioimpedância antes da V1.1, se houver balança. | após conversa |
+| PIN opcional por perfil (candidato à V0.2). | após conversa |
+
+### 33.1 Roteiro de descoberta com o segundo perfil
+
+Conversa de cerca de 10 minutos, antes dos wireframes da V0.1. As
+respostas validam o questionário (§8.2) e decidem as questões acima.
+
+1. Qual é o seu objetivo agora: perder, ganhar, manter ou mudar a forma
+   do corpo?
+2. Quais medidas você quer acompanhar? (mostrar o catálogo da §8.3)
+3. Você prefere ver o peso todo dia, só a tendência, ou prefere não ver?
+4. Você gostaria de registrar o ciclo para entender variações de peso?
+5. Fotos de progresso são importantes para você?
+6. Te incomoda que outra pessoa da casa possa ver seus dados? Um PIN
+   ajudaria?
+7. Quando e onde você registraria o peso: no celular ou no computador?
+8. O que te faria desistir de usar o app?
+
+Depois da conversa, as decisões são registradas neste documento.
+
+### 33.2 Riscos
+
+| Risco | Impacto | Mitigação |
+|---|---|---|
+| Registrar pelo computador todo dia é trabalhoso e o uso cai. | Alto: o sucesso da Fase 1 depende do uso diário. | Registro de peso em poucos segundos ao abrir o app; perguntar na descoberta (§33.1, item 7); celular entra na Fase 2. |
+| Perda de dados por falha do disco. | Alto. | Backup manual na V0.1; backup automático (pendente acima); restauração na V0.7. |
+| O questionário aumenta o escopo da V0.1. | Médio: atrasa a entrega. | Só perguntas que a V0.1 usa; regras simples e tabeladas (§8.2.2). |
+| Testes com `ELECTRON_RUN_AS_NODE` não funcionarem com alguma ferramenta. | Baixo. | Alternativa: compilar o better-sqlite3 também para o Node e alternar antes dos testes. |
+| Segundo perfil não se identificar com o app. | Alto. | Conversa de descoberta antes dos wireframes; segundo perfil como primeiro testador do questionário. |
 
 ---
 
@@ -1632,8 +1998,10 @@ comercial.
 > migrations, backup e possibilidade futura de migração para
 > Web/PostgreSQL. Não implemente SaaS, pagamentos, cloud ou recursos
 > futuros antes de serem solicitados. A primeira entrega deve permitir
-> criar/selecionar perfis, registrar peso e medidas, visualizar evolução
-> e manter tudo persistido localmente. Toda evolução posterior respeita o
+> criar/selecionar perfis, configurar o acompanhamento por um
+> questionário com regras determinísticas, registrar peso e medidas,
+> visualizar a evolução em um painel que se adapta ao perfil e manter
+> tudo persistido localmente. Toda evolução posterior respeita o
 > roadmap da §4.
 
 ---
