@@ -9,7 +9,7 @@ Este documento é a **especificação do produto** e a referência para todo o
 desenvolvimento. Ele é versionado junto com o código e deve ser atualizado
 sempre que uma decisão mudar.
 
-**Fase atual:** V0.1 — Fundação + perfis + questionário de acompanhamento + peso + medidas + dashboard + backup mínimo.
+**Fase atual:** V0.1 — Fundação + perfis + questionário de acompanhamento + peso + medidas + dashboard + backup + importação CSV.
 
 **Licença:** proprietária, todos os direitos reservados ([LICENSE](LICENSE)).
 **Segurança:** modelo e regras em [SECURITY.md](SECURITY.md).
@@ -91,7 +91,8 @@ forma que possam ser reaproveitados ou migrados nas fases seguintes.
 - os dados ficam armazenados localmente;
 - o aplicativo deve funcionar sem internet;
 - o banco é SQLite;
-- deve existir backup (desde a V0.1) e restauração (a partir da V0.7);
+- deve existir backup manual e automático (desde a V0.1) e restauração
+  (a partir da V0.7);
 - deve existir exportação em formatos abertos (V0.7).
 
 ### 2.2 Multi-perfil desde o início
@@ -143,7 +144,25 @@ O aplicativo deve permitir:
 - exportação CSV quando aplicável;
 - futura migração SQLite → PostgreSQL.
 
-### 2.5 Saúde e segurança
+### 2.5 Um ou vários computadores
+
+O Evully precisa funcionar nos dois cenários da casa:
+
+- **Mesmo computador:** os perfis convivem no mesmo banco, separados por
+  `profile_id`.
+- **Computadores diferentes:** cada computador tem sua própria instalação
+  e seu próprio banco, com o perfil de quem o usa.
+
+Na Fase 1 não existe sincronização. Para levar um perfil de um computador
+para outro, existe a **transferência de perfil** por arquivo (V0.7,
+§14.4). Os UUIDs permitem importar sem conflito de IDs.
+
+Não é suportado manter o arquivo `evully.db` em uma pasta sincronizada
+(OneDrive, Google Drive, Dropbox) para dois computadores usarem ao mesmo
+tempo: o SQLite pode corromper o banco nesse cenário. Pastas sincronizadas
+servem apenas como **destino de backup** (§8.7).
+
+### 2.6 Saúde e segurança
 
 O aplicativo é uma ferramenta de registro e planejamento e não deve se
 apresentar como médico, nutricionista ou fisioterapeuta.
@@ -152,7 +171,7 @@ Recomendações automáticas futuras devem ser conservadoras. Sintomas,
 lesões, medicamentos, hormônios e decisões clínicas devem permanecer sob
 responsabilidade de profissionais habilitados.
 
-### 2.6 Cálculos determinísticos
+### 2.7 Cálculos determinísticos
 
 Todo cálculo (médias, totais, macros, durações, progressões) é feito por
 funções de domínio testáveis. IA nunca calcula; no máximo explica
@@ -192,13 +211,13 @@ Este é o **único** roadmap do projeto.
 
 | Versão | Escopo |
 |---|---|
-| **V0.1** | Fundação + perfis + questionário de acompanhamento + projetos + peso + medidas + dashboard adaptável + backup mínimo |
+| **V0.1** | Fundação + perfis + questionário de acompanhamento + projetos + peso + medidas + dashboard adaptável + backup manual e automático + importação CSV |
 | V0.2 | Nutrição: alimentos, refeições, metas nutricionais |
 | V0.3 | Treino: exercícios, planos, execução, séries, progressão |
 | V0.4 | Cardio + hábitos |
 | V0.5 | Sono |
 | V0.6 | Estatísticas e dashboard completo |
-| V0.7 | Backup completo, restauração e exportação JSON/CSV |
+| V0.7 | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
 | V0.8 | UX/polimento |
 | V1.0 | Desktop estável + instalador Windows |
 | V1.1 | Analytics Engine determinístico |
@@ -703,6 +722,7 @@ Catálogo do sistema, sem `profile_id` e sem `deleted_at`.
 | `body_region` | `waist`, `hips`, `arms`, `legs`, `chest`, `other`. Usado pelas regras de foco. |
 | `unit` | `cm`. |
 | `instructions` | Como medir, exibido como dica no formulário. |
+| `csv_name` | Nome da coluna nos modelos de importação CSV, em português sem acentos (ex.: `cintura`). Único. |
 | `sort_order` | Ordem padrão. |
 | `is_active` | Tipos inativos não podem ser escolhidos (para descontinuar um tipo sem apagar histórico). |
 
@@ -784,7 +804,8 @@ pelo menos um valor; nenhum campo é obrigatório individualmente.
 | Medidas | Registrar sessão com as medidas do perfil (com dicas de como medir); histórico; gráfico por medida. |
 | Configurações — Acompanhamento | Objetivo, áreas de foco, medidas acompanhadas e ordem, exibição do peso, etiquetas, refazer questionário. |
 | Configurações — Projeto | Criar, editar e concluir projeto. |
-| Configurações — Geral | Tema claro/escuro, retorno à seleção de perfil por inatividade, backup, versão do app. |
+| Configurações — Geral | Tema claro/escuro, retorno à seleção de perfil por inatividade, backup (manual, automático, pasta adicional, último backup), versão do app. |
+| Importar CSV | Escolher arquivo, pré-visualizar, ver erros e confirmar. Acessível pelas telas Peso e Medidas. |
 
 No topo de todas as telas: `Perfil atual: Lucas ▼`. Trocar de perfil
 nunca mistura registros.
@@ -837,28 +858,82 @@ Regras:
 - uma medida por vez ao longo do tempo, com seletor entre as medidas do
   perfil (padrão: a primeira da ordem).
 
-### 8.7 Backup mínimo
+### 8.7 Backup
 
-- Botão "Fazer backup" em Configurações.
+#### 8.7.1 Backup manual
+
+- Botão "Fazer backup agora" em Configurações.
 - O banco é copiado com `VACUUM INTO` (nunca copiando o arquivo aberto).
 - Gera `evully-backup-YYYY-MM-DD-HHMM.zip` contendo:
 
 ```text
 evully.db
-manifest.json   { app_version, schema_version, created_at, sha256 }
+manifest.json   { app_version, schema_version, created_at, kind, sha256 }
 ```
 
 - O usuário escolhe a pasta de destino. Um arquivo existente nunca é
   sobrescrito sem confirmação.
-- Restauração fica para a V0.7.
 
-### 8.8 Seed de desenvolvimento
+#### 8.7.2 Backup automático
+
+- Ligado por padrão. Executado **ao fechar o app**, no máximo uma vez por
+  dia, e sempre antes de migrations e de "Apagar perfil
+  definitivamente".
+- Destino padrão: `%APPDATA%\Evully\backups`. O usuário pode definir
+  **uma pasta adicional**, por exemplo dentro do OneDrive, para ter uma
+  cópia fora do disco do computador.
+- Mantém as **últimas 10 cópias** automáticas (configurável). A limpeza
+  só remove arquivos criados pelo backup automático (`kind = automatic`
+  no manifesto), nunca backups manuais.
+- Se o backup falhar, o app registra em log e avisa na próxima abertura,
+  sem impedir o fechamento.
+- Configurações mostra a data do último backup bem-sucedido.
+
+Restauração fica para a V0.7.
+
+### 8.8 Importação CSV
+
+Permite trazer dados anotados antes do app (ex.: o projeto "Shape de
+Praia" começou em 05/10/2026) ou de planilhas.
+
+Arquivos aceitos, importados **para o perfil atual**:
+
+```text
+pesos.csv
+data;hora;peso_kg;observacao
+05/10/2026;07:10;92,0;
+06/10/2026;;91,6;após viagem
+
+medidas.csv
+data;cintura;abdomen;quadril;torax;biceps_contraido_d;...
+05/10/2026;;96;109;115;42
+```
+
+Regras:
+
+- Separador `;` (padrão, decimal com vírgula) ou `,` (decimal com
+  ponto). O separador é detectado pelo cabeçalho. Data `DD/MM/AAAA` ou
+  `AAAA-MM-DD`. Codificação UTF-8 (com ou sem BOM).
+- Colunas de medidas usam o `csv_name` (ex.: `cintura`,
+  `biceps_contraido_d`) ou o `code` (ex.: `waist`) do catálogo (§8.3);
+  células vazias são ignoradas. Medidas importadas que o perfil não acompanha são
+  ativadas para ele.
+- `hora` e `observacao` são opcionais. Sem hora, usa-se 12:00 local.
+- As mesmas validações do formulário (limites, sem data futura, §7.1.1).
+- **Pré-visualização obrigatória** antes de gravar: quantas linhas serão
+  importadas, quais têm erro (com número da linha e motivo) e quais
+  parecem duplicadas (mesma data e mesmo valor já existentes), que são
+  ignoradas por padrão.
+- Gravação em **uma transação**: ou tudo que foi aprovado entra, ou nada.
+- O app oferece **modelos de CSV** para baixar.
+
+### 8.9 Seed de desenvolvimento
 
 Executado apenas por comando de desenvolvimento, sobre o banco de
 desenvolvimento (§5.4), nunca no app instalado.
 
 ```text
-Perfil:      Lucas · masculino · 175 cm · data de nascimento configurável
+Perfil:      Lucas · masculino · 175 cm · nascido em 16/08/1994
 Projeto:     Shape de Praia · perder gordura · 05/10/2026 → 06/12/2026 · ativo
 Acompanh.:   foco em barriga, braços, pernas, tórax, quadril · peso em tendência
 Peso:        92,0 kg em 05/10/2026
@@ -872,7 +947,7 @@ passando pelo questionário.
 
 As metas nutricionais do seed estão em §9.7 e entram na V0.2.
 
-### 8.9 Critérios de aceite V0.1
+### 8.10 Critérios de aceite V0.1
 
 1. O aplicativo abre no Windows.
 2. O usuário cria dois perfis.
@@ -891,7 +966,10 @@ As metas nutricionais do seed estão em §9.7 e entram na V0.2.
 12. O banco SQLite é criado automaticamente.
 13. As migrations funcionam e são testadas.
 14. Erros básicos são tratados e registrados em log.
-15. Existe backup manual.
+15. Existe backup manual, e o backup automático roda ao fechar o app e
+    mantém as últimas cópias.
+16. O usuário importa pesos e medidas por CSV, com pré-visualização e
+    relatório de erros.
 
 Não começar nutrição ou treino antes de esse núcleo estar confiável.
 
@@ -1364,6 +1442,20 @@ evully-backup-YYYY-MM-DD-HHMM.zip
 - CSV por categoria: `weights.csv`, `measurements.csv`, `workouts.csv`,
   `exercise_sets.csv`, `nutrition.csv`, `sleep.csv`, `cardio.csv`.
 
+### 14.4 Transferência de perfil entre computadores
+
+Para quem usa computadores diferentes (§2.5):
+
+1. No computador de origem: "Exportar perfil" gera
+   `evully-perfil-<nome>-YYYY-MM-DD.zip` com todos os dados de um único
+   perfil e um manifesto.
+2. No computador de destino: "Importar perfil" valida versão e
+   integridade e mostra um resumo.
+3. Se o perfil (mesmo UUID) não existe, ele é criado. Se já existe, o
+   usuário escolhe **substituir** (com backup automático antes) ou
+   **cancelar**. Mesclagem registro a registro fica para a sincronização
+   da Fase 2.
+
 ---
 
 ## 15. V0.8 a V1.0 — Polimento e distribuição Windows
@@ -1464,6 +1556,8 @@ app; o banco guarda apenas metadados e caminho relativo.
 - regras do questionário (respostas → configuração), por versão de regra;
 - direção dos indicadores por objetivo;
 - configuração vigente em uma data;
+- leitura e validação de CSV (formatos de data, decimal e separador);
+- retenção de backups automáticos (só remove `kind = automatic`);
 - cálculo de macros e soma de refeições;
 - duração do sono;
 - progressão dupla;
@@ -1917,15 +2011,18 @@ executável quando aplicável.
 
 Decisões que serão tomadas quando a versão correspondente começar.
 
-**Pendentes antes do código da V0.1:**
+**Decididas em 06/10/2026:**
 
-| Questão | Observação |
+| Questão | Decisão |
 |---|---|
-| Os dois perfis usam **o mesmo computador**? | Se não, cada computador terá seu banco e os dados não se encontram até a Fase 2. Afeta o planejamento conjunto (marmitas, lista de compras). |
-| **Importação de CSV** de pesos e medidas na V0.1? | O projeto "Shape de Praia" começou em 05/10/2026, antes do app. Alternativa: digitar como registros retroativos (§7.1.1). |
-| **Backup automático** ao fechar o app, para uma pasta escolhida, mantendo as últimas N cópias? | Reduz o maior risco de um app local: perda do disco. |
-| Data de nascimento do seed. | Pode ser provisória. |
-| Data-alvo da V0.1. | — |
+| Mesmo computador ou computadores diferentes? | Os dois cenários (§2.5). Transferência de perfil por arquivo na V0.7 (§14.4). |
+| Importação de CSV na V0.1? | Sim (§8.8). |
+| Backup automático? | Sim, na V0.1 (§8.7.2). |
+| Data de nascimento do seed. | 16/08/1994. |
+| Data-alvo da V0.1. | O quanto antes; sem data fixa. |
+
+**Pendente antes dos wireframes da V0.1:** conversa de descoberta com o
+segundo perfil (§33.1).
 
 **Demais questões:**
 
@@ -1968,7 +2065,8 @@ Depois da conversa, as decisões são registradas neste documento.
 | Risco | Impacto | Mitigação |
 |---|---|---|
 | Registrar pelo computador todo dia é trabalhoso e o uso cai. | Alto: o sucesso da Fase 1 depende do uso diário. | Registro de peso em poucos segundos ao abrir o app; perguntar na descoberta (§33.1, item 7); celular entra na Fase 2. |
-| Perda de dados por falha do disco. | Alto. | Backup manual na V0.1; backup automático (pendente acima); restauração na V0.7. |
+| Perda de dados por falha do disco. | Alto. | Backup manual e automático na V0.1, com pasta adicional fora do disco (§8.7); restauração na V0.7. |
+| Banco colocado em pasta sincronizada e usado por dois computadores. | Alto: corrupção. | Não suportado e explicado na interface ao escolher pastas; sincronização só na Fase 2 (§2.5). |
 | O questionário aumenta o escopo da V0.1. | Médio: atrasa a entrega. | Só perguntas que a V0.1 usa; regras simples e tabeladas (§8.2.2). |
 | Testes com `ELECTRON_RUN_AS_NODE` não funcionarem com alguma ferramenta. | Baixo. | Alternativa: compilar o better-sqlite3 também para o Node e alternar antes dos testes. |
 | Segundo perfil não se identificar com o app. | Alto. | Conversa de descoberta antes dos wireframes; segundo perfil como primeiro testador do questionário. |
