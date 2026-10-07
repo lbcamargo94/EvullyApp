@@ -158,7 +158,7 @@ web ficam parecidas no código, o que facilita manter as duas.
 - **Offline** (V2.x): leitura dos últimos dados em cache (TanStack Query
   persistido em IndexedDB) e **fila de gravações** para operações simples
   (pesagem, medidas), enviadas quando a conexão voltar. Conflitos seguem
-  a regra da sincronização (README §29.3).
+  a regra da sincronização ([BACKEND.md](BACKEND.md), §7).
 - **Sessão**: cookie `httpOnly` emitido pela API; nada de token em
   `localStorage`.
 - **Notificações push** na web (V2.x, Evully Reminders): suportadas em
@@ -178,7 +178,7 @@ web ficam parecidas no código, o que facilita manter as duas.
   `packages/ui-native` (componentes).
 - **Dados locais com sincronização**: SQLite no celular (`expo-sqlite`)
   com Kysely, usando o mesmo protocolo de sincronização do desktop
-  (README §29.3). O app abre e registra sem internet. A decisão final
+  ([BACKEND.md](BACKEND.md), §7). O app abre e registra sem internet. A decisão final
   entre "local com sincronização" e "online com fila" é confirmada no
   início da Fase 3.
 - Convenções de cada sistema: botão voltar do Android, gestos do iOS,

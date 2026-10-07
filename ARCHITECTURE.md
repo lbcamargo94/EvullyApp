@@ -4,7 +4,8 @@ Como o código do Evully é organizado e quais regras ele deve seguir em
 todas as aplicações (desktop, API, web e celular). Complementa a
 especificação no [README](README.md), as regras de segurança em
 [SECURITY.md](SECURITY.md), o design system em [DESIGN.md](DESIGN.md) e
-o planejamento do frontend em [FRONTEND.md](FRONTEND.md).
+o planejamento do frontend em [FRONTEND.md](FRONTEND.md) e do backend em
+[BACKEND.md](BACKEND.md).
 
 ## 1. Visão geral
 

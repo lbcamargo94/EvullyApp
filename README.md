@@ -16,6 +16,7 @@ sempre que uma decisão mudar.
 **Design:** identidade visual e design system em [DESIGN.md](DESIGN.md).
 **Arquitetura:** camadas, módulos e regras de código em [ARCHITECTURE.md](ARCHITECTURE.md).
 **Frontend:** site, app web e apps Android/iOS em [FRONTEND.md](FRONTEND.md).
+**Backend:** API, dados e sincronização em [BACKEND.md](BACKEND.md).
 
 ---
 
@@ -349,7 +350,7 @@ packages/domain/tests/ testes das regras de negócio
 ```
 
 Documentação na raiz: `README.md` (especificação), `ARCHITECTURE.md`,
-`DESIGN.md`, `SECURITY.md`, `LICENSE` e, a partir do código,
+`FRONTEND.md`, `BACKEND.md`, `DESIGN.md`, `SECURITY.md`, `LICENSE` e, a partir do código,
 `CHANGELOG.md` e `THIRD_PARTY_NOTICES`.
 
 Regras:
@@ -2006,69 +2007,23 @@ histórico desktop ("Exportar conta" no desktop → "Importar dados do
 Evully Desktop" na web), incluindo perfis, pesos, medidas, alimentos,
 refeições, treinos, séries, cardio, hábitos e sono.
 
-### 29.2 Backend — tecnologia
+### 29.2 Backend
 
-| Área | Escolha | Motivo |
-|---|---|---|
-| Runtime | Node.js LTS | Mesma linguagem de todo o projeto. |
-| Framework | **NestJS** com adaptador **Fastify** | Módulos, injeção de dependência, guards e interceptors prontos para um monólito modular; Fastify para desempenho. |
-| Validação | **zod** (via `nestjs-zod`) | Reaproveita os schemas de `packages/contracts`; não usar `class-validator`. |
-| Banco | **PostgreSQL** + **Kysely** (`pg`) | Mesmo query builder do desktop; migrations próprias para PostgreSQL. |
-| Documentação da API | OpenAPI gerado a partir dos schemas zod | Para integrações e testes; os clientes TS usam `packages/contracts` diretamente. |
-| Autenticação | **Better Auth** (MIT, dados no nosso banco), a confirmar no início da Fase 2 | E-mail/senha, login Google/Apple, 2FA, sessões para web e tokens para celular e desktop, organizações (família). Alternativa gerenciada: Auth0 ou Clerk (custo por usuário). |
-| Erros | ProblemDetails (RFC 9457) | Mesmo formato `{ code, message }` usado no IPC. |
-| Filas e tarefas | **pg-boss** (fila sobre o PostgreSQL) | Lembretes, e-mails e relatórios sem Redis. BullMQ + Redis só se a escala exigir. |
-| Arquivos | Armazenamento compatível com S3, URLs assinadas | Fotos e exames fora do banco. |
-| Logs e métricas | pino + OpenTelemetry | Sem dados pessoais nos logs. |
-| Testes | Vitest + Testcontainers (PostgreSQL real) + supertest | Os testes de `packages/domain` já cobrem as regras. |
+API em **NestJS** (Fastify) + **PostgreSQL** + **Kysely** + **zod**,
+organizada como monólito modular, sem estado, hospedada na região São
+Paulo. Regras de negócio em `packages/domain`, compartilhadas com o
+desktop, a web e o celular.
 
-### 29.3 Backend — arquitetura
-
-**Monólito modular.** Uma API, sem estado, com módulos que espelham os do
-desktop. Sem microsserviços.
-
-Módulos previstos: `accounts` (contas, famílias, perfis, concessões),
-`tracking`, `body`, `sync`, `billing` e, conforme o roadmap,
-`nutrition`, `training` etc. Cada módulo tem `application/`, `ports/` e
-`adapters/`, como no desktop. A estrutura completa e a forma de usar o
-NestJS sem acoplar as regras estão em
-[ARCHITECTURE.md](ARCHITECTURE.md) (§4.2 e §4.3).
-
-```text
-Controller (HTTP + schema zod)            adapter
-  → caso de uso                            application
-      → packages/domain (regras puras)
-      → port de repositório
-  → repositório Kysely                     adapter → PostgreSQL
-```
+O planejamento completo está em [BACKEND.md](BACKEND.md): módulos,
+modelo Conta → Família → Perfis e autorização, convenções da API,
+autenticação, **protocolo de sincronização** com desktop e celular,
+dados, arquivos, filas, observabilidade, ambientes, testes e LGPD.
 
 ```text
 App web (PWA)     ─┐
 App mobile (RN)   ├── HTTPS ──▶ API NestJS ──▶ PostgreSQL
 Desktop (sync)    ─┘                  └──────▶ Storage S3 · Fila pg-boss
 ```
-
-Regras:
-
-- **Toda regra de negócio fica em `packages/domain` e é executada pela
-  API.** O app web e o site só exibem dados e nunca acessam o banco.
-- **API sem estado**: escala horizontalmente com várias instâncias atrás
-  de um balanceador. Sessões e filas ficam no PostgreSQL.
-- **Modelo de contas**: Conta → Família → Perfis. Autorização verificada
-  por recurso em toda consulta, com testes de isolamento. Acesso de
-  profissionais por **concessões** revogáveis pelo cliente (§30.5).
-- **Sincronização com o desktop**: o desktop continua offline-first. Ao
-  entrar com uma conta, envia e recebe alterações por endpoints de
-  sincronização, usando UUIDs, `updated_at` e soft delete. Regra inicial:
-  a alteração mais recente vence, com aviso em caso de conflito.
-- **Segurança**: HTTPS, CORS restrito, rate limiting, segredos fora do
-  código, auditoria. O [SECURITY.md](SECURITY.md) será ampliado antes do
-  início da Fase 2.
-- **Hospedagem**: contêiner Docker em uma plataforma gerenciada, com
-  PostgreSQL gerenciado na **região São Paulo**. Provedor escolhido no
-  início da Fase 2.
-- **IA (Coach)**: chamada apenas pela API; chaves nunca chegam ao
-  cliente.
 
 ---
 
@@ -2155,7 +2110,7 @@ Preparação para faturar com assinaturas, sem implementar antes da hora:
   conta.
 - **Métricas de negócio**: retenção, conversão Free → Pro e cancelamentos,
   sem dados de saúde nos eventos.
-- **Multi-tenancy e LGPD** (§27, §29.3) são pré-requisitos para vender.
+- **Multi-tenancy e LGPD** (§27; [BACKEND.md](BACKEND.md), §4 e §14) são pré-requisitos para vender.
 
 ---
 
