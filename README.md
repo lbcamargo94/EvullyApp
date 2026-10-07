@@ -11,6 +11,9 @@ sempre que uma decisão mudar.
 
 **Fase atual:** V0.1 — Fundação + perfis + peso + medidas + dashboard + backup mínimo.
 
+**Licença:** proprietária, todos os direitos reservados ([LICENSE](LICENSE)).
+**Segurança:** modelo e regras em [SECURITY.md](SECURITY.md).
+
 ---
 
 ## Sumário
@@ -49,6 +52,7 @@ sempre que uma decisão mudar.
 32. [Prioridade e fluxo de desenvolvimento](#32-prioridade-e-fluxo-de-desenvolvimento)
 33. [Questões em aberto](#33-questões-em-aberto)
 34. [Objetivo final](#34-objetivo-final)
+35. [Propriedade intelectual e licença](#35-propriedade-intelectual-e-licença)
 
 ---
 
@@ -292,6 +296,37 @@ photos/        (futuro)
 attachments/   (futuro)
 ```
 
+### 5.5 Padrões de implementação
+
+| Tema | Padrão |
+|---|---|
+| Montagem das dependências | **Composition root manual** em `main/`, sem container de DI. Serviços dependem de *interfaces* de repositório, o que permite testes com implementações falsas e, na Fase 2, a troca por uma API. |
+| IPC | **Mapa de canais tipado** em `shared/` (ex.: `'weights:create'` → entrada/saída). Cada canal tem um schema zod; os handlers são registrados a partir do mapa. O renderer usa uma API tipada (`api.weights.create(...)`). Não existe canal genérico de SQL ou de arquivos. |
+| Erros | Serviços lançam erros de domínio tipados (`ValidationError`, `NotFoundError`, `ConflictError`). A camada IPC converte para `{ ok: true, data }` ou `{ ok: false, error: { code, message } }`. Stack traces vão para o log, nunca para a tela. |
+| Dados no renderer | **TanStack Query** para cache, carregamento e invalidação após gravações. |
+| Formulários | **react-hook-form + zod**, reaproveitando os schemas de `shared/`. A validação é escrita uma vez e roda nos dois lados. |
+| Tempo | Um `Clock` injetado nos serviços. Nenhuma regra chama `new Date()` diretamente, para que "hoje" seja controlável nos testes. |
+| Logs | **electron-log** em `%APPDATA%\Evully\logs`, com rotação. Mensagens não contêm dados pessoais (peso, medidas, nomes). |
+
+Exemplo de fluxo — registrar peso:
+
+```text
+WeightForm (react-hook-form + schema zod)
+  → api.weights.create()                renderer
+  → preload → ipcMain 'weights:create'
+  → valida com o mesmo schema zod       main
+  → WeightService.create()              arredonda, define measured_on
+  → WeightRepository.insert()           grava com profile_id
+  ← { ok: true, data }                  TanStack Query atualiza dashboard e lista
+```
+
+### 5.6 Segurança
+
+O modelo de ameaças, as camadas de proteção (Electron, IPC, banco,
+segredos, logs, dependências, distribuição) e o checklist por versão
+estão em [SECURITY.md](SECURITY.md). Toda mudança de código deve
+respeitá-lo.
+
 ---
 
 ## 6. Convenções de dados
@@ -413,7 +448,9 @@ Quem está usando?
 [ + Adicionar perfil ]
 ```
 
-Não há login nem senha na Fase 1.
+Não há login nem senha na Fase 1. Perfis separam os dados, mas **não são
+uma barreira de segurança**: quem usa a conta do Windows acessa todos os
+perfis (ver [SECURITY.md](SECURITY.md)).
 
 ### 8.2 Tabelas
 
@@ -1428,7 +1465,17 @@ A análise de uma data passada usa a meta vigente naquela data.
 
 Somente após validação do desktop.
 
-Stack candidata: Next.js, React, TypeScript, PostgreSQL.
+Stack planejada:
+
+```text
+Frontend   Next.js + React + TypeScript (reaproveita componentes da Fase 1)
+Backend    API em ASP.NET Core (C#) + EF Core
+Banco      PostgreSQL
+```
+
+O contrato tipado usado hoje pelo IPC passa a ser atendido pela API
+HTTP. As regras de `domain/` são portadas para C# junto com seus testes,
+que servem de especificação executável.
 
 Entram: autenticação, contas, acesso pelo celular, backend/API,
 sincronização, armazenamento remoto, segurança web e importação do
@@ -1555,6 +1602,9 @@ Decisões que serão tomadas quando a versão correspondente começar:
 | O catálogo de alimentos é compartilhado entre perfis da casa ou por perfil? | V0.2 |
 | Metas nutricionais aceitam faixa (ex.: água 3–3.5 L) ou só valor único? | V0.2 |
 | Fotos de progresso são criptografadas em disco? | futuro |
+| Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.4 |
+| PIN opcional por perfil? | futuro |
+| Assinatura de código (Authenticode) do instalador. | V1.0 |
 | Tipos de medida personalizados por perfil. | futuro |
 
 ---
@@ -1585,3 +1635,45 @@ comercial.
 > criar/selecionar perfis, registrar peso e medidas, visualizar evolução
 > e manter tudo persistido localmente. Toda evolução posterior respeita o
 > roadmap da §4.
+
+---
+
+## 35. Propriedade intelectual e licença
+
+### 35.1 Licença
+
+O Evully é **software proprietário**. Todos os direitos são reservados
+ao titular, conforme o arquivo [LICENSE](LICENSE). O `package.json` usa
+`"license": "UNLICENSED"` e `"private": true`, o que impede publicação
+acidental no npm.
+
+Se no futuro parte do projeto for aberta, a decisão e a nova licença
+serão registradas aqui. Código já publicado sob licença aberta não pode
+ter essa licença revogada, por isso abrir é uma decisão deliberada.
+
+### 35.2 Proteção contra cópia
+
+Aplicativos Electron não conseguem ocultar seu código: o pacote `.asar`
+pode ser extraído. Ofuscação foi descartada porque só atrasa a cópia e
+dificulta a depuração. A proteção do Evully vem de:
+
+1. **Repositório privado**: o código-fonte não é distribuído.
+2. **Licença proprietária** e avisos de copyright: base legal.
+3. **Histórico do git**: prova datada de autoria.
+4. **Registro de programa de computador no INPI** (opcional): reforça a
+   prova de autoria em disputas.
+5. **Registro da marca "Evully" no INPI**: antes de qualquer uso
+   comercial.
+6. **Fase 3**: a lógica de maior valor (Analytics avançado, Coach)
+   roda no servidor e não é distribuída.
+
+### 35.3 Respeito a terceiros
+
+- Não copiar código, textos, ícones ou dados de outros produtos sem
+  licença compatível.
+- Dependências passam por verificação de licença no CI; licenças
+  copyleft fortes (GPL, AGPL, SSPL) são bloqueadas.
+- Avisos exigidos pelas licenças de terceiros ficam em
+  `THIRD_PARTY_NOTICES`, gerado a partir das dependências.
+- Bases de dados nutricionais (V0.2) só podem ser importadas se a
+  licença da base permitir; a fonte fica registrada em `foods.source`.
