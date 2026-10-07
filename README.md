@@ -14,6 +14,7 @@ sempre que uma decisão mudar.
 **Licença:** proprietária, todos os direitos reservados ([LICENSE](LICENSE)).
 **Segurança:** modelo e regras em [SECURITY.md](SECURITY.md).
 **Design:** identidade visual e design system em [DESIGN.md](DESIGN.md).
+**Arquitetura:** camadas, módulos e regras de código em [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 
@@ -226,10 +227,10 @@ Este é o **único** roadmap do projeto.
 | V1.3 | Notificações locais / Evully Reminders |
 | V1.4 | Evully Health (estrutura local/manual) |
 | V1.5 | Evully Coach AI opcional (desenvolvimento/testes) |
-| V2.x | Web + backend + autenticação + PostgreSQL + sincronização |
+| V2.x | App web + site + PWA + API NestJS + autenticação + PostgreSQL + sincronização |
 | V2.x | Evully Cloud + IA server-side |
 | V2.x | WhatsApp oficial / push / e-mail |
-| V3.x | SaaS comercial + planos + billing + mobile/PWA |
+| V3.x | SaaS comercial + planos + billing + apps nas lojas (Capacitor) |
 
 Regras:
 
@@ -270,29 +271,32 @@ A numeração pode ser ajustada, mas o princípio incremental permanece.
 As versões exatas ficam fixadas no `package.json`. Qualquer troca de peça
 desta tabela deve ser registrada aqui com o motivo.
 
-### 5.2 Camadas
+### 5.2 Arquitetura
+
+**Clean Architecture pragmática** organizada como **monólito modular**.
+Os detalhes, a regra de dependência, a estrutura por módulo, as regras de
+Clean Code e a verificação automática estão em
+[ARCHITECTURE.md](ARCHITECTURE.md).
 
 ```text
-UI (React, processo renderer)
+Interface (React, processo renderer)
  ↓  IPC tipado (preload + contextBridge)
-Application / Services      ← processo main
+Adaptadores (handlers IPC, repositórios Kysely)   ← processo main
  ↓
-Domain (funções puras)
+Aplicação (casos de uso + ports)
  ↓
-Repositories
- ↓
-SQLite
+Domínio (packages/domain, funções puras)
 ```
 
-- Domínio, serviços e repositórios rodam no **processo main**.
+- Domínio, casos de uso e adaptadores rodam no **processo main**.
 - O renderer não acessa Node, arquivos nem banco. Ele só chama a API
   exposta pelo preload, com `contextIsolation` ativo e `nodeIntegration`
   desligado.
-- Toda chamada IPC tem contrato tipado (`apps/desktop/src/shared/`, com schemas de `packages/contracts`) e entrada validada
-  com zod no main.
+- Toda chamada IPC tem contrato tipado (`apps/desktop/src/shared/`, com
+  schemas de `packages/contracts`) e entrada validada com zod no main.
 - A regra de negócio NÃO fica em componentes React.
-- Na versão web, o mesmo contrato da UI passa a ser atendido por uma API
-  HTTP no lugar do IPC.
+- Na Fase 2, a API NestJS reaproveita o mesmo domínio; o IPC é
+  substituído por HTTP.
 
 ### 5.3 Estrutura do repositório
 
@@ -322,18 +326,26 @@ Estrutura interna de `apps/desktop`:
 
 ```text
 apps/desktop/src/
-  shared/        mapa de canais IPC do desktop (usa schemas de packages/contracts)
-  database/      conexão, schema tipado, migrations, seed
-  repositories/  acesso a dados por entidade
-  services/      casos de uso (orquestram domínio + repositórios)
-  main/          ciclo de vida do Electron, janelas, IPC, caminhos, logs
+  main/          bootstrap do Electron, janelas, composition root,
+                 roteador IPC, caminhos, logs
   preload/       ponte segura entre main e renderer
+  database/      conexão SQLite, schema tipado, migrations, seed
+  shared/        mapa de canais IPC (usa schemas de packages/contracts)
+  modules/       profiles, tracking, body, backup, settings…
+    <módulo>/
+      application/   casos de uso
+      ports/         interfaces (repositórios, relógio…)
+      adapters/      repositórios Kysely, handlers IPC
   renderer/
     features/    telas e fluxos por módulo
-    lib/         cliente da API, contextos
-apps/desktop/tests/   testes de repositórios, migrations e fluxos
+    lib/         cliente IPC tipado, TanStack Query, contextos
+apps/desktop/tests/    testes de repositórios, migrations e fluxos
 packages/domain/tests/ testes das regras de negócio
 ```
+
+Documentação na raiz: `README.md` (especificação), `ARCHITECTURE.md`,
+`DESIGN.md`, `SECURITY.md`, `LICENSE` e, a partir do código,
+`CHANGELOG.md` e `THIRD_PARTY_NOTICES`.
 
 Regras:
 
@@ -370,23 +382,23 @@ memória ou temporários.
 
 | Tema | Padrão |
 |---|---|
-| Montagem das dependências | **Composition root manual** em `main/`, sem container de DI. Serviços dependem de *interfaces* de repositório, o que permite testes com implementações falsas e, na Fase 2, a troca por uma API. |
-| IPC | **Mapa de canais tipado** em `shared/` (ex.: `'weights:create'` → entrada/saída). Cada canal usa um schema zod de `packages/contracts`; os handlers são registrados a partir do mapa. O renderer usa uma API tipada (`api.weights.create(...)`). Não existe canal genérico de SQL ou de arquivos. |
-| Erros | Serviços lançam erros de domínio tipados (`ValidationError`, `NotFoundError`, `ConflictError`). A camada IPC converte para `{ ok: true, data }` ou `{ ok: false, error: { code, message } }`. Stack traces vão para o log, nunca para a tela. |
+| Montagem das dependências | **Composition root manual** em `main/composition-root.ts`, sem container de DI. Casos de uso dependem de *ports* (interfaces), o que permite testes com implementações falsas. Na API, os módulos NestJS fazem esse papel (ver [ARCHITECTURE.md](ARCHITECTURE.md), §4.3). |
+| IPC | **Mapa de canais tipado** em `shared/`, nomeado por módulo e ação (ex.: `'body:register-weight'` → entrada/saída). Cada canal usa um schema zod de `packages/contracts`; os handlers são registrados a partir do mapa. O renderer usa uma API tipada (`api.body.registerWeight(...)`). Não existe canal genérico de SQL ou de arquivos. |
+| Erros | Domínio e casos de uso lançam erros tipados (`ValidationError`, `NotFoundError`, `ConflictError`). A camada IPC converte para `{ ok: true, data }` ou `{ ok: false, error: { code, message } }`. Stack traces vão para o log, nunca para a tela. |
 | Dados no renderer | **TanStack Query** para cache, carregamento e invalidação após gravações. |
 | Formulários | **react-hook-form + zod**, reaproveitando os schemas de `packages/contracts`. A validação é escrita uma vez e roda na tela, no IPC e, na Fase 2, na API. |
-| Tempo | Um `Clock` injetado nos serviços. Nenhuma regra chama `new Date()` diretamente, para que "hoje" seja controlável nos testes. |
+| Tempo | Um port `Clock` injetado nos casos de uso. Nenhuma regra chama `new Date()` diretamente, para que "hoje" seja controlável nos testes. |
 | Logs | **electron-log** em `%APPDATA%\Evully\logs`, com rotação. Mensagens não contêm dados pessoais (peso, medidas, nomes). |
 
 Exemplo de fluxo — registrar peso:
 
 ```text
-WeightForm (react-hook-form + schema zod)
-  → api.weights.create()                renderer
-  → preload → ipcMain 'weights:create'
-  → valida com o mesmo schema zod       main
-  → WeightService.create()              arredonda, define measured_on
-  → WeightRepository.insert()           grava com profile_id
+WeightForm (react-hook-form + schema zod de packages/contracts)
+  → api.body.registerWeight()           renderer
+  → preload → IPC 'body:register-weight'
+  → handler IPC valida com o mesmo schema   adapter (main)
+  → RegisterWeight.execute()            caso de uso: regras de packages/domain
+  → WeightRepository.insert()           port → KyselyWeightRepository (SQLite)
   ← { ok: true, data }                  TanStack Query atualiza dashboard e lista
 ```
 
@@ -431,7 +443,7 @@ Toda tabela possui, salvo indicação em contrário:
 
 | Coluna | Tipo | Regra |
 |---|---|---|
-| `id` | TEXT (UUID v7) | Chave primária gerada pela aplicação. Ordenada pelo tempo, o que mantém índices eficientes no PostgreSQL, e permite sincronizar sem conflito de IDs. |
+| `id` | UUID v7 (`TEXT` no SQLite, `uuid` no PostgreSQL) | Chave primária gerada pela aplicação. Ordenada pelo tempo, o que mantém índices eficientes no PostgreSQL, e permite sincronizar sem conflito de IDs. |
 | `created_at` | TEXT (ISO 8601, UTC) | Preenchido na criação. |
 | `updated_at` | TEXT (ISO 8601, UTC) | Atualizado em toda alteração. |
 | `deleted_at` | TEXT (ISO 8601, UTC), nulo | Soft delete em entidades com dados do usuário. |
@@ -505,7 +517,7 @@ Todas as regras abaixo são implementadas em `packages/domain` e possuem testes.
 - Alterar as datas de um projeto apenas recalcula os indicadores; nenhum
   registro é alterado.
 
-### 7.1.1 Registros retroativos
+#### 7.1.1 Registros retroativos
 
 Pesagens e medidas podem ser registradas com data passada (ex.: dados
 anotados antes de o app existir), mas nunca com data futura.
@@ -568,7 +580,7 @@ A cor de uma variação depende do objetivo do projeto atual:
   (`sleep_date` = data local de `wake_time`).
 - `duration_minutes` é sempre derivado de `sleep_time` (ou `bed_time`,
   se `sleep_time` estiver vazio) até `wake_time`. É gravado para facilitar
-  consultas, mas só o serviço o calcula; nunca é editado diretamente.
+  consultas, mas só o caso de uso o calcula; nunca é editado diretamente.
 
 ---
 
@@ -634,7 +646,8 @@ Dashboard, medidas e gráficos se adaptam
 Princípios:
 
 - **Opcional a partir do passo 2.** É possível pular e configurar tudo
-  manualmente depois; nesse caso valem os padrões da §8.2.3.
+  manualmente depois; nesse caso valem os padrões da §8.2.3. Os passos 2
+  e 3 criam o projeto e são respondidos juntos: pular um pula o outro.
 - **Proposta, não imposição.** Nada é aplicado sem o usuário aceitar a
   proposta, e tudo pode ser alterado depois.
 - **Pode ser refeito** a qualquer momento, e é oferecido novamente quando
@@ -838,8 +851,8 @@ Dicas gerais exibidas no formulário: medir sempre no mesmo horário
 (de preferência pela manhã, em jejum), com a fita rente à pele sem
 apertar, e do mesmo lado do corpo.
 
-Tipos personalizados por perfil ficam para depois (coluna `profile_id`
-nula = tipo do sistema).
+Tipos personalizados por perfil ficam para depois. Quando existirem,
+o catálogo ganhará uma coluna `profile_id` (nula = tipo do sistema).
 
 #### `body_measurements`
 
@@ -887,14 +900,15 @@ pelo menos um valor; nenhum campo é obrigatório individualmente.
 | Tela | Conteúdo |
 |---|---|
 | Seleção de perfil | Nomes e avatares + "Adicionar perfil". Nenhum dado pessoal. |
-| Cadastro/edição de perfil | Campos de `profiles`. |
+| Cadastro/edição de perfil | Campos de `profiles`; arquivar, restaurar arquivados e apagar definitivamente (§8.3.1). |
 | Questionário de acompanhamento | Passos da §8.2.1 e resumo com Aceitar/Ajustar. |
 | Dashboard | Ver §8.5. |
 | Peso | Registrar, editar e excluir pesagens; etiquetas; lista; gráfico. |
 | Medidas | Registrar sessão com as medidas do perfil (com dicas de como medir); histórico; gráfico por medida. |
 | Configurações — Acompanhamento | Objetivo, áreas de foco, medidas acompanhadas e ordem, exibição do peso, etiquetas, refazer questionário. |
 | Configurações — Projeto | Criar, editar e concluir projeto. |
-| Configurações — Geral | Tema claro/escuro, retorno à seleção de perfil por inatividade, backup (manual, automático, pasta adicional, último backup), versão do app. |
+| Configurações — Geral | Tema claro/escuro, retorno à seleção de perfil por inatividade, backup (manual, automático, pasta adicional, último backup). |
+| Configurações — Sobre | Versão do app, aviso de saúde, licença e avisos de terceiros, como restaurar um backup manualmente (§8.7.3). |
 | Importar CSV | Escolher arquivo, pré-visualizar, ver erros e confirmar. Acessível pelas telas Peso e Medidas. |
 
 No topo de todas as telas: `Perfil atual: Lucas ▼`. Trocar de perfil
@@ -979,7 +993,12 @@ manifest.json   { app_version, schema_version, created_at, kind, sha256 }
   sem impedir o fechamento.
 - Configurações mostra a data do último backup bem-sucedido.
 
-Restauração fica para a V0.7.
+#### 8.7.3 Restauração antes da V0.7
+
+A tela de restauração chega na V0.7. Até lá, um backup pode ser
+restaurado manualmente, com o app fechado: extrair o `evully.db` do zip
+e substituí-lo em `%APPDATA%\Evully`, guardando o arquivo atual. O
+passo a passo fica em Configurações — Sobre e no guia do usuário.
 
 ### 8.8 Importação CSV
 
@@ -1032,6 +1051,10 @@ Medidas em 05/10/2026:
   Coxa D 60 · Coxa E 61 · Quadril 109
 ```
 
+As medidas acompanhadas do seed seguem as regras da §8.2.2 e, além
+delas, incluem Bíceps contraído D/E por ajuste manual (`source = manual`),
+porque o objetivo "perder gordura" não as ativa automaticamente.
+
 O segundo perfil não é criado pelo seed; ele é criado pela interface,
 passando pelo questionário.
 
@@ -1060,6 +1083,11 @@ As metas nutricionais do seed estão em §9.7 e entram na V0.2.
     mantém as últimas cópias.
 16. O usuário importa pesos e medidas por CSV, com pré-visualização e
     relatório de erros.
+17. O aviso de saúde é exibido na primeira abertura.
+18. Após o tempo de inatividade, o app volta à seleção de perfil.
+19. O usuário arquiva e restaura um perfil sem perder dados.
+20. As regras de fronteira da arquitetura passam no CI
+    ([ARCHITECTURE.md](ARCHITECTURE.md), §8).
 
 Não começar nutrição ou treino antes de esse núcleo estar confiável.
 
@@ -1667,18 +1695,15 @@ app; o banco guarda apenas metadados e caminho relativo.
 
 ### 18.3 Fluxos críticos (interface)
 
+Automatizados com Playwright no app real:
+
 ```text
-criar perfil
-responder ao questionário e aceitar a proposta
-registrar peso
-registrar medidas
-registrar refeição
-iniciar treino
-salvar série
-finalizar treino
-fechar aplicativo
-abrir novamente
-confirmar persistência
+V0.1   criar perfil → responder ao questionário → aceitar a proposta
+V0.1   registrar peso → registrar medidas → importar CSV
+V0.1   trocar de perfil → confirmar isolamento dos dados
+V0.1   fechar o app → abrir novamente → confirmar persistência e backup automático
+V0.2   registrar refeição
+V0.3   iniciar treino → salvar série → finalizar treino
 ```
 
 ---
@@ -1991,28 +2016,19 @@ refeições, treinos, séries, cardio, hábitos e sono.
 **Monólito modular.** Uma API, sem estado, com módulos que espelham os do
 desktop. Sem microsserviços.
 
-```text
-apps/api/src/
-  main.ts                 bootstrap (Fastify, segurança, OpenAPI)
-  common/                 auth guards, entitlements, erros, logging, config
-  modules/
-    accounts/             contas, famílias, perfis, concessões
-    tracking/             questionário e configurações
-    body/                 pesos, medidas, etiquetas
-    sync/                 sincronização com o desktop
-    billing/              planos, assinaturas, webhooks de pagamento
-    nutrition/ training/ …  (conforme o roadmap)
-  database/               conexão Kysely, migrations PostgreSQL
-```
-
-Cada módulo segue o mesmo fluxo do desktop:
+Módulos previstos: `accounts` (contas, famílias, perfis, concessões),
+`tracking`, `body`, `sync`, `billing` e, conforme o roadmap,
+`nutrition`, `training` etc. Cada módulo tem `application/`, `ports/` e
+`adapters/`, como no desktop. A estrutura completa e a forma de usar o
+NestJS sem acoplar as regras estão em
+[ARCHITECTURE.md](ARCHITECTURE.md) (§4.2 e §4.3).
 
 ```text
-Controller (HTTP + schema zod)
-  → Service (caso de uso)
-  → packages/domain (regras puras)
-  → Repository (Kysely)
-  → PostgreSQL
+Controller (HTTP + schema zod)            adapter
+  → caso de uso                            application
+      → packages/domain (regras puras)
+      → port de repositório
+  → repositório Kysely                     adapter → PostgreSQL
 ```
 
 ```text
@@ -2231,6 +2247,8 @@ recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
 | Fotos de progresso são criptografadas em disco? | futuro |
 | Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.4 |
 | Assinatura de código (Authenticode) do instalador. | V1.0 |
+| Confirmar Better Auth como solução de autenticação. | Início da Fase 2 |
+| Provedor de hospedagem e de pagamentos. | Início da Fase 2 / Fase 3 |
 | Tipos de medida personalizados por perfil. | futuro |
 | Acompanhamento do ciclo menstrual (opcional, ativado no perfil): registrar início do ciclo, mostrar fases no gráfico de peso, comparar o mesmo ponto entre ciclos. Dado sensível: privado, fora dos logs, exportação só com escolha explícita. Sem previsões nem interpretações. | após conversa (V0.1.1 ou V0.4) |
 | Status "pausado" no projeto (gestação, lesão, viagem): congela a contagem de dias e as diferenças, sem incentivar perda de peso no período. | após conversa |
@@ -2275,6 +2293,7 @@ Depois da conversa, as decisões são registradas neste documento.
 | Banco colocado em pasta sincronizada e usado por dois computadores. | Alto: corrupção. | Não suportado e explicado na interface ao escolher pastas; sincronização só na Fase 2 (§2.5). |
 | O questionário aumenta o escopo da V0.1. | Médio: atrasa a entrega. | Só perguntas que a V0.1 usa; regras simples e tabeladas (§8.2.2). |
 | Testes com `ELECTRON_RUN_AS_NODE` não funcionarem com alguma ferramenta. | Baixo. | Alternativa: compilar o better-sqlite3 também para o Node e alternar antes dos testes. |
+| Empacotamento com electron-builder em monorepo (npm workspaces) com módulo nativo. | Médio: build quebrado. | Validar o instalador logo no início da V0.1 (primeiro marco), antes das funcionalidades. |
 | Segundo perfil não se identificar com o app. | Alto. | Questionário configurável; segundo perfil como primeiro testador; passos 6 e 7 e conversa após 1 a 2 semanas de uso (§33.1). |
 
 ---
