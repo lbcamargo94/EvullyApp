@@ -34,7 +34,8 @@ Componentes Evully   StatCard, TrendIndicator, MeasurementField, WeightChart,
 Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 ```
 
-- `packages/tokens`: tokens em JSON (fonte única), exportados como
+- `packages/tokens`: tokens em `tokens.json` (fonte única; `tokens.css` é
+  gerado por `npm run build -w @evully/tokens` e verificado nos testes), exportados como
   variáveis CSS para o `@theme` do Tailwind 4 e como preset para o
   NativeWind no React Native.
 - `packages/ui`: componentes base (gerados pelo CLI do shadcn/ui) e
@@ -58,9 +59,12 @@ Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 | `text-muted` | Texto secundário | `#5B6280` | `#A1A1A1` |
 | `brand` | Ações principais, foco, destaque | `#5457D6` | `#8B8EF0` |
 | `brand-foreground` | Texto sobre `brand` | `#FFFFFF` | `#0A0A0A` |
+| `brand-soft` | Fundo de item ativo, avatar | `#E3E4FB` | `#262626` |
+| `brand-soft-foreground` | Texto sobre `brand-soft` | `#3F42B8` | `#FAFAFA` |
 | `positive` | Variação favorável (§7.6 do README) | `#1A7A4A` | `#4CC38A` |
 | `caution` | Variação contrária (nunca vermelho) | `#9A5B00` | `#F0B54A` |
 | `neutral` | Variação neutra ou estável | `#6B7190` | `#A1A1A1` |
+| `positive-soft`, `caution-soft`, `neutral-soft` | Fundo dos selos de variação | `#E3F1EA`, `#FBEFD9`, `#E8E8FA` | `#14281D`, `#2E2410`, `#262626` |
 | `danger` | Somente ações destrutivas (apagar perfil) | `#C2413B` | `#F07A74` |
 | `focus-ring` | Anel de foco | `brand` | `brand` |
 

@@ -1,0 +1,30 @@
+appId: br.com.evully.desktop
+productName: Evully
+copyright: Copyright (c) 2026 Lucas Camargo
+directories:
+  output: release
+  buildResources: build
+files:
+  - out/**
+  - package.json
+# better-sqlite3 13 uses Node-API: its prebuilt binary works in Electron, no rebuild needed.
+npmRebuild: false
+asarUnpack:
+  - '**/*.node'
+win:
+  target: nsis
+  artifactName: Evully-Setup-${version}.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  # Personal data lives in %APPDATA%\Evully and is kept on uninstall (README §15).
+  deleteAppDataOnUninstall: false
+electronFuses:
+  runAsNode: false
+  enableCookieEncryption: true
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true

@@ -1,0 +1,89 @@
+/* Generated from tokens.json by scripts/build.mjs. Do not edit. */
+:root {
+  color-scheme: light;
+  --evully-background: #EFEFFC;
+  --evully-surface: #FAFAFF;
+  --evully-surface-muted: #E8E8FA;
+  --evully-border: #DCDDF2;
+  --evully-text: #161A2E;
+  --evully-text-muted: #5B6280;
+  --evully-brand: #5457D6;
+  --evully-brand-foreground: #FFFFFF;
+  --evully-brand-soft: #E3E4FB;
+  --evully-brand-soft-foreground: #3F42B8;
+  --evully-positive: #1A7A4A;
+  --evully-positive-soft: #E3F1EA;
+  --evully-caution: #9A5B00;
+  --evully-caution-soft: #FBEFD9;
+  --evully-neutral: #6B7190;
+  --evully-neutral-soft: #E8E8FA;
+  --evully-danger: #C2413B;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --evully-background: #0A0A0A;
+    --evully-surface: #171717;
+    --evully-surface-muted: #262626;
+    --evully-border: #2A2A2A;
+    --evully-text: #FAFAFA;
+    --evully-text-muted: #A1A1A1;
+    --evully-brand: #8B8EF0;
+    --evully-brand-foreground: #0A0A0A;
+    --evully-brand-soft: #262626;
+    --evully-brand-soft-foreground: #FAFAFA;
+    --evully-positive: #4CC38A;
+    --evully-positive-soft: #14281D;
+    --evully-caution: #F0B54A;
+    --evully-caution-soft: #2E2410;
+    --evully-neutral: #A1A1A1;
+    --evully-neutral-soft: #262626;
+    --evully-danger: #F07A74;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --evully-background: #0A0A0A;
+  --evully-surface: #171717;
+  --evully-surface-muted: #262626;
+  --evully-border: #2A2A2A;
+  --evully-text: #FAFAFA;
+  --evully-text-muted: #A1A1A1;
+  --evully-brand: #8B8EF0;
+  --evully-brand-foreground: #0A0A0A;
+  --evully-brand-soft: #262626;
+  --evully-brand-soft-foreground: #FAFAFA;
+  --evully-positive: #4CC38A;
+  --evully-positive-soft: #14281D;
+  --evully-caution: #F0B54A;
+  --evully-caution-soft: #2E2410;
+  --evully-neutral: #A1A1A1;
+  --evully-neutral-soft: #262626;
+  --evully-danger: #F07A74;
+}
+
+@theme inline {
+  --color-background: var(--evully-background);
+  --color-surface: var(--evully-surface);
+  --color-surface-muted: var(--evully-surface-muted);
+  --color-border: var(--evully-border);
+  --color-text: var(--evully-text);
+  --color-text-muted: var(--evully-text-muted);
+  --color-brand: var(--evully-brand);
+  --color-brand-foreground: var(--evully-brand-foreground);
+  --color-brand-soft: var(--evully-brand-soft);
+  --color-brand-soft-foreground: var(--evully-brand-soft-foreground);
+  --color-positive: var(--evully-positive);
+  --color-positive-soft: var(--evully-positive-soft);
+  --color-caution: var(--evully-caution);
+  --color-caution-soft: var(--evully-caution-soft);
+  --color-neutral: var(--evully-neutral);
+  --color-neutral-soft: var(--evully-neutral-soft);
+  --color-danger: var(--evully-danger);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --font-sans: 'Inter Variable', Inter, system-ui, sans-serif;
+}

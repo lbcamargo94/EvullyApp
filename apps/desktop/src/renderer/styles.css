@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@evully/tokens/tokens.css';
+
+/* Workspace packages are symlinked into node_modules, which Tailwind skips by default. */
+@source '../../../../packages/ui/src';
+@source '../../../../packages/app-web/src';
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}

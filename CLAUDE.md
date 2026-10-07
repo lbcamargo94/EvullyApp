@@ -2,7 +2,7 @@
 
 Local-first fitness app (Electron + React + TS + SQLite), multi-profile,
 growing to web (NestJS API + React SPA/PWA + Next.js site) and native
-mobile (Expo). **Current phase: V0.1 planning done; no code yet.**
+mobile (Expo). **Current phase: V0.1 — scaffold done; features next.**
 
 ## Language
 - Talk to the user in **Portuguese (pt-BR)**. UI text in pt-BR.
@@ -55,6 +55,17 @@ Same for any doc over ~300 lines.
 - Keep this file short; detail belongs in the docs above or in skills.
 
 ## Commands
-Documentation check: `node scripts/check-docs.mjs`.
-Build, lint, typecheck and test commands are added here when the
-V0.1 scaffold exists.
+| Task | Command |
+|---|---|
+| Run app (dev, data in `%APPDATA%\Evully-dev`) | `npm run dev` |
+| Lint (incl. architecture boundaries) | `npm run lint` |
+| Typecheck | `npm run typecheck` |
+| Tests (desktop tests run under Electron) | `npm test` |
+| Format | `npm run format` / `npm run format:check` |
+| Docs references | `npm run docs:check` |
+| Copyleft license check | `npm run licenses:check` |
+| Build / installer | `npm run build` / `npm run dist` |
+| Regenerate tokens.css after editing tokens.json | `npm run build -w @evully/tokens` |
+
+Pin `electron` to an exact version. Keep Vite 7, `@vitejs/plugin-react` 5,
+TypeScript 6.0.x until electron-vite / typescript-eslint support newer ones.
