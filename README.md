@@ -588,6 +588,7 @@ Princípios:
 | 3 | Dê um nome e um prazo ao seu projeto | Nome, início, prazo | `projects` |
 | 4 | Quais áreas do corpo você quer acompanhar? | Múltipla escolha: Barriga/cintura · Quadril/glúteos · Braços · Pernas · Tórax/costas | Medidas acompanhadas e sua ordem |
 | 5 | Como você prefere ver o seu peso? | Tendência (recomendado) · Peso do dia · Prefiro não ver o peso no painel | `weight_display` |
+| 6 | Tem algo que você gostaria de acompanhar e não encontrou? (opcional) | Texto livre | `profile_questionnaires.answers` — sugestão de produto, não altera a configuração |
 | — | Resumo | "Seu Evully ficará assim: …" | [Aceitar] / [Ajustar] |
 
 #### 8.2.2 Regras da V0.1 (`tracking-rules@1`)
@@ -2021,8 +2022,10 @@ Decisões que serão tomadas quando a versão correspondente começar.
 | Data de nascimento do seed. | 16/08/1994. |
 | Data-alvo da V0.1. | O quanto antes; sem data fixa. |
 
-**Pendente antes dos wireframes da V0.1:** conversa de descoberta com o
-segundo perfil (§33.1).
+Nenhuma pendência bloqueia os wireframes da V0.1. As preferências de
+cada pessoa são resolvidas pelo questionário (§8.2); as ideias de
+funcionalidades novas são coletadas pelo passo 6 e pelo uso real
+(§33.1).
 
 **Demais questões:**
 
@@ -2042,10 +2045,19 @@ segundo perfil (§33.1).
 | Registro de bioimpedância antes da V1.1, se houver balança. | após conversa |
 | PIN opcional por perfil (candidato à V0.2). | após conversa |
 
-### 33.1 Roteiro de descoberta com o segundo perfil
+### 33.1 Descoberta com o segundo perfil
 
-Conversa de cerca de 10 minutos, antes dos wireframes da V0.1. As
-respostas validam o questionário (§8.2) e decidem as questões acima.
+As preferências individuais (objetivo, medidas, exibição do peso) são
+resolvidas pelo próprio questionário (§8.2). O que o questionário não
+cobre são funcionalidades que ainda não existem (ciclo, fotos, PIN,
+registro pelo celular). Elas são descobertas assim:
+
+- o **primeiro uso real do questionário** pelo segundo perfil serve como
+  teste de usabilidade;
+- o passo 6 do questionário coleta o que a pessoa queria acompanhar e
+  não encontrou;
+- depois de 1 a 2 semanas de uso, uma conversa curta com as perguntas
+  abaixo decide as questões em aberto da tabela anterior.
 
 1. Qual é o seu objetivo agora: perder, ganhar, manter ou mudar a forma
    do corpo?
@@ -2069,7 +2081,7 @@ Depois da conversa, as decisões são registradas neste documento.
 | Banco colocado em pasta sincronizada e usado por dois computadores. | Alto: corrupção. | Não suportado e explicado na interface ao escolher pastas; sincronização só na Fase 2 (§2.5). |
 | O questionário aumenta o escopo da V0.1. | Médio: atrasa a entrega. | Só perguntas que a V0.1 usa; regras simples e tabeladas (§8.2.2). |
 | Testes com `ELECTRON_RUN_AS_NODE` não funcionarem com alguma ferramenta. | Baixo. | Alternativa: compilar o better-sqlite3 também para o Node e alternar antes dos testes. |
-| Segundo perfil não se identificar com o app. | Alto. | Conversa de descoberta antes dos wireframes; segundo perfil como primeiro testador do questionário. |
+| Segundo perfil não se identificar com o app. | Alto. | Questionário configurável; segundo perfil como primeiro testador; passo 6 e conversa após 1 a 2 semanas de uso (§33.1). |
 
 ---
 
