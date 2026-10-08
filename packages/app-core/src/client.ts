@@ -1,9 +1,12 @@
 import type {
+  AcceptTrackingInput,
   AppInfo,
   AppSettings,
   ProfileDto,
   ProfileInput,
   ProfileSummary,
+  ProjectDto,
+  TrackingState,
   UpdateAppSettingsInput,
   UpdateProfileInput,
 } from '@evully/contracts';
@@ -27,6 +30,14 @@ export interface EvullyClient {
     get(): Promise<AppSettings>;
     update(input: UpdateAppSettingsInput): Promise<AppSettings>;
     acceptHealthNotice(): Promise<AppSettings>;
+  };
+  tracking: {
+    getState(profileId: string): Promise<TrackingState>;
+    accept(input: AcceptTrackingInput): Promise<TrackingState>;
+    skip(profileId: string): Promise<TrackingState>;
+  };
+  projects: {
+    getActive(profileId: string): Promise<ProjectDto | null>;
   };
 }
 

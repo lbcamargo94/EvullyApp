@@ -13,6 +13,7 @@ import { ProfileSelectScreen } from './features/profiles/profile-select-screen';
 import { AppShell } from './features/shell/app-shell';
 import { HealthNoticeScreen } from './features/shell/health-notice-screen';
 import { HomeScreen } from './features/shell/home-screen';
+import { QuestionnaireScreen } from './features/tracking/questionnaire-screen';
 
 /**
  * Root of the shared screens. Each platform passes its data client and router
@@ -54,6 +55,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/profiles" element={<ProfileSelectScreen />} />
       <Route path="/profiles/new" element={<ProfileCreateScreen />} />
+      <Route path="/onboarding" element={<QuestionnaireScreen />} />
       <Route path="/app" element={<AppShell />}>
         <Route index element={<HomeScreen />} />
         <Route path="profile" element={<ProfileEditScreen />} />

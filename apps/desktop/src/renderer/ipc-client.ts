@@ -40,4 +40,12 @@ export const ipcEvullyClient: EvullyClient = {
     update: (input) => call('settings:update', input),
     acceptHealthNotice: () => call('settings:accept-health-notice', undefined),
   },
+  tracking: {
+    getState: (profileId) => call('tracking:get-state', { profileId }),
+    accept: (input) => call('tracking:accept', input),
+    skip: (profileId) => call('tracking:skip', { profileId }),
+  },
+  projects: {
+    getActive: (profileId) => call('projects:get-active', { profileId }),
+  },
 };

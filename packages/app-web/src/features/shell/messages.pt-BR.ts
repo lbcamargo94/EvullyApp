@@ -15,6 +15,17 @@ export const shellMessages = {
   ],
   healthAccept: 'Entendi',
   homeTitle: (name: string) => `Olá, ${name}`,
-  homeBody:
-    'Seu perfil está pronto. Peso, medidas e o painel de acompanhamento chegam nas próximas etapas da V0.1.',
+  homeBody: 'O registro de peso e medidas e o painel completo chegam nas próximas etapas da V0.1.',
+  noProject: 'Sem projeto ativo. Você poderá criar um nas Configurações.',
+  trackedTitle: 'Você acompanha',
+  projectLabel: 'Projeto atual',
+  projectKicker: (objective: string) => `Projeto · ${objective}`,
+  projectDay: (day: number, total: number, left: number) =>
+    left === 0
+      ? `Dia ${day} de ${total} · último dia`
+      : `Dia ${day} de ${total} · faltam ${left} ${left === 1 ? 'dia' : 'dias'}`,
+  projectStartsIn: (days: number) => `Começa em ${days} ${days === 1 ? 'dia' : 'dias'}`,
+  projectEnded: 'Prazo encerrado',
+  until: (date: string) => `até ${date}`,
+  projectProgress: 'Dias do projeto',
 } as const;

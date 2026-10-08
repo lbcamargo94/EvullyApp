@@ -27,7 +27,7 @@ export function ProfileCreateScreen() {
             onSubmit={async (values) => {
               const profile = await create.mutateAsync(values);
               select(profile.id);
-              await navigate('/app', { replace: true });
+              await navigate('/onboarding', { replace: true });
             }}
             {...(hasProfiles && { onCancel: () => void navigate('/profiles') })}
           />

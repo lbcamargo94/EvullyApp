@@ -6,6 +6,9 @@ import { profileIpcHandlers } from '../modules/profiles/adapters/profile-ipc-han
 import { KyselySettingsRepository } from '../modules/settings/adapters/kysely-settings-repository';
 import { settingsIpcHandlers } from '../modules/settings/adapters/settings-ipc-handlers';
 import type { Clock, IdGenerator } from '../modules/shared/ports';
+import { KyselyProjectRepository } from '../modules/tracking/adapters/kysely-project-repository';
+import { KyselyTrackingRepository } from '../modules/tracking/adapters/kysely-tracking-repository';
+import { trackingIpcHandlers } from '../modules/tracking/adapters/tracking-ipc-handlers';
 import type { IpcHandlers } from '../shared/ipc-channels';
 
 interface Dependencies {
@@ -19,9 +22,12 @@ interface Dependencies {
 export function buildIpcHandlers({ db, clock, ids, appInfo }: Dependencies): IpcHandlers {
   const profiles = new KyselyProfileRepository(db);
   const settings = new KyselySettingsRepository(db, clock, ids);
+  const projects = new KyselyProjectRepository(db);
+  const tracking = new KyselyTrackingRepository(db, ids);
   return {
     'app:info': appInfo,
     ...profileIpcHandlers(profiles, clock, ids),
     ...settingsIpcHandlers(settings, clock),
+    ...trackingIpcHandlers({ profiles, projects, tracking, clock, ids }),
   };
 }
