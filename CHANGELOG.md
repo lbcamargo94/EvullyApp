@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.1.0-alpha.3] - 2026-10-08
+
 ### Added
 - Questionário de acompanhamento (passos 2 a 7 e resumo): objetivo, projeto
   com prazo, áreas do corpo, forma de ver o peso, recursos em breve e
@@ -46,6 +48,7 @@ Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
   instalador Windows (`Evully-Setup-<versão>.exe`).
 - Verificação de licenças copyleft (`npm run licenses:check`).
 
-[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.2...HEAD
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.3...HEAD
+[0.1.0-alpha.3]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.2...v0.1.0-alpha.3
 [0.1.0-alpha.2]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.1...v0.1.0-alpha.2
 [0.1.0-alpha.1]: https://github.com/lbcamargo94/EvullyApp/releases/tag/v0.1.0-alpha.1
