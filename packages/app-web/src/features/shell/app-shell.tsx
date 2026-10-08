@@ -1,4 +1,10 @@
-import { useAppInfo, useAppSettings, useCurrentProfile, useProfile } from '@evully/app-core';
+import {
+  useAppInfo,
+  useAppSettings,
+  useCurrentProfile,
+  useProfile,
+  useTrackingState,
+} from '@evully/app-core';
 import { LayoutDashboard } from 'lucide-react';
 import { useCallback } from 'react';
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router';
@@ -16,6 +22,7 @@ export function AppShell() {
   const { data: profile, isError } = useProfile(profileId);
   const { data: settings } = useAppSettings();
   const { data: info } = useAppInfo();
+  const { data: tracking } = useTrackingState(profileId);
   const navigate = useNavigate();
 
   const lock = useCallback(() => {
@@ -25,6 +32,8 @@ export function AppShell() {
   useInactivity(settings?.inactivityLockMinutes ?? 0, lock);
 
   if (!profileId || isError) return <Navigate to="/profiles" replace />;
+  // Profiles that never answered (or skipped) the questionnaire go through it first.
+  if (tracking && tracking.questionnaire === null) return <Navigate to="/onboarding" replace />;
 
   return (
     <div className="flex min-h-screen flex-wrap bg-background text-text">

@@ -1,10 +1,14 @@
 import {
+  acceptTrackingInputSchema,
   appInfoSchema,
   appSettingsSchema,
   profileIdInputSchema,
   profileInputSchema,
+  profileScopedInputSchema,
   profileSchema,
   profileSummarySchema,
+  projectSchema,
+  trackingStateSchema,
   updateAppSettingsInputSchema,
   updateProfileInputSchema,
 } from '@evully/contracts';
@@ -23,6 +27,10 @@ export const ipcChannels = {
   'settings:get': { input: z.undefined(), output: appSettingsSchema },
   'settings:update': { input: updateAppSettingsInputSchema, output: appSettingsSchema },
   'settings:accept-health-notice': { input: z.undefined(), output: appSettingsSchema },
+  'tracking:get-state': { input: profileScopedInputSchema, output: trackingStateSchema },
+  'tracking:accept': { input: acceptTrackingInputSchema, output: trackingStateSchema },
+  'tracking:skip': { input: profileScopedInputSchema, output: trackingStateSchema },
+  'projects:get-active': { input: profileScopedInputSchema, output: projectSchema.nullable() },
 } as const;
 
 export type IpcChannel = keyof typeof ipcChannels;

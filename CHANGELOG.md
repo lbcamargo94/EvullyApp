@@ -6,6 +6,17 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Questionário de acompanhamento (passos 2 a 7 e resumo): objetivo, projeto
+  com prazo, áreas do corpo, forma de ver o peso, recursos em breve e
+  sugestão livre. Regras `tracking-rules@1` transformam as respostas em uma
+  proposta que só vale depois de aceita; pular aplica os padrões.
+- Projeto ativo com "Dia X de Y" e medidas acompanhadas na tela inicial.
+- Catálogo de 13 medidas com instruções de como medir, medidas por perfil,
+  etiquetas padrão e histórico de configurações (migration `0003_tracking`).
+- Regras de direção dos indicadores por objetivo (README §7.6), prontas para
+  o painel.
+
 ## [0.1.0-alpha.2] - 2026-10-07
 
 ### Added
