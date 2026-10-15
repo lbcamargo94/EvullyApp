@@ -19,6 +19,11 @@ import { QuestionnaireScreen } from './features/tracking/questionnaire-screen';
 const WeightScreen = lazy(() =>
   import('./features/weights/weight-screen').then((m) => ({ default: m.WeightScreen })),
 );
+const MeasurementScreen = lazy(() =>
+  import('./features/measurements/measurement-screen').then((m) => ({
+    default: m.MeasurementScreen,
+  })),
+);
 
 /**
  * Root of the shared screens. Each platform passes its data client and router
@@ -68,6 +73,14 @@ function AppRoutes() {
           element={
             <Suspense fallback={null}>
               <WeightScreen />
+            </Suspense>
+          }
+        />
+        <Route
+          path="measurements"
+          element={
+            <Suspense fallback={null}>
+              <MeasurementScreen />
             </Suspense>
           }
         />

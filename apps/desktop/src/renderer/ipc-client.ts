@@ -55,6 +55,13 @@ export const ipcEvullyClient: EvullyClient = {
     update: (input) => call('weights:update', input),
     remove: (profileId, id) => call('weights:delete', { profileId, id }),
   },
+  measurements: {
+    list: (profileId) => call('measurements:list', { profileId }),
+    summary: (profileId) => call('measurements:summary', { profileId }),
+    register: (input) => call('measurements:register', input),
+    update: (input) => call('measurements:update', input),
+    remove: (profileId, id) => call('measurements:delete', { profileId, id }),
+  },
   tags: {
     list: (profileId) => call('tags:list', { profileId }),
     create: (input) => call('tags:create', input),

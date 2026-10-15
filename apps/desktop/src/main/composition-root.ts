@@ -1,6 +1,8 @@
 import type { AppInfo } from '@evully/contracts';
 import type { Kysely } from 'kysely';
 import type { DatabaseSchema } from '../database/schema';
+import { KyselyMeasurementRepository } from '../modules/measurements/adapters/kysely-measurement-repository';
+import { measurementIpcHandlers } from '../modules/measurements/adapters/measurement-ipc-handlers';
 import { KyselyProfileRepository } from '../modules/profiles/adapters/kysely-profile-repository';
 import { profileIpcHandlers } from '../modules/profiles/adapters/profile-ipc-handlers';
 import { KyselySettingsRepository } from '../modules/settings/adapters/kysely-settings-repository';
@@ -31,11 +33,13 @@ export function buildIpcHandlers({ db, clock, ids, appInfo }: Dependencies): Ipc
   const tracking = new KyselyTrackingRepository(db, ids);
   const weights = new KyselyWeightRepository(db);
   const tags = new KyselyTagRepository(db);
+  const measurements = new KyselyMeasurementRepository(db);
   return {
     'app:info': appInfo,
     ...profileIpcHandlers(profiles, clock, ids),
     ...settingsIpcHandlers(settings, clock),
     ...trackingIpcHandlers({ profiles, projects, tracking, clock, ids }),
     ...weightIpcHandlers({ profiles, projects, weights, tags, clock, ids }),
+    ...measurementIpcHandlers({ profiles, projects, tracking, measurements, clock, ids }),
   };
 }

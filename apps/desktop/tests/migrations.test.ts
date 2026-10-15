@@ -25,6 +25,7 @@ describe('database', () => {
       '0002_profiles_settings',
       '0003_tracking',
       '0004_body_weights',
+      '0005_body_measurements',
     ]);
     expect(await migrateToLatest(db)).toEqual([]);
     await db.destroy();

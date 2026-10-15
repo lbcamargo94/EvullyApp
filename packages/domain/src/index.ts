@@ -10,3 +10,4 @@ export * from './tracking/types';
 export * from './weights/weight';
 export * from './weights/weight-stats';
 export * from './weights/tag';
+export * from './measurements/measurement';

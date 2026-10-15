@@ -5,6 +5,7 @@ import {
   projectTimeline,
   useActiveProject,
   useCurrentProfile,
+  useMeasurementSummary,
   useProfile,
   useTrackingState,
   useWeightSummary,
@@ -12,6 +13,7 @@ import {
 import type { ProjectDto } from '@evully/contracts';
 import { Button, Card, ProgressBar } from '@evully/ui';
 import { Link } from 'react-router';
+import { MeasurementCards } from '../measurements/measurement-cards';
 import { objectiveLabels } from '../tracking/messages.pt-BR';
 import { WeightSummaryCard } from '../weights/weight-summary-card';
 import { shellMessages as m } from './messages.pt-BR';
@@ -23,23 +25,31 @@ export function HomeScreen() {
   const { data: project } = useActiveProject(profileId);
   const { data: tracking } = useTrackingState(profileId);
   const { data: weight } = useWeightSummary(profileId);
+  const { data: measurements } = useMeasurementSummary(profileId);
+  const hasMeasurements = measurements?.items.some((i) => i.current) ?? false;
   if (!profile) return null;
 
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-[26px] font-semibold tracking-tight">{m.homeTitle(profile.name)}</h1>
-        <Button asChild>
-          <Link to="/app/weight">{m.registerWeight}</Link>
-        </Button>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild variant="secondary">
+            <Link to="/app/measurements">{m.registerMeasurements}</Link>
+          </Button>
+          <Button asChild>
+            <Link to="/app/weight">{m.registerWeight}</Link>
+          </Button>
+        </div>
       </div>
       {project ? <ProjectCard project={project} /> : <Card>{m.noProject}</Card>}
-      {weight && tracking?.config && (
-        <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(260px,1fr))]">
+      <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
+        {weight && tracking?.config && (
           <WeightSummaryCard summary={weight} display={tracking.config.weightDisplay} />
-        </div>
-      )}
-      {tracking && tracking.measurementTypes.length > 0 && (
+        )}
+        {measurements && <MeasurementCards summary={measurements} />}
+      </div>
+      {!hasMeasurements && tracking && tracking.measurementTypes.length > 0 && (
         <Card>
           <h2 className="text-lg font-semibold">{m.trackedTitle}</h2>
           <ul className="flex flex-wrap gap-2">
