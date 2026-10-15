@@ -118,6 +118,26 @@ export interface BodyWeightTagsTable {
   created_at: string;
 }
 
+export interface BodyMeasurementsTable {
+  id: string;
+  profile_id: string;
+  measured_on: string;
+  measured_at: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface BodyMeasurementValuesTable {
+  id: string;
+  measurement_id: string;
+  measurement_type_id: string;
+  value_cm: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface DatabaseSchema {
   profiles: ProfilesTable;
   settings: SettingsTable;
@@ -129,4 +149,6 @@ export interface DatabaseSchema {
   tags: TagsTable;
   body_weights: BodyWeightsTable;
   body_weight_tags: BodyWeightTagsTable;
+  body_measurements: BodyMeasurementsTable;
+  body_measurement_values: BodyMeasurementValuesTable;
 }

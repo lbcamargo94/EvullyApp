@@ -3,6 +3,9 @@ import type {
   AppInfo,
   AppSettings,
   CreateTagInput,
+  MeasurementInput,
+  MeasurementSession,
+  MeasurementSummary,
   ProfileDto,
   ProfileInput,
   ProfileSummary,
@@ -10,6 +13,7 @@ import type {
   Tag,
   TrackingState,
   UpdateAppSettingsInput,
+  UpdateMeasurementInput,
   UpdateProfileInput,
   UpdateWeightInput,
   WeightEntry,
@@ -50,6 +54,13 @@ export interface EvullyClient {
     summary(profileId: string): Promise<WeightSummary>;
     register(input: WeightInput): Promise<WeightEntry>;
     update(input: UpdateWeightInput): Promise<WeightEntry>;
+    remove(profileId: string, id: string): Promise<null>;
+  };
+  measurements: {
+    list(profileId: string): Promise<MeasurementSession[]>;
+    summary(profileId: string): Promise<MeasurementSummary>;
+    register(input: MeasurementInput): Promise<MeasurementSession>;
+    update(input: UpdateMeasurementInput): Promise<MeasurementSession>;
     remove(profileId: string, id: string): Promise<null>;
   };
   tags: {

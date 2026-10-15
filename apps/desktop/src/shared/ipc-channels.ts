@@ -1,6 +1,10 @@
 import {
   acceptTrackingInputSchema,
   createTagInputSchema,
+  measurementIdInputSchema,
+  measurementInputSchema,
+  measurementSessionSchema,
+  measurementSummarySchema,
   appInfoSchema,
   appSettingsSchema,
   profileIdInputSchema,
@@ -17,6 +21,7 @@ import {
   weightInputSchema,
   weightSummarySchema,
   updateAppSettingsInputSchema,
+  updateMeasurementInputSchema,
   updateProfileInputSchema,
 } from '@evully/contracts';
 import { z } from 'zod';
@@ -45,6 +50,14 @@ export const ipcChannels = {
   'weights:delete': { input: weightIdInputSchema, output: z.null() },
   'tags:list': { input: profileScopedInputSchema, output: z.array(tagSchema) },
   'tags:create': { input: createTagInputSchema, output: tagSchema },
+  'measurements:list': {
+    input: profileScopedInputSchema,
+    output: z.array(measurementSessionSchema),
+  },
+  'measurements:summary': { input: profileScopedInputSchema, output: measurementSummarySchema },
+  'measurements:register': { input: measurementInputSchema, output: measurementSessionSchema },
+  'measurements:update': { input: updateMeasurementInputSchema, output: measurementSessionSchema },
+  'measurements:delete': { input: measurementIdInputSchema, output: z.null() },
 } as const;
 
 export type IpcChannel = keyof typeof ipcChannels;

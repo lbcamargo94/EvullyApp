@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Medidas: sessão de medidas com as medidas do perfil, na ordem do
+  questionário e com a dica de como medir; edição; exclusão com confirmação
+  (soft delete); histórico em tabela.
+- Gráfico por medida com valor atual, inicial e variação colorida pela
+  direção do objetivo.
+- Tela inicial com até 3 medidas, ao lado do peso.
+- Migration `0005_body_measurements`.
+
 ## [0.1.0-alpha.4] - 2026-10-14
 
 ### Added
