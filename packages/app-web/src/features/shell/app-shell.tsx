@@ -5,7 +5,7 @@ import {
   useProfile,
   useTrackingState,
 } from '@evully/app-core';
-import { LayoutDashboard } from 'lucide-react';
+import { LayoutDashboard, Scale } from 'lucide-react';
 import { useCallback } from 'react';
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router';
 import { Logo } from './logo';
@@ -48,6 +48,10 @@ export function AppShell() {
           <NavLink to="/app" end className={navItem}>
             <LayoutDashboard aria-hidden="true" className="size-5" />
             {m.dashboard}
+          </NavLink>
+          <NavLink to="/app/weight" className={navItem}>
+            <Scale aria-hidden="true" className="size-5" />
+            {m.weight}
           </NavLink>
         </div>
         {info && <p className="mt-auto px-3 text-xs text-text-muted">{m.version(info.version)}</p>}

@@ -48,4 +48,15 @@ export const ipcEvullyClient: EvullyClient = {
   projects: {
     getActive: (profileId) => call('projects:get-active', { profileId }),
   },
+  weights: {
+    list: (profileId) => call('weights:list', { profileId }),
+    summary: (profileId) => call('weights:summary', { profileId }),
+    register: (input) => call('weights:register', input),
+    update: (input) => call('weights:update', input),
+    remove: (profileId, id) => call('weights:delete', { profileId, id }),
+  },
+  tags: {
+    list: (profileId) => call('tags:list', { profileId }),
+    create: (input) => call('tags:create', input),
+  },
 };

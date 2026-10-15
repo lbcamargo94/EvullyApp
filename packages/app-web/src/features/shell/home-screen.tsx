@@ -7,10 +7,13 @@ import {
   useCurrentProfile,
   useProfile,
   useTrackingState,
+  useWeightSummary,
 } from '@evully/app-core';
 import type { ProjectDto } from '@evully/contracts';
-import { Card, ProgressBar } from '@evully/ui';
+import { Button, Card, ProgressBar } from '@evully/ui';
+import { Link } from 'react-router';
 import { objectiveLabels } from '../tracking/messages.pt-BR';
+import { WeightSummaryCard } from '../weights/weight-summary-card';
 import { shellMessages as m } from './messages.pt-BR';
 
 /** Placeholder until the V0.1 dashboard (README §8.5): project progress and what is tracked. */
@@ -19,12 +22,23 @@ export function HomeScreen() {
   const { data: profile } = useProfile(profileId);
   const { data: project } = useActiveProject(profileId);
   const { data: tracking } = useTrackingState(profileId);
+  const { data: weight } = useWeightSummary(profileId);
   if (!profile) return null;
 
   return (
     <>
-      <h1 className="text-[26px] font-semibold tracking-tight">{m.homeTitle(profile.name)}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-[26px] font-semibold tracking-tight">{m.homeTitle(profile.name)}</h1>
+        <Button asChild>
+          <Link to="/app/weight">{m.registerWeight}</Link>
+        </Button>
+      </div>
       {project ? <ProjectCard project={project} /> : <Card>{m.noProject}</Card>}
+      {weight && tracking?.config && (
+        <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(260px,1fr))]">
+          <WeightSummaryCard summary={weight} display={tracking.config.weightDisplay} />
+        </div>
+      )}
       {tracking && tracking.measurementTypes.length > 0 && (
         <Card>
           <h2 className="text-lg font-semibold">{m.trackedTitle}</h2>

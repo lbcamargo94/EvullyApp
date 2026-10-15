@@ -38,3 +38,9 @@ export async function createTestApp(clock: Clock = fixedClock()) {
   };
   return { db, handlers, ids, dispose };
 }
+
+/** Narrows an optional test value, failing the test with a clear message when it is missing. */
+export function must<T>(value: T | null | undefined, what = 'value'): T {
+  if (value === null || value === undefined) throw new Error(`Expected ${what} to exist`);
+  return value;
+}

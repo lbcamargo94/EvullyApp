@@ -6,6 +6,22 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Peso: registro com data, hora, etiquetas e observação; edição; exclusão
+  com confirmação (soft delete); histórico.
+- Regras de peso no domínio: peso do dia (última pesagem do dia), tendência
+  (média de 7 dias com ao menos 3 dias), peso inicial do projeto e diferenças.
+- Gráfico com peso do dia, tendência e marcação dos dias com etiqueta, com
+  período do projeto, 30 dias ou tudo.
+- Tela inicial mostra o peso conforme a escolha do questionário (tendência,
+  peso do dia ou oculto), com a cor da variação pela direção do objetivo.
+- Criação de etiquetas pelo formulário de pesagem (nomes únicos por perfil,
+  sem diferenciar maiúsculas).
+- Migration `0004_body_weights`.
+
+### Changed
+- A tela de peso é carregada sob demanda para manter a abertura do app leve.
+
 ## [0.1.0-alpha.3] - 2026-10-08
 
 ### Added
