@@ -1,5 +1,6 @@
 import {
   acceptTrackingInputSchema,
+  createTagInputSchema,
   appInfoSchema,
   appSettingsSchema,
   profileIdInputSchema,
@@ -8,7 +9,13 @@ import {
   profileSchema,
   profileSummarySchema,
   projectSchema,
+  tagSchema,
   trackingStateSchema,
+  updateWeightInputSchema,
+  weightEntrySchema,
+  weightIdInputSchema,
+  weightInputSchema,
+  weightSummarySchema,
   updateAppSettingsInputSchema,
   updateProfileInputSchema,
 } from '@evully/contracts';
@@ -31,6 +38,13 @@ export const ipcChannels = {
   'tracking:accept': { input: acceptTrackingInputSchema, output: trackingStateSchema },
   'tracking:skip': { input: profileScopedInputSchema, output: trackingStateSchema },
   'projects:get-active': { input: profileScopedInputSchema, output: projectSchema.nullable() },
+  'weights:list': { input: profileScopedInputSchema, output: z.array(weightEntrySchema) },
+  'weights:summary': { input: profileScopedInputSchema, output: weightSummarySchema },
+  'weights:register': { input: weightInputSchema, output: weightEntrySchema },
+  'weights:update': { input: updateWeightInputSchema, output: weightEntrySchema },
+  'weights:delete': { input: weightIdInputSchema, output: z.null() },
+  'tags:list': { input: profileScopedInputSchema, output: z.array(tagSchema) },
+  'tags:create': { input: createTagInputSchema, output: tagSchema },
 } as const;
 
 export type IpcChannel = keyof typeof ipcChannels;

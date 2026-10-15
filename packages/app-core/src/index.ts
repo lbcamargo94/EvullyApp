@@ -5,12 +5,18 @@ export * from './features/profiles/current-profile';
 export * from './features/profiles/use-profiles';
 export * from './features/settings/use-app-settings';
 export * from './features/tracking/use-tracking';
+export * from './features/weights/use-weights';
 export * from './format/dates';
+export * from './format/numbers';
 export {
   asksAboutMenstrualCycle,
   buildTrackingProposal,
+  changeTone,
+  MAX_WEIGHT_KG,
+  MIN_WEIGHT_KG,
   parseLocalDate,
   profileInitial,
   projectTimeline,
+  type ChangeTone,
   type TrackingProposal,
 } from '@evully/domain';

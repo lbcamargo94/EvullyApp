@@ -29,3 +29,19 @@ export function projectLength(startDate: string, targetDate: string): number | n
     return null;
   }
 }
+
+/** Local date + `HH:mm` on this device → ISO 8601 UTC instant (README §6.2). */
+export function localDateTimeToIso(date: string, time: string): string {
+  return new Date(`${date}T${time}:00`).toISOString();
+}
+
+/** ISO instant → `HH:mm` in this device's time zone. */
+export function isoToLocalTime(iso: string): string {
+  const d = new Date(iso);
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+/** Current time as `HH:mm` on this device. */
+export function localNowTime(now: Date = new Date()): string {
+  return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+}

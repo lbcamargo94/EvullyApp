@@ -1,6 +1,7 @@
 export const shellMessages = {
   mainMenu: 'Menu principal',
   dashboard: 'Dashboard',
+  weight: 'Peso',
   switchProfile: (name: string) => `Trocar de perfil. Perfil atual: ${name}`,
   profilesLabel: 'Perfis',
   otherProfiles: 'Trocar para',
@@ -15,7 +16,8 @@ export const shellMessages = {
   ],
   healthAccept: 'Entendi',
   homeTitle: (name: string) => `Olá, ${name}`,
-  homeBody: 'O registro de peso e medidas e o painel completo chegam nas próximas etapas da V0.1.',
+  homeBody: 'O registro de medidas e o painel completo chegam nas próximas etapas da V0.1.',
+  registerWeight: 'Registrar peso',
   noProject: 'Sem projeto ativo. Você poderá criar um nas Configurações.',
   trackedTitle: 'Você acompanha',
   projectLabel: 'Projeto atual',

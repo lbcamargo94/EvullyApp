@@ -5,7 +5,7 @@ import {
   type EvullyClient,
 } from '@evully/app-core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, type ComponentType, type ReactNode } from 'react';
+import { lazy, Suspense, useState, type ComponentType, type ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import { ProfileCreateScreen } from './features/profiles/profile-create-screen';
 import { ProfileEditScreen } from './features/profiles/profile-edit-screen';
@@ -14,6 +14,11 @@ import { AppShell } from './features/shell/app-shell';
 import { HealthNoticeScreen } from './features/shell/health-notice-screen';
 import { HomeScreen } from './features/shell/home-screen';
 import { QuestionnaireScreen } from './features/tracking/questionnaire-screen';
+
+// Screens with charts load on demand to keep the initial bundle small (FRONTEND.md §7).
+const WeightScreen = lazy(() =>
+  import('./features/weights/weight-screen').then((m) => ({ default: m.WeightScreen })),
+);
 
 /**
  * Root of the shared screens. Each platform passes its data client and router
@@ -58,6 +63,14 @@ function AppRoutes() {
       <Route path="/onboarding" element={<QuestionnaireScreen />} />
       <Route path="/app" element={<AppShell />}>
         <Route index element={<HomeScreen />} />
+        <Route
+          path="weight"
+          element={
+            <Suspense fallback={null}>
+              <WeightScreen />
+            </Suspense>
+          }
+        />
         <Route path="profile" element={<ProfileEditScreen />} />
       </Route>
       <Route path="*" element={<Navigate to="/profiles" replace />} />

@@ -2,13 +2,19 @@ import type {
   AcceptTrackingInput,
   AppInfo,
   AppSettings,
+  CreateTagInput,
   ProfileDto,
   ProfileInput,
   ProfileSummary,
   ProjectDto,
+  Tag,
   TrackingState,
   UpdateAppSettingsInput,
   UpdateProfileInput,
+  UpdateWeightInput,
+  WeightEntry,
+  WeightInput,
+  WeightSummary,
 } from '@evully/contracts';
 
 /**
@@ -38,6 +44,17 @@ export interface EvullyClient {
   };
   projects: {
     getActive(profileId: string): Promise<ProjectDto | null>;
+  };
+  weights: {
+    list(profileId: string): Promise<WeightEntry[]>;
+    summary(profileId: string): Promise<WeightSummary>;
+    register(input: WeightInput): Promise<WeightEntry>;
+    update(input: UpdateWeightInput): Promise<WeightEntry>;
+    remove(profileId: string, id: string): Promise<null>;
+  };
+  tags: {
+    list(profileId: string): Promise<Tag[]>;
+    create(input: CreateTagInput): Promise<Tag>;
   };
 }
 

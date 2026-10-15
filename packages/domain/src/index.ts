@@ -7,3 +7,6 @@ export * from './tracking/direction';
 export * from './tracking/effective-config';
 export * from './tracking/tracking-rules';
 export * from './tracking/types';
+export * from './weights/weight';
+export * from './weights/weight-stats';
+export * from './weights/tag';

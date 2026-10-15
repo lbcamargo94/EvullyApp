@@ -100,6 +100,24 @@ export interface TagsTable {
   deleted_at: string | null;
 }
 
+export interface BodyWeightsTable {
+  id: string;
+  profile_id: string;
+  measured_on: string;
+  measured_at: string;
+  weight_kg: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface BodyWeightTagsTable {
+  body_weight_id: string;
+  tag_id: string;
+  created_at: string;
+}
+
 export interface DatabaseSchema {
   profiles: ProfilesTable;
   settings: SettingsTable;
@@ -109,4 +127,6 @@ export interface DatabaseSchema {
   tracking_configs: TrackingConfigsTable;
   profile_measurement_types: ProfileMeasurementTypesTable;
   tags: TagsTable;
+  body_weights: BodyWeightsTable;
+  body_weight_tags: BodyWeightTagsTable;
 }
