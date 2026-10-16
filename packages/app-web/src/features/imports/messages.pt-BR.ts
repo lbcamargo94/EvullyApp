@@ -1,0 +1,55 @@
+export const importMessages = {
+  button: 'Importar CSV',
+  title: { weights: 'Importar pesagens', measurements: 'Importar medidas' },
+  back: { weights: 'Voltar para Peso', measurements: 'Voltar para Medidas' },
+  intro: (name: string) =>
+    `Os dados entram no perfil ${name}. Nada é gravado antes da sua confirmação.`,
+  formats:
+    'Separador ";" com vírgula decimal (padrão do Excel) ou "," com ponto. Datas DD/MM/AAAA ou AAAA-MM-DD.',
+  chooseFile: 'Escolher arquivo CSV',
+  chooseOther: 'Escolher outro arquivo',
+  reading: 'Lendo arquivo…',
+  template: 'Baixar modelo',
+  templateSaved: 'Modelo salvo.',
+  ready: (n: number) => `${n} ${n === 1 ? 'pronta' : 'prontas'} para importar`,
+  duplicates: (n: number) => `${n} ${n === 1 ? 'duplicada' : 'duplicadas'} (ignoradas)`,
+  errors: (n: number) => `${n} com erro (não ${n === 1 ? 'entra' : 'entram'})`,
+  previewTitle: 'Pré-visualização',
+  columns: { line: 'Linha', date: 'Data', time: 'Hora', value: 'Valores', status: 'Situação' },
+  status: { ready: 'Pronta', duplicate: 'Já existe' },
+  noTime: 'sem hora, usa 12:00',
+  newTypes: (names: string) => `Estas medidas passam a ser acompanhadas pelo perfil: ${names}.`,
+  shownRows: (shown: number, total: number) =>
+    shown < total ? `Mostrando ${shown} de ${total} linhas.` : '',
+  fixHint: 'Corrija as linhas com erro no arquivo e escolha-o de novo, ou importe só as prontas.',
+  cancel: 'Cancelar',
+  confirm: (n: number, kind: 'weights' | 'measurements') =>
+    `Importar ${n} ${kind === 'weights' ? (n === 1 ? 'pesagem' : 'pesagens') : n === 1 ? 'sessão de medidas' : 'sessões de medidas'}`,
+  importing: 'Importando…',
+  done: (n: number) => `${n} ${n === 1 ? 'registro importado' : 'registros importados'}.`,
+  genericError: 'Não foi possível importar. Nada foi gravado.',
+} as const;
+
+/** Error codes from packages/domain and the import flow → pt-BR. */
+export const importErrorByCode: Record<string, string> = {
+  'import.empty_file': 'O arquivo não tem linhas de dados.',
+  'import.too_many_rows': 'O arquivo tem mais de 5.000 linhas.',
+  'import.too_large': 'O arquivo é maior que 2 MB.',
+  'import.missing_date_column': 'Falta a coluna "data".',
+  'import.missing_weight_column': 'Falta a coluna "peso_kg".',
+  'import.unknown_column': 'Há uma coluna que não corresponde a nenhuma medida. Use o modelo.',
+  'import.no_measurement_columns': 'Nenhuma coluna de medida encontrada.',
+  'import.invalid_date': 'Data inválida',
+  'import.invalid_time': 'Hora inválida',
+  'import.invalid_number': 'Número inválido',
+  'import.invalid_row': 'Linha inválida',
+  'import.expired': 'A pré-visualização expirou. Escolha o arquivo de novo.',
+  'import.nothing_to_import': 'Não há linhas prontas para importar.',
+  'weight.out_of_range': 'Peso fora do limite (20–400 kg)',
+  'weight.date_in_future': 'Data futura',
+  'weight.notes_too_long': 'Observação longa demais',
+  'measurement.out_of_range': 'Medida fora do limite (5–300 cm)',
+  'measurement.date_in_future': 'Data futura',
+  'measurement.empty': 'Nenhuma medida preenchida',
+  'measurement.notes_too_long': 'Observação longa demais',
+};

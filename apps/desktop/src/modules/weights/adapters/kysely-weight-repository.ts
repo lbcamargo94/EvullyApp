@@ -33,6 +33,26 @@ export class KyselyWeightRepository implements WeightRepository {
     });
   }
 
+  async insertMany(entries: readonly WeightEntryData[]): Promise<void> {
+    await this.db.transaction().execute(async (trx) => {
+      for (const entry of entries) {
+        await trx
+          .insertInto('body_weights')
+          .values({
+            id: entry.id,
+            profile_id: entry.profileId,
+            measured_on: entry.measuredOn,
+            measured_at: entry.measuredAt,
+            weight_kg: entry.weightKg,
+            notes: entry.notes,
+            created_at: entry.createdAt,
+            updated_at: entry.updatedAt,
+          })
+          .execute();
+      }
+    });
+  }
+
   async update(entry: WeightEntryData, tagIds: readonly string[]): Promise<void> {
     await this.db.transaction().execute(async (trx) => {
       await trx

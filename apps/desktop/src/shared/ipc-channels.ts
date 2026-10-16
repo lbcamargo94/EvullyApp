@@ -1,6 +1,10 @@
 import {
   acceptTrackingInputSchema,
   createTagInputSchema,
+  importPreviewSchema,
+  importRequestSchema,
+  importResultSchema,
+  importTokenInputSchema,
   measurementIdInputSchema,
   measurementInputSchema,
   measurementSessionSchema,
@@ -69,6 +73,10 @@ export const ipcChannels = {
     output: backupStatusSchema,
   },
   'backup:dismiss-error': { input: z.undefined(), output: backupStatusSchema },
+  'import:preview': { input: importRequestSchema, output: importPreviewSchema.nullable() },
+  'import:confirm': { input: importTokenInputSchema, output: importResultSchema },
+  'import:cancel': { input: importTokenInputSchema, output: z.null() },
+  'import:template': { input: importRequestSchema, output: z.boolean() },
 } as const;
 
 export type IpcChannel = keyof typeof ipcChannels;

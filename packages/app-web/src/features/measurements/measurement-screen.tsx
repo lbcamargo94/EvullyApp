@@ -7,6 +7,7 @@ import {
 import type { MeasurementSession } from '@evully/contracts';
 import { Card } from '@evully/ui';
 import { useState } from 'react';
+import { ImportHeader } from '../imports/import-header';
 import { MeasurementChart } from './measurement-chart';
 import { MeasurementForm } from './measurement-form';
 import { MeasurementHistory } from './measurement-history';
@@ -23,7 +24,7 @@ export function MeasurementScreen() {
 
   return (
     <>
-      <h1 className="text-[26px] font-semibold">{m.title}</h1>
+      <ImportHeader title={m.title} kind="measurements" />
       {types.length === 0 ? (
         <Card>{m.noTracked}</Card>
       ) : (

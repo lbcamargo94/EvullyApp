@@ -7,6 +7,7 @@ import { hasPendingMigrations, migrateToLatest } from '../database/migrator';
 import { systemClock, uuidV7Generator } from '../modules/shared/system-adapters';
 import { buildApp } from './composition-root';
 import { electronDialogs } from './electron-dialogs';
+import { electronImportFiles } from './electron-import-files';
 import { registerIpcHandlers } from './ipc-router';
 import { backupsDirectory, configureDataDirectory, databaseFile, scratchDirectory } from './paths';
 
@@ -65,6 +66,7 @@ async function start(): Promise<void> {
       tempDirectory: scratchDirectory(),
       dialogs: electronDialogs,
     },
+    importFiles: electronImportFiles,
   });
 
   // Back up an existing database before changing its schema (README §6.4).

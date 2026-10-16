@@ -30,6 +30,32 @@ export class KyselyMeasurementRepository implements MeasurementRepository {
     });
   }
 
+  async importSessions(
+    profileId: string,
+    items: readonly { session: MeasurementSessionData; values: readonly NewValue[] }[],
+    activate: readonly { id: string; measurementTypeId: string }[],
+    now: string,
+  ): Promise<void> {
+    await this.db.transaction().execute(async (trx) => {
+      await activateTypes(trx, profileId, activate, now);
+      for (const { session, values } of items) {
+        await trx
+          .insertInto('body_measurements')
+          .values({
+            id: session.id,
+            profile_id: profileId,
+            measured_on: session.measuredOn,
+            measured_at: session.measuredAt,
+            notes: session.notes,
+            created_at: session.createdAt,
+            updated_at: session.updatedAt,
+          })
+          .execute();
+        await insertValues(trx, session.id, values, now);
+      }
+    });
+  }
+
   async update(session: MeasurementSessionData, values: readonly NewValue[]): Promise<void> {
     await this.db.transaction().execute(async (trx) => {
       await trx
@@ -137,4 +163,40 @@ async function insertValues(
       })),
     )
     .execute();
+}
+
+/** Turns on measurement types for a profile, appended after the ones it already tracks. */
+async function activateTypes(
+  trx: Transaction<DatabaseSchema>,
+  profileId: string,
+  activate: readonly { id: string; measurementTypeId: string }[],
+  now: string,
+) {
+  const last = await trx
+    .selectFrom('profile_measurement_types')
+    .select((eb) => eb.fn.max('sort_order').as('max'))
+    .where('profile_id', '=', profileId)
+    .executeTakeFirst();
+  let order = last?.max ?? 0;
+  for (const { id, measurementTypeId } of activate) {
+    order += 1;
+    const sortOrder = order;
+    await trx
+      .insertInto('profile_measurement_types')
+      .values({
+        id,
+        profile_id: profileId,
+        measurement_type_id: measurementTypeId,
+        sort_order: sortOrder,
+        is_active: 1,
+        created_at: now,
+        updated_at: now,
+      })
+      .onConflict((oc) =>
+        oc
+          .columns(['profile_id', 'measurement_type_id'])
+          .doUpdateSet({ is_active: 1, sort_order: sortOrder, updated_at: now }),
+      )
+      .execute();
+  }
 }

@@ -6,6 +6,7 @@ import {
 } from '@evully/app-core';
 import type { WeightEntry } from '@evully/contracts';
 import { useState } from 'react';
+import { ImportHeader } from '../imports/import-header';
 import { weightMessages as m } from './messages.pt-BR';
 import { WeightChart } from './weight-chart';
 import { WeightForm } from './weight-form';
@@ -21,7 +22,7 @@ export function WeightScreen() {
 
   return (
     <>
-      <h1 className="text-[26px] font-semibold">{m.title}</h1>
+      <ImportHeader title={m.title} kind="weights" />
       <div className="flex flex-wrap items-start gap-6">
         <WeightForm
           key={editing?.id ?? 'new'}

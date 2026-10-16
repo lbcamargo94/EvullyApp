@@ -7,6 +7,9 @@ import { BackupSettings } from '../modules/backup/application/backup-settings';
 import { CreateBackup, type BackupDeps } from '../modules/backup/application/create-backup';
 import { RunAutomaticBackup } from '../modules/backup/application/run-automatic-backup';
 import type { BackupDialogs } from '../modules/backup/ports/backup-ports';
+import { importIpcHandlers } from '../modules/imports/adapters/import-ipc-handlers';
+import { PendingImports } from '../modules/imports/application/pending-imports';
+import type { ImportFiles } from '../modules/imports/ports/import-ports';
 import { KyselyMeasurementRepository } from '../modules/measurements/adapters/kysely-measurement-repository';
 import { measurementIpcHandlers } from '../modules/measurements/adapters/measurement-ipc-handlers';
 import { KyselyProfileRepository } from '../modules/profiles/adapters/kysely-profile-repository';
@@ -30,10 +33,11 @@ interface Dependencies {
   ids: IdGenerator;
   appInfo: () => AppInfo;
   backup: { defaultDirectory: string; tempDirectory: string; dialogs: BackupDialogs };
+  importFiles: ImportFiles;
 }
 
 /** Wires adapters into use cases (ARCHITECTURE.md §3). The only place that knows every module. */
-export function buildApp({ db, clock, ids, appInfo, backup }: Dependencies) {
+export function buildApp({ db, clock, ids, appInfo, backup, importFiles }: Dependencies) {
   const profiles = new KyselyProfileRepository(db);
   const settings = new KyselySettingsRepository(db, clock, ids);
   const projects = new KyselyProjectRepository(db);
@@ -62,6 +66,16 @@ export function buildApp({ db, clock, ids, appInfo, backup }: Dependencies) {
       settings: backupSettings,
       dialogs: backup.dialogs,
       defaultDirectory: backup.defaultDirectory,
+    }),
+    ...importIpcHandlers({
+      profiles,
+      weights,
+      measurements,
+      tracking,
+      files: importFiles,
+      pending: new PendingImports(),
+      clock,
+      ids,
     }),
   };
 

@@ -5,6 +5,9 @@ import type {
   BackupResult,
   BackupStatus,
   CreateTagInput,
+  ImportKind,
+  ImportPreview,
+  ImportResult,
   MeasurementInput,
   MeasurementSession,
   MeasurementSummary,
@@ -68,6 +71,13 @@ export interface EvullyClient {
   tags: {
     list(profileId: string): Promise<Tag[]>;
     create(input: CreateTagInput): Promise<Tag>;
+  };
+  /** CSV import; absent on platforms without local files. */
+  imports?: {
+    preview(profileId: string, kind: ImportKind): Promise<ImportPreview | null>;
+    confirm(profileId: string, token: string): Promise<ImportResult>;
+    cancel(profileId: string, token: string): Promise<null>;
+    saveTemplate(profileId: string, kind: ImportKind): Promise<boolean>;
   };
   /** Absent on platforms without local data (web, mobile). */
   backup?: {
