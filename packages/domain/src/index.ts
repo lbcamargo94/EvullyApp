@@ -11,3 +11,4 @@ export * from './weights/weight';
 export * from './weights/weight-stats';
 export * from './weights/tag';
 export * from './measurements/measurement';
+export * from './backup/backup-rules';

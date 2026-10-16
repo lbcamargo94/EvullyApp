@@ -244,6 +244,7 @@ licenças e `npm audit`.
 | 06/10/2026 | Clean Architecture pragmática + monólito modular | Regras independentes de framework, sem cerimônia excessiva. |
 | 06/10/2026 | Licença proprietária | Intenção comercial. |
 | 07/10/2026 | Fronteiras com `no-restricted-imports` em vez de `eslint-plugin-boundaries` | Regra nativa do ESLint, sem dependência extra e com mensagem que aponta para este documento. |
+| 14/10/2026 | Backups com `VACUUM INTO` + adm-zip (MIT); caminhos escolhidos só por diálogos nativos no processo main | Cópia consistente do banco aberto; o renderer nunca envia caminhos de arquivo (SECURITY.md §2.3). |
 | 07/10/2026 | `better-sqlite3` 13 sem recompilação para o Electron | Usa Node-API; elimina a necessidade de compilador C++ no Windows e no CI. |
 | 06/10/2026 | Padronização do Claude Code: `CLAUDE.md` curto, skills `evully-task` e `evully-docs-sync`, permissões em `.claude/settings.json`, verificação de docs por script | Agente consistente e economia de tokens: regras carregadas sempre são mínimas; o detalhe fica nos docs e nas skills, lidos sob demanda. |
 

@@ -24,3 +24,9 @@ export async function migrateToLatest<DB>(db: Kysely<DB>): Promise<string[]> {
   if (error) throw error;
   return (results ?? []).filter((r) => r.status === 'Success').map((r) => r.migrationName);
 }
+
+/** True when the database has migrations that were not applied yet. */
+export async function hasPendingMigrations<DB>(db: Kysely<DB>): Promise<boolean> {
+  const all = await new Migrator({ db, provider }).getMigrations();
+  return all.some((m) => m.executedAt === undefined);
+}

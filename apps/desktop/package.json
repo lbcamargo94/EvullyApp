@@ -16,6 +16,7 @@
     "test": "cross-env ELECTRON_RUN_AS_NODE=1 electron ../../node_modules/vitest/vitest.mjs run"
   },
   "dependencies": {
+    "adm-zip": "^0.6.1",
     "better-sqlite3": "^13.0.3",
     "electron-log": "^5.4.0",
     "kysely": "^0.29.6",
@@ -30,6 +31,7 @@
     "@evully/ui": "*",
     "@fontsource-variable/inter": "^5.2.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/adm-zip": "^0.5.8",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",

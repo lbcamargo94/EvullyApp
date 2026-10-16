@@ -66,4 +66,11 @@ export const ipcEvullyClient: EvullyClient = {
     list: (profileId) => call('tags:list', { profileId }),
     create: (input) => call('tags:create', input),
   },
+  backup: {
+    status: () => call('backup:status', undefined),
+    createManual: () => call('backup:create-manual', undefined),
+    setAutomatic: (automaticEnabled) => call('backup:set-automatic', { automaticEnabled }),
+    chooseExtraDirectory: (clear) => call('backup:choose-extra-directory', { clear }),
+    dismissError: () => call('backup:dismiss-error', undefined),
+  },
 };

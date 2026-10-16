@@ -14,3 +14,13 @@ export function configureDataDirectory(): void {
 export function databaseFile(): string {
   return join(app.getPath('userData'), 'evully.db');
 }
+
+/** Default folder for automatic and pre-migration backups (README §5.4). */
+export function backupsDirectory(): string {
+  return join(app.getPath('userData'), 'backups');
+}
+
+/** Private scratch folder for database snapshots while a backup is written. */
+export function scratchDirectory(): string {
+  return join(app.getPath('userData'), 'tmp');
+}

@@ -10,6 +10,10 @@ export const systemClock: Clock = {
     const now = new Date();
     return parseLocalDate(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`);
   },
+  localTime: () => {
+    const now = new Date();
+    return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  },
 };
 
 export const uuidV7Generator: IdGenerator = { next: () => uuidv7() };

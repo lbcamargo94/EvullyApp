@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Backup manual ("Fazer backup agora"), salvo onde você escolher.
+- Backup automático ao fechar o app, uma vez por dia, com cópia opcional em
+  uma pasta adicional (ex.: OneDrive) e retenção das últimas 10 cópias
+  automáticas; backups manuais nunca são apagados.
+- Backup automático antes de atualizar o banco (migrations).
+- Aviso no topo do app quando o último backup automático falha.
+- Tela de Configurações com a seção de backup e instruções de restauração
+  manual até a V0.7.
+
 ## [0.1.0-alpha.5] - 2026-10-14
 
 ### Added
