@@ -45,4 +45,6 @@ export interface TrackingRepository {
   listConfigs(profileId: string): Promise<TrackingConfigRecord[]>;
   latestQuestionnaireStatus(profileId: string): Promise<'completed' | 'skipped' | null>;
   listActiveMeasurementTypes(profileId: string): Promise<MeasurementType[]>;
+  /** The system measurement catalog (active types), in default order. */
+  listCatalog(): Promise<MeasurementType[]>;
 }

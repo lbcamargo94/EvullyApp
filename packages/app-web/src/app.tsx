@@ -13,6 +13,7 @@ import { ProfileSelectScreen } from './features/profiles/profile-select-screen';
 import { AppShell } from './features/shell/app-shell';
 import { HealthNoticeScreen } from './features/shell/health-notice-screen';
 import { HomeScreen } from './features/shell/home-screen';
+import { ImportScreen } from './features/imports/import-screen';
 import { SettingsScreen } from './features/settings/settings-screen';
 import { QuestionnaireScreen } from './features/tracking/questionnaire-screen';
 
@@ -85,6 +86,7 @@ function AppRoutes() {
             </Suspense>
           }
         />
+        <Route path="import/:kind" element={<ImportScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
         <Route path="profile" element={<ProfileEditScreen />} />
       </Route>

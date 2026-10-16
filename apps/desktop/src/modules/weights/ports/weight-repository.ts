@@ -23,6 +23,8 @@ export type WeightEntryData = Omit<WeightEntryRecord, 'tags'>;
 export interface WeightRepository {
   /** Inserts the weighing and its tag links in one transaction. */
   insert(entry: WeightEntryData, tagIds: readonly string[]): Promise<void>;
+  /** Inserts many weighings (CSV import) in one transaction: all or nothing. */
+  insertMany(entries: readonly WeightEntryData[]): Promise<void>;
   /** Updates the weighing and replaces its tag links in one transaction. */
   update(entry: WeightEntryData, tagIds: readonly string[]): Promise<void>;
   /** Soft delete; false if the weighing does not exist for this profile. */

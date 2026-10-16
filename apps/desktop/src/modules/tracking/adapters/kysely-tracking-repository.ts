@@ -175,6 +175,23 @@ export class KyselyTrackingRepository implements TrackingRepository {
     return row?.status ?? null;
   }
 
+  async listCatalog(): Promise<MeasurementType[]> {
+    const rows = await this.db
+      .selectFrom('measurement_types')
+      .select(['id', 'code', 'name', 'body_region', 'instructions', 'csv_name'])
+      .where('is_active', '=', 1)
+      .orderBy('sort_order')
+      .execute();
+    return rows.map((r) => ({
+      id: r.id,
+      code: r.code,
+      name: r.name,
+      bodyRegion: r.body_region,
+      instructions: r.instructions,
+      csvName: r.csv_name,
+    }));
+  }
+
   async listActiveMeasurementTypes(profileId: string): Promise<MeasurementType[]> {
     const rows = await this.db
       .selectFrom('profile_measurement_types as pmt')

@@ -66,6 +66,12 @@ export const ipcEvullyClient: EvullyClient = {
     list: (profileId) => call('tags:list', { profileId }),
     create: (input) => call('tags:create', input),
   },
+  imports: {
+    preview: (profileId, kind) => call('import:preview', { profileId, kind }),
+    confirm: (profileId, token) => call('import:confirm', { profileId, token }),
+    cancel: (profileId, token) => call('import:cancel', { profileId, token }),
+    saveTemplate: (profileId, kind) => call('import:template', { profileId, kind }),
+  },
   backup: {
     status: () => call('backup:status', undefined),
     createManual: () => call('backup:create-manual', undefined),

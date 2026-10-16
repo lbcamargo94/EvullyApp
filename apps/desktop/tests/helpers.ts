@@ -6,6 +6,7 @@ import { openDatabase } from '../src/database/connection';
 import { migrateToLatest } from '../src/database/migrator';
 import { buildApp } from '../src/main/composition-root';
 import type { BackupDialogs } from '../src/modules/backup/ports/backup-ports';
+import type { ImportFiles } from '../src/modules/imports/ports/import-ports';
 import type { Clock, IdGenerator } from '../src/modules/shared/ports';
 
 export const fixedClock = (
@@ -16,6 +17,8 @@ export const fixedClock = (
   nowIso: () => iso,
   today: () => parseLocalDate(today),
   localTime: () => time,
+  // Tests run as if the user were in UTC.
+  localToIso: (date, t) => `${date}T${t}:00.000Z`,
 });
 
 /** Deterministic UUID v7-shaped ids: …-7000-8000-000000000001, …0002, … */
@@ -32,10 +35,17 @@ export const noDialogs: BackupDialogs = {
   chooseDirectory: async () => null,
 };
 
+/** Import dialogs that are always cancelled. */
+export const noImportFiles: ImportFiles = {
+  chooseCsv: async () => null,
+  saveText: async () => false,
+};
+
 /** Migrated database in a temp folder plus the app's handlers wired to it. */
 export async function createTestApp(
   clock: Clock = fixedClock(),
   dialogs: BackupDialogs = noDialogs,
+  importFiles: ImportFiles = noImportFiles,
 ) {
   const dir = mkdtempSync(join(tmpdir(), 'evully-test-'));
   const db = openDatabase(join(dir, 'evully.db'));
@@ -51,6 +61,7 @@ export async function createTestApp(
       tempDirectory: join(dir, 'tmp'),
       dialogs,
     },
+    importFiles,
   });
   const dispose = async () => {
     await db.destroy();

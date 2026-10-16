@@ -29,6 +29,16 @@ export interface NewValue {
 export interface MeasurementRepository {
   /** Inserts the session and its values in one transaction. */
   insert(session: MeasurementSessionData, values: readonly NewValue[]): Promise<void>;
+  /**
+   * CSV import (README §8.8): inserts many sessions and turns on the listed
+   * measurement types for the profile, all in one transaction.
+   */
+  importSessions(
+    profileId: string,
+    items: readonly { session: MeasurementSessionData; values: readonly NewValue[] }[],
+    activate: readonly { id: string; measurementTypeId: string }[],
+    now: string,
+  ): Promise<void>;
   /** Updates the session and replaces its values in one transaction. */
   update(session: MeasurementSessionData, values: readonly NewValue[]): Promise<void>;
   /** Soft delete; false if the session does not exist for this profile. */

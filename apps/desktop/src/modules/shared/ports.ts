@@ -8,6 +8,8 @@ export interface Clock {
   today(): LocalDate;
   /** Current local time, `HH:mm`. */
   localTime(): string;
+  /** Local date + `HH:mm` in the user's time zone → ISO 8601 UTC instant. */
+  localToIso(date: LocalDate, time: string): string;
 }
 
 export interface IdGenerator {

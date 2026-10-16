@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Importação CSV de pesos e medidas para o perfil atual, com
+  pré-visualização obrigatória: linhas prontas, duplicadas (ignoradas) e com
+  erro (número da linha e motivo). A gravação é tudo ou nada.
+- Aceita o formato do Excel em português (`;` e vírgula decimal) e o
+  internacional (`,` e ponto); datas DD/MM/AAAA ou AAAA-MM-DD.
+- Modelos de CSV para baixar; colunas de medidas que o perfil não acompanha
+  passam a ser acompanhadas, com aviso na pré-visualização.
+
 ## [0.1.0-alpha.6] - 2026-10-16
 
 ### Added

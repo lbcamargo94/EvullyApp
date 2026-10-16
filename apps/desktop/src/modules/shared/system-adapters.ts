@@ -10,6 +10,7 @@ export const systemClock: Clock = {
     const now = new Date();
     return parseLocalDate(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`);
   },
+  localToIso: (date, time) => new Date(`${date}T${time}:00`).toISOString(),
   localTime: () => {
     const now = new Date();
     return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
