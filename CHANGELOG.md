@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.1.0-alpha.7] - 2026-10-16
+
 ### Added
 - Importação CSV de pesos e medidas para o perfil atual, com
   pré-visualização obrigatória: linhas prontas, duplicadas (ignoradas) e com
@@ -98,7 +100,8 @@ Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
   instalador Windows (`Evully-Setup-<versão>.exe`).
 - Verificação de licenças copyleft (`npm run licenses:check`).
 
-[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.6...HEAD
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.7...HEAD
+[0.1.0-alpha.7]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.6...v0.1.0-alpha.7
 [0.1.0-alpha.6]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.5...v0.1.0-alpha.6
 [0.1.0-alpha.5]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.4...v0.1.0-alpha.5
 [0.1.0-alpha.4]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.3...v0.1.0-alpha.4
