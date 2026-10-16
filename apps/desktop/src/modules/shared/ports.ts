@@ -6,6 +6,8 @@ export interface Clock {
   nowIso(): string;
   /** Current date in the user's local time zone. */
   today(): LocalDate;
+  /** Current local time, `HH:mm`. */
+  localTime(): string;
 }
 
 export interface IdGenerator {

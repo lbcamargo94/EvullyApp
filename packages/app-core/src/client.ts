@@ -2,6 +2,8 @@ import type {
   AcceptTrackingInput,
   AppInfo,
   AppSettings,
+  BackupResult,
+  BackupStatus,
   CreateTagInput,
   MeasurementInput,
   MeasurementSession,
@@ -66,6 +68,14 @@ export interface EvullyClient {
   tags: {
     list(profileId: string): Promise<Tag[]>;
     create(input: CreateTagInput): Promise<Tag>;
+  };
+  /** Absent on platforms without local data (web, mobile). */
+  backup?: {
+    status(): Promise<BackupStatus>;
+    createManual(): Promise<BackupResult | null>;
+    setAutomatic(enabled: boolean): Promise<BackupStatus>;
+    chooseExtraDirectory(clear: boolean): Promise<BackupStatus>;
+    dismissError(): Promise<BackupStatus>;
   };
 }
 

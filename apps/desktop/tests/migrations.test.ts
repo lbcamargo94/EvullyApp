@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { openDatabase } from '../src/database/connection';
-import { migrateToLatest } from '../src/database/migrator';
+import { hasPendingMigrations, migrateToLatest } from '../src/database/migrator';
 
 describe('database', () => {
   const dirs: string[] = [];
@@ -28,6 +28,14 @@ describe('database', () => {
       '0005_body_measurements',
     ]);
     expect(await migrateToLatest(db)).toEqual([]);
+    await db.destroy();
+  });
+
+  it('detects pending migrations, which trigger the pre-migration backup', async () => {
+    const db = tempDb();
+    expect(await hasPendingMigrations(db)).toBe(true);
+    await migrateToLatest(db);
+    expect(await hasPendingMigrations(db)).toBe(false);
     await db.destroy();
   });
 

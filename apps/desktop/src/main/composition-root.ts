@@ -1,6 +1,12 @@
 import type { AppInfo } from '@evully/contracts';
 import type { Kysely } from 'kysely';
 import type { DatabaseSchema } from '../database/schema';
+import { backupIpcHandlers } from '../modules/backup/adapters/backup-ipc-handlers';
+import { FsBackupFolder, FsBackupWriter } from '../modules/backup/adapters/fs-backup';
+import { BackupSettings } from '../modules/backup/application/backup-settings';
+import { CreateBackup, type BackupDeps } from '../modules/backup/application/create-backup';
+import { RunAutomaticBackup } from '../modules/backup/application/run-automatic-backup';
+import type { BackupDialogs } from '../modules/backup/ports/backup-ports';
 import { KyselyMeasurementRepository } from '../modules/measurements/adapters/kysely-measurement-repository';
 import { measurementIpcHandlers } from '../modules/measurements/adapters/measurement-ipc-handlers';
 import { KyselyProfileRepository } from '../modules/profiles/adapters/kysely-profile-repository';
@@ -23,10 +29,11 @@ interface Dependencies {
   clock: Clock;
   ids: IdGenerator;
   appInfo: () => AppInfo;
+  backup: { defaultDirectory: string; tempDirectory: string; dialogs: BackupDialogs };
 }
 
 /** Wires adapters into use cases (ARCHITECTURE.md §3). The only place that knows every module. */
-export function buildIpcHandlers({ db, clock, ids, appInfo }: Dependencies): IpcHandlers {
+export function buildApp({ db, clock, ids, appInfo, backup }: Dependencies) {
   const profiles = new KyselyProfileRepository(db);
   const settings = new KyselySettingsRepository(db, clock, ids);
   const projects = new KyselyProjectRepository(db);
@@ -34,12 +41,40 @@ export function buildIpcHandlers({ db, clock, ids, appInfo }: Dependencies): Ipc
   const weights = new KyselyWeightRepository(db);
   const tags = new KyselyTagRepository(db);
   const measurements = new KyselyMeasurementRepository(db);
-  return {
+  const backupSettings = new BackupSettings(settings);
+  const backupDeps: BackupDeps = {
+    writer: new FsBackupWriter(db, backup.tempDirectory),
+    folder: new FsBackupFolder(),
+    settings: backupSettings,
+    clock,
+    appVersion: appInfo().version,
+  };
+
+  const handlers: IpcHandlers = {
     'app:info': appInfo,
     ...profileIpcHandlers(profiles, clock, ids),
     ...settingsIpcHandlers(settings, clock),
     ...trackingIpcHandlers({ profiles, projects, tracking, clock, ids }),
     ...weightIpcHandlers({ profiles, projects, weights, tags, clock, ids }),
     ...measurementIpcHandlers({ profiles, projects, tracking, measurements, clock, ids }),
+    ...backupIpcHandlers({
+      backup: backupDeps,
+      settings: backupSettings,
+      dialogs: backup.dialogs,
+      defaultDirectory: backup.defaultDirectory,
+    }),
+  };
+
+  return {
+    handlers,
+    /** Lifecycle backups run by the main process (README §6.4, §8.7.2). */
+    lifecycle: {
+      onClose: () => new RunAutomaticBackup(backupDeps, backup.defaultDirectory).execute(),
+      beforeMigrations: () =>
+        new CreateBackup(backupDeps).execute({
+          kind: 'pre-migration',
+          directory: backup.defaultDirectory,
+        }),
+    },
   };
 }

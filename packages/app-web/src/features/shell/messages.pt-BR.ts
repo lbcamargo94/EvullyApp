@@ -3,6 +3,7 @@ export const shellMessages = {
   dashboard: 'Dashboard',
   weight: 'Peso',
   measurements: 'Medidas',
+  settings: 'Configurações',
   registerMeasurements: 'Registrar medidas',
   switchProfile: (name: string) => `Trocar de perfil. Perfil atual: ${name}`,
   profilesLabel: 'Perfis',

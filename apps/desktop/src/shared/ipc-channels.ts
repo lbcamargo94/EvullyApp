@@ -7,6 +7,8 @@ import {
   measurementSummarySchema,
   appInfoSchema,
   appSettingsSchema,
+  backupResultSchema,
+  backupStatusSchema,
   profileIdInputSchema,
   profileInputSchema,
   profileScopedInputSchema,
@@ -21,6 +23,7 @@ import {
   weightInputSchema,
   weightSummarySchema,
   updateAppSettingsInputSchema,
+  updateBackupSettingsInputSchema,
   updateMeasurementInputSchema,
   updateProfileInputSchema,
 } from '@evully/contracts';
@@ -58,6 +61,14 @@ export const ipcChannels = {
   'measurements:register': { input: measurementInputSchema, output: measurementSessionSchema },
   'measurements:update': { input: updateMeasurementInputSchema, output: measurementSessionSchema },
   'measurements:delete': { input: measurementIdInputSchema, output: z.null() },
+  'backup:status': { input: z.undefined(), output: backupStatusSchema },
+  'backup:create-manual': { input: z.undefined(), output: backupResultSchema.nullable() },
+  'backup:set-automatic': { input: updateBackupSettingsInputSchema, output: backupStatusSchema },
+  'backup:choose-extra-directory': {
+    input: z.object({ clear: z.boolean() }),
+    output: backupStatusSchema,
+  },
+  'backup:dismiss-error': { input: z.undefined(), output: backupStatusSchema },
 } as const;
 
 export type IpcChannel = keyof typeof ipcChannels;
