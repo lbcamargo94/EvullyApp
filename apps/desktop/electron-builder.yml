@@ -7,6 +7,12 @@ directories:
 files:
   - out/**
   - package.json
+# Shown in Settings › Sobre (README §8.4).
+extraResources:
+  - from: ../../LICENSE
+    to: LICENSE
+  - from: ../../THIRD_PARTY_NOTICES
+    to: THIRD_PARTY_NOTICES
 # better-sqlite3 13 uses Node-API: its prebuilt binary works in Electron, no rebuild needed.
 npmRebuild: false
 asarUnpack:

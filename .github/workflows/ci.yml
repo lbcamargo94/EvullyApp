@@ -24,6 +24,7 @@ jobs:
       - run: npm test
       - run: npm run docs:check
       - run: npm run licenses:check
+      - run: npm run notices:check
       - run: npm audit --omit=dev --audit-level=high
       - run: npm run dist
       # Convenience copy only (installers are attached to releases); a full

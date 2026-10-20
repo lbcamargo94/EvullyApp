@@ -28,12 +28,17 @@ async function call<C extends IpcChannel>(channel: C, input: IpcInput<C>): Promi
 export const ipcEvullyClient: EvullyClient = {
   app: {
     info: () => call('app:info', undefined),
+    legal: () => call('app:legal', undefined),
   },
   profiles: {
     list: () => call('profiles:list', undefined),
     get: (id) => call('profiles:get', { id }),
     create: (input) => call('profiles:create', input),
     update: (input) => call('profiles:update', input),
+    listArchived: () => call('profiles:list-archived', undefined),
+    archive: (id) => call('profiles:archive', { id }),
+    restore: (id) => call('profiles:restore', { id }),
+    deletePermanently: (input) => call('profiles:delete-permanently', input),
   },
   settings: {
     get: () => call('settings:get', undefined),

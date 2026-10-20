@@ -6,6 +6,8 @@ import { openDatabase } from '../database/connection';
 import { hasPendingMigrations, migrateToLatest } from '../database/migrator';
 import { systemClock, uuidV7Generator } from '../modules/shared/system-adapters';
 import { buildApp } from './composition-root';
+import { readLegalDocuments } from './legal';
+import { withNativeTheme } from './native-theme';
 import { electronDialogs } from './electron-dialogs';
 import { electronImportFiles } from './electron-import-files';
 import { registerIpcHandlers } from './ipc-router';
@@ -61,6 +63,7 @@ async function start(): Promise<void> {
       version: app.getVersion(),
       environment: app.isPackaged ? 'production' : 'development',
     }),
+    legal: readLegalDocuments,
     backup: {
       defaultDirectory: backupsDirectory(),
       tempDirectory: scratchDirectory(),
@@ -79,7 +82,9 @@ async function start(): Promise<void> {
   const applied = await migrateToLatest(db);
   if (applied.length) log.info(`migrations applied: ${applied.join(', ')}`);
 
-  registerIpcHandlers(evully.handlers, isTrustedSender);
+  const handlers = withNativeTheme(evully.handlers);
+  await handlers['settings:get'](undefined); // applies the saved theme before the window opens
+  registerIpcHandlers(handlers, isTrustedSender);
   createWindow();
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

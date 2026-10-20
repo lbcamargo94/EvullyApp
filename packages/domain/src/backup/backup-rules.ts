@@ -1,6 +1,6 @@
 import { daysBetween, type LocalDate } from '../local-date';
 
-export type BackupKind = 'manual' | 'automatic' | 'pre-migration';
+export type BackupKind = 'manual' | 'automatic' | 'pre-migration' | 'pre-delete';
 
 /** Automatic copies kept per folder (README §8.7.2). */
 export const AUTOMATIC_BACKUPS_TO_KEEP = 10;

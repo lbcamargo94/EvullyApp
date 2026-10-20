@@ -1,13 +1,16 @@
 import type {
   AcceptTrackingInput,
   AppInfo,
+  ArchivedProfile,
   AppSettings,
   BackupResult,
   BackupStatus,
   CreateTagInput,
+  DeleteProfileInput,
   ImportKind,
   ImportPreview,
   ImportResult,
+  LegalDocuments,
   MeasurementInput,
   MeasurementSession,
   MeasurementSummary,
@@ -39,12 +42,17 @@ import type {
 export interface EvullyClient {
   app: {
     info(): Promise<AppInfo>;
+    legal(): Promise<LegalDocuments>;
   };
   profiles: {
     list(): Promise<ProfileSummary[]>;
     get(id: string): Promise<ProfileDto>;
     create(input: ProfileInput): Promise<ProfileDto>;
     update(input: UpdateProfileInput): Promise<ProfileDto>;
+    listArchived(): Promise<ArchivedProfile[]>;
+    archive(id: string): Promise<null>;
+    restore(id: string): Promise<ProfileSummary>;
+    deletePermanently(input: DeleteProfileInput): Promise<null>;
   };
   settings: {
     get(): Promise<AppSettings>;

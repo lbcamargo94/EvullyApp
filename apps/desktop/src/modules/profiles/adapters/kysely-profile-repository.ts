@@ -1,7 +1,7 @@
 import type { LocalDate, Profile } from '@evully/domain';
 import type { Kysely, Selectable } from 'kysely';
 import type { DatabaseSchema, ProfilesTable } from '../../../database/schema';
-import type { ProfileRepository } from '../ports/profile-repository';
+import type { ArchivedProfileRecord, ProfileRepository } from '../ports/profile-repository';
 
 const toProfile = (row: Selectable<ProfilesTable>): Profile => ({
   id: row.id,
@@ -62,4 +62,60 @@ export class KyselyProfileRepository implements ProfileRepository {
       .execute();
     return rows.map(toProfile);
   }
+
+  async listArchived(): Promise<ArchivedProfileRecord[]> {
+    const rows = await this.archivedRows().orderBy('deleted_at', 'desc').orderBy('id').execute();
+    return rows.map(toArchived);
+  }
+
+  async findArchivedById(id: string): Promise<ArchivedProfileRecord | null> {
+    const row = await this.archivedRows().where('id', '=', id).executeTakeFirst();
+    return row ? toArchived(row) : null;
+  }
+
+  async archive(id: string, now: string): Promise<boolean> {
+    const result = await this.db
+      .updateTable('profiles')
+      .set({ deleted_at: now, updated_at: now })
+      .where('id', '=', id)
+      .where('deleted_at', 'is', null)
+      .executeTakeFirst();
+    return result.numUpdatedRows > 0n;
+  }
+
+  async restore(id: string, now: string): Promise<boolean> {
+    const result = await this.db
+      .updateTable('profiles')
+      .set({ deleted_at: null, updated_at: now })
+      .where('id', '=', id)
+      .where('deleted_at', 'is not', null)
+      .executeTakeFirst();
+    return result.numUpdatedRows > 0n;
+  }
+
+  async deletePermanently(id: string): Promise<void> {
+    await this.db.transaction().execute(async (trx) => {
+      // Every profile table references profiles.id with ON DELETE CASCADE
+      // (foreign_keys is on); settings rows are removed explicitly for clarity.
+      await trx.deleteFrom('settings').where('profile_id', '=', id).execute();
+      await trx
+        .deleteFrom('profiles')
+        .where('id', '=', id)
+        .where('deleted_at', 'is not', null)
+        .execute();
+    });
+  }
+
+  private archivedRows() {
+    return this.db
+      .selectFrom('profiles')
+      .select(['id', 'name', 'deleted_at'])
+      .where('deleted_at', 'is not', null);
+  }
 }
+
+const toArchived = (row: {
+  id: string;
+  name: string;
+  deleted_at: string | null;
+}): ArchivedProfileRecord => ({ id: row.id, name: row.name, archivedAt: row.deleted_at ?? '' });

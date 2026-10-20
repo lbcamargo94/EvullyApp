@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeProfileDraft, parseLocalDate, profileInitial, type ProfileDraft } from '../src';
+import {
+  confirmsProfileName,
+  normalizeProfileDraft,
+  parseLocalDate,
+  profileInitial,
+  type ProfileDraft,
+} from '../src';
 
 const today = parseLocalDate('2026-10-07');
 const draft = (overrides: Partial<ProfileDraft> = {}): ProfileDraft => ({
@@ -59,5 +65,19 @@ describe('profileInitial', () => {
     ['', '?'],
   ])('%s → %s', (name, initial) => {
     expect(profileInitial(name)).toBe(initial);
+  });
+});
+
+describe('confirmsProfileName', () => {
+  it('accepts the name ignoring case and outer spaces', () => {
+    expect(confirmsProfileName('  lucas ', 'Lucas')).toBe(true);
+    expect(confirmsProfileName('ANA PAULA', 'Ana Paula')).toBe(true);
+  });
+
+  it('rejects other names, partial names and empty input', () => {
+    expect(confirmsProfileName('Luc', 'Lucas')).toBe(false);
+    expect(confirmsProfileName('Lucas C', 'Lucas')).toBe(false);
+    expect(confirmsProfileName('', 'Lucas')).toBe(false);
+    expect(confirmsProfileName('', '  ')).toBe(false);
   });
 });

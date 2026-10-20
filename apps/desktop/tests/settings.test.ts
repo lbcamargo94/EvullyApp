@@ -17,6 +17,7 @@ describe('settings', () => {
     expect(await handlers['settings:get'](undefined)).toEqual({
       healthNoticeAcceptedAt: null,
       inactivityLockMinutes: 15,
+      theme: 'system',
     });
   });
 
@@ -26,6 +27,7 @@ describe('settings', () => {
     expect(await handlers['settings:accept-health-notice'](undefined)).toEqual({
       healthNoticeAcceptedAt: '2026-10-07T10:00:00.000Z',
       inactivityLockMinutes: 5,
+      theme: 'system',
     });
     await handlers['settings:update']({ inactivityLockMinutes: 0 });
     expect((await handlers['settings:get'](undefined)).inactivityLockMinutes).toBe(0);

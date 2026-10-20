@@ -12,6 +12,7 @@ import { ProfileEditScreen } from './features/profiles/profile-edit-screen';
 import { ProfileSelectScreen } from './features/profiles/profile-select-screen';
 import { AppShell } from './features/shell/app-shell';
 import { HealthNoticeScreen } from './features/shell/health-notice-screen';
+import { useDocumentTheme } from './features/shell/use-document-theme';
 import { HomeScreen } from './features/shell/home-screen';
 import { ImportScreen } from './features/imports/import-screen';
 import { QuestionnaireScreen } from './features/tracking/questionnaire-screen';
@@ -61,6 +62,7 @@ export function App({
 
 function HealthNoticeGate({ children }: { children: ReactNode }) {
   const { data: settings } = useAppSettings();
+  useDocumentTheme(settings?.theme);
   if (!settings) return null;
   return settings.healthNoticeAcceptedAt ? children : <HealthNoticeScreen />;
 }

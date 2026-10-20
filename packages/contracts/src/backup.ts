@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const backupKindSchema = z.enum(['manual', 'automatic', 'pre-migration']);
+export const backupKindSchema = z.enum(['manual', 'automatic', 'pre-migration', 'pre-delete']);
 
 /** State shown in Settings › Backup (README §8.7). Paths are chosen in the main process only. */
 export const backupStatusSchema = z.object({

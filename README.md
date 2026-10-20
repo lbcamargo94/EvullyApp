@@ -903,23 +903,26 @@ pelo menos um valor; nenhum campo é obrigatório individualmente.
 - **Arquivar perfil** (padrão): soft delete. O perfil some da tela de
   seleção, os dados são preservados e ele pode ser restaurado em
   Configurações.
-- **Apagar definitivamente**: exige digitar o nome do perfil para
-  confirmar, cria um backup automático antes e remove todos os dados do
-  perfil em uma transação. É a única exclusão física do app.
+- **Apagar definitivamente**: só para perfis já arquivados. Exige digitar
+  o nome do perfil para confirmar (maiúsculas e espaços nas pontas não
+  importam), cria um backup antes (`kind = pre-delete`) e remove todos os
+  dados do perfil em uma transação. Se o backup falhar, nada é apagado. É a
+  única exclusão física do app.
 
 ### 8.4 Telas
 
 | Tela | Conteúdo |
 |---|---|
 | Seleção de perfil | Nomes e avatares + "Adicionar perfil". Nenhum dado pessoal. |
-| Cadastro/edição de perfil | Campos de `profiles`; arquivar, restaurar arquivados e apagar definitivamente (§8.3.1). |
+| Cadastro/edição de perfil | Campos de `profiles`. |
+| Configurações — Perfil | Arquivar o perfil atual; restaurar e apagar definitivamente perfis arquivados (§8.3.1). |
 | Questionário de acompanhamento | Passos da §8.2.1 e resumo com Aceitar/Ajustar. |
 | Dashboard | Ver §8.5. |
 | Peso | Registrar, editar e excluir pesagens; etiquetas; lista; gráfico. |
 | Medidas | Registrar sessão com as medidas do perfil (com dicas de como medir); histórico; gráfico por medida. |
 | Configurações — Acompanhamento | Objetivo, áreas de foco, medidas acompanhadas e ordem, exibição do peso, etiquetas, refazer questionário. |
 | Configurações — Projeto | Criar, editar e concluir projeto. |
-| Configurações — Geral | Tema claro/escuro, retorno à seleção de perfil por inatividade, backup (manual, automático, pasta adicional, último backup). |
+| Configurações — Geral | Tema (igual ao Windows, claro ou escuro), retorno à seleção de perfil por inatividade (nunca, 5, 15 ou 30 min), backup (manual, automático, pasta adicional, último backup). |
 | Configurações — Sobre | Versão do app, aviso de saúde, licença e avisos de terceiros, como restaurar um backup manualmente (§8.7.3). |
 | Importar CSV | Escolher arquivo, pré-visualizar, ver erros e confirmar. Acessível pelas telas Peso e Medidas. |
 
@@ -2334,6 +2337,8 @@ dificulta a depuração. A proteção do Evully vem de:
 - Dependências passam por verificação de licença no CI; licenças
   copyleft fortes (GPL, AGPL, SSPL) são bloqueadas.
 - Avisos exigidos pelas licenças de terceiros ficam em
-  `THIRD_PARTY_NOTICES`, gerado a partir das dependências.
+  `THIRD_PARTY_NOTICES`, gerado por `npm run notices` a partir dos pacotes
+  incluídos no app; o CI falha se o arquivo estiver desatualizado. Ele e o
+  `LICENSE` vão no instalador e aparecem em Configurações — Sobre.
 - Bases de dados nutricionais (V0.2) só podem ser importadas se a
   licença da base permitir; a fonte fica registrada em `foods.source`.
