@@ -71,3 +71,14 @@ export function profileInitial(name: string): string {
   const first = [...name.trim()][0];
   return first ? first.toLocaleUpperCase('pt-BR') : '?';
 }
+
+const comparableName = (name: string) => name.trim().normalize('NFC').toLocaleLowerCase('pt-BR');
+
+/**
+ * Permanent deletion is confirmed by typing the profile name (README §8.3.1).
+ * Case and surrounding spaces are ignored; an empty name never confirms.
+ */
+export function confirmsProfileName(typed: string, name: string): boolean {
+  const expected = comparableName(name);
+  return expected.length > 0 && comparableName(typed) === expected;
+}

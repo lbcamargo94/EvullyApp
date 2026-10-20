@@ -128,7 +128,8 @@ Antes de concluir qualquer versão:
       sem teste de isolamento.
 - [ ] Nenhum dado pessoal em logs.
 - [ ] `npm audit` sem vulnerabilidades altas ou críticas sem justificativa.
-- [ ] Verificação de licenças aprovada e `THIRD_PARTY_NOTICES` atualizado.
+- [ ] Verificação de licenças aprovada e `THIRD_PARTY_NOTICES` atualizado
+      (`npm run notices`; o CI roda `notices:check`).
 - [ ] Build de produção com DevTools desligado e fuses aplicados.
 
 ## 4. Fases futuras

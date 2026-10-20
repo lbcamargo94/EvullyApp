@@ -6,7 +6,12 @@ export const settingsMessages = {
   lastBackup: 'Último backup',
   never: 'Nenhum backup ainda',
   lastBackupValue: (iso: string, kind: string) => `${dateTime.format(new Date(iso))} · ${kind}`,
-  kinds: { manual: 'manual', automatic: 'automático', 'pre-migration': 'antes de atualização' },
+  kinds: {
+    manual: 'manual',
+    automatic: 'automático',
+    'pre-migration': 'antes de atualização',
+    'pre-delete': 'antes de apagar um perfil',
+  },
   backupNow: 'Fazer backup agora',
   backingUp: 'Fazendo backup…',
   backupDone: (fileName: string) => `Backup salvo: ${fileName}`,
@@ -21,15 +26,20 @@ export const settingsMessages = {
   chooseFolder: 'Escolher pasta',
   changeFolder: 'Trocar pasta',
   removeFolder: 'Remover',
-  restoreHint:
-    'Para restaurar um backup (até a versão 0.7): feche o Evully, extraia o arquivo evully.db do zip e substitua o de %APPDATA%\\Evully, guardando o arquivo atual.',
+  restoreHint: 'Para restaurar um backup, veja o passo a passo em Configurações › Sobre.',
   errorTitle: 'O último backup automático falhou.',
   errorBody: (iso: string) =>
     `Em ${dateTime.format(new Date(iso))}. Faça um backup manual ou confira a pasta adicional.`,
   errorAction: 'Ver backup',
   dismiss: 'Dispensar',
 
-  tabs: { tracking: 'Acompanhamento', project: 'Projeto', general: 'Geral e backup' },
+  tabs: {
+    tracking: 'Acompanhamento',
+    project: 'Projeto',
+    profile: 'Perfil',
+    general: 'Geral e backup',
+    about: 'Sobre',
+  },
   saved: 'Salvo.',
   genericError: 'Não foi possível salvar. Tente novamente.',
   cancel: 'Cancelar',
@@ -88,4 +98,68 @@ export const settingsErrorByCode: Record<string, string> = {
   'project.not_active': 'Este projeto já foi concluído.',
   'tag.not_found': 'Etiqueta não encontrada. Recarregue a tela.',
   'measurement.unknown_type': 'Medida desconhecida. Recarregue a tela.',
+  'profile.not_found': 'Perfil não encontrado. Recarregue a tela.',
+  'profile.name_mismatch': 'O nome digitado não confere.',
+  'backup.failed': 'Não foi possível fazer o backup. Nada foi apagado.',
 };
+
+export const generalSettingsMessages = {
+  themeTitle: 'Tema',
+  themes: {
+    system: { title: 'Igual ao Windows', description: 'Segue o tema claro ou escuro do sistema.' },
+    light: { title: 'Claro', description: 'Fundo claro sempre.' },
+    dark: { title: 'Escuro', description: 'Fundo escuro sempre.' },
+  },
+  inactivityTitle: 'Voltar à seleção de perfil',
+  inactivityHint:
+    'Depois de um tempo sem uso, o Evully volta para a tela de perfis, para ninguém ver os dados de outra pessoa.',
+  inactivity: (minutes: number) => (minutes === 0 ? 'Nunca' : `Após ${minutes} minutos`),
+} as const;
+
+export const profileSettingsMessages = {
+  currentTitle: 'Este perfil',
+  currentHint: (name: string) =>
+    `Você está usando o perfil ${name}. Arquivar tira o perfil da tela de seleção, mas guarda todos os dados.`,
+  editData: 'Editar dados do perfil',
+  archive: 'Arquivar este perfil',
+  archiveTitle: 'Arquivar este perfil?',
+  archiveBody: (name: string) =>
+    `“${name}” sai da tela de seleção. Nada é apagado e você pode restaurar o perfil aqui em Configurações › Perfil.`,
+  archivedTitle: 'Perfis arquivados',
+  noArchived: 'Nenhum perfil arquivado.',
+  archivedOn: (date: string) => `Arquivado em ${date}`,
+  restore: (name: string) => `Restaurar ${name}`,
+  restoreLabel: 'Restaurar',
+  restored: (name: string) => `${name} voltou para a tela de seleção.`,
+  deleteLabel: 'Apagar definitivamente',
+  delete: (name: string) => `Apagar ${name} definitivamente`,
+  deleteTitle: 'Apagar definitivamente?',
+  deleteBody: (name: string) =>
+    `Todos os dados de “${name}” (pesos, medidas, projetos e configurações) serão apagados deste computador. Antes, o Evully faz um backup automático na pasta de backups.`,
+  deleteTypeName: (name: string) => `Digite “${name}” para confirmar`,
+  deleteConfirm: 'Apagar definitivamente',
+  deleted: (name: string) => `${name} foi apagado. O backup foi salvo antes.`,
+  deleting: 'Fazendo backup e apagando…',
+} as const;
+
+export const aboutMessages = {
+  versionTitle: 'Versão',
+  version: (v: string) => `Evully ${v}`,
+  development: 'modo de desenvolvimento',
+  healthTitle: 'Aviso de saúde',
+  restoreTitle: 'Como restaurar um backup',
+  restoreSteps: [
+    'Feche o Evully.',
+    'Abra a pasta %APPDATA%\\Evully no Explorador de Arquivos.',
+    'Renomeie o arquivo evully.db atual (ex.: evully-antigo.db) para guardá-lo.',
+    'Extraia o arquivo evully.db do backup (.zip) e coloque-o nessa pasta.',
+    'Abra o Evully novamente.',
+  ],
+  restoreNote:
+    'A restauração pelo próprio app chega com a transferência de perfil (V0.7). Os backups ficam em %APPDATA%\\Evully\\backups.',
+  licenseTitle: 'Licença',
+  noticesTitle: 'Avisos de terceiros',
+  noticesHint: 'O Evully usa bibliotecas de código aberto. Veja as licenças de cada uma.',
+  showNotices: 'Mostrar avisos de terceiros',
+  unavailable: 'Não foi possível carregar este texto.',
+} as const;

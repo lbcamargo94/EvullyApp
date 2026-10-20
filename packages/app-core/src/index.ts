@@ -16,6 +16,7 @@ export {
   asksAboutMenstrualCycle,
   buildTrackingProposal,
   changeTone,
+  confirmsProfileName,
   MAX_WEIGHT_KG,
   MIN_WEIGHT_KG,
   parseLocalDate,

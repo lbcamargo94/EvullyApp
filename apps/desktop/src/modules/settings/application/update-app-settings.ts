@@ -7,12 +7,8 @@ export class UpdateAppSettings {
   constructor(private readonly settings: SettingsRepository) {}
 
   async execute(input: UpdateAppSettingsInput): Promise<AppSettings> {
-    if (input.inactivityLockMinutes !== undefined) {
-      await this.settings.set(
-        null,
-        SETTING_KEYS.inactivityLockMinutes,
-        input.inactivityLockMinutes,
-      );
+    for (const [key, value] of Object.entries(input) as [keyof UpdateAppSettingsInput, unknown][]) {
+      if (value !== undefined) await this.settings.set(null, SETTING_KEYS[key], value);
     }
     return new GetAppSettings(this.settings).execute();
   }

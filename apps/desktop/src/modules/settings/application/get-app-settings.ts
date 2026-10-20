@@ -2,22 +2,20 @@ import { appSettingsSchema, type AppSettings } from '@evully/contracts';
 import type { SettingsRepository } from '../ports/settings-repository';
 import { DEFAULT_APP_SETTINGS, SETTING_KEYS } from './setting-keys';
 
+const KEYS = Object.keys(SETTING_KEYS) as (keyof AppSettings)[];
+
 export class GetAppSettings {
   constructor(private readonly settings: SettingsRepository) {}
 
   async execute(): Promise<AppSettings> {
-    const stored = {
-      healthNoticeAcceptedAt: await this.settings.get(null, SETTING_KEYS.healthNoticeAcceptedAt),
-      inactivityLockMinutes: await this.settings.get(null, SETTING_KEYS.inactivityLockMinutes),
-    };
-    // Unknown or corrupted values fall back to defaults instead of breaking startup.
-    const parsed = appSettingsSchema.partial().safeParse(stored);
-    const values = parsed.success ? parsed.data : {};
-    return {
-      healthNoticeAcceptedAt:
-        values.healthNoticeAcceptedAt ?? DEFAULT_APP_SETTINGS.healthNoticeAcceptedAt,
-      inactivityLockMinutes:
-        values.inactivityLockMinutes ?? DEFAULT_APP_SETTINGS.inactivityLockMinutes,
-    };
+    const values: Record<string, unknown> = {};
+    for (const key of KEYS) {
+      const stored = await this.settings.get(null, SETTING_KEYS[key]);
+      // Each value is checked on its own: an unknown or corrupted one falls
+      // back to its default without resetting the others.
+      const parsed = appSettingsSchema.shape[key].safeParse(stored);
+      values[key] = parsed.success ? parsed.data : DEFAULT_APP_SETTINGS[key];
+    }
+    return values as AppSettings;
   }
 }

@@ -44,6 +44,9 @@ Telas                packages/app-web (desktop e web), apps/mobile, apps/site
   componente ou tela usa cor literal (`#…`, `text-indigo-600`); usa o
   token semântico (`text-brand`, `bg-surface`).
 - O tema escuro redefine apenas os tokens semânticos.
+- Por padrão o tema segue o sistema (`prefers-color-scheme`). A escolha em
+  Configurações — Geral fixa claro ou escuro com `data-theme` no `<html>`;
+  no desktop, `nativeTheme` acompanha a escolha (barra de título e diálogos).
 
 ## 3. Tokens
 

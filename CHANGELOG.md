@@ -6,6 +6,19 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Configurações — Perfil: arquivar o perfil atual, restaurar perfis
+  arquivados e apagá-los definitivamente digitando o nome. Antes de apagar,
+  o Evully faz um backup; se ele falhar, nada é apagado.
+- Configurações — Geral: tema (igual ao Windows, claro ou escuro) e tempo
+  para voltar à seleção de perfil (nunca, 5, 15 ou 30 minutos).
+- Configurações — Sobre: versão, aviso de saúde, passo a passo para
+  restaurar um backup, licença e avisos de terceiros.
+- `THIRD_PARTY_NOTICES` gerado por `npm run notices` e verificado no CI.
+
+### Changed
+- Uma configuração do app corrompida volta ao padrão sem afetar as outras.
+
 ## [0.1.0-alpha.8] - 2026-10-20
 
 ### Added

@@ -26,7 +26,18 @@ export const profileSchema = profileInputSchema.extend({
 /** What the profile selection screen may show: never personal data (README §8.1). */
 export const profileSummarySchema = z.object({ id: z.string(), name: z.string() });
 
+/** Archived profiles listed in Settings › Perfil, to restore or delete permanently (README §8.3.1). */
+export const archivedProfileSchema = profileSummarySchema.extend({ archivedAt: z.string() });
+
+export const deleteProfileInputSchema = z.object({
+  id: z.uuid(),
+  /** The profile name as typed by the user to confirm. */
+  confirmName: z.string().max(100),
+});
+
 export type ProfileInput = z.infer<typeof profileInputSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileInputSchema>;
 export type ProfileDto = z.infer<typeof profileSchema>;
 export type ProfileSummary = z.infer<typeof profileSummarySchema>;
+export type ArchivedProfile = z.infer<typeof archivedProfileSchema>;
+export type DeleteProfileInput = z.infer<typeof deleteProfileInputSchema>;

@@ -1,4 +1,4 @@
-import type { AppInfo } from '@evully/contracts';
+import type { AppInfo, LegalDocuments } from '@evully/contracts';
 import type { Kysely } from 'kysely';
 import type { DatabaseSchema } from '../database/schema';
 import { backupIpcHandlers } from '../modules/backup/adapters/backup-ipc-handlers';
@@ -32,12 +32,14 @@ interface Dependencies {
   clock: Clock;
   ids: IdGenerator;
   appInfo: () => AppInfo;
+  /** LICENSE and THIRD_PARTY_NOTICES, read from the app resources. */
+  legal: () => Promise<LegalDocuments>;
   backup: { defaultDirectory: string; tempDirectory: string; dialogs: BackupDialogs };
   importFiles: ImportFiles;
 }
 
 /** Wires adapters into use cases (ARCHITECTURE.md §3). The only place that knows every module. */
-export function buildApp({ db, clock, ids, appInfo, backup, importFiles }: Dependencies) {
+export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }: Dependencies) {
   const profiles = new KyselyProfileRepository(db);
   const settings = new KyselySettingsRepository(db, clock, ids);
   const projects = new KyselyProjectRepository(db);
@@ -56,7 +58,13 @@ export function buildApp({ db, clock, ids, appInfo, backup, importFiles }: Depen
 
   const handlers: IpcHandlers = {
     'app:info': appInfo,
-    ...profileIpcHandlers(profiles, clock, ids),
+    'app:legal': legal,
+    ...profileIpcHandlers(profiles, clock, ids, () =>
+      new CreateBackup(backupDeps).execute({
+        kind: 'pre-delete',
+        directory: backup.defaultDirectory,
+      }),
+    ),
     ...settingsIpcHandlers(settings, clock),
     ...trackingIpcHandlers({ profiles, projects, tracking, clock, ids }),
     ...weightIpcHandlers({ profiles, projects, weights, tags, clock, ids }),
