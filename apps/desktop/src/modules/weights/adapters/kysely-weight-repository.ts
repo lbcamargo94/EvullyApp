@@ -176,6 +176,27 @@ export class KyselyTagRepository implements TagRepository {
       .execute();
   }
 
+  async rename(profileId: string, tag: TagRef, now: string): Promise<void> {
+    await this.db
+      .updateTable('tags')
+      .set({ name: tag.name, updated_at: now })
+      .where('id', '=', tag.id)
+      .where('profile_id', '=', profileId)
+      .where('deleted_at', 'is', null)
+      .execute();
+  }
+
+  async softDelete(profileId: string, id: string, now: string): Promise<boolean> {
+    const result = await this.db
+      .updateTable('tags')
+      .set({ deleted_at: now, updated_at: now })
+      .where('id', '=', id)
+      .where('profile_id', '=', profileId)
+      .where('deleted_at', 'is', null)
+      .executeTakeFirst();
+    return result.numUpdatedRows > 0n;
+  }
+
   async filterOwned(profileId: string, ids: readonly string[]): Promise<string[]> {
     if (!ids.length) return [];
     const rows = await this.db

@@ -55,3 +55,8 @@ export type WeightInput = z.infer<typeof weightInputSchema>;
 export type UpdateWeightInput = z.infer<typeof updateWeightInputSchema>;
 export type WeightEntry = z.infer<typeof weightEntrySchema>;
 export type WeightSummary = z.infer<typeof weightSummarySchema>;
+
+export const renameTagInputSchema = createTagInputSchema.extend({ id: z.uuid() });
+export const tagIdInputSchema = z.object({ profileId: z.uuid(), id: z.uuid() });
+
+export type RenameTagInput = z.infer<typeof renameTagInputSchema>;

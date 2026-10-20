@@ -11,16 +11,21 @@ import type {
   MeasurementInput,
   MeasurementSession,
   MeasurementSummary,
+  MeasurementTypeDto,
   ProfileDto,
   ProfileInput,
   ProfileSummary,
+  ProjectCreateInput,
   ProjectDto,
+  ProjectUpdateInput,
+  RenameTagInput,
   Tag,
   TrackingState,
   UpdateAppSettingsInput,
   UpdateMeasurementInput,
   UpdateProfileInput,
   UpdateWeightInput,
+  WeightDisplay,
   WeightEntry,
   WeightInput,
   WeightSummary,
@@ -50,9 +55,16 @@ export interface EvullyClient {
     getState(profileId: string): Promise<TrackingState>;
     accept(input: AcceptTrackingInput): Promise<TrackingState>;
     skip(profileId: string): Promise<TrackingState>;
+    catalog(): Promise<MeasurementTypeDto[]>;
+    setWeightDisplay(profileId: string, weightDisplay: WeightDisplay): Promise<TrackingState>;
+    setMeasurements(profileId: string, measurementTypeIds: string[]): Promise<TrackingState>;
   };
   projects: {
     getActive(profileId: string): Promise<ProjectDto | null>;
+    list(profileId: string): Promise<ProjectDto[]>;
+    create(input: ProjectCreateInput): Promise<ProjectDto>;
+    update(input: ProjectUpdateInput): Promise<ProjectDto>;
+    complete(profileId: string, id: string): Promise<ProjectDto>;
   };
   weights: {
     list(profileId: string): Promise<WeightEntry[]>;
@@ -71,6 +83,8 @@ export interface EvullyClient {
   tags: {
     list(profileId: string): Promise<Tag[]>;
     create(input: CreateTagInput): Promise<Tag>;
+    rename(input: RenameTagInput): Promise<Tag>;
+    remove(profileId: string, id: string): Promise<null>;
   };
   /** CSV import; absent on platforms without local files. */
   imports?: {

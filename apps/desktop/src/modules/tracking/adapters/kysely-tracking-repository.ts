@@ -56,22 +56,7 @@ export class KyselyTrackingRepository implements TrackingRepository {
       }
 
       const c = setup.config;
-      await trx
-        .insertInto('tracking_configs')
-        .values({
-          id: c.id,
-          profile_id: c.profileId,
-          effective_from: c.effectiveFrom,
-          weight_display: c.weightDisplay,
-          focus_areas: JSON.stringify(c.focusAreas),
-          enabled_modules: '[]',
-          source: c.source,
-          rule_version: c.ruleVersion,
-          questionnaire_id: c.questionnaireId,
-          created_at: c.createdAt,
-          updated_at: c.createdAt,
-        })
-        .execute();
+      await trx.insertInto('tracking_configs').values(configRow(c)).execute();
 
       await this.replaceMeasurements(trx, c.profileId, setup.measurementCodes, now);
       await this.addMissingTags(trx, c.profileId, setup.tags, now);
@@ -175,6 +160,28 @@ export class KyselyTrackingRepository implements TrackingRepository {
     return row?.status ?? null;
   }
 
+  async insertConfig(c: TrackingConfigRecord): Promise<void> {
+    await this.db.insertInto('tracking_configs').values(configRow(c)).execute();
+  }
+
+  async setTrackedMeasurements(profileId: string, typeIds: readonly string[], now: string) {
+    await this.db.transaction().execute(async (trx) => {
+      const rows = await trx
+        .selectFrom('measurement_types')
+        .select(['id', 'code'])
+        .where('id', 'in', typeIds.length ? [...typeIds] : [''])
+        .execute();
+      const codeById = new Map(rows.map((r) => [r.id, r.code]));
+      // replaceMeasurements works with codes and keeps the given order.
+      await this.replaceMeasurements(
+        trx,
+        profileId,
+        typeIds.map((id) => codeById.get(id) ?? ''),
+        now,
+      );
+    });
+  }
+
   async listCatalog(): Promise<MeasurementType[]> {
     const rows = await this.db
       .selectFrom('measurement_types')
@@ -211,3 +218,17 @@ export class KyselyTrackingRepository implements TrackingRepository {
     }));
   }
 }
+
+const configRow = (c: TrackingConfigRecord) => ({
+  id: c.id,
+  profile_id: c.profileId,
+  effective_from: c.effectiveFrom,
+  weight_display: c.weightDisplay,
+  focus_areas: JSON.stringify(c.focusAreas),
+  enabled_modules: '[]',
+  source: c.source,
+  rule_version: c.ruleVersion,
+  questionnaire_id: c.questionnaireId,
+  created_at: c.createdAt,
+  updated_at: c.createdAt,
+});

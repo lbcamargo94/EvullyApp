@@ -4,6 +4,7 @@ import {
   type FocusArea,
   type Objective,
   type ProfileDto,
+  type ProjectDto,
   type ProjectDraft,
   type TrackingAnswers,
 } from '@evully/contracts';
@@ -26,12 +27,17 @@ const DEFAULT_PROJECT_DAYS = 62;
 
 export type ProjectErrors = { name?: string | undefined; dates?: string | undefined };
 
-/** State and navigation of the tracking questionnaire, kept out of the screen. */
-export function useQuestionnaire(profile: ProfileDto) {
+/**
+ * State and navigation of the tracking questionnaire, kept out of the screen.
+ * With an active project (redoing it from Settings) the project steps are
+ * skipped and the project is kept as is.
+ */
+export function useQuestionnaire(profile: ProfileDto, activeProject: ProjectDto | null = null) {
   const today = localToday();
-  const [step, setStep] = useState<Step>('objective');
-  const [objective, setObjective] = useState<Objective | null>(null);
-  const [hasProject, setHasProject] = useState(true);
+  const firstStep: Step = activeProject ? 'focus' : 'objective';
+  const [step, setStep] = useState<Step>(firstStep);
+  const [objective, setObjective] = useState<Objective | null>(activeProject?.objective ?? null);
+  const [hasProject, setHasProject] = useState(!activeProject);
   const [project, setProject] = useState<Omit<ProjectDraft, 'objective'>>({
     name: '',
     startDate: today,
@@ -51,8 +57,9 @@ export function useQuestionnaire(profile: ProfileDto) {
   const index = STEPS.indexOf(step);
   const projectDraft: ProjectDraft | null =
     hasProject && objective ? { ...project, objective } : null;
+  const shownProject: ProjectDraft | null = projectDraft ?? activeProject;
   const proposal = buildTrackingProposal(
-    { objective: projectDraft?.objective ?? null, focusAreas, weightDisplay },
+    { objective: shownProject?.objective ?? null, focusAreas, weightDisplay },
     profile.sex,
   );
 
@@ -90,6 +97,7 @@ export function useQuestionnaire(profile: ProfileDto) {
   };
 
   const back = () => {
+    if (step === firstStep) return;
     if (step === 'focus' && !hasProject) return setStep('objective');
     setStep(STEPS[Math.max(0, index - 1)] ?? 'objective');
   };
@@ -121,6 +129,8 @@ export function useQuestionnaire(profile: ProfileDto) {
   return {
     step,
     index,
+    firstStep,
+    keepsActiveProject: activeProject !== null,
     isProjectStep: step === 'objective' || step === 'project',
     objective,
     setObjective,
@@ -129,6 +139,7 @@ export function useQuestionnaire(profile: ProfileDto) {
     projectErrors,
     totalDays: projectLength(project.startDate, project.targetDate),
     projectDraft,
+    shownProject,
     focusAreas,
     toggleFocus,
     measurementsFor,

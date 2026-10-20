@@ -1,14 +1,15 @@
 import {
   errorCode,
   useAcceptTracking,
+  useActiveProject,
   useCurrentProfile,
   useProfile,
   useSkipTracking,
 } from '@evully/app-core';
-import type { ProfileDto } from '@evully/contracts';
+import type { ProfileDto, ProjectDto } from '@evully/contracts';
 import { Button, Card, ProgressBar } from '@evully/ui';
 import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router';
+import { Navigate, useNavigate, useSearchParams } from 'react-router';
 import { Logo } from '../shell/logo';
 import { projectErrorByCode, trackingMessages as m } from './messages.pt-BR';
 import {
@@ -24,22 +25,39 @@ import { STEPS, useQuestionnaire, type QuestionnaireState } from './use-question
 
 const LAST_NUMBERED_STEP = 7;
 
+/** `?redo=1` comes from Settings: leaving does not record a skip and returns there. */
 export function QuestionnaireScreen() {
   const { profileId } = useCurrentProfile();
   const { data: profile } = useProfile(profileId);
+  const active = useActiveProject(profileId);
+  const [params] = useSearchParams();
   if (!profileId) return <Navigate to="/profiles" replace />;
-  if (!profile) return null;
-  return <Questionnaire profile={profile} />;
+  if (!profile || active.isPending) return null;
+  return (
+    <Questionnaire
+      profile={profile}
+      activeProject={active.data ?? null}
+      redo={params.get('redo') === '1'}
+    />
+  );
 }
 
-function Questionnaire({ profile }: { profile: ProfileDto }) {
+function Questionnaire({
+  profile,
+  activeProject,
+  redo,
+}: {
+  profile: ProfileDto;
+  activeProject: ProjectDto | null;
+  redo: boolean;
+}) {
   const navigate = useNavigate();
-  const q = useQuestionnaire(profile);
+  const q = useQuestionnaire(profile, activeProject);
   const accept = useAcceptTracking(profile.id);
   const skip = useSkipTracking(profile.id);
   const [saveError, setSaveError] = useState<string | null>(null);
   const busy = accept.isPending || skip.isPending;
-  const finish = () => void navigate('/app', { replace: true });
+  const finish = () => void navigate(redo ? '/app/settings' : '/app', { replace: true });
 
   const submit = async () => {
     setSaveError(null);
@@ -54,7 +72,7 @@ function Questionnaire({ profile }: { profile: ProfileDto }) {
   };
 
   const skipAll = async () => {
-    await skip.mutateAsync(undefined);
+    if (!redo) await skip.mutateAsync(undefined);
     finish();
   };
 
@@ -87,7 +105,7 @@ function Questionnaire({ profile }: { profile: ProfileDto }) {
           disabled={busy}
           className="self-center text-sm text-text-muted underline-offset-4 hover:text-text hover:underline"
         >
-          {m.skipAll}
+          {redo ? m.cancelRedo : m.skipAll}
         </button>
       </div>
     </main>
@@ -124,8 +142,8 @@ function StepBody({ q, sex }: { q: QuestionnaireState; sex: ProfileDto['sex'] })
     case 'summary':
       return (
         <SummaryStep
-          objective={q.projectDraft?.objective ?? null}
-          project={q.projectDraft}
+          objective={q.shownProject?.objective ?? null}
+          project={q.shownProject}
           proposal={q.proposal}
         />
       );
@@ -144,7 +162,12 @@ function Footer({
   const isSummary = q.step === 'summary';
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-      <Button type="button" variant="ghost" onClick={q.back} disabled={q.index === 0 || busy}>
+      <Button
+        type="button"
+        variant="ghost"
+        onClick={q.back}
+        disabled={q.step === q.firstStep || busy}
+      >
         {m.back}
       </Button>
       <div className="flex flex-wrap gap-3">
@@ -153,7 +176,7 @@ function Footer({
             <Button
               type="button"
               variant="secondary"
-              onClick={() => q.goTo('objective')}
+              onClick={() => q.goTo(q.firstStep)}
               disabled={busy}
             >
               {m.adjust}

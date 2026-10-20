@@ -7,6 +7,7 @@ import { CreateTag } from '../application/create-tag';
 import { DeleteWeight } from '../application/delete-weight';
 import { GetWeightSummary } from '../application/get-weight-summary';
 import { ListTags, ListWeights } from '../application/list-weights';
+import { RemoveTag, RenameTag } from '../application/manage-tags';
 import { RegisterWeight } from '../application/register-weight';
 import { UpdateWeight } from '../application/update-weight';
 import type {
@@ -22,7 +23,9 @@ type WeightChannels =
   | 'weights:update'
   | 'weights:delete'
   | 'tags:list'
-  | 'tags:create';
+  | 'tags:create'
+  | 'tags:rename'
+  | 'tags:remove';
 
 /** What the screens receive: no profile id or audit timestamps. */
 const toDto = (record: WeightEntryRecord): WeightEntry => ({
@@ -50,6 +53,8 @@ export function weightIpcHandlers(deps: {
   const remove = new DeleteWeight(weights, clock);
   const summary = new GetWeightSummary(weights, projects, clock);
   const createTag = new CreateTag(profiles, tags, clock, ids);
+  const renameTag = new RenameTag(tags, clock);
+  const removeTag = new RemoveTag(tags, clock);
   return {
     'weights:list': async (input) => (await list.execute(input)).map(toDto),
     'weights:summary': (input) => summary.execute(input),
@@ -58,5 +63,7 @@ export function weightIpcHandlers(deps: {
     'weights:delete': (input) => remove.execute(input),
     'tags:list': (input) => listTags.execute(input),
     'tags:create': (input) => createTag.execute(input),
+    'tags:rename': (input) => renameTag.execute(input),
+    'tags:remove': (input) => removeTag.execute(input),
   };
 }

@@ -45,6 +45,10 @@ export interface TrackingRepository {
   listConfigs(profileId: string): Promise<TrackingConfigRecord[]>;
   latestQuestionnaireStatus(profileId: string): Promise<'completed' | 'skipped' | null>;
   listActiveMeasurementTypes(profileId: string): Promise<MeasurementType[]>;
+  /** Adds a configuration record; existing records are never changed. */
+  insertConfig(config: TrackingConfigRecord): Promise<void>;
+  /** Turns on `typeIds` in this order; the others are turned off (history kept). */
+  setTrackedMeasurements(profileId: string, typeIds: readonly string[], now: string): Promise<void>;
   /** The system measurement catalog (active types), in default order. */
   listCatalog(): Promise<MeasurementType[]>;
 }

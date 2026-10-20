@@ -44,9 +44,18 @@ export const ipcEvullyClient: EvullyClient = {
     getState: (profileId) => call('tracking:get-state', { profileId }),
     accept: (input) => call('tracking:accept', input),
     skip: (profileId) => call('tracking:skip', { profileId }),
+    catalog: () => call('tracking:catalog', undefined),
+    setWeightDisplay: (profileId, weightDisplay) =>
+      call('tracking:set-weight-display', { profileId, weightDisplay }),
+    setMeasurements: (profileId, measurementTypeIds) =>
+      call('tracking:set-measurements', { profileId, measurementTypeIds }),
   },
   projects: {
     getActive: (profileId) => call('projects:get-active', { profileId }),
+    list: (profileId) => call('projects:list', { profileId }),
+    create: (input) => call('projects:create', input),
+    update: (input) => call('projects:update', input),
+    complete: (profileId, id) => call('projects:complete', { profileId, id }),
   },
   weights: {
     list: (profileId) => call('weights:list', { profileId }),
@@ -65,6 +74,8 @@ export const ipcEvullyClient: EvullyClient = {
   tags: {
     list: (profileId) => call('tags:list', { profileId }),
     create: (input) => call('tags:create', input),
+    rename: (input) => call('tags:rename', input),
+    remove: (profileId, id) => call('tags:remove', { profileId, id }),
   },
   imports: {
     preview: (profileId, kind) => call('import:preview', { profileId, kind }),
