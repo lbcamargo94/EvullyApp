@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Configurações em abas: Acompanhamento, Projeto e Geral e backup.
+- Acompanhamento: escolher como o peso aparece no painel, ligar/desligar e
+  reordenar as medidas acompanhadas (o histórico das desligadas é mantido),
+  renomear, remover e criar etiquetas, e refazer o questionário (mantém o
+  projeto ativo).
+- Projeto: editar nome, objetivo e datas do projeto ativo, concluí-lo, criar
+  um novo quando não houver ativo e ver os projetos anteriores.
+
 ## [0.1.0-alpha.7] - 2026-10-16
 
 ### Added

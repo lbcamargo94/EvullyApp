@@ -21,7 +21,7 @@ export function BackupErrorBanner() {
         <span className="text-sm">{m.errorBody(status.lastError.at)}</span>
       </div>
       <Button asChild variant="secondary">
-        <Link to="/app/settings">{m.errorAction}</Link>
+        <Link to="/app/settings?tab=general">{m.errorAction}</Link>
       </Button>
       <Button type="button" variant="ghost" onClick={() => dismiss.mutate(undefined)}>
         {m.dismiss}

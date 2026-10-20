@@ -5,6 +5,7 @@ export const trackingMessages = {
   step: (n: number, total: number) => `Passo ${n} de ${total}`,
   summaryStep: 'Resumo',
   skipAll: 'Pular e configurar depois',
+  cancelRedo: 'Cancelar e voltar às Configurações',
   back: 'Voltar',
   skip: 'Pular',
   skipProject: 'Pular projeto',

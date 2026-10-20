@@ -26,8 +26,11 @@ jobs:
       - run: npm run licenses:check
       - run: npm audit --omit=dev --audit-level=high
       - run: npm run dist
+      # Convenience copy only (installers are attached to releases); a full
+      # storage quota must not fail the checks above.
       - uses: actions/upload-artifact@v4
+        continue-on-error: true
         with:
           name: Evully-Setup
           path: apps/desktop/release/*.exe
-          retention-days: 14
+          retention-days: 7

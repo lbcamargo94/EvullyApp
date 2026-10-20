@@ -6,6 +6,14 @@ import {
   importResultSchema,
   importTokenInputSchema,
   measurementIdInputSchema,
+  measurementTypeSchema,
+  projectCreateInputSchema,
+  projectIdInputSchema,
+  projectUpdateInputSchema,
+  renameTagInputSchema,
+  setTrackedMeasurementsInputSchema,
+  setWeightDisplayInputSchema,
+  tagIdInputSchema,
   measurementInputSchema,
   measurementSessionSchema,
   measurementSummarySchema,
@@ -77,6 +85,21 @@ export const ipcChannels = {
   'import:confirm': { input: importTokenInputSchema, output: importResultSchema },
   'import:cancel': { input: importTokenInputSchema, output: z.null() },
   'import:template': { input: importRequestSchema, output: z.boolean() },
+  'tracking:catalog': { input: z.undefined(), output: z.array(measurementTypeSchema) },
+  'tracking:set-weight-display': {
+    input: setWeightDisplayInputSchema,
+    output: trackingStateSchema,
+  },
+  'tracking:set-measurements': {
+    input: setTrackedMeasurementsInputSchema,
+    output: trackingStateSchema,
+  },
+  'projects:list': { input: profileScopedInputSchema, output: z.array(projectSchema) },
+  'projects:create': { input: projectCreateInputSchema, output: projectSchema },
+  'projects:update': { input: projectUpdateInputSchema, output: projectSchema },
+  'projects:complete': { input: projectIdInputSchema, output: projectSchema },
+  'tags:rename': { input: renameTagInputSchema, output: tagSchema },
+  'tags:remove': { input: tagIdInputSchema, output: z.null() },
 } as const;
 
 export type IpcChannel = keyof typeof ipcChannels;

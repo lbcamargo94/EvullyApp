@@ -82,3 +82,25 @@ export type MeasurementTypeDto = z.infer<typeof measurementTypeSchema>;
 export type TrackingConfigDto = z.infer<typeof trackingConfigSchema>;
 export type TrackingState = z.infer<typeof trackingStateSchema>;
 export type ProjectDto = z.infer<typeof projectSchema>;
+
+// --------------------------------------------------- settings › tracking
+
+export const setWeightDisplayInputSchema = z.object({
+  profileId: z.uuid(),
+  weightDisplay: weightDisplaySchema,
+});
+
+/** Measurements the profile tracks, in display order (README §8.3). */
+export const setTrackedMeasurementsInputSchema = z.object({
+  profileId: z.uuid(),
+  measurementTypeIds: z.array(z.uuid()).min(1, 'Escolha pelo menos uma medida').max(20),
+});
+
+// -------------------------------------------------- settings › projects
+
+export const projectCreateInputSchema = projectDraftSchema.extend({ profileId: z.uuid() });
+export const projectUpdateInputSchema = projectCreateInputSchema.extend({ id: z.uuid() });
+export const projectIdInputSchema = z.object({ profileId: z.uuid(), id: z.uuid() });
+
+export type ProjectCreateInput = z.infer<typeof projectCreateInputSchema>;
+export type ProjectUpdateInput = z.infer<typeof projectUpdateInputSchema>;

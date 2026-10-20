@@ -14,12 +14,15 @@ import { AppShell } from './features/shell/app-shell';
 import { HealthNoticeScreen } from './features/shell/health-notice-screen';
 import { HomeScreen } from './features/shell/home-screen';
 import { ImportScreen } from './features/imports/import-screen';
-import { SettingsScreen } from './features/settings/settings-screen';
 import { QuestionnaireScreen } from './features/tracking/questionnaire-screen';
 
-// Screens with charts load on demand to keep the initial bundle small (FRONTEND.md §7).
+// Screens with charts or many forms load on demand to keep the initial bundle small
+// (FRONTEND.md §7).
 const WeightScreen = lazy(() =>
   import('./features/weights/weight-screen').then((m) => ({ default: m.WeightScreen })),
+);
+const SettingsScreen = lazy(() =>
+  import('./features/settings/settings-screen').then((m) => ({ default: m.SettingsScreen })),
 );
 const MeasurementScreen = lazy(() =>
   import('./features/measurements/measurement-screen').then((m) => ({
@@ -87,7 +90,14 @@ function AppRoutes() {
           }
         />
         <Route path="import/:kind" element={<ImportScreen />} />
-        <Route path="settings" element={<SettingsScreen />} />
+        <Route
+          path="settings"
+          element={
+            <Suspense fallback={null}>
+              <SettingsScreen />
+            </Suspense>
+          }
+        />
         <Route path="profile" element={<ProfileEditScreen />} />
       </Route>
       <Route path="*" element={<Navigate to="/profiles" replace />} />

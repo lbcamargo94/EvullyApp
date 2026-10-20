@@ -40,4 +40,7 @@ export interface TagRepository {
   filterOwned(profileId: string, ids: readonly string[]): Promise<string[]>;
   /** Adds a tag at the end of the profile's list. */
   insert(tag: TagRef & { profileId: string; createdAt: string }): Promise<void>;
+  rename(profileId: string, tag: TagRef, now: string): Promise<void>;
+  /** Soft delete; false if the tag does not exist for this profile. */
+  softDelete(profileId: string, id: string, now: string): Promise<boolean>;
 }
