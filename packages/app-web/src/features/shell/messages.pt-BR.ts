@@ -19,10 +19,13 @@ export const shellMessages = {
   ],
   healthAccept: 'Entendi',
   homeTitle: (name: string) => `Olá, ${name}`,
-  homeBody: 'Registre suas primeiras medidas para acompanhar a evolução aqui.',
   registerWeight: 'Registrar peso',
-  noProject: 'Sem projeto ativo. Você poderá criar um nas Configurações.',
-  trackedTitle: 'Você acompanha',
+  noProjectTitle: 'Sem projeto ativo',
+  noProjectBody:
+    'Um projeto dá nome e prazo ao seu objetivo. O painel mostra em que dia você está e colore a evolução conforme o objetivo.',
+  createProject: 'Criar projeto',
+  projectEndedHint: 'O prazo terminou. Conclua o projeto para começar um novo quando quiser.',
+  completeProject: 'Concluir projeto',
   projectLabel: 'Projeto atual',
   projectKicker: (objective: string) => `Projeto · ${objective}`,
   projectDay: (day: number, total: number, left: number) =>

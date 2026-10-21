@@ -18,7 +18,7 @@ import { objectiveLabels } from '../tracking/messages.pt-BR';
 import { WeightSummaryCard } from '../weights/weight-summary-card';
 import { shellMessages as m } from './messages.pt-BR';
 
-/** Placeholder until the V0.1 dashboard (README §8.5): project progress and what is tracked. */
+/** Dashboard (README §8.5): project progress, weight as chosen and up to 3 measurements. */
 export function HomeScreen() {
   const { profileId } = useCurrentProfile();
   const { data: profile } = useProfile(profileId);
@@ -26,7 +26,6 @@ export function HomeScreen() {
   const { data: tracking } = useTrackingState(profileId);
   const { data: weight } = useWeightSummary(profileId);
   const { data: measurements } = useMeasurementSummary(profileId);
-  const hasMeasurements = measurements?.items.some((i) => i.current) ?? false;
   if (!profile) return null;
 
   return (
@@ -42,27 +41,29 @@ export function HomeScreen() {
           </Button>
         </div>
       </div>
-      {project ? <ProjectCard project={project} /> : <Card>{m.noProject}</Card>}
+      {project ? <ProjectCard project={project} /> : <NoProjectCard />}
       <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
         {weight && tracking?.config && (
           <WeightSummaryCard summary={weight} display={tracking.config.weightDisplay} />
         )}
         {measurements && <MeasurementCards summary={measurements} />}
       </div>
-      {!hasMeasurements && tracking && tracking.measurementTypes.length > 0 && (
-        <Card>
-          <h2 className="text-lg font-semibold">{m.trackedTitle}</h2>
-          <ul className="flex flex-wrap gap-2">
-            {tracking.measurementTypes.map((t) => (
-              <li key={t.id} className="rounded-full bg-surface-muted px-3 py-1 text-sm text-text">
-                {t.name}
-              </li>
-            ))}
-          </ul>
-          <p className="text-sm text-text-muted">{m.homeBody}</p>
-        </Card>
-      )}
     </>
+  );
+}
+
+/** Without an active project the dashboard invites the user to create one (README §8.5). */
+function NoProjectCard() {
+  return (
+    <Card aria-label={m.projectLabel}>
+      <div className="flex flex-col gap-1">
+        <h2 className="text-lg font-semibold">{m.noProjectTitle}</h2>
+        <p className="text-sm text-text-muted">{m.noProjectBody}</p>
+      </div>
+      <Button asChild variant="secondary" className="self-start">
+        <Link to="/app/settings?tab=project">{m.createProject}</Link>
+      </Button>
+    </Card>
   );
 }
 
@@ -92,6 +93,14 @@ function ProjectCard({ project }: { project: ProjectDto }) {
           {status} · {m.until(formatLocalDate(project.targetDate))}
         </span>
       </div>
+      {timeline.status === 'ended' && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-text-muted">{m.projectEndedHint}</p>
+          <Button asChild variant="secondary">
+            <Link to="/app/settings?tab=project">{m.completeProject}</Link>
+          </Button>
+        </div>
+      )}
       <ProgressBar
         value={
           timeline.status === 'in_progress' ? timeline.day : timeline.status === 'ended' ? 1 : 0

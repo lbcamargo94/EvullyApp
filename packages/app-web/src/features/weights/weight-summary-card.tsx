@@ -5,7 +5,8 @@ import { weightMessages as m } from './messages.pt-BR';
 
 /**
  * Weight indicator as chosen in the questionnaire (README §8.2.2): trend or
- * today's weight as the main number. Nothing is shown when the user hides it.
+ * today's weight as the main number. Nothing is shown when the user hides it;
+ * without weighings it says so instead of showing zero (README §8.5).
  */
 export function WeightSummaryCard({
   summary,
@@ -14,7 +15,16 @@ export function WeightSummaryCard({
   summary: WeightSummary;
   display: WeightDisplay;
 }) {
-  if (display === 'hidden' || !summary.current) return null;
+  if (display === 'hidden') return null;
+  if (!summary.current) {
+    return (
+      <StatCard
+        label={display === 'trend' ? m.trend : m.current}
+        value={m.insufficient}
+        footnote={m.noWeighingsHint}
+      />
+    );
+  }
 
   const showTrend = display === 'trend' && summary.trend !== null;
   const main = showTrend ? summary.trend : summary.current.weightKg;
