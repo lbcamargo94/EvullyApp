@@ -43,9 +43,11 @@ function createWindow(): void {
   });
 
   window.once('ready-to-show', () => window.show());
-  window.webContents.on('render-process-gone', (_event, details) =>
-    log.error(`renderer gone: ${details.reason} (exit ${details.exitCode})`),
-  );
+  window.webContents.on('render-process-gone', (_event, details) => {
+    if (details.reason !== 'clean-exit') {
+      log.error(`renderer gone: ${details.reason} (exit ${details.exitCode})`);
+    }
+  });
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', (event, url) => {
     if (!isTrustedSender(url)) event.preventDefault();

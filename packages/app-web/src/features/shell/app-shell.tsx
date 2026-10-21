@@ -5,7 +5,7 @@ import {
   useProfile,
   useTrackingState,
 } from '@evully/app-core';
-import { LayoutDashboard, Ruler, Scale, Settings } from 'lucide-react';
+import { Apple, LayoutDashboard, Ruler, Scale, Settings } from 'lucide-react';
 import { useCallback } from 'react';
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router';
 import { BackupErrorBanner } from '../settings/backup-error-banner';
@@ -57,6 +57,10 @@ export function AppShell() {
           <NavLink to="/app/measurements" className={navItem}>
             <Ruler aria-hidden="true" className="size-5" />
             {m.measurements}
+          </NavLink>
+          <NavLink to="/app/foods" className={navItem}>
+            <Apple aria-hidden="true" className="size-5" />
+            {m.foods}
           </NavLink>
           <NavLink to="/app/settings" className={navItem}>
             <Settings aria-hidden="true" className="size-5" />

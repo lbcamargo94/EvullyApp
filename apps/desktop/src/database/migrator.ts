@@ -5,6 +5,7 @@ import * as m0002 from './migrations/0002_profiles_settings';
 import * as m0003 from './migrations/0003_tracking';
 import * as m0004 from './migrations/0004_body_weights';
 import * as m0005 from './migrations/0005_body_measurements';
+import * as m0006 from './migrations/0006_foods';
 
 // Migrations are imported statically so they are bundled into the app.
 // Never edit a published migration; add a new one (README §6.4).
@@ -14,6 +15,7 @@ const migrations: Record<string, Migration> = {
   '0003_tracking': m0003,
   '0004_body_weights': m0004,
   '0005_body_measurements': m0005,
+  '0006_foods': m0006,
 };
 
 const provider: MigrationProvider = { getMigrations: async () => migrations };

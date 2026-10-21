@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Nutrição (V0.2): catálogo de **Alimentos** da casa, compartilhado entre
+  os perfis. Cadastro com nutrientes por 100 g, por ml ou por porção,
+  copiados do rótulo ou da tabela que você usa; busca sem acentos; editar
+  e excluir.
+
+### Changed
+- O log não registra mais o fechamento normal da janela como falha.
+
 ## [0.1.0] - 2026-10-21
 
 Primeira versão estável da V0.1: perfis, questionário de acompanhamento,

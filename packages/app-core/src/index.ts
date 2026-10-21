@@ -3,6 +3,7 @@ export * from './client-context';
 export * from './features/app/use-app-info';
 export * from './features/profiles/current-profile';
 export * from './features/profiles/use-profiles';
+export * from './features/nutrition/use-foods';
 export * from './features/settings/use-app-settings';
 export * from './features/shell/idle-timer';
 export * from './features/settings/use-tracking-settings';
