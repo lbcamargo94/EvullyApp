@@ -90,6 +90,25 @@ export interface ProfileMeasurementTypesTable {
   updated_at: string;
 }
 
+/** Household catalog: no profile_id (README §6.1). */
+export interface FoodsTable {
+  id: string;
+  name: string;
+  brand: string | null;
+  reference_amount: number;
+  reference_unit: 'g' | 'ml' | 'portion';
+  calories_kcal: number;
+  protein_g: number;
+  carbohydrate_g: number;
+  fat_g: number;
+  fiber_g: number | null;
+  sodium_mg: number | null;
+  source: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -151,4 +170,5 @@ export interface DatabaseSchema {
   body_weight_tags: BodyWeightTagsTable;
   body_measurements: BodyMeasurementsTable;
   body_measurement_values: BodyMeasurementValuesTable;
+  foods: FoodsTable;
 }

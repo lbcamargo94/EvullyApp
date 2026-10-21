@@ -245,6 +245,7 @@ licenças e `npm audit`.
 | 06/10/2026 | Licença proprietária | Intenção comercial. |
 | 07/10/2026 | Fronteiras com `no-restricted-imports` em vez de `eslint-plugin-boundaries` | Regra nativa do ESLint, sem dependência extra e com mensagem que aponta para este documento. |
 | 14/10/2026 | Backups com `VACUUM INTO` + adm-zip (MIT); caminhos escolhidos só por diálogos nativos no processo main | Cópia consistente do banco aberto; o renderer nunca envia caminhos de arquivo (SECURITY.md §2.3). |
+| 21/10/2026 | Catálogo de alimentos (`foods`) da casa, sem `profile_id`; refeições, registros, metas e água por perfil | Evita cadastro em dobro entre os perfis do mesmo computador; registros copiam os nutrientes, então editar um alimento não altera o histórico de ninguém (README §6.1, §9.2). |
 | 20/10/2026 | Apagar perfil definitivamente só depois de arquivá-lo, com backup `pre-delete` antes; exclusão via `ON DELETE CASCADE` em uma transação | Duas etapas evitam perda por engano; o backup permite desfazer manualmente (README §8.3.1). |
 | 20/10/2026 | `THIRD_PARTY_NOTICES` gerado por script (`npm query`) e verificado no CI; enviado como `extraResources` e lido só pelo main | Avisos sempre corretos sem manutenção manual; o renderer não acessa arquivos (SECURITY.md §2.3). |
 | 07/10/2026 | `better-sqlite3` 13 sem recompilação para o Electron | Usa Node-API; elimina a necessidade de compilador C++ no Windows e no CI. |

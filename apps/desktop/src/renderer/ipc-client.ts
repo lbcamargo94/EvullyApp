@@ -82,6 +82,12 @@ export const ipcEvullyClient: EvullyClient = {
     rename: (input) => call('tags:rename', input),
     remove: (profileId, id) => call('tags:remove', { profileId, id }),
   },
+  foods: {
+    list: () => call('foods:list', undefined),
+    create: (input) => call('foods:create', input),
+    update: (input) => call('foods:update', input),
+    remove: (id) => call('foods:remove', { id }),
+  },
   imports: {
     preview: (profileId, kind) => call('import:preview', { profileId, kind }),
     confirm: (profileId, token) => call('import:confirm', { profileId, token }),

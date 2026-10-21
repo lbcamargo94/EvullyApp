@@ -468,6 +468,9 @@ Exceções:
 
 - **Catálogos do sistema** (ex.: `measurement_types`): sem `profile_id`
   e sem `deleted_at`; desativados com `is_active`.
+- **Catálogo da casa** (`foods`): sem `profile_id`, compartilhado entre
+  os perfis do computador; tem soft delete. O que é pessoal (refeições,
+  registros, metas, água) fica em tabelas com `profile_id`.
 - **Tabelas de ligação** (ex.: `body_weight_tags`): sem `updated_at` e
   sem `deleted_at`; a ligação é criada ou removida.
 - **Tabelas de histórico** (`tracking_configs`, `profile_questionnaires`,
@@ -1141,6 +1144,10 @@ source           nulo
 Nutrientes podem ser cadastrados por 100 g ou por porção. O peso pode
 se referir ao alimento pronto/cozido, conforme o cadastro.
 
+O catálogo é **compartilhado entre os perfis da casa** (§6.1): um alimento
+cadastrado por um perfil aparece para os outros. Editar um alimento não
+muda registros já feitos (§9.4).
+
 ### 9.3 Refeições
 
 Tipos iniciais: café da manhã, lanche da manhã, almoço, pré-treino,
@@ -1159,6 +1166,17 @@ Salada/legumes
 
 Cada registro guarda uma **cópia dos nutrientes calculados** no momento
 do registro. Editar um alimento depois não altera dias passados.
+
+### 9.4.1 Água — `water_logs`
+
+```text
+log_date     data local
+amount_ml
+logged_at    instante
+```
+
+Registro rápido no dia (atalhos de copo e garrafa), comparado com a meta
+de água (§9.6). A água faz parte da nutrição, não dos hábitos (§11.2).
 
 ### 9.5 Recursos
 
@@ -1187,6 +1205,9 @@ source           manual | recommendation
 
 A meta vigente em uma data D é a de maior `effective_from` ≤ D. Mudar uma
 meta cria um novo registro; nunca altera o anterior.
+
+Cada meta é um **valor único** (sem faixa mínima e máxima). Faixas podem
+ser adicionadas depois sem mudar os registros existentes.
 
 ### 9.7 Metas iniciais do seed
 
@@ -1453,8 +1474,8 @@ habit_logs          habit_definition_id, profile_id, log_date, value, notes
 
 Tipos: booleano, quantidade, duração, horário.
 
-Exemplos: creatina, água, passos, caminhada, treino, cardio, horário de
-sono.
+Exemplos: creatina, passos, caminhada, treino, cardio, horário de sono.
+A água é registrada na nutrição (§9.4.1).
 
 ---
 
@@ -1661,7 +1682,7 @@ No topo: `Perfil atual: Lucas ▼`.
 | Acompanhamento | `tracking_templates` (modelos para profissionais) | V3.x |
 | Corpo | `body_weights`, `tags`, `body_weight_tags`, `measurement_types`, `body_measurements`, `body_measurement_values` | V0.1 |
 | Corpo | `progress_photos`, `body_targets`, `body_composition_records`, `cycle_logs` | futuro |
-| Nutrição | `nutrition_targets`, `foods`, `meal_templates`, `meal_template_items`, `food_logs` | V0.2 |
+| Nutrição | `nutrition_targets`, `foods`, `meal_templates`, `meal_template_items`, `food_logs`, `water_logs` | V0.2 |
 | Nutrição | `recipes`, `recipe_items` | V0.2+ |
 | Treino | `exercises`, `workout_plans`, `workout_days`, `workout_plan_exercises`, `workout_sessions`, `exercise_performances`, `exercise_sets` | V0.3 |
 | Cardio | `cardio_sessions` | V0.4 |
@@ -2202,6 +2223,14 @@ Decisões que serão tomadas quando a versão correspondente começar.
 | Data de nascimento do seed. | 16/08/1994. |
 | Data-alvo da V0.1. | O quanto antes; sem data fixa. |
 
+**Decididas em 21/10/2026 (início da V0.2):**
+
+| Questão | Decisão |
+|---|---|
+| O catálogo de alimentos é compartilhado entre perfis da casa ou por perfil? | Compartilhado; o resto da nutrição é por perfil (§6.1, §9.2). |
+| Água é registrada como hábito de quantidade ou como parte da nutrição? | Na nutrição, já na V0.2 (§9.4.1). |
+| Metas nutricionais aceitam faixa ou só valor único? | Só valor único por enquanto (§9.6). |
+
 Nenhuma pendência bloqueia os wireframes da V0.1. As preferências de
 cada pessoa são resolvidas pelo questionário (§8.2); o interesse em
 recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
@@ -2210,10 +2239,7 @@ recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
 
 | Questão | Versão |
 |---|---|
-| Água é registrada como hábito de quantidade ou como parte da nutrição? | V0.2 / V0.4 |
 | Passos vêm de hábitos, de cardio ou de ambos? | V0.4 |
-| O catálogo de alimentos é compartilhado entre perfis da casa ou por perfil? | V0.2 |
-| Metas nutricionais aceitam faixa (ex.: água 3–3,5 L) ou só valor único? | V0.2 |
 | Fotos de progresso são criptografadas em disco? | futuro |
 | Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.4 |
 | Assinatura de código (Authenticode) do instalador. | V1.0 |

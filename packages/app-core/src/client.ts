@@ -6,6 +6,8 @@ import type {
   BackupResult,
   BackupStatus,
   CreateTagInput,
+  FoodDto,
+  FoodInput,
   DeleteProfileInput,
   ImportKind,
   ImportPreview,
@@ -25,6 +27,7 @@ import type {
   Tag,
   TrackingState,
   UpdateAppSettingsInput,
+  UpdateFoodInput,
   UpdateMeasurementInput,
   UpdateProfileInput,
   UpdateWeightInput,
@@ -95,6 +98,12 @@ export interface EvullyClient {
     remove(profileId: string, id: string): Promise<null>;
   };
   /** CSV import; absent on platforms without local files. */
+  foods: {
+    list(): Promise<FoodDto[]>;
+    create(input: FoodInput): Promise<FoodDto>;
+    update(input: UpdateFoodInput): Promise<FoodDto>;
+    remove(id: string): Promise<null>;
+  };
   imports?: {
     preview(profileId: string, kind: ImportKind): Promise<ImportPreview | null>;
     confirm(profileId: string, token: string): Promise<ImportResult>;
