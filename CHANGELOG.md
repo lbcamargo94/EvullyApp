@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.1.0-alpha.10] - 2026-10-21
+
 ### Changed
 - Painel: sem projeto ativo, convida a criar um; com o prazo encerrado,
   oferece concluir o projeto.
@@ -133,7 +135,8 @@ Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
   instalador Windows (`Evully-Setup-<versão>.exe`).
 - Verificação de licenças copyleft (`npm run licenses:check`).
 
-[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.9...HEAD
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.10...HEAD
+[0.1.0-alpha.10]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.9...v0.1.0-alpha.10
 [0.1.0-alpha.9]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.8...v0.1.0-alpha.9
 [0.1.0-alpha.8]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.7...v0.1.0-alpha.8
 [0.1.0-alpha.7]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.6...v0.1.0-alpha.7
