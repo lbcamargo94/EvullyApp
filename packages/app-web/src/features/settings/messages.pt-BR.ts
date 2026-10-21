@@ -86,6 +86,10 @@ export const projectSettingsMessages = {
   completeTitle: 'Concluir este projeto?',
   completeBody: (name: string) =>
     `“${name}” vai para os projetos anteriores. Seus registros continuam salvos e você poderá criar um novo projeto.`,
+  completedTitle: (name: string) => `“${name}” foi concluído`,
+  completedBody:
+    'Quer revisar o que acompanhar daqui em diante? Refaça o questionário para receber uma nova sugestão. Depois, crie o próximo projeto aqui.',
+  redo: 'Refazer questionário',
   pastTitle: 'Projetos anteriores',
   noPast: 'Nenhum projeto concluído ainda.',
   period: (start: string, end: string) => `${start} a ${end}`,

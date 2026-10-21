@@ -39,6 +39,9 @@ export const measurementMessages = {
   confirm: 'Excluir',
   cancel: 'Cancelar',
   sinceStart: 'desde o início',
+  insufficient: 'Dados insuficientes',
+  noDataHint: 'Registre em Medidas para acompanhar aqui.',
+  firstValueHint: 'A variação aparece a partir da segunda medição.',
 } as const;
 
 export const measurementErrorByCode: Record<string, string> = {

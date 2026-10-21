@@ -6,6 +6,13 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Changed
+- Painel: sem projeto ativo, convida a criar um; com o prazo encerrado,
+  oferece concluir o projeto.
+- Painel: peso e as 3 primeiras medidas do perfil aparecem mesmo sem
+  registros, com "Dados insuficientes" em vez de sumir.
+- Ao concluir um projeto, o app oferece refazer o questionário.
+
 ## [0.1.0-alpha.9] - 2026-10-20
 
 ### Added

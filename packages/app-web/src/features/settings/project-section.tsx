@@ -10,6 +10,7 @@ import {
 import type { ProjectDraft, ProjectDto } from '@evully/contracts';
 import { Button, Card, ConfirmDialog } from '@evully/ui';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { objectiveLabels } from '../tracking/messages.pt-BR';
 import { projectSettingsMessages as m, settingsMessages } from './messages.pt-BR';
 import { ProjectForm } from './project-form';
@@ -20,13 +21,20 @@ const DEFAULT_PROJECT_DAYS = 62;
 /** Settings › Projeto (README §8.7): one active project at a time. */
 export function ProjectSection({ profileId }: { profileId: string }) {
   const { data: projects } = useProjects(profileId);
+  const [completed, setCompleted] = useState<string | null>(null);
   if (!projects) return null;
   const active = projects.find((p) => p.status === 'active');
   const past = projects.filter((p) => p.status !== 'active');
   return (
     <>
+      {completed && !active && <CompletedCard name={completed} />}
       {active ? (
-        <ActiveProjectCard key={active.updatedAt} profileId={profileId} project={active} />
+        <ActiveProjectCard
+          key={active.updatedAt}
+          profileId={profileId}
+          project={active}
+          onCompleted={setCompleted}
+        />
       ) : (
         <NewProjectCard profileId={profileId} />
       )}
@@ -35,7 +43,38 @@ export function ProjectSection({ profileId }: { profileId: string }) {
   );
 }
 
-function ActiveProjectCard({ profileId, project }: { profileId: string; project: ProjectDto }) {
+/** After completing a project the app offers to redo the questionnaire (README §7.1). */
+function CompletedCard({ name }: { name: string }) {
+  const navigate = useNavigate();
+  return (
+    <Card role="status" aria-labelledby="completed-title">
+      <div className="flex flex-col gap-1">
+        <h2 id="completed-title" className="text-lg font-semibold">
+          {m.completedTitle(name)}
+        </h2>
+        <p className="text-sm text-text-muted">{m.completedBody}</p>
+      </div>
+      <Button
+        type="button"
+        variant="secondary"
+        className="self-start"
+        onClick={() => void navigate('/onboarding?redo=1')}
+      >
+        {m.redo}
+      </Button>
+    </Card>
+  );
+}
+
+function ActiveProjectCard({
+  profileId,
+  project,
+  onCompleted,
+}: {
+  profileId: string;
+  project: ProjectDto;
+  onCompleted: (name: string) => void;
+}) {
   const update = useUpdateProject(profileId);
   const complete = useCompleteProject(profileId);
   const [confirming, setConfirming] = useState(false);
@@ -44,6 +83,7 @@ function ActiveProjectCard({ profileId, project }: { profileId: string; project:
   const finish = async () => {
     try {
       await complete.mutateAsync(project.id);
+      onCompleted(project.name);
     } catch (e) {
       setError(settingsError(e));
     }

@@ -36,6 +36,7 @@ export const weightMessages = {
   lastWeighing: 'Última pesagem',
   sinceStart: 'Desde o início',
   insufficient: 'Dados insuficientes',
+  noWeighingsHint: 'Registre seu peso para acompanhar aqui.',
   insufficientHint: 'A tendência aparece com pesagens em pelo menos 3 dos últimos 7 dias.',
 
   historyTitle: 'Histórico',
