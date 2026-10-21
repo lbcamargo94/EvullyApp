@@ -6,6 +6,13 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Tela "Algo deu errado" com botão para recarregar, em vez de janela em
+  branco, se uma tela falhar.
+- Falhas inesperadas do processo principal e do renderer ficam
+  registradas no log.
+- Testes de persistência após reiniciar e do tempo de inatividade.
+
 ## [0.1.0-alpha.10] - 2026-10-21
 
 ### Changed

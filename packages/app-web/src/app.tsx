@@ -11,6 +11,7 @@ import { ProfileCreateScreen } from './features/profiles/profile-create-screen';
 import { ProfileEditScreen } from './features/profiles/profile-edit-screen';
 import { ProfileSelectScreen } from './features/profiles/profile-select-screen';
 import { AppShell } from './features/shell/app-shell';
+import { ErrorBoundary } from './features/shell/error-boundary';
 import { HealthNoticeScreen } from './features/shell/health-notice-screen';
 import { useDocumentTheme } from './features/shell/use-document-theme';
 import { HomeScreen } from './features/shell/home-screen';
@@ -46,17 +47,19 @@ export function App({
     () => new QueryClient({ defaultOptions: { queries: { retry: false } } }),
   );
   return (
-    <EvullyClientProvider client={client}>
-      <QueryClientProvider client={queryClient}>
-        <CurrentProfileProvider>
-          <Router>
-            <HealthNoticeGate>
-              <AppRoutes />
-            </HealthNoticeGate>
-          </Router>
-        </CurrentProfileProvider>
-      </QueryClientProvider>
-    </EvullyClientProvider>
+    <ErrorBoundary>
+      <EvullyClientProvider client={client}>
+        <QueryClientProvider client={queryClient}>
+          <CurrentProfileProvider>
+            <Router>
+              <HealthNoticeGate>
+                <AppRoutes />
+              </HealthNoticeGate>
+            </Router>
+          </CurrentProfileProvider>
+        </QueryClientProvider>
+      </EvullyClientProvider>
+    </ErrorBoundary>
   );
 }
 
