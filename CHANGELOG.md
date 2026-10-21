@@ -6,6 +6,13 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-21
+
+Primeira versão estável da V0.1: perfis, questionário de acompanhamento,
+projetos, peso, medidas, painel adaptável, backup manual e automático,
+importação CSV e configurações. Detalhes de cada etapa nas pré-versões
+abaixo.
+
 ### Fixed
 - Campos do cadastro de perfil desalinhados quando o rótulo "Data de
   nascimento" quebrava em duas linhas (agora "Nascimento").
@@ -146,7 +153,8 @@ Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
   instalador Windows (`Evully-Setup-<versão>.exe`).
 - Verificação de licenças copyleft (`npm run licenses:check`).
 
-[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.10...HEAD
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.10...v0.1.0
 [0.1.0-alpha.10]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.9...v0.1.0-alpha.10
 [0.1.0-alpha.9]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.8...v0.1.0-alpha.9
 [0.1.0-alpha.8]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.7...v0.1.0-alpha.8

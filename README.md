@@ -215,7 +215,7 @@ Este é o **único** roadmap do projeto.
 
 | Versão | Escopo |
 |---|---|
-| **V0.1** | Fundação + perfis + questionário de acompanhamento + projetos + peso + medidas + dashboard adaptável + backup manual e automático + importação CSV |
+| **V0.1** ✓ 0.1.0 (21/10/2026) | Fundação + perfis + questionário de acompanhamento + projetos + peso + medidas + dashboard adaptável + backup manual e automático + importação CSV |
 | V0.2 | Nutrição: alimentos, refeições, metas nutricionais |
 | V0.3 | Treino: exercícios, planos, execução, séries, progressão |
 | V0.4 | Cardio + hábitos |
