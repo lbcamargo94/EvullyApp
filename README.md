@@ -223,7 +223,7 @@ Este é o **único** roadmap do projeto.
 | V0.6 | Estatísticas e dashboard completo |
 | V0.7 | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
 | V0.8 | UX/polimento |
-| V1.0 | Desktop estável + instalador Windows |
+| V1.0 | Desktop estável + instalador Windows + atualização automática |
 | V1.1 | Analytics Engine determinístico |
 | V1.2 | Recommendation Engine determinístico |
 | V1.3 | Notificações locais / Evully Reminders |
@@ -2217,6 +2217,7 @@ recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
 | Fotos de progresso são criptografadas em disco? | futuro |
 | Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.4 |
 | Assinatura de código (Authenticode) do instalador. | V1.0 |
+| Atualização automática (`electron-updater` com GitHub Releases): onde publicar os instaladores, já que o repositório é privado (repositório público só de releases ou token). Até lá, atualiza-se instalando a versão nova por cima; os dados em `%APPDATA%\Evully` são mantidos e há backup antes de migrations. | V1.0 (antecipável) |
 | Confirmar Better Auth como solução de autenticação. | Início da Fase 2 |
 | Provedor de hospedagem e de pagamentos. | Início da Fase 2 / Fase 3 |
 | Tipos de medida personalizados por perfil. | futuro |
