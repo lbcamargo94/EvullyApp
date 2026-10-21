@@ -15,6 +15,9 @@ import { backupsDirectory, configureDataDirectory, databaseFile, scratchDirector
 
 configureDataDirectory();
 log.initialize();
+// Unexpected failures are recorded (README §8.10, criterion 14); messages carry no user data.
+process.on('uncaughtException', (error) => log.error('uncaught exception', error));
+process.on('unhandledRejection', (reason) => log.error('unhandled rejection', reason));
 
 const rendererUrl = process.env['ELECTRON_RENDERER_URL'];
 const isTrustedSender = (url: string) =>
@@ -40,6 +43,9 @@ function createWindow(): void {
   });
 
   window.once('ready-to-show', () => window.show());
+  window.webContents.on('render-process-gone', (_event, details) =>
+    log.error(`renderer gone: ${details.reason} (exit ${details.exitCode})`),
+  );
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', (event, url) => {
     if (!isTrustedSender(url)) event.preventDefault();

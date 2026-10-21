@@ -1,21 +1,22 @@
+import { createIdleTimer } from '@evully/app-core';
 import { useEffect } from 'react';
 
 const ACTIVITY_EVENTS = ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart'] as const;
-const MS_PER_MINUTE = 60_000;
 
 /** Calls `onIdle` after `minutes` without user activity; 0 disables it. */
 export function useInactivity(minutes: number, onIdle: () => void): void {
   useEffect(() => {
+    const timer = createIdleTimer(minutes, onIdle, {
+      setTimeout: (callback, ms) => window.setTimeout(callback, ms),
+      clearTimeout: (handle) => window.clearTimeout(handle as number),
+    });
     if (minutes <= 0) return;
-    let timer = window.setTimeout(onIdle, minutes * MS_PER_MINUTE);
-    const reset = () => {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(onIdle, minutes * MS_PER_MINUTE);
-    };
-    for (const event of ACTIVITY_EVENTS) window.addEventListener(event, reset, { passive: true });
+    for (const event of ACTIVITY_EVENTS) {
+      window.addEventListener(event, timer.activity, { passive: true });
+    }
     return () => {
-      window.clearTimeout(timer);
-      for (const event of ACTIVITY_EVENTS) window.removeEventListener(event, reset);
+      timer.stop();
+      for (const event of ACTIVITY_EVENTS) window.removeEventListener(event, timer.activity);
     };
   }, [minutes, onIdle]);
 }
