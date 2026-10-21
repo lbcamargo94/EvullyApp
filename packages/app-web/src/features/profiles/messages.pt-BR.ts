@@ -8,7 +8,7 @@ export const profileMessages = {
   createSubtitle: 'Só o nome é obrigatório. O resto ajuda o Evully a sugerir o acompanhamento.',
   editTitle: 'Editar perfil',
   name: 'Nome',
-  birthDate: 'Data de nascimento',
+  birthDate: 'Nascimento',
   sex: 'Sexo',
   sexOptions: { '': 'Prefiro não informar', male: 'Masculino', female: 'Feminino' },
   height: 'Altura (cm)',

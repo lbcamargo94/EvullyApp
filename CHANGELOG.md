@@ -6,6 +6,10 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Fixed
+- Campos do cadastro de perfil desalinhados quando o rótulo "Data de
+  nascimento" quebrava em duas linhas (agora "Nascimento").
+
 ### Added
 - Tela "Algo deu errado" com botão para recarregar, em vez de janela em
   branco, se uma tela falhar.
