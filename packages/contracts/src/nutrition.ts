@@ -104,10 +104,42 @@ export const foodLogSchema = z.object({
   consumedAt: z.string().nullable(),
 });
 
+// ------------------------------------------------------------ targets and water (README §9.4.1, §9.6)
+
+const targetValues = {
+  caloriesKcal: z.number().positive('Informe as calorias'),
+  proteinG: z.number().min(0),
+  carbohydrateG: z.number().min(0).nullable(),
+  fatG: z.number().min(0).nullable(),
+  waterMl: z.number().min(0).nullable(),
+};
+
+export const nutritionTargetInputSchema = z.object({ profileId: z.uuid(), ...targetValues });
+
+export const nutritionTargetSchema = z.object({
+  id: z.string(),
+  effectiveFrom: localDate,
+  ...targetValues,
+  createdAt: z.string(),
+});
+
+export const waterLogInputSchema = z.object({
+  profileId: z.uuid(),
+  date: localDate,
+  amountMl: z.number().positive('Informe a quantidade'),
+});
+
+export const waterLogIdInputSchema = z.object({ profileId: z.uuid(), id: z.uuid() });
+
+const waterLogSchema = z.object({ id: z.string(), amountMl: z.number(), loggedAt: z.string() });
+
 export const nutritionDaySchema = z.object({
   date: localDate,
   logs: z.array(foodLogSchema),
   totals: z.object({ planned: macroTotalsSchema, consumed: macroTotalsSchema }),
+  /** Target in force on the day, or null when the profile has none. */
+  target: nutritionTargetSchema.nullable(),
+  water: z.object({ totalMl: z.number(), logs: z.array(waterLogSchema) }),
 });
 
 // ------------------------------------------------------------ meal shortcuts (README §9.5)
@@ -150,6 +182,9 @@ export const mealTemplateSchema = z.object({
 });
 
 export type FoodUnit = z.infer<typeof foodUnitSchema>;
+export type NutritionTargetInput = z.infer<typeof nutritionTargetInputSchema>;
+export type NutritionTargetDto = z.infer<typeof nutritionTargetSchema>;
+export type WaterLogInput = z.infer<typeof waterLogInputSchema>;
 export type CopyMealInput = z.infer<typeof copyMealInputSchema>;
 export type SaveMealTemplateInput = z.infer<typeof saveMealTemplateInputSchema>;
 export type ApplyMealTemplateInput = z.infer<typeof applyMealTemplateInputSchema>;

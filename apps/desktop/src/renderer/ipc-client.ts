@@ -99,6 +99,14 @@ export const ipcEvullyClient: EvullyClient = {
     remove: (profileId, id) => call('nutrition:remove', { profileId, id }),
     copyMeal: (input) => call('nutrition:copy-meal', input),
   },
+  nutritionTargets: {
+    current: (profileId) => call('nutrition-targets:current', { profileId }),
+    set: (input) => call('nutrition-targets:set', input),
+  },
+  water: {
+    add: (input) => call('water:add', input),
+    remove: (profileId, id) => call('water:remove', { profileId, id }),
+  },
   mealTemplates: {
     list: (profileId) => call('meal-templates:list', { profileId }),
     save: (input) => call('meal-templates:save', input),

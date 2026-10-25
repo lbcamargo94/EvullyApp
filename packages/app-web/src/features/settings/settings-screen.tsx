@@ -5,11 +5,12 @@ import { AboutSection } from './about-section';
 import { BackupSection } from './backup-section';
 import { GeneralSection } from './general-section';
 import { settingsMessages as m } from './messages.pt-BR';
+import { NutritionTargetsSection } from './nutrition-targets-section';
 import { ProfileSection } from './profile-section';
 import { ProjectSection } from './project-section';
 import { TrackingSection } from './tracking-section';
 
-const TABS = ['tracking', 'project', 'profile', 'general', 'about'] as const;
+const TABS = ['tracking', 'project', 'nutrition', 'profile', 'general', 'about'] as const;
 type Tab = (typeof TABS)[number];
 
 /** Settings (README §8.7). The tab lives in the URL so links can open one (`?tab=general`). */
@@ -39,6 +40,9 @@ export function SettingsScreen() {
         </TabsContent>
         <TabsContent value="project">
           {profileId && <ProjectSection profileId={profileId} />}
+        </TabsContent>
+        <TabsContent value="nutrition">
+          {profileId && <NutritionTargetsSection profileId={profileId} />}
         </TabsContent>
         <TabsContent value="profile">
           {profileId && <ProfileSection profileId={profileId} />}

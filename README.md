@@ -1239,6 +1239,12 @@ meta cria um novo registro; nunca altera o anterior.
 Cada meta é um **valor único** (sem faixa mínima e máxima). Faixas podem
 ser adicionadas depois sem mudar os registros existentes.
 
+- Calorias e proteína são obrigatórias; carboidratos, gorduras e água são
+  opcionais. Valores inteiros.
+- Um perfil começa **sem metas**: o app nunca preenche nem calcula metas.
+  Elas são definidas em Configurações — Nutrição e valem a partir do dia
+  em que são salvas.
+
 ### 9.7 Metas iniciais do seed
 
 ```text
@@ -1247,7 +1253,8 @@ Proteína: 190 g/dia
 Água:     3500 ml/dia
 ```
 
-Editáveis, nunca codificadas na lógica.
+Só para o seed de desenvolvimento (§8.9). Editáveis, nunca codificadas na
+lógica: no app, cada perfil define as próprias metas (§9.6).
 
 ### 9.8 Receitas e marmitas (após a nutrição básica estar estável)
 
@@ -1273,6 +1280,11 @@ Proteína       132 / 190 g
 Carboidratos   xxx / meta
 Gorduras        xx / meta
 ```
+
+- Em Dieta — Dia: o consumido contra a meta, com barras de progresso, e o
+  planejado ao lado. Sem meta, mostra só os totais.
+- No Dashboard, o card "Hoje" (calorias, proteína e água) aparece quando o
+  perfil tem metas ou registros de nutrição no dia.
 
 ---
 

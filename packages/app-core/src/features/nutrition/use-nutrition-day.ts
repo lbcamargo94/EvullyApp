@@ -3,6 +3,7 @@ import type {
   CopyMealInput,
   FoodLogInput,
   NutritionDay,
+  NutritionTargetInput,
   SaveMealTemplateInput,
   SetMealConsumedInput,
 } from '@evully/contracts';
@@ -117,4 +118,42 @@ export function useSaveMealTemplate(profileId: string) {
 export function useRemoveMealTemplate(profileId: string) {
   const client = useEvullyClient();
   return useTemplateMutation(profileId, (id: string) => client.mealTemplates.remove(profileId, id));
+}
+
+const targetKey = (profileId: string) => ['nutrition-target', profileId] as const;
+
+export function useNutritionTarget(profileId: string | null) {
+  const client = useEvullyClient();
+  return useQuery({
+    queryKey: targetKey(profileId ?? ''),
+    queryFn: () => client.nutritionTargets.current(profileId ?? ''),
+    enabled: profileId !== null,
+  });
+}
+
+/** A new target changes every cached day of the profile. */
+export function useSetNutritionTarget(profileId: string) {
+  const client = useEvullyClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: Omit<NutritionTargetInput, 'profileId'>) =>
+      client.nutritionTargets.set({ profileId, ...input }),
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: targetKey(profileId) }),
+        queryClient.invalidateQueries({ queryKey: ['nutrition', profileId] }),
+      ]),
+  });
+}
+
+export function useAddWater(profileId: string) {
+  const client = useEvullyClient();
+  return useDayMutation(profileId, ({ date, amountMl }: { date: string; amountMl: number }) =>
+    client.water.add({ profileId, date, amountMl }),
+  );
+}
+
+export function useRemoveWater(profileId: string) {
+  const client = useEvullyClient();
+  return useDayMutation(profileId, (id: string) => client.water.remove(profileId, id));
 }

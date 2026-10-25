@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Metas nutricionais** em Configurações › Nutrição: calorias, proteína,
+  carboidratos, gorduras e água. Valem a partir de hoje; dias passados
+  mantêm a meta que tinham. O app não preenche nem calcula metas.
+- **Água** em Dieta › Dia: +250 ml, +500 ml ou outra quantidade, com a
+  lista do dia para desfazer.
+- Total do dia contra a meta, com barras de progresso.
+- Card **Hoje** no Dashboard com calorias, proteína e água.
+
 ## [0.2.0-alpha.3] - 2026-10-25
 
 ### Added

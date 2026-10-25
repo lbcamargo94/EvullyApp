@@ -151,6 +151,32 @@ export interface MealTemplateItemsTable {
   created_at: string;
 }
 
+/** History only: rows are never updated nor deleted (README §6.1). */
+export interface NutritionTargetsTable {
+  id: string;
+  profile_id: string;
+  effective_from: string;
+  calories_kcal: number;
+  protein_g: number;
+  carbohydrate_g: number | null;
+  fat_g: number | null;
+  water_ml: number | null;
+  reason: string | null;
+  source: 'manual' | 'recommendation';
+  created_at: string;
+}
+
+export interface WaterLogsTable {
+  id: string;
+  profile_id: string;
+  log_date: string;
+  amount_ml: number;
+  logged_at: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -216,4 +242,6 @@ export interface DatabaseSchema {
   food_logs: FoodLogsTable;
   meal_templates: MealTemplatesTable;
   meal_template_items: MealTemplateItemsTable;
+  nutrition_targets: NutritionTargetsTable;
+  water_logs: WaterLogsTable;
 }
