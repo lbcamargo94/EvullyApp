@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.2.0-alpha.2] - 2026-10-25
+
 ### Added
 - **Dieta** no menu, com as abas **Dia** e **Alimentos**.
 - Refeições do dia: café da manhã, lanche da manhã, almoço, pré-treino,
@@ -183,7 +185,8 @@ Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
   instalador Windows (`Evully-Setup-<versão>.exe`).
 - Verificação de licenças copyleft (`npm run licenses:check`).
 
-[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.1...HEAD
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.2...HEAD
+[0.2.0-alpha.2]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.1...v0.2.0-alpha.2
 [0.2.0-alpha.1]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0...v0.2.0-alpha.1
 [0.1.0]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.10...v0.1.0
 [0.1.0-alpha.10]: https://github.com/lbcamargo94/EvullyApp/compare/v0.1.0-alpha.9...v0.1.0-alpha.10
