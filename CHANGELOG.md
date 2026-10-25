@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Atalhos de refeição em Dieta › Dia (menu "…" de cada refeição):
+  **Repetir de ontem**, **Copiar para…** (outro dia ou outra refeição),
+  **Salvar como favorita** e **Usar favorita…**. O que é copiado entra como
+  planejado.
+- Aba **Favoritas** em Dieta, com os itens e as calorias de cada favorita.
+
+### Changed
+- Alimentos usados em favoritas também não podem ser excluídos do catálogo.
+
 ## [0.2.0-alpha.2] - 2026-10-25
 
 ### Added

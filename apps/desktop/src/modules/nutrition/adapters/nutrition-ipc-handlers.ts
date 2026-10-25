@@ -7,9 +7,16 @@ import {
   SetFoodLogConsumed,
   SetMealConsumed,
   UpdateFoodLogQuantity,
-  type FoodLogDeps,
 } from '../application/food-logs';
 import { CreateFood, ListFoods, RemoveFood, UpdateFood } from '../application/manage-foods';
+import {
+  ApplyMealTemplate,
+  CopyMeal,
+  ListMealTemplates,
+  RemoveMealTemplate,
+  SaveMealTemplate,
+  type MealShortcutDeps,
+} from '../application/meal-shortcuts';
 import type { FoodRecord } from '../ports/food-repository';
 
 type NutritionChannels =
@@ -22,16 +29,21 @@ type NutritionChannels =
   | 'nutrition:update-quantity'
   | 'nutrition:set-consumed'
   | 'nutrition:set-meal-consumed'
-  | 'nutrition:remove';
+  | 'nutrition:remove'
+  | 'nutrition:copy-meal'
+  | 'meal-templates:list'
+  | 'meal-templates:save'
+  | 'meal-templates:apply'
+  | 'meal-templates:remove';
 
 const toDto = (food: FoodRecord): FoodDto => food;
 
-export function nutritionIpcHandlers(deps: FoodLogDeps): Pick<IpcHandlers, NutritionChannels> {
-  const { foods, logs, clock, ids } = deps;
+export function nutritionIpcHandlers(deps: MealShortcutDeps): Pick<IpcHandlers, NutritionChannels> {
+  const { foods, logs, templates, clock, ids } = deps;
   const list = new ListFoods(foods);
   const create = new CreateFood(foods, clock, ids);
   const update = new UpdateFood(foods, clock);
-  const remove = new RemoveFood(foods, logs, clock);
+  const remove = new RemoveFood(foods, logs, templates, clock);
   return {
     'foods:list': async () => (await list.execute()).map(toDto),
     'foods:create': async (input) => toDto(await create.execute(input)),
@@ -43,5 +55,10 @@ export function nutritionIpcHandlers(deps: FoodLogDeps): Pick<IpcHandlers, Nutri
     'nutrition:set-consumed': (input) => new SetFoodLogConsumed(deps).execute(input),
     'nutrition:set-meal-consumed': (input) => new SetMealConsumed(deps).execute(input),
     'nutrition:remove': (input) => new RemoveFoodLog(deps).execute(input),
+    'nutrition:copy-meal': (input) => new CopyMeal(deps).execute(input),
+    'meal-templates:list': (input) => new ListMealTemplates(deps).execute(input),
+    'meal-templates:save': (input) => new SaveMealTemplate(deps).execute(input),
+    'meal-templates:apply': (input) => new ApplyMealTemplate(deps).execute(input),
+    'meal-templates:remove': (input) => new RemoveMealTemplate(deps).execute(input),
   };
 }

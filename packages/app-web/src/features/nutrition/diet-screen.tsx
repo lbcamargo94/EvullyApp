@@ -2,10 +2,11 @@ import { useCurrentProfile } from '@evully/app-core';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
 import { useSearchParams } from 'react-router';
 import { DayView } from './day-view';
+import { FavoritesList } from './favorites-list';
 import { FoodsCatalog } from './foods-catalog';
 import { dietMessages as m } from './messages.pt-BR';
 
-const TABS = ['day', 'foods'] as const;
+const TABS = ['day', 'favorites', 'foods'] as const;
 type Tab = (typeof TABS)[number];
 
 /** Diet (README §9, §16.2): the day's meals and the household food catalog. */
@@ -33,6 +34,9 @@ export function DietScreen() {
         </TabsList>
         <TabsContent value="day">
           <DayView profileId={profileId} />
+        </TabsContent>
+        <TabsContent value="favorites">
+          <FavoritesList profileId={profileId} />
         </TabsContent>
         <TabsContent value="foods">
           <FoodsCatalog />

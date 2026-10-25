@@ -3,8 +3,10 @@ import type {
   AppInfo,
   ArchivedProfile,
   AppSettings,
+  ApplyMealTemplateInput,
   BackupResult,
   BackupStatus,
+  CopyMealInput,
   CreateTagInput,
   FoodDto,
   FoodInput,
@@ -17,6 +19,7 @@ import type {
   MeasurementInput,
   MeasurementSession,
   MeasurementSummary,
+  MealTemplateDto,
   MeasurementTypeDto,
   NutritionDay,
   ProfileDto,
@@ -26,6 +29,7 @@ import type {
   ProjectDto,
   ProjectUpdateInput,
   RenameTagInput,
+  SaveMealTemplateInput,
   SetMealConsumedInput,
   Tag,
   TrackingState,
@@ -114,6 +118,13 @@ export interface EvullyClient {
     setConsumed(profileId: string, id: string, consumed: boolean): Promise<NutritionDay>;
     setMealConsumed(input: SetMealConsumedInput): Promise<NutritionDay>;
     remove(profileId: string, id: string): Promise<NutritionDay>;
+    copyMeal(input: CopyMealInput): Promise<NutritionDay>;
+  };
+  mealTemplates: {
+    list(profileId: string): Promise<MealTemplateDto[]>;
+    save(input: SaveMealTemplateInput): Promise<MealTemplateDto>;
+    apply(input: ApplyMealTemplateInput): Promise<NutritionDay>;
+    remove(profileId: string, id: string): Promise<null>;
   };
   imports?: {
     preview(profileId: string, kind: ImportKind): Promise<ImportPreview | null>;

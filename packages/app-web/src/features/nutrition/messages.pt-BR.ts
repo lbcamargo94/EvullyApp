@@ -63,7 +63,7 @@ export const foodErrorByCode: Record<string, string> = {
   'food.duplicate': 'Já existe um alimento com esse nome e marca.',
   'food.not_found': 'Alimento não encontrado. Recarregue a tela.',
   'food.in_use':
-    'Este alimento já foi usado em refeições e não pode ser excluído. Você pode editá-lo.',
+    'Este alimento já foi usado em refeições ou favoritas e não pode ser excluído. Você pode editá-lo.',
 };
 
 const weekday = new Intl.DateTimeFormat('pt-BR', {
@@ -83,7 +83,7 @@ export const mealLabels: Record<Exclude<MealType, 'custom'>, string> = {
 
 export const dietMessages = {
   title: 'Dieta',
-  tabs: { day: 'Dia', foods: 'Alimentos' },
+  tabs: { day: 'Dia', favorites: 'Favoritas', foods: 'Alimentos' },
   previousDay: 'Dia anterior',
   nextDay: 'Próximo dia',
   backToToday: 'Voltar para hoje',
@@ -121,6 +121,31 @@ export const dietMessages = {
   newMealPlaceholder: 'Ex.: Lanche da tarde',
   createMeal: 'Criar',
   genericError: 'Não foi possível salvar. Tente novamente.',
+  mealActions: (meal: string) => `Mais ações: ${meal}`,
+  repeatYesterday: 'Repetir de ontem',
+  copyTo: 'Copiar para…',
+  saveFavorite: 'Salvar como favorita',
+  useFavorite: 'Usar favorita…',
+  copyTitle: 'Copiar esta refeição para',
+  copyDate: 'Dia',
+  copyMeal: 'Refeição',
+  copySameCustom: (name: string) => `${name} (mesmo nome)`,
+  copyConfirm: 'Copiar',
+  copied: 'Refeição copiada como planejada.',
+  favoriteName: 'Nome da favorita',
+  favoriteSave: 'Salvar',
+  favoriteSaved: (name: string) => `“${name}” salva nas favoritas.`,
+  favoritesEmpty: 'Nenhuma favorita ainda. Monte uma refeição e use “Salvar como favorita”.',
+  applyFavorite: (name: string) => `Usar ${name}`,
+  kcalApprox: (value: string) => `${value} kcal`,
+  plannedHint: 'Os itens entram como planejados; marque como consumido quando comer.',
+  removeFavorite: (name: string) => `Excluir favorita ${name}`,
+  removeFavoriteTitle: 'Excluir favorita?',
+  removeFavoriteBody: (name: string) =>
+    `“${name}” sai das favoritas. Refeições já registradas não mudam.`,
+  removeFavoriteConfirm: 'Excluir',
+  favoritesHint:
+    'Favoritas guardam alimentos e quantidades. Ao usar, os valores vêm do catálogo atual.',
 } as const;
 
 export const foodLogErrorByCode: Record<string, string> = {
@@ -131,4 +156,9 @@ export const foodLogErrorByCode: Record<string, string> = {
   'food_log.meal_name_too_long': 'Use até 40 caracteres no nome da refeição.',
   'food_log.not_found': 'Item não encontrado. Recarregue a tela.',
   'food.not_found': 'Alimento não encontrado no catálogo.',
+  'food_log.meal_empty': 'Essa refeição não tem alimentos para copiar.',
+  'meal_template.name_required': 'Dê um nome à favorita.',
+  'meal_template.name_too_long': 'Use até 40 caracteres no nome da favorita.',
+  'meal_template.duplicate': 'Já existe uma favorita com esse nome.',
+  'meal_template.not_found': 'Favorita não encontrada. Recarregue a tela.',
 };

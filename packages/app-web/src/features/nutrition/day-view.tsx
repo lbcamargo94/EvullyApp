@@ -32,6 +32,7 @@ export function DayView({ profileId }: { profileId: string }) {
   const [date, setDate] = useState<string>(today);
   const [extraMeals, setExtraMeals] = useState<string[]>([]);
   const { data: day } = useNutritionDay(profileId, date);
+  const { data: yesterday } = useNutritionDay(profileId, addDays(date as typeof today, -1));
   const isFuture = date > today;
   const lastDay = addDays(today, PLANNING_DAYS);
 
@@ -75,6 +76,7 @@ export function DayView({ profileId }: { profileId: string }) {
             meal={meal}
             logs={day.logs.filter((l) => sameMeal(l, meal))}
             canConsume={!isFuture}
+            yesterdayHasItems={!!yesterday?.logs.some((l) => sameMeal(l, meal))}
           />
         ))}
       <NewMeal onCreate={(name) => setExtraMeals((names) => [...names, name])} />

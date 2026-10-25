@@ -3,6 +3,7 @@ import { assertUniqueFood, ConflictError, normalizeFoodDraft, NotFoundError } fr
 import type { Clock, IdGenerator } from '../../shared/ports';
 import type { FoodLogRepository } from '../ports/food-log-repository';
 import type { FoodRecord, FoodRepository } from '../ports/food-repository';
+import type { MealTemplateRepository } from '../ports/meal-template-repository';
 
 const notFound = () => new NotFoundError('food.not_found', 'Food not found');
 
@@ -52,16 +53,17 @@ export class UpdateFood {
   }
 }
 
-/** Soft delete, only for foods never logged by any profile (README §9.5). */
+/** Soft delete, only for foods never logged nor kept in a favorite meal (README §9.5). */
 export class RemoveFood {
   constructor(
     private readonly foods: FoodRepository,
     private readonly logs: FoodLogRepository,
+    private readonly templates: MealTemplateRepository,
     private readonly clock: Clock,
   ) {}
 
   async execute({ id }: { id: string }): Promise<null> {
-    if (await this.logs.isFoodUsed(id)) {
+    if ((await this.logs.isFoodUsed(id)) || (await this.templates.isFoodUsed(id))) {
       throw new ConflictError('food.in_use', 'Food is used in food logs');
     }
     if (!(await this.foods.softDelete(id, this.clock.nowIso()))) throw notFound();

@@ -7,13 +7,14 @@ import {
   NotFoundError,
   nutrientsFor,
   parseLocalDate,
+  type FoodSnapshot,
   type LocalDate,
 } from '@evully/domain';
 import { GetProfile } from '../../profiles/application/get-profile';
 import type { ProfileRepository } from '../../profiles/ports/profile-repository';
 import type { Clock, IdGenerator } from '../../shared/ports';
 import type { FoodLogRecord, FoodLogRepository } from '../ports/food-log-repository';
-import type { FoodRepository } from '../ports/food-repository';
+import type { FoodRecord, FoodRepository } from '../ports/food-repository';
 
 export interface FoodLogDeps {
   profiles: ProfileRepository;
@@ -52,6 +53,22 @@ export async function nutritionDay(
   };
 }
 
+/** The part of a food a log keeps (README §9.4). */
+export function snapshotOf(food: FoodRecord): FoodSnapshot {
+  return {
+    name: food.name,
+    brand: food.brand,
+    referenceAmount: food.referenceAmount,
+    referenceUnit: food.referenceUnit,
+    caloriesKcal: food.caloriesKcal,
+    proteinG: food.proteinG,
+    carbohydrateG: food.carbohydrateG,
+    fatG: food.fatG,
+    fiberG: food.fiberG,
+    sodiumMg: food.sodiumMg,
+  };
+}
+
 async function findLog(logs: FoodLogRepository, profileId: string, id: string) {
   const log = await logs.findById(profileId, id);
   if (!log) throw new NotFoundError('food_log.not_found', 'Food log not found');
@@ -76,18 +93,7 @@ export class AddFoodLog {
     const food = await foods.findById(foodId);
     if (!food) throw new NotFoundError('food.not_found', 'Food not found');
     const draft = normalizeFoodLogDraft(input, clock.today());
-    const snapshot = {
-      name: food.name,
-      brand: food.brand,
-      referenceAmount: food.referenceAmount,
-      referenceUnit: food.referenceUnit,
-      caloriesKcal: food.caloriesKcal,
-      proteinG: food.proteinG,
-      carbohydrateG: food.carbohydrateG,
-      fatG: food.fatG,
-      fiberG: food.fiberG,
-      sodiumMg: food.sodiumMg,
-    };
+    const snapshot = snapshotOf(food);
     const meal = { profileId, ...draft };
     const now = clock.nowIso();
     await logs.insert({

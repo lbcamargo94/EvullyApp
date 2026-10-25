@@ -14,6 +14,7 @@ import { KyselyMeasurementRepository } from '../modules/measurements/adapters/ky
 import { measurementIpcHandlers } from '../modules/measurements/adapters/measurement-ipc-handlers';
 import { KyselyFoodLogRepository } from '../modules/nutrition/adapters/kysely-food-log-repository';
 import { KyselyFoodRepository } from '../modules/nutrition/adapters/kysely-food-repository';
+import { KyselyMealTemplateRepository } from '../modules/nutrition/adapters/kysely-meal-template-repository';
 import { nutritionIpcHandlers } from '../modules/nutrition/adapters/nutrition-ipc-handlers';
 import { KyselyProfileRepository } from '../modules/profiles/adapters/kysely-profile-repository';
 import { profileIpcHandlers } from '../modules/profiles/adapters/profile-ipc-handlers';
@@ -52,6 +53,7 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
   const measurements = new KyselyMeasurementRepository(db);
   const foods = new KyselyFoodRepository(db);
   const foodLogs = new KyselyFoodLogRepository(db);
+  const mealTemplates = new KyselyMealTemplateRepository(db);
   const backupSettings = new BackupSettings(settings);
   const backupDeps: BackupDeps = {
     writer: new FsBackupWriter(db, backup.tempDirectory),
@@ -74,7 +76,14 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
     ...trackingIpcHandlers({ profiles, projects, tracking, clock, ids }),
     ...weightIpcHandlers({ profiles, projects, weights, tags, clock, ids }),
     ...measurementIpcHandlers({ profiles, projects, tracking, measurements, clock, ids }),
-    ...nutritionIpcHandlers({ profiles, foods, logs: foodLogs, clock, ids }),
+    ...nutritionIpcHandlers({
+      profiles,
+      foods,
+      logs: foodLogs,
+      templates: mealTemplates,
+      clock,
+      ids,
+    }),
     ...backupIpcHandlers({
       backup: backupDeps,
       settings: backupSettings,

@@ -1209,6 +1209,16 @@ de água (§9.6). A água faz parte da nutrição, não dos hábitos (§11.2).
 - alterar quantidade e recalcular macros imediatamente;
 - mostrar total diário.
 
+Regras dos atalhos:
+
+- Duplicar e "repetir de ontem" copiam os registros de origem como estão
+  (mesma cópia do alimento e mesmos valores) e entram como **planejados**.
+- Uma favorita (`meal_templates`, `meal_template_items`) guarda só
+  alimentos e quantidades; ao usá-la, os valores vêm do catálogo atual. O
+  nome é único por perfil, sem diferenciar maiúsculas.
+- Um alimento usado em registros ou em favoritas não pode ser excluído do
+  catálogo.
+
 ### 9.6 Metas nutricionais — `nutrition_targets`
 
 ```text
