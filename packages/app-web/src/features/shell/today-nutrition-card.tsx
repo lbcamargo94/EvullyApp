@@ -1,22 +1,30 @@
-import { localToday, useNutritionDay } from '@evully/app-core';
+import { localToday, useNutritionDay, useNutritionPreferences } from '@evully/app-core';
+import type { NutritionDay } from '@evully/contracts';
 import { Card, ProgressBar } from '@evully/ui';
 import { Link } from 'react-router';
 import { formatNumber } from '../nutrition/messages.pt-BR';
 import { shellMessages as m } from './messages.pt-BR';
 
+/** Label, unit, value and target of each line; water only when the profile tracks it. */
+function rowsOf(day: NutritionDay, withWater: boolean) {
+  const t = day.target;
+  const rows: [string, string, number, number | null][] = [
+    [m.calories, 'kcal', day.totals.consumed.caloriesKcal, t?.caloriesKcal ?? null],
+    [m.protein, 'g', day.totals.consumed.proteinG, t?.proteinG ?? null],
+  ];
+  if (withWater) rows.push([m.water, 'ml', day.water.totalMl, t?.waterMl ?? null]);
+  return rows;
+}
+
 /** "Hoje" on the dashboard (README §9.9): calories, protein and water against the targets. */
 export function TodayNutritionCard({ profileId }: { profileId: string }) {
   const { data: day } = useNutritionDay(profileId, localToday());
+  const { data: prefs } = useNutritionPreferences(profileId);
   if (!day) return null;
   const used = day.logs.length > 0 || day.water.logs.length > 0;
   if (!day.target && !used) return null; // the profile does not use nutrition yet
 
-  const t = day.target;
-  const rows = [
-    [m.calories, 'kcal', day.totals.consumed.caloriesKcal, t?.caloriesKcal ?? null],
-    [m.protein, 'g', day.totals.consumed.proteinG, t?.proteinG ?? null],
-    [m.water, 'ml', day.water.totalMl, t?.waterMl ?? null],
-  ] as const;
+  const shown = rowsOf(day, prefs?.trackWater !== false);
 
   return (
     <Card aria-labelledby="today-nutrition-title" className="gap-3">
@@ -32,7 +40,7 @@ export function TodayNutritionCard({ profileId }: { profileId: string }) {
         </Link>
       </div>
       <dl className="grid gap-3 sm:grid-cols-3">
-        {rows.map(([label, unit, value, target]) => (
+        {shown.map(([label, unit, value, target]) => (
           <div key={label} className="flex flex-col gap-1">
             <dt className="text-sm text-text-muted">{label}</dt>
             <dd className="font-semibold tabular-nums">

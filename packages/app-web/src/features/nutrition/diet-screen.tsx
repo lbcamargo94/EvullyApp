@@ -1,10 +1,11 @@
-import { useCurrentProfile } from '@evully/app-core';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
+import { useCurrentProfile, useNutritionPreferences } from '@evully/app-core';
+import { Card, Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
 import { useSearchParams } from 'react-router';
 import { DayView } from './day-view';
 import { FavoritesList } from './favorites-list';
 import { FoodsCatalog } from './foods-catalog';
-import { dietMessages as m } from './messages.pt-BR';
+import { dietMessages as m, preferencesMessages } from './messages.pt-BR';
+import { NutritionQuestionnaire } from './nutrition-questionnaire';
 
 const TABS = ['day', 'favorites', 'foods'] as const;
 type Tab = (typeof TABS)[number];
@@ -15,7 +16,26 @@ export function DietScreen() {
   const [params, setParams] = useSearchParams();
   const requested = params.get('tab');
   const tab: Tab = TABS.find((t) => t === requested) ?? 'day';
-  if (!profileId) return null;
+  const { data: prefs } = useNutritionPreferences(profileId);
+  if (!profileId || !prefs) return null;
+
+  // First visit of the profile: the module questionnaire (README §9).
+  if (prefs.status === 'pending') {
+    return (
+      <>
+        <h1 className="text-[26px] font-semibold">{m.title}</h1>
+        <Card aria-labelledby="nutrition-intro" className="max-w-3xl gap-5 p-8">
+          <div className="flex flex-col gap-1">
+            <h2 id="nutrition-intro" className="text-xl font-semibold">
+              {preferencesMessages.introTitle}
+            </h2>
+            <p className="text-text-muted">{preferencesMessages.introBody}</p>
+          </div>
+          <NutritionQuestionnaire profileId={profileId} initial={prefs} />
+        </Card>
+      </>
+    );
+  }
 
   return (
     <>

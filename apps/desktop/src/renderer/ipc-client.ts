@@ -99,6 +99,11 @@ export const ipcEvullyClient: EvullyClient = {
     remove: (profileId, id) => call('nutrition:remove', { profileId, id }),
     copyMeal: (input) => call('nutrition:copy-meal', input),
   },
+  nutritionPreferences: {
+    get: (profileId) => call('nutrition-preferences:get', { profileId }),
+    answer: (input) => call('nutrition-preferences:answer', input),
+    skip: (profileId) => call('nutrition-preferences:skip', { profileId }),
+  },
   nutritionTargets: {
     current: (profileId) => call('nutrition-targets:current', { profileId }),
     set: (input) => call('nutrition-targets:set', input),

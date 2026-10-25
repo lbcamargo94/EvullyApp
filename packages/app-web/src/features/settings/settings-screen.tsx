@@ -5,6 +5,7 @@ import { AboutSection } from './about-section';
 import { BackupSection } from './backup-section';
 import { GeneralSection } from './general-section';
 import { settingsMessages as m } from './messages.pt-BR';
+import { NutritionPreferencesSection } from './nutrition-preferences-section';
 import { NutritionTargetsSection } from './nutrition-targets-section';
 import { ProfileSection } from './profile-section';
 import { ProjectSection } from './project-section';
@@ -43,6 +44,7 @@ export function SettingsScreen() {
         </TabsContent>
         <TabsContent value="nutrition">
           {profileId && <NutritionTargetsSection profileId={profileId} />}
+          {profileId && <NutritionPreferencesSection profileId={profileId} />}
         </TabsContent>
         <TabsContent value="profile">
           {profileId && <ProfileSection profileId={profileId} />}

@@ -1125,6 +1125,18 @@ número de refeições por dia, restrições alimentares declaradas pelo
 usuário (sem perguntas clínicas) e se deseja acompanhar água. As regras
 correspondentes configuram as refeições padrão e o painel.
 
+Na V0.2 (`nutrition@1`, em `profile_questionnaires` com código
+`nutrition`):
+
+- Aparece na primeira abertura da Dieta de cada perfil; pode ser pulado
+  (padrão: todas as refeições e água ligada) e refeito em Configurações —
+  Nutrição. Cada resposta é um novo registro; vale a mais recente.
+- **Refeições que costuma fazer**: só essas aparecem no dia, além de
+  qualquer refeição que já tenha itens naquele dia.
+- **Acompanhar água**: sem água, o card some da Dieta e do Dashboard.
+- **Restrições**: anotação livre de até 280 caracteres, sem perguntas
+  clínicas e sem uso em regras.
+
 ### 9.2 Alimentos — `foods`
 
 ```text

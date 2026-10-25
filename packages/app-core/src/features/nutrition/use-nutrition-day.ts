@@ -3,6 +3,8 @@ import type {
   CopyMealInput,
   FoodLogInput,
   NutritionDay,
+  NutritionPreferencesDto,
+  NutritionPreferencesInput,
   NutritionTargetInput,
   SaveMealTemplateInput,
   SetMealConsumedInput,
@@ -156,4 +158,38 @@ export function useAddWater(profileId: string) {
 export function useRemoveWater(profileId: string) {
   const client = useEvullyClient();
   return useDayMutation(profileId, (id: string) => client.water.remove(profileId, id));
+}
+
+const preferencesKey = (profileId: string) => ['nutrition-preferences', profileId] as const;
+
+export function useNutritionPreferences(profileId: string | null) {
+  const client = useEvullyClient();
+  return useQuery({
+    queryKey: preferencesKey(profileId ?? ''),
+    queryFn: () => client.nutritionPreferences.get(profileId ?? ''),
+    enabled: profileId !== null,
+  });
+}
+
+function usePreferencesMutation<TInput>(
+  profileId: string,
+  run: (input: TInput) => Promise<NutritionPreferencesDto>,
+) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: run,
+    onSuccess: (prefs) => queryClient.setQueryData(preferencesKey(profileId), prefs),
+  });
+}
+
+export function useAnswerNutritionQuestionnaire(profileId: string) {
+  const client = useEvullyClient();
+  return usePreferencesMutation(profileId, (input: Omit<NutritionPreferencesInput, 'profileId'>) =>
+    client.nutritionPreferences.answer({ profileId, ...input }),
+  );
+}
+
+export function useSkipNutritionQuestionnaire(profileId: string) {
+  const client = useEvullyClient();
+  return usePreferencesMutation(profileId, () => client.nutritionPreferences.skip(profileId));
 }

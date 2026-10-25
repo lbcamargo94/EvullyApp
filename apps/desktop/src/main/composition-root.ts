@@ -15,6 +15,7 @@ import { measurementIpcHandlers } from '../modules/measurements/adapters/measure
 import { KyselyFoodLogRepository } from '../modules/nutrition/adapters/kysely-food-log-repository';
 import { KyselyFoodRepository } from '../modules/nutrition/adapters/kysely-food-repository';
 import { KyselyMealTemplateRepository } from '../modules/nutrition/adapters/kysely-meal-template-repository';
+import { KyselyNutritionQuestionnaireRepository } from '../modules/nutrition/adapters/kysely-nutrition-questionnaire-repository';
 import {
   KyselyNutritionTargetRepository,
   KyselyWaterLogRepository,
@@ -87,6 +88,7 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
       templates: mealTemplates,
       targets: new KyselyNutritionTargetRepository(db),
       water: new KyselyWaterLogRepository(db),
+      questionnaires: new KyselyNutritionQuestionnaireRepository(db),
       clock,
       ids,
     }),

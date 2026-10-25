@@ -22,6 +22,8 @@ import type {
   MealTemplateDto,
   MeasurementTypeDto,
   NutritionDay,
+  NutritionPreferencesDto,
+  NutritionPreferencesInput,
   NutritionTargetDto,
   NutritionTargetInput,
   ProfileDto,
@@ -122,6 +124,11 @@ export interface EvullyClient {
     setMealConsumed(input: SetMealConsumedInput): Promise<NutritionDay>;
     remove(profileId: string, id: string): Promise<NutritionDay>;
     copyMeal(input: CopyMealInput): Promise<NutritionDay>;
+  };
+  nutritionPreferences: {
+    get(profileId: string): Promise<NutritionPreferencesDto>;
+    answer(input: NutritionPreferencesInput): Promise<NutritionPreferencesDto>;
+    skip(profileId: string): Promise<NutritionPreferencesDto>;
   };
   nutritionTargets: {
     current(profileId: string): Promise<NutritionTargetDto | null>;

@@ -181,7 +181,30 @@ export const mealTemplateSchema = z.object({
   caloriesKcal: z.number(),
 });
 
+// ------------------------------------------------------------ module questionnaire (README §9)
+
+const standardMealSchema = mealTypeSchema.exclude(['custom']);
+
+const preferenceValues = {
+  meals: z.array(standardMealSchema).max(6),
+  trackWater: z.boolean(),
+  restrictions: z.string().trim().max(280, 'Use até 280 caracteres').nullable(),
+};
+
+export const nutritionPreferencesInputSchema = z.object({
+  profileId: z.uuid(),
+  ...preferenceValues,
+});
+
+export const nutritionPreferencesSchema = z.object({
+  /** `pending` until the questionnaire is answered or skipped. */
+  status: z.enum(['pending', 'completed', 'skipped']),
+  ...preferenceValues,
+});
+
 export type FoodUnit = z.infer<typeof foodUnitSchema>;
+export type NutritionPreferencesInput = z.infer<typeof nutritionPreferencesInputSchema>;
+export type NutritionPreferencesDto = z.infer<typeof nutritionPreferencesSchema>;
 export type NutritionTargetInput = z.infer<typeof nutritionTargetInputSchema>;
 export type NutritionTargetDto = z.infer<typeof nutritionTargetSchema>;
 export type WaterLogInput = z.infer<typeof waterLogInputSchema>;
