@@ -110,7 +110,50 @@ export const nutritionDaySchema = z.object({
   totals: z.object({ planned: macroTotalsSchema, consumed: macroTotalsSchema }),
 });
 
+// ------------------------------------------------------------ meal shortcuts (README §9.5)
+
+const mealAt = z.object({ date: localDate, ...mealRef });
+
+export const copyMealInputSchema = z.object({
+  profileId: z.uuid(),
+  from: mealAt,
+  to: mealAt,
+});
+
+export const saveMealTemplateInputSchema = mealAt.extend({
+  profileId: z.uuid(),
+  name: z.string().trim().min(1, 'Informe o nome').max(40, 'Use até 40 caracteres'),
+});
+
+export const applyMealTemplateInputSchema = mealAt.extend({
+  profileId: z.uuid(),
+  templateId: z.uuid(),
+});
+
+export const mealTemplateIdInputSchema = z.object({ profileId: z.uuid(), id: z.uuid() });
+
+/** A favorite meal: foods and quantities; values come from the current foods. */
+export const mealTemplateSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  items: z.array(
+    z.object({
+      foodId: z.string(),
+      foodName: z.string(),
+      brand: z.string().nullable(),
+      quantity: z.number(),
+      unit: foodUnitSchema,
+      caloriesKcal: z.number(),
+    }),
+  ),
+  caloriesKcal: z.number(),
+});
+
 export type FoodUnit = z.infer<typeof foodUnitSchema>;
+export type CopyMealInput = z.infer<typeof copyMealInputSchema>;
+export type SaveMealTemplateInput = z.infer<typeof saveMealTemplateInputSchema>;
+export type ApplyMealTemplateInput = z.infer<typeof applyMealTemplateInputSchema>;
+export type MealTemplateDto = z.infer<typeof mealTemplateSchema>;
 export type MealType = z.infer<typeof mealTypeSchema>;
 export type FoodLogInput = z.infer<typeof foodLogInputSchema>;
 export type FoodLogDto = z.infer<typeof foodLogSchema>;

@@ -133,6 +133,24 @@ export interface FoodLogsTable {
   deleted_at: string | null;
 }
 
+export interface MealTemplatesTable {
+  id: string;
+  profile_id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface MealTemplateItemsTable {
+  id: string;
+  meal_template_id: string;
+  food_id: string;
+  quantity: number;
+  sort_order: number;
+  created_at: string;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -196,4 +214,6 @@ export interface DatabaseSchema {
   body_measurement_values: BodyMeasurementValuesTable;
   foods: FoodsTable;
   food_logs: FoodLogsTable;
+  meal_templates: MealTemplatesTable;
+  meal_template_items: MealTemplateItemsTable;
 }

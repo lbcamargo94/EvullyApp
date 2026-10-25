@@ -97,6 +97,13 @@ export const ipcEvullyClient: EvullyClient = {
       call('nutrition:set-consumed', { profileId, id, consumed }),
     setMealConsumed: (input) => call('nutrition:set-meal-consumed', input),
     remove: (profileId, id) => call('nutrition:remove', { profileId, id }),
+    copyMeal: (input) => call('nutrition:copy-meal', input),
+  },
+  mealTemplates: {
+    list: (profileId) => call('meal-templates:list', { profileId }),
+    save: (input) => call('meal-templates:save', input),
+    apply: (input) => call('meal-templates:apply', input),
+    remove: (profileId, id) => call('meal-templates:remove', { profileId, id }),
   },
   imports: {
     preview: (profileId, kind) => call('import:preview', { profileId, kind }),

@@ -28,6 +28,7 @@ describe('database', () => {
       '0005_body_measurements',
       '0006_foods',
       '0007_food_logs',
+      '0008_meal_templates',
     ]);
     expect(await migrateToLatest(db)).toEqual([]);
     await db.destroy();
