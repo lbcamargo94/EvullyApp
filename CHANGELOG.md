@@ -17,6 +17,10 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 - Cada registro guarda uma cópia do alimento: editar o alimento depois não
   muda dias passados.
 
+### Security
+- zod 4.6.7 e fast-uri 3.1.9, com correções de segurança publicadas pelos
+  mantenedores.
+
 ### Changed
 - Um alimento já usado em refeições não pode mais ser excluído do
   catálogo (pode ser editado).

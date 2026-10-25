@@ -2223,7 +2223,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ========================================================================
-fast-uri@3.1.8
+fast-uri@3.1.9
 License: BSD-3-Clause
 Repository: https://github.com/fastify/fast-uri
 
@@ -3039,7 +3039,7 @@ Repository: https://github.com/FormidableLabs/victory
 (No license file included; declared license: MIT AND ISC)
 
 ========================================================================
-zod@4.6.5
+zod@4.6.7
 License: MIT
 Repository: https://github.com/colinhacks/zod
 
