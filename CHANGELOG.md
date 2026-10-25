@@ -6,6 +6,17 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-25
+
+Versão estável da V0.2 — Nutrição: catálogo de alimentos da casa,
+refeições do dia com cópia dos nutrientes, atalhos e favoritas, metas
+nutricionais, água, painel nutricional e questionário do módulo.
+Detalhes de cada etapa nas pré-versões abaixo.
+
+### Changed
+- O teste de exclusão definitiva de perfil passa a cobrir os dados de
+  nutrição (refeições, favoritas, metas e água).
+
 ## [0.2.0-alpha.5] - 2026-10-25
 
 ### Added
@@ -218,7 +229,8 @@ Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
   instalador Windows (`Evully-Setup-<versão>.exe`).
 - Verificação de licenças copyleft (`npm run licenses:check`).
 
-[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.5...HEAD
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.5...v0.2.0
 [0.2.0-alpha.5]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.4...v0.2.0-alpha.5
 [0.2.0-alpha.4]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.3...v0.2.0-alpha.4
 [0.2.0-alpha.3]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.2...v0.2.0-alpha.3
