@@ -14,6 +14,10 @@ const PROFILE_TABLES = [
   'tags',
   'body_weights',
   'body_measurements',
+  'food_logs',
+  'meal_templates',
+  'nutrition_targets',
+  'water_logs',
 ] as const;
 
 describe('settings: profiles, theme and legal documents', () => {
@@ -26,6 +30,20 @@ describe('settings: profiles, theme and legal documents', () => {
     const { handlers } = app;
     const lucas = await handlers['profiles:create'](person);
     const ana = await handlers['profiles:create']({ ...person, name: 'Ana' });
+    // Household catalog: it stays when a profile is deleted (README §6.1).
+    const food = await handlers['foods:create']({
+      name: 'Arroz',
+      brand: null,
+      referenceAmount: 100,
+      referenceUnit: 'g',
+      caloriesKcal: 128,
+      proteinG: 2.5,
+      carbohydrateG: 28,
+      fatG: 0.2,
+      fiberG: null,
+      sodiumMg: null,
+      source: null,
+    });
     for (const profileId of [lucas.id, ana.id]) {
       await handlers['tracking:accept']({
         profileId,
@@ -56,8 +74,31 @@ describe('settings: profiles, theme and legal documents', () => {
         tagIds: [must(tag).id],
         notes: null,
       });
+      const lunch = { mealType: 'lunch', mealName: null } as const;
+      await handlers['nutrition:add']({
+        profileId,
+        logDate: '2026-10-20',
+        ...lunch,
+        foodId: food.id,
+        quantity: 150,
+      });
+      await handlers['meal-templates:save']({
+        profileId,
+        date: '2026-10-20',
+        ...lunch,
+        name: 'Almoço',
+      });
+      await handlers['nutrition-targets:set']({
+        profileId,
+        caloriesKcal: 2000,
+        proteinG: 120,
+        carbohydrateG: null,
+        fatG: null,
+        waterMl: 2500,
+      });
+      await handlers['water:add']({ profileId, date: '2026-10-20', amountMl: 250 });
     }
-    return { ...app, lucas, ana };
+    return { ...app, lucas, ana, food };
   };
 
   const countRows = async (db: Awaited<ReturnType<typeof setup>>['db'], profileId: string) => {
@@ -122,6 +163,8 @@ describe('settings: profiles, theme and legal documents', () => {
     expect(await handlers['profiles:list-archived'](undefined)).toEqual([]);
     expect(await db.selectFrom('profiles').select('id').execute()).toEqual([{ id: ana.id }]);
     expect(await countRows(db, lucas.id)).toBe(0);
+    expect(await db.selectFrom('meal_template_items').select('id').execute()).toHaveLength(1); // Ana's
+    expect(await handlers['foods:list'](undefined)).toHaveLength(1); // the catalog stays
     expect(await db.selectFrom('body_weight_tags').select('body_weight_id').execute()).toHaveLength(
       1,
     ); // Ana's only
