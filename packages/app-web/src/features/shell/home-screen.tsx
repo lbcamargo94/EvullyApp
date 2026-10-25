@@ -17,6 +17,7 @@ import { MeasurementCards } from '../measurements/measurement-cards';
 import { objectiveLabels } from '../tracking/messages.pt-BR';
 import { WeightSummaryCard } from '../weights/weight-summary-card';
 import { shellMessages as m } from './messages.pt-BR';
+import { TodayNutritionCard } from './today-nutrition-card';
 
 /** Dashboard (README §8.5): project progress, weight as chosen and up to 3 measurements. */
 export function HomeScreen() {
@@ -48,6 +49,7 @@ export function HomeScreen() {
         )}
         {measurements && <MeasurementCards summary={measurements} />}
       </div>
+      {profileId && <TodayNutritionCard profileId={profileId} />}
     </>
   );
 }

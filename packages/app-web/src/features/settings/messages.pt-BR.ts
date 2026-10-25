@@ -36,6 +36,7 @@ export const settingsMessages = {
   tabs: {
     tracking: 'Acompanhamento',
     project: 'Projeto',
+    nutrition: 'Nutrição',
     profile: 'Perfil',
     general: 'Geral e backup',
     about: 'Sobre',

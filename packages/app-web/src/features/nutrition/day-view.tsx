@@ -4,6 +4,7 @@ import { Button, Card, Input } from '@evully/ui';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { DayTotals } from './day-totals';
+import { WaterCard } from './water-card';
 import { MealSection, type MealKey } from './meal-section';
 import { dietMessages as m, mealLabels } from './messages.pt-BR';
 
@@ -66,7 +67,8 @@ export function DayView({ profileId }: { profileId: string }) {
         )}
       </div>
       {isFuture && <p className="text-sm text-text-muted">{m.planningHint}</p>}
-      {day && <DayTotals totals={day.totals} />}
+      {day && <DayTotals day={day} />}
+      {day && <WaterCard profileId={profileId} day={day} canLog={!isFuture} />}
       {day &&
         mealsOf(day.logs, extraMeals).map((meal) => (
           <MealSection

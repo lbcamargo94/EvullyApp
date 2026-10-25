@@ -40,4 +40,9 @@ export const shellMessages = {
   projectEnded: 'Prazo encerrado',
   until: (date: string) => `até ${date}`,
   projectProgress: 'Dias do projeto',
+  todayTitle: 'Hoje',
+  openDiet: 'Abrir Dieta',
+  calories: 'Calorias',
+  protein: 'Proteína',
+  water: 'Água',
 } as const;

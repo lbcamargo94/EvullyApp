@@ -17,3 +17,4 @@ export * from './imports/import-plan';
 export * from './nutrition/food';
 export * from './nutrition/food-log';
 export * from './nutrition/meal-template';
+export * from './nutrition/targets';

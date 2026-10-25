@@ -2,6 +2,7 @@ import type { FoodLogInput, NutritionDay, SetMealConsumedInput } from '@evully/c
 import {
   assertCanConsume,
   dailyTotals,
+  effectiveAt,
   normalizeFoodLogDraft,
   normalizeLogQuantity,
   NotFoundError,
@@ -15,11 +16,17 @@ import type { ProfileRepository } from '../../profiles/ports/profile-repository'
 import type { Clock, IdGenerator } from '../../shared/ports';
 import type { FoodLogRecord, FoodLogRepository } from '../ports/food-log-repository';
 import type { FoodRecord, FoodRepository } from '../ports/food-repository';
+import type {
+  NutritionTargetRepository,
+  WaterLogRepository,
+} from '../ports/targets-water-repository';
 
 export interface FoodLogDeps {
   profiles: ProfileRepository;
   foods: FoodRepository;
   logs: FoodLogRepository;
+  targets: NutritionTargetRepository;
+  water: WaterLogRepository;
   clock: Clock;
   ids: IdGenerator;
 }
@@ -38,18 +45,34 @@ const toDto = (log: FoodLogRecord): NutritionDay['logs'][number] => ({
   consumedAt: log.consumedAt,
 });
 
-/** A day of food logs with its totals (README §9.5). */
+/** A day of food logs with its totals, the target in force and water (README §9.5, §9.9). */
 export async function nutritionDay(
-  { profiles, logs }: Pick<FoodLogDeps, 'profiles' | 'logs'>,
+  { profiles, logs, targets, water }: Pick<FoodLogDeps, 'profiles' | 'logs' | 'targets' | 'water'>,
   profileId: string,
   date: LocalDate,
 ): Promise<NutritionDay> {
   await new GetProfile(profiles).execute({ id: profileId });
   const records = await logs.listDay(profileId, date);
+  const target = effectiveAt(await targets.list(profileId), date);
+  const waterLogs = await water.listDay(profileId, date);
   return {
     date,
     logs: records.map(toDto),
     totals: dailyTotals(records.map((r) => ({ nutrients: r.nutrients, consumed: !!r.consumedAt }))),
+    target: target && {
+      id: target.id,
+      effectiveFrom: target.effectiveFrom,
+      caloriesKcal: target.caloriesKcal,
+      proteinG: target.proteinG,
+      carbohydrateG: target.carbohydrateG,
+      fatG: target.fatG,
+      waterMl: target.waterMl,
+      createdAt: target.createdAt,
+    },
+    water: {
+      totalMl: waterLogs.reduce((total, w) => total + w.amountMl, 0),
+      logs: waterLogs.map((w) => ({ id: w.id, amountMl: w.amountMl, loggedAt: w.loggedAt })),
+    },
   };
 }
 

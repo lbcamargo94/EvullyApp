@@ -17,6 +17,12 @@ import {
   SaveMealTemplate,
   type MealShortcutDeps,
 } from '../application/meal-shortcuts';
+import {
+  AddWaterLog,
+  GetNutritionTarget,
+  RemoveWaterLog,
+  SetNutritionTarget,
+} from '../application/targets-water';
 import type { FoodRecord } from '../ports/food-repository';
 
 type NutritionChannels =
@@ -34,7 +40,11 @@ type NutritionChannels =
   | 'meal-templates:list'
   | 'meal-templates:save'
   | 'meal-templates:apply'
-  | 'meal-templates:remove';
+  | 'meal-templates:remove'
+  | 'nutrition-targets:current'
+  | 'nutrition-targets:set'
+  | 'water:add'
+  | 'water:remove';
 
 const toDto = (food: FoodRecord): FoodDto => food;
 
@@ -60,5 +70,9 @@ export function nutritionIpcHandlers(deps: MealShortcutDeps): Pick<IpcHandlers, 
     'meal-templates:save': (input) => new SaveMealTemplate(deps).execute(input),
     'meal-templates:apply': (input) => new ApplyMealTemplate(deps).execute(input),
     'meal-templates:remove': (input) => new RemoveMealTemplate(deps).execute(input),
+    'nutrition-targets:current': (input) => new GetNutritionTarget(deps).execute(input),
+    'nutrition-targets:set': (input) => new SetNutritionTarget(deps).execute(input),
+    'water:add': (input) => new AddWaterLog(deps).execute(input),
+    'water:remove': (input) => new RemoveWaterLog(deps).execute(input),
   };
 }
