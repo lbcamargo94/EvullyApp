@@ -19,6 +19,8 @@ import {
   measurementSessionSchema,
   measurementSummarySchema,
   appInfoSchema,
+  nutritionPreferencesInputSchema,
+  nutritionPreferencesSchema,
   nutritionTargetInputSchema,
   nutritionTargetSchema,
   waterLogIdInputSchema,
@@ -126,6 +128,18 @@ export const ipcChannels = {
   'nutrition-targets:set': { input: nutritionTargetInputSchema, output: nutritionTargetSchema },
   'water:add': { input: waterLogInputSchema, output: nutritionDaySchema },
   'water:remove': { input: waterLogIdInputSchema, output: nutritionDaySchema },
+  'nutrition-preferences:get': {
+    input: profileScopedInputSchema,
+    output: nutritionPreferencesSchema,
+  },
+  'nutrition-preferences:answer': {
+    input: nutritionPreferencesInputSchema,
+    output: nutritionPreferencesSchema,
+  },
+  'nutrition-preferences:skip': {
+    input: profileScopedInputSchema,
+    output: nutritionPreferencesSchema,
+  },
   'backup:status': { input: z.undefined(), output: backupStatusSchema },
   'backup:create-manual': { input: z.undefined(), output: backupResultSchema.nullable() },
   'backup:set-automatic': { input: updateBackupSettingsInputSchema, output: backupStatusSchema },

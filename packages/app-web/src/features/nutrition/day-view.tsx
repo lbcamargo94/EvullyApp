@@ -1,4 +1,10 @@
-import { addDays, localToday, useNutritionDay } from '@evully/app-core';
+import {
+  addDays,
+  localToday,
+  useNutritionDay,
+  useNutritionPreferences,
+  visibleMeals,
+} from '@evully/app-core';
 import type { FoodLogDto } from '@evully/contracts';
 import { Button, Card, Input } from '@evully/ui';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
@@ -6,21 +12,27 @@ import { useState, type FormEvent } from 'react';
 import { DayTotals } from './day-totals';
 import { WaterCard } from './water-card';
 import { MealSection, type MealKey } from './meal-section';
-import { dietMessages as m, mealLabels } from './messages.pt-BR';
+import { dietMessages as m } from './messages.pt-BR';
 
-const STANDARD_MEALS = Object.keys(mealLabels) as (keyof typeof mealLabels)[];
 const PLANNING_DAYS = 30;
 
-/** Standard meals always, then custom meals in the order they appear (README §9.3). */
-function mealsOf(logs: FoodLogDto[], extra: string[]): MealKey[] {
+/**
+ * Meals chosen in the questionnaire (plus any meal with foods that day), then
+ * custom meals in the order they appear (README §9.3).
+ */
+function mealsOf(logs: FoodLogDto[], chosen: MealKey['mealType'][], extra: string[]): MealKey[] {
   const custom = [
     ...new Set([
       ...logs.filter((l) => l.mealType === 'custom').map((l) => l.mealName ?? ''),
       ...extra,
     ]),
   ];
+  const standard = visibleMeals(
+    chosen.filter((t) => t !== 'custom'),
+    logs.map((l) => l.mealType),
+  );
   return [
-    ...STANDARD_MEALS.map((mealType) => ({ mealType, mealName: null })),
+    ...standard.map((mealType) => ({ mealType, mealName: null })),
     ...custom.map((mealName) => ({ mealType: 'custom' as const, mealName })),
   ];
 }
@@ -33,6 +45,7 @@ export function DayView({ profileId }: { profileId: string }) {
   const [date, setDate] = useState<string>(today);
   const [extraMeals, setExtraMeals] = useState<string[]>([]);
   const { data: day } = useNutritionDay(profileId, date);
+  const { data: prefs } = useNutritionPreferences(profileId);
   const { data: yesterday } = useNutritionDay(profileId, addDays(date as typeof today, -1));
   const isFuture = date > today;
   const lastDay = addDays(today, PLANNING_DAYS);
@@ -68,9 +81,10 @@ export function DayView({ profileId }: { profileId: string }) {
       </div>
       {isFuture && <p className="text-sm text-text-muted">{m.planningHint}</p>}
       {day && <DayTotals day={day} />}
-      {day && <WaterCard profileId={profileId} day={day} canLog={!isFuture} />}
+      {day && prefs?.trackWater && <WaterCard profileId={profileId} day={day} canLog={!isFuture} />}
       {day &&
-        mealsOf(day.logs, extraMeals).map((meal) => (
+        prefs &&
+        mealsOf(day.logs, prefs.meals, extraMeals).map((meal) => (
           <MealSection
             key={`${meal.mealType}:${meal.mealName ?? ''}`}
             profileId={profileId}

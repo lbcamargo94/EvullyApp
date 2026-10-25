@@ -20,6 +20,7 @@ export {
   buildTrackingProposal,
   changeTone,
   confirmsProfileName,
+  visibleMeals,
   MAX_WEIGHT_KG,
   MIN_WEIGHT_KG,
   parseLocalDate,

@@ -6,6 +6,14 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Questionário da Dieta**: na primeira abertura, cada perfil escolhe as
+  refeições que costuma fazer, se quer acompanhar a água e pode anotar
+  restrições alimentares. Pode ser pulado e refeito em Configurações ›
+  Nutrição.
+- A aba Dia mostra só as refeições escolhidas (e qualquer refeição que já
+  tenha itens no dia); sem água, o card some da Dieta e do Dashboard.
+
 ## [0.2.0-alpha.4] - 2026-10-25
 
 ### Added

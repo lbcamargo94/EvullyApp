@@ -23,6 +23,12 @@ import {
   RemoveWaterLog,
   SetNutritionTarget,
 } from '../application/targets-water';
+import {
+  AnswerNutritionQuestionnaire,
+  GetNutritionPreferences,
+  SkipNutritionQuestionnaire,
+} from '../application/nutrition-preferences';
+import type { NutritionQuestionnaireRepository } from '../ports/nutrition-questionnaire-repository';
 import type { FoodRecord } from '../ports/food-repository';
 
 type NutritionChannels =
@@ -44,11 +50,16 @@ type NutritionChannels =
   | 'nutrition-targets:current'
   | 'nutrition-targets:set'
   | 'water:add'
-  | 'water:remove';
+  | 'water:remove'
+  | 'nutrition-preferences:get'
+  | 'nutrition-preferences:answer'
+  | 'nutrition-preferences:skip';
 
 const toDto = (food: FoodRecord): FoodDto => food;
 
-export function nutritionIpcHandlers(deps: MealShortcutDeps): Pick<IpcHandlers, NutritionChannels> {
+export function nutritionIpcHandlers(
+  deps: MealShortcutDeps & { questionnaires: NutritionQuestionnaireRepository },
+): Pick<IpcHandlers, NutritionChannels> {
   const { foods, logs, templates, clock, ids } = deps;
   const list = new ListFoods(foods);
   const create = new CreateFood(foods, clock, ids);
@@ -74,5 +85,9 @@ export function nutritionIpcHandlers(deps: MealShortcutDeps): Pick<IpcHandlers, 
     'nutrition-targets:set': (input) => new SetNutritionTarget(deps).execute(input),
     'water:add': (input) => new AddWaterLog(deps).execute(input),
     'water:remove': (input) => new RemoveWaterLog(deps).execute(input),
+    'nutrition-preferences:get': (input) => new GetNutritionPreferences(deps).execute(input),
+    'nutrition-preferences:answer': (input) =>
+      new AnswerNutritionQuestionnaire(deps).execute(input),
+    'nutrition-preferences:skip': (input) => new SkipNutritionQuestionnaire(deps).execute(input),
   };
 }
