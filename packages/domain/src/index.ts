@@ -15,3 +15,4 @@ export * from './backup/backup-rules';
 export * from './imports/csv';
 export * from './imports/import-plan';
 export * from './nutrition/food';
+export * from './nutrition/food-log';

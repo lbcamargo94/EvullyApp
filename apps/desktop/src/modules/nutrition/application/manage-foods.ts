@@ -1,6 +1,7 @@
 import type { FoodInput, UpdateFoodInput } from '@evully/contracts';
-import { assertUniqueFood, normalizeFoodDraft, NotFoundError } from '@evully/domain';
+import { assertUniqueFood, ConflictError, normalizeFoodDraft, NotFoundError } from '@evully/domain';
 import type { Clock, IdGenerator } from '../../shared/ports';
+import type { FoodLogRepository } from '../ports/food-log-repository';
 import type { FoodRecord, FoodRepository } from '../ports/food-repository';
 
 const notFound = () => new NotFoundError('food.not_found', 'Food not found');
@@ -51,17 +52,18 @@ export class UpdateFood {
   }
 }
 
-/**
- * Soft delete. Food logs arrive in V0.2 alpha.2; from then on a food that was
- * already logged cannot be removed (README §9.5).
- */
+/** Soft delete, only for foods never logged by any profile (README §9.5). */
 export class RemoveFood {
   constructor(
     private readonly foods: FoodRepository,
+    private readonly logs: FoodLogRepository,
     private readonly clock: Clock,
   ) {}
 
   async execute({ id }: { id: string }): Promise<null> {
+    if (await this.logs.isFoodUsed(id)) {
+      throw new ConflictError('food.in_use', 'Food is used in food logs');
+    }
     if (!(await this.foods.softDelete(id, this.clock.nowIso()))) throw notFound();
     return null;
   }

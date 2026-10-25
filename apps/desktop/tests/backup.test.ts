@@ -49,7 +49,7 @@ describe('backup', () => {
       appVersion: '0.0.0-test',
       kind: 'pre-migration',
       createdAt: '2026-10-14T10:00:00.000Z',
-      schemaVersion: '0006_foods',
+      schemaVersion: '0007_food_logs',
       sha256: createHash('sha256').update(db).digest('hex'),
     });
 

@@ -12,8 +12,9 @@ import { PendingImports } from '../modules/imports/application/pending-imports';
 import type { ImportFiles } from '../modules/imports/ports/import-ports';
 import { KyselyMeasurementRepository } from '../modules/measurements/adapters/kysely-measurement-repository';
 import { measurementIpcHandlers } from '../modules/measurements/adapters/measurement-ipc-handlers';
-import { foodIpcHandlers } from '../modules/nutrition/adapters/food-ipc-handlers';
+import { KyselyFoodLogRepository } from '../modules/nutrition/adapters/kysely-food-log-repository';
 import { KyselyFoodRepository } from '../modules/nutrition/adapters/kysely-food-repository';
+import { nutritionIpcHandlers } from '../modules/nutrition/adapters/nutrition-ipc-handlers';
 import { KyselyProfileRepository } from '../modules/profiles/adapters/kysely-profile-repository';
 import { profileIpcHandlers } from '../modules/profiles/adapters/profile-ipc-handlers';
 import { KyselySettingsRepository } from '../modules/settings/adapters/kysely-settings-repository';
@@ -50,6 +51,7 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
   const tags = new KyselyTagRepository(db);
   const measurements = new KyselyMeasurementRepository(db);
   const foods = new KyselyFoodRepository(db);
+  const foodLogs = new KyselyFoodLogRepository(db);
   const backupSettings = new BackupSettings(settings);
   const backupDeps: BackupDeps = {
     writer: new FsBackupWriter(db, backup.tempDirectory),
@@ -72,7 +74,7 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
     ...trackingIpcHandlers({ profiles, projects, tracking, clock, ids }),
     ...weightIpcHandlers({ profiles, projects, weights, tags, clock, ids }),
     ...measurementIpcHandlers({ profiles, projects, tracking, measurements, clock, ids }),
-    ...foodIpcHandlers(foods, clock, ids),
+    ...nutritionIpcHandlers({ profiles, foods, logs: foodLogs, clock, ids }),
     ...backupIpcHandlers({
       backup: backupDeps,
       settings: backupSettings,

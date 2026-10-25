@@ -2,7 +2,7 @@ export const shellMessages = {
   mainMenu: 'Menu principal',
   dashboard: 'Dashboard',
   weight: 'Peso',
-  foods: 'Alimentos',
+  diet: 'Dieta',
   measurements: 'Medidas',
   settings: 'Configurações',
   registerMeasurements: 'Registrar medidas',

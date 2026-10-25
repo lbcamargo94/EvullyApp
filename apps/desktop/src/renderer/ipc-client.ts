@@ -88,6 +88,16 @@ export const ipcEvullyClient: EvullyClient = {
     update: (input) => call('foods:update', input),
     remove: (id) => call('foods:remove', { id }),
   },
+  nutrition: {
+    day: (profileId, date) => call('nutrition:day', { profileId, date }),
+    add: (input) => call('nutrition:add', input),
+    updateQuantity: (profileId, id, quantity) =>
+      call('nutrition:update-quantity', { profileId, id, quantity }),
+    setConsumed: (profileId, id, consumed) =>
+      call('nutrition:set-consumed', { profileId, id, consumed }),
+    setMealConsumed: (input) => call('nutrition:set-meal-consumed', input),
+    remove: (profileId, id) => call('nutrition:remove', { profileId, id }),
+  },
   imports: {
     preview: (profileId, kind) => call('import:preview', { profileId, kind }),
     confirm: (profileId, token) => call('import:confirm', { profileId, token }),

@@ -1167,6 +1167,26 @@ Salada/legumes
 Cada registro guarda uma **cópia dos nutrientes calculados** no momento
 do registro. Editar um alimento depois não altera dias passados.
 
+```text
+log_date        data local
+meal_type       breakfast | morning_snack | lunch | pre_workout | dinner | supper | custom
+meal_name       só em custom
+food_id
+food_snapshot   cópia do alimento (nome, marca, unidade, nutrientes de referência)
+quantity        na unidade do alimento
+calories_kcal, protein_g, carbohydrate_g, fat_g, fiber_g, sodium_mg   para a quantidade
+consumed_at     nulo = planejado
+sort_order
+```
+
+- Mudar a quantidade recalcula a partir de `food_snapshot`, não do
+  alimento atual.
+- Dias passados aceitam registros; dias futuros só para **planejar**, até
+  30 dias à frente. Marcar como consumido só vale para hoje ou dias
+  passados.
+- O total do dia mostra o **consumido** e o **planejado**.
+- Um alimento já registrado não pode ser excluído do catálogo, só editado.
+
 ### 9.4.1 Água — `water_logs`
 
 ```text

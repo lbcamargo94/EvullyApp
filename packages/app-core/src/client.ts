@@ -8,6 +8,7 @@ import type {
   CreateTagInput,
   FoodDto,
   FoodInput,
+  FoodLogInput,
   DeleteProfileInput,
   ImportKind,
   ImportPreview,
@@ -17,6 +18,7 @@ import type {
   MeasurementSession,
   MeasurementSummary,
   MeasurementTypeDto,
+  NutritionDay,
   ProfileDto,
   ProfileInput,
   ProfileSummary,
@@ -24,6 +26,7 @@ import type {
   ProjectDto,
   ProjectUpdateInput,
   RenameTagInput,
+  SetMealConsumedInput,
   Tag,
   TrackingState,
   UpdateAppSettingsInput,
@@ -103,6 +106,14 @@ export interface EvullyClient {
     create(input: FoodInput): Promise<FoodDto>;
     update(input: UpdateFoodInput): Promise<FoodDto>;
     remove(id: string): Promise<null>;
+  };
+  nutrition: {
+    day(profileId: string, date: string): Promise<NutritionDay>;
+    add(input: FoodLogInput): Promise<NutritionDay>;
+    updateQuantity(profileId: string, id: string, quantity: number): Promise<NutritionDay>;
+    setConsumed(profileId: string, id: string, consumed: boolean): Promise<NutritionDay>;
+    setMealConsumed(input: SetMealConsumedInput): Promise<NutritionDay>;
+    remove(profileId: string, id: string): Promise<NutritionDay>;
   };
   imports?: {
     preview(profileId: string, kind: ImportKind): Promise<ImportPreview | null>;

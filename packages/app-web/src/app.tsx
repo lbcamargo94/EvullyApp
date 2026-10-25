@@ -26,8 +26,8 @@ const WeightScreen = lazy(() =>
 const SettingsScreen = lazy(() =>
   import('./features/settings/settings-screen').then((m) => ({ default: m.SettingsScreen })),
 );
-const FoodsScreen = lazy(() =>
-  import('./features/nutrition/foods-screen').then((m) => ({ default: m.FoodsScreen })),
+const DietScreen = lazy(() =>
+  import('./features/nutrition/diet-screen').then((m) => ({ default: m.DietScreen })),
 );
 const MeasurementScreen = lazy(() =>
   import('./features/measurements/measurement-screen').then((m) => ({
@@ -98,13 +98,14 @@ function AppRoutes() {
           }
         />
         <Route
-          path="foods"
+          path="diet"
           element={
             <Suspense fallback={null}>
-              <FoodsScreen />
+              <DietScreen />
             </Suspense>
           }
         />
+        <Route path="foods" element={<Navigate to="/app/diet?tab=foods" replace />} />
         <Route path="import/:kind" element={<ImportScreen />} />
         <Route
           path="settings"
