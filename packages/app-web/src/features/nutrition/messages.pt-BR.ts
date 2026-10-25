@@ -1,4 +1,4 @@
-import type { FoodUnit } from '@evully/contracts';
+import type { FoodUnit, MealType } from '@evully/contracts';
 
 const number = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
 export const formatNumber = (value: number) => number.format(value);
@@ -62,4 +62,73 @@ export const foodErrorByCode: Record<string, string> = {
     'Proteína, carboidratos e gorduras somam mais que a quantidade informada.',
   'food.duplicate': 'Já existe um alimento com esse nome e marca.',
   'food.not_found': 'Alimento não encontrado. Recarregue a tela.',
+  'food.in_use':
+    'Este alimento já foi usado em refeições e não pode ser excluído. Você pode editá-lo.',
+};
+
+const weekday = new Intl.DateTimeFormat('pt-BR', {
+  weekday: 'long',
+  day: '2-digit',
+  month: '2-digit',
+});
+
+export const mealLabels: Record<Exclude<MealType, 'custom'>, string> = {
+  breakfast: 'Café da manhã',
+  morning_snack: 'Lanche da manhã',
+  lunch: 'Almoço',
+  pre_workout: 'Pré-treino',
+  dinner: 'Jantar',
+  supper: 'Ceia',
+};
+
+export const dietMessages = {
+  title: 'Dieta',
+  tabs: { day: 'Dia', foods: 'Alimentos' },
+  previousDay: 'Dia anterior',
+  nextDay: 'Próximo dia',
+  backToToday: 'Voltar para hoje',
+  dayLabel: (date: string, today: string, yesterday: string, tomorrow: string) => {
+    if (date === today) return 'Hoje';
+    if (date === yesterday) return 'Ontem';
+    if (date === tomorrow) return 'Amanhã';
+    const text = weekday.format(new Date(`${date}T12:00:00`));
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  },
+  planningHint: 'Dia futuro: você pode planejar as refeições e marcá-las como consumidas no dia.',
+  totalsTitle: 'Total do dia',
+  consumed: 'Consumido',
+  planned: 'Planejado',
+  kcal: (value: string) => `${value} kcal`,
+  macros: (p: string, c: string, f: string) => `P ${p} g · C ${c} g · G ${f} g`,
+  protein: 'Proteína',
+  carbohydrate: 'Carboidratos',
+  fat: 'Gorduras',
+  emptyMeal: 'Nenhum alimento.',
+  addFood: 'Adicionar alimento',
+  searchFood: 'Buscar alimento no catálogo',
+  noFoods: 'O catálogo está vazio. Cadastre alimentos na aba Alimentos.',
+  noMatch: 'Nenhum alimento encontrado.',
+  quantity: (unit: string) => `Quantidade (${unit})`,
+  add: 'Adicionar',
+  cancel: 'Cancelar',
+  markMeal: 'Marcar refeição como consumida',
+  unmarkMeal: 'Refeição consumida',
+  consumedItem: (name: string) => `${name} consumido`,
+  quantityOf: (name: string) => `Quantidade de ${name}`,
+  removeItem: (name: string) => `Remover ${name} da refeição`,
+  newMeal: 'Adicionar outra refeição',
+  newMealName: 'Nome da refeição',
+  newMealPlaceholder: 'Ex.: Lanche da tarde',
+  createMeal: 'Criar',
+  genericError: 'Não foi possível salvar. Tente novamente.',
+} as const;
+
+export const foodLogErrorByCode: Record<string, string> = {
+  'food_log.quantity_out_of_range': 'Use uma quantidade maior que zero e até 10.000.',
+  'food_log.date_too_far': 'Dá para planejar até 30 dias à frente.',
+  'food_log.consume_future': 'Só dá para marcar como consumido hoje ou em dias passados.',
+  'food_log.meal_name_required': 'Dê um nome à refeição.',
+  'food_log.meal_name_too_long': 'Use até 40 caracteres no nome da refeição.',
+  'food_log.not_found': 'Item não encontrado. Recarregue a tela.',
+  'food.not_found': 'Alimento não encontrado no catálogo.',
 };

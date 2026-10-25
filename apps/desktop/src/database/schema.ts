@@ -109,6 +109,30 @@ export interface FoodsTable {
   deleted_at: string | null;
 }
 
+export interface FoodLogsTable {
+  id: string;
+  profile_id: string;
+  log_date: string;
+  meal_type:
+    'breakfast' | 'morning_snack' | 'lunch' | 'pre_workout' | 'dinner' | 'supper' | 'custom';
+  meal_name: string | null;
+  food_id: string;
+  /** JSON of the domain FoodSnapshot. */
+  food_snapshot: string;
+  quantity: number;
+  calories_kcal: number;
+  protein_g: number;
+  carbohydrate_g: number;
+  fat_g: number;
+  fiber_g: number | null;
+  sodium_mg: number | null;
+  consumed_at: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -171,4 +195,5 @@ export interface DatabaseSchema {
   body_measurements: BodyMeasurementsTable;
   body_measurement_values: BodyMeasurementValuesTable;
   foods: FoodsTable;
+  food_logs: FoodLogsTable;
 }

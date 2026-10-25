@@ -58,9 +58,9 @@ export function AppShell() {
             <Ruler aria-hidden="true" className="size-5" />
             {m.measurements}
           </NavLink>
-          <NavLink to="/app/foods" className={navItem}>
+          <NavLink to="/app/diet" className={navItem}>
             <Apple aria-hidden="true" className="size-5" />
-            {m.foods}
+            {m.diet}
           </NavLink>
           <NavLink to="/app/settings" className={navItem}>
             <Settings aria-hidden="true" className="size-5" />

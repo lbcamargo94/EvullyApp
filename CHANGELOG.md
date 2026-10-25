@@ -6,6 +6,25 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Dieta** no menu, com as abas **Dia** e **Alimentos**.
+- Refeições do dia: café da manhã, lanche da manhã, almoço, pré-treino,
+  jantar, ceia e refeições com nome próprio. Adicionar alimentos do
+  catálogo, mudar a quantidade (calorias e macros recalculados na hora),
+  remover, marcar um item ou a refeição inteira como consumida.
+- Total do dia: consumido e planejado.
+- Planejar até 30 dias à frente; marcar como consumido só hoje ou antes.
+- Cada registro guarda uma cópia do alimento: editar o alimento depois não
+  muda dias passados.
+
+### Security
+- zod 4.6.7 e fast-uri 3.1.9, com correções de segurança publicadas pelos
+  mantenedores.
+
+### Changed
+- Um alimento já usado em refeições não pode mais ser excluído do
+  catálogo (pode ser editado).
+
 ## [0.2.0-alpha.1] - 2026-10-21
 
 ### Added
