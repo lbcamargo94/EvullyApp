@@ -254,6 +254,47 @@ export interface WorkoutPlanExercisesTable {
   deleted_at: string | null;
 }
 
+export interface WorkoutSessionsTable {
+  id: string;
+  profile_id: string;
+  workout_day_id: string | null;
+  started_at: string;
+  finished_at: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface ExercisePerformancesTable {
+  id: string;
+  profile_id: string;
+  session_id: string;
+  exercise_id: string;
+  plan_exercise_id: string | null;
+  sort_order: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface ExerciseSetsTable {
+  id: string;
+  profile_id: string;
+  performance_id: string;
+  set_number: number;
+  weight_kg: number | null;
+  repetitions: number | null;
+  duration_seconds: number | null;
+  rir: number | null;
+  completed: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -325,4 +366,7 @@ export interface DatabaseSchema {
   workout_plans: WorkoutPlansTable;
   workout_days: WorkoutDaysTable;
   workout_plan_exercises: WorkoutPlanExercisesTable;
+  workout_sessions: WorkoutSessionsTable;
+  exercise_performances: ExercisePerformancesTable;
+  exercise_sets: ExerciseSetsTable;
 }

@@ -8,6 +8,7 @@ export * from './features/nutrition/use-nutrition-day';
 export * from './features/settings/use-app-settings';
 export * from './features/workouts/use-exercises';
 export * from './features/workouts/use-workout-plans';
+export * from './features/workouts/use-workout-session';
 export * from './features/shell/idle-timer';
 export * from './features/settings/use-tracking-settings';
 export * from './features/tracking/use-tracking';
@@ -22,6 +23,7 @@ export {
   buildTrackingProposal,
   changeTone,
   confirmsProfileName,
+  isoWeekday,
   visibleMeals,
   MAX_WEIGHT_KG,
   MIN_WEIGHT_KG,

@@ -44,6 +44,15 @@ export class KyselyExerciseRepository implements ExerciseRepository {
     return rows.map(toRecord);
   }
 
+  async listAll(profileId: string): Promise<ExerciseRecord[]> {
+    const rows = await this.db
+      .selectFrom('exercises')
+      .selectAll()
+      .where((eb) => eb.or([eb('profile_id', 'is', null), eb('profile_id', '=', profileId)]))
+      .execute();
+    return rows.map(toRecord);
+  }
+
   async findOwn(profileId: string, id: string): Promise<ExerciseRecord | null> {
     const row = await this.db
       .selectFrom('exercises')
