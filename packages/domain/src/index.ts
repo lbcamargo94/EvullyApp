@@ -25,3 +25,4 @@ export * from './workouts/plan-templates';
 export * from './workouts/session';
 export * from './workouts/history';
 export * from './workouts/preferences';
+export * from './cardio/cardio';

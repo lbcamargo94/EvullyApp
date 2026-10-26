@@ -6,6 +6,9 @@ import type {
   ApplyMealTemplateInput,
   BackupResult,
   BackupStatus,
+  CardioInput,
+  CardioOverview,
+  CardioSessionDto,
   CopyMealInput,
   CreateTagInput,
   ExerciseDto,
@@ -44,6 +47,7 @@ import type {
   Tag,
   TrackingState,
   UpdateAppSettingsInput,
+  UpdateCardioInput,
   UpdateExerciseInput,
   UpdateFoodInput,
   UpdateMeasurementInput,
@@ -216,6 +220,12 @@ export interface EvullyClient {
     ): Promise<WorkoutSessionDto>;
     replaceExercise(profileId: string, id: string, exerciseId: string): Promise<WorkoutSessionDto>;
     removeExercise(profileId: string, id: string): Promise<WorkoutSessionDto>;
+  };
+  cardio: {
+    overview(profileId: string): Promise<CardioOverview>;
+    register(input: CardioInput): Promise<CardioSessionDto>;
+    update(input: UpdateCardioInput): Promise<CardioSessionDto>;
+    remove(profileId: string, id: string): Promise<null>;
   };
   mealTemplates: {
     list(profileId: string): Promise<MealTemplateDto[]>;

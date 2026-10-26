@@ -26,6 +26,7 @@ const PROFILE_TABLES = [
   'exercise_performances',
   'exercise_sets',
   'profile_exercise_settings',
+  'cardio_sessions',
 ] as const;
 
 describe('settings: profiles, theme and legal documents', () => {
@@ -141,6 +142,19 @@ describe('settings: profiles, theme and legal documents', () => {
         profileId,
         exerciseId: own.id,
         loadIncrementKg: 2.5,
+      });
+      await handlers['cardio:register']({
+        profileId,
+        sessionDate: '2026-10-20',
+        startedAt: '2026-10-20T10:00:00.000Z',
+        activityType: 'walking',
+        activityName: null,
+        durationMinutes: 45,
+        distanceKm: null,
+        steps: null,
+        intensity: null,
+        heartRateAverage: null,
+        notes: null,
       });
     }
     return { ...app, lucas, ana, food };
