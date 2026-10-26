@@ -177,6 +177,37 @@ export interface WaterLogsTable {
   deleted_at: string | null;
 }
 
+/** System exercises have profile_id null and a code; profile exercises have no code. */
+export interface ExercisesTable {
+  id: string;
+  profile_id: string | null;
+  code: string | null;
+  name: string;
+  muscle_group:
+    | 'chest'
+    | 'back'
+    | 'shoulders'
+    | 'biceps'
+    | 'triceps'
+    | 'forearms'
+    | 'quadriceps'
+    | 'hamstrings'
+    | 'glutes'
+    | 'calves'
+    | 'core'
+    | 'lower_back'
+    | 'cardio_other';
+  /** JSON array of muscle groups. */
+  secondary_muscles: string;
+  equipment: string | null;
+  instructions: string | null;
+  notes: string | null;
+  load_increment_kg: number | null;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -244,4 +275,5 @@ export interface DatabaseSchema {
   meal_template_items: MealTemplateItemsTable;
   nutrition_targets: NutritionTargetsTable;
   water_logs: WaterLogsTable;
+  exercises: ExercisesTable;
 }

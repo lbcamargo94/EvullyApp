@@ -6,6 +6,14 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- Treino (V0.3): menu **Treinos** com a **Biblioteca de exercícios**.
+  Catálogo do Evully com os exercícios do programa inicial (peito, costas,
+  pernas, braços, core, lombar e outros), com instruções curtas; busca sem
+  acentos e filtro por grupo muscular.
+- Exercícios próprios por perfil: criar, editar e desativar, com grupos
+  secundários, equipamento, incremento de carga, instruções e notas.
+
 ## [0.2.0] - 2026-10-25
 
 Versão estável da V0.2 — Nutrição: catálogo de alimentos da casa,
