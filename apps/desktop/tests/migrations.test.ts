@@ -33,6 +33,7 @@ describe('database', () => {
       '0010_exercises',
       '0011_workout_plans',
       '0012_workout_sessions',
+      '0013_profile_exercise_settings',
     ]);
     expect(await migrateToLatest(db)).toEqual([]);
     await db.destroy();

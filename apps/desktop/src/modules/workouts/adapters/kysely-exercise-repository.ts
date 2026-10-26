@@ -88,6 +88,41 @@ export class KyselyExerciseRepository implements ExerciseRepository {
       .execute();
   }
 
+  async profileIncrement(profileId: string, exerciseId: string): Promise<number | null> {
+    const row = await this.db
+      .selectFrom('profile_exercise_settings')
+      .select('load_increment_kg')
+      .where('profile_id', '=', profileId)
+      .where('exercise_id', '=', exerciseId)
+      .executeTakeFirst();
+    return row?.load_increment_kg ?? null;
+  }
+
+  async setProfileIncrement(
+    profileId: string,
+    exerciseId: string,
+    loadIncrementKg: number | null,
+    id: string,
+    now: string,
+  ): Promise<void> {
+    await this.db
+      .insertInto('profile_exercise_settings')
+      .values({
+        id,
+        profile_id: profileId,
+        exercise_id: exerciseId,
+        load_increment_kg: loadIncrementKg,
+        created_at: now,
+        updated_at: now,
+      })
+      .onConflict((oc) =>
+        oc
+          .columns(['profile_id', 'exercise_id'])
+          .doUpdateSet({ load_increment_kg: loadIncrementKg, updated_at: now }),
+      )
+      .execute();
+  }
+
   async deactivate(profileId: string, id: string, now: string): Promise<boolean> {
     const result = await this.db
       .updateTable('exercises')

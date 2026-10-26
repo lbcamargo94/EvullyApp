@@ -3,6 +3,7 @@ import {
   ConflictError,
   normalizeSetValues,
   NotFoundError,
+  suggestsLoadIncrease,
   summarizePerformance,
   ValidationError,
   type Prescription,
@@ -15,6 +16,7 @@ import type {
   SessionRepository,
   SetRecord,
 } from '../ports/session-repository';
+import { effectiveIncrement } from './exercise-history';
 import type { PlanDeps } from './manage-plans';
 
 export interface SessionDeps extends PlanDeps {
@@ -30,11 +32,26 @@ interface SessionContext {
   prescriptions: Map<string, Prescription>;
 }
 
-/** Summary of the previous finished session with the exercise, or null. */
+/** Summary of the previous finished session with the exercise, and its sets. */
 async function lastSummary(deps: SessionDeps, session: SessionRecord, exerciseId: string) {
   const previous = await deps.sessions.lastPerformance(session.profileId, exerciseId, session.id);
   const summary = previous && summarizePerformance(previous.sets);
-  return previous && summary ? { date: previous.startedAt, ...summary } : null;
+  return {
+    last: previous && summary ? { date: previous.startedAt, ...summary } : null,
+    sets: previous?.sets ?? [],
+  };
+}
+
+/** Double progression met last time (README §10.6); a suggestion, never a change. */
+async function suggestionFor(
+  deps: SessionDeps,
+  profileId: string,
+  exerciseId: string,
+  prescription: Prescription | null,
+  lastSets: SetRecord[],
+) {
+  if (!prescription || !suggestsLoadIncrease(prescription, lastSets)) return null;
+  return { incrementKg: await effectiveIncrement(deps, profileId, exerciseId) };
 }
 
 /** One exercise of the session with its prescription and previous session. */
@@ -46,7 +63,7 @@ async function performanceDto(
 ): Promise<PerformanceDto> {
   const exercise = ctx.exercises.get(p.exerciseId);
   const prescription = (p.planExerciseId && ctx.prescriptions.get(p.planExerciseId)) || null;
-  const last = await lastSummary(deps, session, p.exerciseId);
+  const { last, sets: lastSets } = await lastSummary(deps, session, p.exerciseId);
   return {
     id: p.id,
     exerciseId: p.exerciseId,
@@ -55,6 +72,7 @@ async function performanceDto(
     prescription,
     targetType: prescription?.targetType ?? last?.unit ?? 'reps',
     last,
+    suggestion: await suggestionFor(deps, session.profileId, p.exerciseId, prescription, lastSets),
     sets: p.sets,
   };
 }

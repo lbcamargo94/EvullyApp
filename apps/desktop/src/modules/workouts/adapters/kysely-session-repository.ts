@@ -84,7 +84,10 @@ export class KyselySessionRepository implements SessionRepository {
       .where('deleted_at', 'is', null);
     if (where.id) query = query.where('id', '=', where.id);
     if (where.open) query = query.where('finished_at', 'is', null);
-    const session = await query.orderBy('started_at', 'desc').executeTakeFirst();
+    const session = await query
+      .orderBy('started_at', 'desc')
+      .orderBy('id', 'desc')
+      .executeTakeFirst();
     if (!session) return null;
     const performances = await this.db
       .selectFrom('exercise_performances')
@@ -144,6 +147,8 @@ export class KyselySessionRepository implements SessionRepository {
       .where('s.finished_at', 'is not', null)
       .where('s.id', '!=', beforeSessionId)
       .orderBy('s.started_at', 'desc')
+      // UUID v7 ids break ties within the same instant.
+      .orderBy('s.id', 'desc')
       .executeTakeFirst();
     if (!row) return null;
     const sets = await this.db
@@ -154,6 +159,49 @@ export class KyselySessionRepository implements SessionRepository {
       .orderBy('set_number')
       .execute();
     return { startedAt: row.started_at, sets: sets.map(toSet) };
+  }
+
+  async history(profileId: string, exerciseId: string) {
+    const rows = await this.db
+      .selectFrom('exercise_performances as p')
+      .innerJoin('workout_sessions as s', 's.id', 'p.session_id')
+      .select(['p.id as performance_id', 's.id as session_id', 's.started_at'])
+      .where('p.profile_id', '=', profileId)
+      .where('p.exercise_id', '=', exerciseId)
+      .where('p.deleted_at', 'is', null)
+      .where('s.deleted_at', 'is', null)
+      .where('s.finished_at', 'is not', null)
+      .orderBy('s.started_at', 'desc')
+      // UUID v7 ids break ties within the same instant.
+      .orderBy('s.id', 'desc')
+      .execute();
+    if (!rows.length) return [];
+    const sets = await this.db
+      .selectFrom('exercise_sets')
+      .selectAll()
+      .where(
+        'performance_id',
+        'in',
+        rows.map((r) => r.performance_id),
+      )
+      .where('deleted_at', 'is', null)
+      .orderBy('set_number')
+      .execute();
+    // A session may hold the same exercise twice: merge its performances.
+    const bySession = new Map<
+      string,
+      { sessionId: string; startedAt: string; sets: SetRecord[] }
+    >();
+    for (const r of rows) {
+      const entry = bySession.get(r.session_id) ?? {
+        sessionId: r.session_id,
+        startedAt: r.started_at,
+        sets: [],
+      };
+      entry.sets.push(...sets.filter((s) => s.performance_id === r.performance_id).map(toSet));
+      bySession.set(r.session_id, entry);
+    }
+    return [...bySession.values()];
   }
 
   async insertSession(

@@ -295,6 +295,15 @@ export interface ExerciseSetsTable {
   deleted_at: string | null;
 }
 
+export interface ProfileExerciseSettingsTable {
+  id: string;
+  profile_id: string;
+  exercise_id: string;
+  load_increment_kg: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -369,4 +378,5 @@ export interface DatabaseSchema {
   workout_sessions: WorkoutSessionsTable;
   exercise_performances: ExercisePerformancesTable;
   exercise_sets: ExerciseSetsTable;
+  profile_exercise_settings: ProfileExerciseSettingsTable;
 }

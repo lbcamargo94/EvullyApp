@@ -4,7 +4,12 @@ import { Button, Card } from '@evully/ui';
 import { Plus, Repeat, X } from 'lucide-react';
 import { useState } from 'react';
 import { ExercisePicker } from './exercise-picker';
-import { formatPrescription, sessionErrorByCode, sessionMessages as m } from './messages.pt-BR';
+import {
+  formatKgValue,
+  formatPrescription,
+  sessionErrorByCode,
+  sessionMessages as m,
+} from './messages.pt-BR';
 import { RestTimer } from './rest-timer';
 import { SetRow } from './set-row';
 
@@ -77,6 +82,16 @@ export function PerformanceCard({
           <X aria-hidden="true" className="size-4" />
         </Button>
       </div>
+      {p.suggestion && (
+        <p
+          role="note"
+          className="rounded-md bg-brand-soft px-3 py-2 text-sm text-brand-soft-foreground"
+        >
+          {m.suggestion(
+            p.suggestion.incrementKg === null ? null : formatKgValue(p.suggestion.incrementKg),
+          )}
+        </p>
+      )}
       {swapping && (
         <ExercisePicker
           profileId={profileId}

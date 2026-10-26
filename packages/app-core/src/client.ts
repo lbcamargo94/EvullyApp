@@ -9,6 +9,7 @@ import type {
   CopyMealInput,
   CreateTagInput,
   ExerciseDto,
+  ExerciseHistoryDto,
   ExerciseInput,
   FoodDto,
   FoodInput,
@@ -151,6 +152,12 @@ export interface EvullyClient {
     create(input: ExerciseInput): Promise<ExerciseDto>;
     update(input: UpdateExerciseInput): Promise<ExerciseDto>;
     deactivate(profileId: string, id: string): Promise<null>;
+    history(profileId: string, exerciseId: string): Promise<ExerciseHistoryDto>;
+    setIncrement(
+      profileId: string,
+      exerciseId: string,
+      loadIncrementKg: number | null,
+    ): Promise<ExerciseHistoryDto>;
   };
   workoutPlans: {
     list(profileId: string): Promise<WorkoutPlanDto[]>;
