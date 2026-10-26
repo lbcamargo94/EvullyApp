@@ -14,6 +14,7 @@ import * as m0011 from './migrations/0011_workout_plans';
 import * as m0012 from './migrations/0012_workout_sessions';
 import * as m0013 from './migrations/0013_profile_exercise_settings';
 import * as m0014 from './migrations/0014_cardio_sessions';
+import * as m0015 from './migrations/0015_habits';
 
 // Migrations are imported statically so they are bundled into the app.
 // Never edit a published migration; add a new one (README §6.4).
@@ -32,6 +33,7 @@ const migrations: Record<string, Migration> = {
   '0012_workout_sessions': m0012,
   '0013_profile_exercise_settings': m0013,
   '0014_cardio_sessions': m0014,
+  '0015_habits': m0015,
 };
 
 const provider: MigrationProvider = { getMigrations: async () => migrations };

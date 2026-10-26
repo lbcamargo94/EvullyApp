@@ -164,6 +164,17 @@ export const ipcEvullyClient: EvullyClient = {
     update: (input) => call('cardio:update', input),
     remove: (profileId, id) => call('cardio:delete', { profileId, id }),
   },
+  habits: {
+    list: (profileId) => call('habits:list', { profileId }),
+    create: (input) => call('habits:create', input),
+    update: (input) => call('habits:update', input),
+    deactivate: (profileId, id) => call('habits:deactivate', { profileId, id }),
+    move: (profileId, id, direction) => call('habits:move', { profileId, id, direction }),
+    addExamples: (profileId) => call('habits:add-examples', { profileId }),
+    day: (profileId, date) => call('habits:day', { profileId, date }),
+    log: (profileId, habitId, date, value) =>
+      call('habits:log', { profileId, habitId, date, value }),
+  },
   mealTemplates: {
     list: (profileId) => call('meal-templates:list', { profileId }),
     save: (input) => call('meal-templates:save', input),

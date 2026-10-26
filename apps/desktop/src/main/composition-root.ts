@@ -15,6 +15,8 @@ import { RunAutomaticBackup } from '../modules/backup/application/run-automatic-
 import type { BackupDialogs } from '../modules/backup/ports/backup-ports';
 import { cardioIpcHandlers } from '../modules/cardio/adapters/cardio-ipc-handlers';
 import { KyselyCardioRepository } from '../modules/cardio/adapters/kysely-cardio-repository';
+import { habitIpcHandlers } from '../modules/habits/adapters/habit-ipc-handlers';
+import { KyselyHabitRepository } from '../modules/habits/adapters/kysely-habit-repository';
 import { importIpcHandlers } from '../modules/imports/adapters/import-ipc-handlers';
 import { PendingImports } from '../modules/imports/application/pending-imports';
 import type { ImportFiles } from '../modules/imports/ports/import-ports';
@@ -122,6 +124,7 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
       ids,
     }),
     ...cardioIpcHandlers({ profiles, cardio: new KyselyCardioRepository(db), clock, ids }),
+    ...habitIpcHandlers({ profiles, habits: new KyselyHabitRepository(db), clock, ids }),
     ...backupIpcHandlers({
       backup: backupDeps,
       settings: backupSettings,

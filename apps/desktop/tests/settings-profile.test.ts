@@ -27,6 +27,8 @@ const PROFILE_TABLES = [
   'exercise_sets',
   'profile_exercise_settings',
   'cardio_sessions',
+  'habit_definitions',
+  'habit_logs',
 ] as const;
 
 describe('settings: profiles, theme and legal documents', () => {
@@ -155,6 +157,13 @@ describe('settings: profiles, theme and legal documents', () => {
         intensity: null,
         heartRateAverage: null,
         notes: null,
+      });
+      const [habit] = await handlers['habits:add-examples']({ profileId });
+      await handlers['habits:log']({
+        profileId,
+        habitId: must(habit).id,
+        date: '2026-10-20',
+        value: 1,
       });
     }
     return { ...app, lucas, ana, food };

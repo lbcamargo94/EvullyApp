@@ -15,6 +15,9 @@ import type {
   ExerciseHistoryDto,
   ExerciseInput,
   FoodDto,
+  HabitDay,
+  HabitDto,
+  HabitInput,
   FoodInput,
   FoodLogInput,
   DeleteProfileInput,
@@ -48,6 +51,7 @@ import type {
   TrackingState,
   UpdateAppSettingsInput,
   UpdateCardioInput,
+  UpdateHabitInput,
   UpdateExerciseInput,
   UpdateFoodInput,
   UpdateMeasurementInput,
@@ -226,6 +230,16 @@ export interface EvullyClient {
     register(input: CardioInput): Promise<CardioSessionDto>;
     update(input: UpdateCardioInput): Promise<CardioSessionDto>;
     remove(profileId: string, id: string): Promise<null>;
+  };
+  habits: {
+    list(profileId: string): Promise<HabitDto[]>;
+    create(input: HabitInput): Promise<HabitDto>;
+    update(input: UpdateHabitInput): Promise<HabitDto>;
+    deactivate(profileId: string, id: string): Promise<null>;
+    move(profileId: string, id: string, direction: 'up' | 'down'): Promise<HabitDto[]>;
+    addExamples(profileId: string): Promise<HabitDto[]>;
+    day(profileId: string, date: string): Promise<HabitDay>;
+    log(profileId: string, habitId: string, date: string, value: number | null): Promise<HabitDay>;
   };
   mealTemplates: {
     list(profileId: string): Promise<MealTemplateDto[]>;
