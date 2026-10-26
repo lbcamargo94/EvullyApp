@@ -37,6 +37,7 @@ export const settingsMessages = {
     tracking: 'Acompanhamento',
     project: 'Projeto',
     nutrition: 'Nutrição',
+    workouts: 'Treino',
     profile: 'Perfil',
     general: 'Geral e backup',
     about: 'Sobre',

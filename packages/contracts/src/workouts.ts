@@ -220,7 +220,37 @@ export const exerciseHistorySchema = z.object({
   ),
 });
 
+// ------------------------------------------------------------ module questionnaire (README §10)
+
+const preferenceValues = {
+  experience: z.enum(['beginner', 'intermediate', 'advanced']).nullable(),
+  daysPerWeek: whole.nullable(),
+  location: z.enum(['gym', 'home', 'both']).nullable(),
+  equipment: z
+    .array(z.enum(['barbell', 'dumbbells', 'machines', 'cables', 'bench', 'none']))
+    .max(6),
+};
+
+export const workoutPreferencesInputSchema = z.object({ ...profileScoped, ...preferenceValues });
+
+export const workoutPreferencesSchema = z.object({
+  status: z.enum(['pending', 'completed', 'skipped']),
+  ...preferenceValues,
+  suggestions: z.object({
+    rulesVersion: z.string(),
+    templates: z.array(
+      z.object({
+        template: z.enum(['cutting_2026', 'core_home']),
+        reason: z.enum(['gym_five_days', 'home_core', 'core_complement']),
+      }),
+    ),
+    buildOwnPlan: z.boolean(),
+  }),
+});
+
 export type MuscleGroup = z.infer<typeof muscleGroupSchema>;
+export type WorkoutPreferencesDto = z.infer<typeof workoutPreferencesSchema>;
+export type WorkoutPreferencesInput = z.infer<typeof workoutPreferencesInputSchema>;
 export type ExerciseHistoryDto = z.infer<typeof exerciseHistorySchema>;
 export type WorkoutSessionDto = z.infer<typeof workoutSessionSchema>;
 export type SetValuesDto = Omit<z.infer<typeof updateSetInputSchema>, 'profileId' | 'id'>;

@@ -1,15 +1,7 @@
 import type { NutritionPreferences } from '@evully/domain';
+import type { QuestionnaireRecord, QuestionnaireRepository } from '../../shared/ports';
 
-export interface NutritionQuestionnaireRecord {
-  id: string;
-  profileId: string;
-  status: 'completed' | 'skipped';
-  answers: NutritionPreferences;
-  completedAt: string;
-}
+export type NutritionQuestionnaireRecord = QuestionnaireRecord<NutritionPreferences>;
 
 /** Answers of the nutrition module questionnaire, kept as history (README §8.2, §9). */
-export interface NutritionQuestionnaireRepository {
-  latest(profileId: string): Promise<NutritionQuestionnaireRecord | null>;
-  insert(record: NutritionQuestionnaireRecord): Promise<void>;
-}
+export type NutritionQuestionnaireRepository = QuestionnaireRepository<NutritionPreferences>;

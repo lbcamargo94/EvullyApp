@@ -139,6 +139,11 @@ export const ipcEvullyClient: EvullyClient = {
     moveExercise: (profileId, id, direction) =>
       call('plan-exercises:move', { profileId, id, direction }),
   },
+  workoutPreferences: {
+    get: (profileId) => call('workout-preferences:get', { profileId }),
+    answer: (input) => call('workout-preferences:answer', input),
+    skip: (profileId) => call('workout-preferences:skip', { profileId }),
+  },
   workoutSessions: {
     open: (profileId) => call('workout-sessions:open', { profileId }),
     start: (profileId, workoutDayId) => call('workout-sessions:start', { profileId, workoutDayId }),

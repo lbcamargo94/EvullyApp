@@ -1,8 +1,9 @@
-import { useCurrentProfile } from '@evully/app-core';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
+import { useCurrentProfile, useWorkoutPreferences } from '@evully/app-core';
+import { Card, Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
 import { useSearchParams } from 'react-router';
 import { ExerciseLibrary } from './exercise-library';
-import { workoutMessages as m } from './messages.pt-BR';
+import { workoutMessages as m, workoutQuestionnaireMessages } from './messages.pt-BR';
+import { WorkoutQuestionnaire } from './workout-questionnaire';
 import { PlansTab } from './plans-tab';
 import { SessionTab } from './session-tab';
 
@@ -15,7 +16,30 @@ export function WorkoutsScreen() {
   const [params, setParams] = useSearchParams();
   const requested = params.get('tab');
   const tab: Tab = TABS.find((t) => t === requested) ?? 'session';
-  if (!profileId) return null;
+  const { data: prefs } = useWorkoutPreferences(profileId);
+  if (!profileId || !prefs) return null;
+
+  // First visit of the profile: the module questionnaire (README §10).
+  if (prefs.status === 'pending') {
+    return (
+      <>
+        <h1 className="text-[26px] font-semibold">{m.title}</h1>
+        <Card aria-labelledby="workouts-intro" className="max-w-3xl gap-5 p-8">
+          <div className="flex flex-col gap-1">
+            <h2 id="workouts-intro" className="text-xl font-semibold">
+              {workoutQuestionnaireMessages.introTitle}
+            </h2>
+            <p className="text-text-muted">{workoutQuestionnaireMessages.introBody}</p>
+          </div>
+          <WorkoutQuestionnaire
+            profileId={profileId}
+            initial={prefs}
+            onDone={() => setParams({ tab: 'plans' }, { replace: true })}
+          />
+        </Card>
+      </>
+    );
+  }
 
   return (
     <>
