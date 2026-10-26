@@ -17,9 +17,13 @@ import { MeasurementCards } from '../measurements/measurement-cards';
 import { objectiveLabels } from '../tracking/messages.pt-BR';
 import { WeightSummaryCard } from '../weights/weight-summary-card';
 import { shellMessages as m } from './messages.pt-BR';
+import { TodayActivityCards } from './today-activity-cards';
 import { TodayNutritionCard } from './today-nutrition-card';
 
-/** Dashboard (README §8.5): project progress, weight as chosen and up to 3 measurements. */
+/**
+ * Dashboard (README §8.5): project progress, weight as chosen, up to 3 measurements,
+ * and today's nutrition, habits and cardio for the modules in use.
+ */
 export function HomeScreen() {
   const { profileId } = useCurrentProfile();
   const { data: profile } = useProfile(profileId);
@@ -50,6 +54,7 @@ export function HomeScreen() {
         {measurements && <MeasurementCards summary={measurements} />}
       </div>
       {profileId && <TodayNutritionCard profileId={profileId} />}
+      {profileId && <TodayActivityCards profileId={profileId} />}
     </>
   );
 }

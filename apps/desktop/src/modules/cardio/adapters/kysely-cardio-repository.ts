@@ -1,7 +1,12 @@
 import type { LocalDate } from '@evully/domain';
 import type { Kysely, Selectable } from 'kysely';
 import type { CardioSessionsTable, DatabaseSchema } from '../../../database/schema';
-import type { CardioRecord, CardioRepository } from '../ports/cardio-repository';
+import type {
+  CardioRecord,
+  CardioRepository,
+  CardioTargetRecord,
+  CardioTargetRepository,
+} from '../ports/cardio-repository';
 
 const toRecord = (r: Selectable<CardioSessionsTable>): CardioRecord => ({
   id: r.id,
@@ -85,5 +90,42 @@ export class KyselyCardioRepository implements CardioRepository {
       .where('deleted_at', 'is', null)
       .executeTakeFirst();
     return result.numUpdatedRows > 0n;
+  }
+}
+
+export class KyselyCardioTargetRepository implements CardioTargetRepository {
+  constructor(private readonly db: Kysely<DatabaseSchema>) {}
+
+  async list(profileId: string): Promise<CardioTargetRecord[]> {
+    const rows = await this.db
+      .selectFrom('cardio_targets')
+      .selectAll()
+      .where('profile_id', '=', profileId)
+      // Creation order; UUID v7 ids break ties within the same instant.
+      .orderBy('created_at')
+      .orderBy('id')
+      .execute();
+    return rows.map((r) => ({
+      id: r.id,
+      profileId: r.profile_id,
+      effectiveFrom: r.effective_from as LocalDate,
+      sessionsPerWeek: r.sessions_per_week,
+      minutesPerWeek: r.minutes_per_week,
+      createdAt: r.created_at,
+    }));
+  }
+
+  async insert(t: CardioTargetRecord): Promise<void> {
+    await this.db
+      .insertInto('cardio_targets')
+      .values({
+        id: t.id,
+        profile_id: t.profileId,
+        effective_from: t.effectiveFrom,
+        sessions_per_week: t.sessionsPerWeek,
+        minutes_per_week: t.minutesPerWeek,
+        created_at: t.createdAt,
+      })
+      .execute();
   }
 }

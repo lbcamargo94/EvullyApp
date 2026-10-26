@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   normalizeCardioDraft,
+  normalizeCardioTarget,
   parseLocalDate,
   ValidationError,
   weekStartOf,
@@ -109,5 +110,33 @@ describe('weeks', () => {
         { activityType: 'cycling', activityName: null, sessions: 1, minutes: 30, distanceKm: 0 },
       ],
     });
+  });
+});
+
+describe('normalizeCardioTarget', () => {
+  it('keeps whole numbers within range and allows clearing', () => {
+    expect(normalizeCardioTarget({ sessionsPerWeek: 5, minutesPerWeek: 200 })).toEqual({
+      sessionsPerWeek: 5,
+      minutesPerWeek: 200,
+    });
+    expect(normalizeCardioTarget({ sessionsPerWeek: null, minutesPerWeek: 150 })).toEqual({
+      sessionsPerWeek: null,
+      minutesPerWeek: 150,
+    });
+    expect(normalizeCardioTarget({ sessionsPerWeek: null, minutesPerWeek: null })).toEqual({
+      sessionsPerWeek: null,
+      minutesPerWeek: null,
+    });
+  });
+
+  it('rejects zero, fractions and values above the limits', () => {
+    for (const draft of [
+      { sessionsPerWeek: 0, minutesPerWeek: null },
+      { sessionsPerWeek: 15, minutesPerWeek: null },
+      { sessionsPerWeek: null, minutesPerWeek: 2.5 },
+      { sessionsPerWeek: null, minutesPerWeek: 3001 },
+    ]) {
+      expect(code(() => normalizeCardioTarget(draft))).toBe('cardio_target.out_of_range');
+    }
   });
 });

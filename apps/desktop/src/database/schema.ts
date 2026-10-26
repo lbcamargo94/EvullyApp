@@ -322,6 +322,15 @@ export interface CardioSessionsTable {
   deleted_at: string | null;
 }
 
+export interface CardioTargetsTable {
+  id: string;
+  profile_id: string;
+  effective_from: string;
+  sessions_per_week: number | null;
+  minutes_per_week: number | null;
+  created_at: string;
+}
+
 export interface HabitDefinitionsTable {
   id: string;
   profile_id: string;
@@ -423,6 +432,7 @@ export interface DatabaseSchema {
   exercise_sets: ExerciseSetsTable;
   profile_exercise_settings: ProfileExerciseSettingsTable;
   cardio_sessions: CardioSessionsTable;
+  cardio_targets: CardioTargetsTable;
   habit_definitions: HabitDefinitionsTable;
   habit_logs: HabitLogsTable;
 }

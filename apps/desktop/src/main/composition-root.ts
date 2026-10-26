@@ -14,7 +14,10 @@ import { CreateBackup, type BackupDeps } from '../modules/backup/application/cre
 import { RunAutomaticBackup } from '../modules/backup/application/run-automatic-backup';
 import type { BackupDialogs } from '../modules/backup/ports/backup-ports';
 import { cardioIpcHandlers } from '../modules/cardio/adapters/cardio-ipc-handlers';
-import { KyselyCardioRepository } from '../modules/cardio/adapters/kysely-cardio-repository';
+import {
+  KyselyCardioRepository,
+  KyselyCardioTargetRepository,
+} from '../modules/cardio/adapters/kysely-cardio-repository';
 import { habitIpcHandlers } from '../modules/habits/adapters/habit-ipc-handlers';
 import { KyselyHabitRepository } from '../modules/habits/adapters/kysely-habit-repository';
 import { importIpcHandlers } from '../modules/imports/adapters/import-ipc-handlers';
@@ -123,7 +126,13 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
       clock,
       ids,
     }),
-    ...cardioIpcHandlers({ profiles, cardio: new KyselyCardioRepository(db), clock, ids }),
+    ...cardioIpcHandlers({
+      profiles,
+      cardio: new KyselyCardioRepository(db),
+      targets: new KyselyCardioTargetRepository(db),
+      clock,
+      ids,
+    }),
     ...habitIpcHandlers({ profiles, habits: new KyselyHabitRepository(db), clock, ids }),
     ...backupIpcHandlers({
       backup: backupDeps,

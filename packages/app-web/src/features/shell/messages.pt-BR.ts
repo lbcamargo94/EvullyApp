@@ -48,4 +48,13 @@ export const shellMessages = {
   calories: 'Calorias',
   protein: 'Proteína',
   water: 'Água',
+  habitsTitle: 'Hábitos de hoje',
+  openHabits: 'Abrir Hábitos',
+  habitsDone: (done: number, total: number) => `${done} de ${total} cumpridos`,
+  habitDone: 'cumprido',
+  habitPending: 'pendente',
+  cardioTitle: 'Cardio da semana',
+  openCardio: 'Abrir Cardio',
+  cardioWeek: (sessions: number, minutes: number) =>
+    `${sessions === 1 ? '1 sessão' : `${sessions} sessões`} · ${minutes} min`,
 } as const;

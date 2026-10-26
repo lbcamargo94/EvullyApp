@@ -474,7 +474,7 @@ Exceções:
 - **Tabelas de ligação** (ex.: `body_weight_tags`): sem `updated_at` e
   sem `deleted_at`; a ligação é criada ou removida.
 - **Tabelas de histórico** (`tracking_configs`, `profile_questionnaires`,
-  `nutrition_targets`): somente inserção. Registros nunca são editados
+  `nutrition_targets`, `cardio_targets`): somente inserção. Registros nunca são editados
   nem excluídos pela interface.
 
 Restrições de unicidade com coluna que pode ser nula (ex.:
@@ -1587,6 +1587,13 @@ hábito "Passos" (§11.2). Os dois nunca são somados.
   data futura.
 - Semana de segunda a domingo: o resumo mostra sessões, minutos e km, no
   total e por atividade.
+- **Meta semanal** (`cardio_targets`, só histórico, como §9.6): sessões
+  por semana (1–14) e/ou minutos por semana (1–3000), digitadas pelo
+  usuário e nunca calculadas. Vale a partir do dia em que é salva; os
+  dois vazios removem a meta. O card "Esta semana" mostra o progresso.
+- **Painel inicial:** card "Hábitos de hoje" (cumpridos / total, com os
+  nomes) e card "Cardio da semana" (sessões e minutos contra a meta).
+  Cada card só aparece para o perfil que já usa o módulo.
 
 ### 11.2 Hábitos
 
@@ -1824,7 +1831,7 @@ No topo: `Perfil atual: Lucas ▼`.
 | Nutrição | `nutrition_targets`, `foods`, `meal_templates`, `meal_template_items`, `food_logs`, `water_logs` | V0.2 |
 | Nutrição | `recipes`, `recipe_items` | V0.2+ |
 | Treino | `exercises`, `workout_plans`, `workout_days`, `workout_plan_exercises`, `workout_sessions`, `exercise_performances`, `exercise_sets` | V0.3 |
-| Cardio | `cardio_sessions` | V0.4 |
+| Cardio | `cardio_sessions`, `cardio_targets` | V0.4 |
 | Hábitos | `habit_definitions`, `habit_logs` | V0.4 |
 | Sono | `sleep_logs` | V0.5 |
 | Inteligência | `analytics_snapshots`, `recommendation_events`, `recommendation_decisions` | V1.1–V1.2 |

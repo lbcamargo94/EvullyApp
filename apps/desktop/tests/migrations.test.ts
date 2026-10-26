@@ -36,6 +36,7 @@ describe('database', () => {
       '0013_profile_exercise_settings',
       '0014_cardio_sessions',
       '0015_habits',
+      '0016_cardio_targets',
     ]);
     expect(await migrateToLatest(db)).toEqual([]);
     await db.destroy();

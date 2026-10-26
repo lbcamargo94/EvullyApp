@@ -47,9 +47,25 @@ const weekSummarySchema = z.object({
   ),
 });
 
-/** This week's summary plus every week with sessions, newest first. */
+const targetValues = {
+  sessionsPerWeek: z.number().int().positive().nullable(),
+  minutesPerWeek: z.number().int().positive().nullable(),
+};
+
+/** A new weekly target from today on; both null clears it (README §11.1). */
+export const cardioTargetInputSchema = z.object({ profileId: z.uuid(), ...targetValues });
+export const cardioTargetSchema = z.object({
+  id: z.string(),
+  effectiveFrom: localDate,
+  ...targetValues,
+  createdAt: z.string(),
+});
+
+/** This week's summary and target in force, plus every week with sessions, newest first. */
 export const cardioOverviewSchema = z.object({
   thisWeek: weekSummarySchema,
+  /** Null when no target is in force or the latest one was cleared. */
+  target: cardioTargetSchema.nullable(),
   weeks: z.array(z.object({ summary: weekSummarySchema, sessions: z.array(cardioSessionSchema) })),
 });
 
@@ -58,4 +74,6 @@ export type CardioIntensity = z.infer<typeof cardioIntensitySchema>;
 export type CardioInput = z.infer<typeof cardioInputSchema>;
 export type UpdateCardioInput = z.infer<typeof updateCardioInputSchema>;
 export type CardioSessionDto = z.infer<typeof cardioSessionSchema>;
+export type CardioTargetInput = z.infer<typeof cardioTargetInputSchema>;
+export type CardioTargetDto = z.infer<typeof cardioTargetSchema>;
 export type CardioOverview = z.infer<typeof cardioOverviewSchema>;

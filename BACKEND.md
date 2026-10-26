@@ -138,7 +138,7 @@ dados localmente em SQLite.
 - `created_at`, `updated_at` e `deleted_at` (soft delete) em todas as
   tabelas sincronizáveis.
 - Tabelas de histórico somente com inserção (`tracking_configs`,
-  `profile_questionnaires`, `nutrition_targets`).
+  `profile_questionnaires`, `nutrition_targets`, `cardio_targets`).
 
 Na Fase 2, uma migration do desktop adiciona `server_version` e
 `sync_state` às tabelas sincronizáveis.

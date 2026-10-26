@@ -1,4 +1,4 @@
-import type { CardioDraft, LocalDate } from '@evully/domain';
+import type { CardioDraft, CardioTargetValues, LocalDate } from '@evully/domain';
 
 export interface CardioRecord extends Omit<CardioDraft, 'sessionDate'> {
   id: string;
@@ -16,4 +16,18 @@ export interface CardioRepository {
   insert(session: CardioRecord): Promise<void>;
   update(session: CardioRecord): Promise<void>;
   softDelete(profileId: string, id: string, now: string): Promise<boolean>;
+}
+
+export interface CardioTargetRecord extends CardioTargetValues {
+  id: string;
+  profileId: string;
+  effectiveFrom: LocalDate;
+  createdAt: string;
+}
+
+/** History only: targets are never edited or deleted (README §11.1). */
+export interface CardioTargetRepository {
+  /** All targets of the profile in creation order. */
+  list(profileId: string): Promise<CardioTargetRecord[]>;
+  insert(target: CardioTargetRecord): Promise<void>;
 }

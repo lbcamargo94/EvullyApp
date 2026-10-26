@@ -27,6 +27,7 @@ const PROFILE_TABLES = [
   'exercise_sets',
   'profile_exercise_settings',
   'cardio_sessions',
+  'cardio_targets',
   'habit_definitions',
   'habit_logs',
 ] as const;
@@ -158,6 +159,7 @@ describe('settings: profiles, theme and legal documents', () => {
         heartRateAverage: null,
         notes: null,
       });
+      await handlers['cardio-target:set']({ profileId, sessionsPerWeek: 5, minutesPerWeek: 200 });
       const [habit] = await handlers['habits:add-examples']({ profileId });
       await handlers['habits:log']({
         profileId,

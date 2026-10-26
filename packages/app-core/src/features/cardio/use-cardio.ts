@@ -1,4 +1,4 @@
-import type { CardioInput, UpdateCardioInput } from '@evully/contracts';
+import type { CardioInput, CardioTargetInput, UpdateCardioInput } from '@evully/contracts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEvullyClient } from '../../client-context';
 
@@ -41,4 +41,11 @@ export function useUpdateCardio(profileId: string) {
 export function useDeleteCardio(profileId: string) {
   const client = useEvullyClient();
   return useCardioMutation(profileId, (id: string) => client.cardio.remove(profileId, id));
+}
+
+export function useSetCardioTarget(profileId: string) {
+  const client = useEvullyClient();
+  return useCardioMutation(profileId, (input: Omit<CardioTargetInput, 'profileId'>) =>
+    client.cardio.setTarget({ profileId, ...input }),
+  );
 }
