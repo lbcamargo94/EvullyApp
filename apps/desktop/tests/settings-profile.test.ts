@@ -18,6 +18,14 @@ const PROFILE_TABLES = [
   'meal_templates',
   'nutrition_targets',
   'water_logs',
+  'exercises',
+  'workout_plans',
+  'workout_days',
+  'workout_plan_exercises',
+  'workout_sessions',
+  'exercise_performances',
+  'exercise_sets',
+  'profile_exercise_settings',
 ] as const;
 
 describe('settings: profiles, theme and legal documents', () => {
@@ -97,6 +105,43 @@ describe('settings: profiles, theme and legal documents', () => {
         waterMl: 2500,
       });
       await handlers['water:add']({ profileId, date: '2026-10-20', amountMl: 250 });
+
+      // Workouts: an own exercise, a plan, a finished session and an increment.
+      const own = await handlers['exercises:create']({
+        profileId,
+        name: 'Remada T',
+        muscleGroup: 'back',
+        secondaryMuscles: [],
+        equipment: null,
+        instructions: null,
+        notes: null,
+        loadIncrementKg: null,
+      });
+      const plan = await handlers['workout-plans:import-template']({
+        profileId,
+        template: 'core_home',
+      });
+      const session = await handlers['workout-sessions:start']({
+        profileId,
+        workoutDayId: must(plan.days[0]).id,
+      });
+      const first = must(session.performances[0]?.sets[0]);
+      await handlers['workout-sets:update']({
+        profileId,
+        id: first.id,
+        weightKg: null,
+        repetitions: 15,
+        durationSeconds: null,
+        rir: null,
+        completed: true,
+        notes: null,
+      });
+      await handlers['workout-sessions:finish']({ profileId, id: session.id, notes: null });
+      await handlers['exercises:set-increment']({
+        profileId,
+        exerciseId: own.id,
+        loadIncrementKg: 2.5,
+      });
     }
     return { ...app, lucas, ana, food };
   };
@@ -165,6 +210,10 @@ describe('settings: profiles, theme and legal documents', () => {
     expect(await countRows(db, lucas.id)).toBe(0);
     expect(await db.selectFrom('meal_template_items').select('id').execute()).toHaveLength(1); // Ana's
     expect(await handlers['foods:list'](undefined)).toHaveLength(1); // the catalog stays
+    // The system exercise catalog stays too; only Lucas's own exercise is gone.
+    const exercises = await handlers['exercises:list']({ profileId: ana.id });
+    expect(exercises.filter((e) => e.isSystem).length).toBeGreaterThanOrEqual(40);
+    expect(exercises.filter((e) => !e.isSystem)).toHaveLength(1);
     expect(await db.selectFrom('body_weight_tags').select('body_weight_id').execute()).toHaveLength(
       1,
     ); // Ana's only
