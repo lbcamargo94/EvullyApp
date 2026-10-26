@@ -6,6 +6,7 @@ export * from './features/profiles/use-profiles';
 export * from './features/nutrition/use-foods';
 export * from './features/nutrition/use-nutrition-day';
 export * from './features/cardio/use-cardio';
+export * from './features/habits/use-habits';
 export * from './features/settings/use-app-settings';
 export * from './features/workouts/use-exercises';
 export * from './features/workouts/use-workout-plans';

@@ -1602,6 +1602,20 @@ Tipos: booleano, quantidade, duração, horário.
 Exemplos: creatina, passos, caminhada, treino, cardio, horário de sono.
 A água é registrada na nutrição (§9.4.1).
 
+- `habit_definitions` também guarda `sort_order`; `habit_logs` tem soft
+  delete. Ambos com `profile_id`.
+- Valores numéricos por tipo: sim/não = 1/0; quantidade na unidade do
+  hábito; duração em minutos (0–1.440); horário em minutos desde a
+  meia-noite. Unidade só em quantidade; meta (opcional) só em quantidade e
+  duração.
+- **Um registro por hábito por dia**: registrar de novo substitui o valor;
+  limpar remove o registro. Nunca em data futura.
+- **Dia cumprido**: sim/não marcado; quantidade ou duração ≥ meta (ou > 0
+  sem meta); horário registrado. A tela mostra os últimos 7 dias.
+- Nome único entre os hábitos ativos do perfil. Desativar mantém os
+  registros. "Adicionar exemplos" cria Creatina, Passos (meta 8.000) e
+  Horário de dormir; caminhada, treino e cardio já têm módulos próprios.
+
 ---
 
 ## 12. V0.5 — Sono

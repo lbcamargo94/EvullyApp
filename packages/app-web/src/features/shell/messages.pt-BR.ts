@@ -5,6 +5,7 @@ export const shellMessages = {
   diet: 'Dieta',
   workouts: 'Treinos',
   cardio: 'Cardio',
+  habits: 'Hábitos',
   measurements: 'Medidas',
   settings: 'Configurações',
   registerMeasurements: 'Registrar medidas',

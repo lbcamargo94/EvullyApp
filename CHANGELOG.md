@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Hábitos** no menu (V0.4): hábitos de sim/não, quantidade (com unidade
+  e meta), duração (com meta) e horário. Aba **Dia** com um campo por
+  hábito, salvo automaticamente, e os últimos 7 dias; aba **Gerenciar**
+  para criar, editar, reordenar e desativar.
+- **Adicionar exemplos**: Creatina, Passos (meta 8.000) e Horário de dormir.
+
+### Changed
+- O teste de exclusão definitiva de perfil passa a cobrir os hábitos.
+
 ## [0.4.0-alpha.1] - 2026-10-26
 
 ### Added

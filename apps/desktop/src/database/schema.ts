@@ -322,6 +322,31 @@ export interface CardioSessionsTable {
   deleted_at: string | null;
 }
 
+export interface HabitDefinitionsTable {
+  id: string;
+  profile_id: string;
+  name: string;
+  type: 'boolean' | 'quantity' | 'duration' | 'time';
+  unit: string | null;
+  target_value: number | null;
+  sort_order: number;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface HabitLogsTable {
+  id: string;
+  profile_id: string;
+  habit_definition_id: string;
+  log_date: string;
+  value: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -398,4 +423,6 @@ export interface DatabaseSchema {
   exercise_sets: ExerciseSetsTable;
   profile_exercise_settings: ProfileExerciseSettingsTable;
   cardio_sessions: CardioSessionsTable;
+  habit_definitions: HabitDefinitionsTable;
+  habit_logs: HabitLogsTable;
 }
