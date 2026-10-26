@@ -18,7 +18,7 @@ export const muscleGroupLabels: Record<MuscleGroup, string> = {
 
 export const workoutMessages = {
   title: 'Treinos',
-  tabs: { plans: 'Planos', exercises: 'Exercícios' },
+  tabs: { session: 'Treinar', plans: 'Planos', exercises: 'Exercícios' },
 } as const;
 
 export const exerciseMessages = {
@@ -178,4 +178,67 @@ export const planErrorByCode: Record<string, string> = {
   'prescription.rir_out_of_range': 'RIR de 0 a 10, com mínimo até o máximo.',
   'prescription.rest_out_of_range': 'Descanso de 0 a 900 s, com mínimo até o máximo.',
   'prescription.notes_too_long': 'Use até 200 caracteres nas notas.',
+};
+
+const time = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' });
+const shortDate = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' });
+const kg = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
+
+export const sessionMessages = {
+  startTitle: 'Iniciar treino',
+  startHint: 'Escolha o dia do plano. O de hoje vem marcado quando o plano tem dia da semana.',
+  noPlans:
+    'Você ainda não tem planos ativos. Crie ou importe um na aba Planos, ou faça um treino livre.',
+  today: 'hoje',
+  start: 'Iniciar',
+  free: 'Treino livre',
+  startedAt: (iso: string) => `Iniciado às ${time.format(new Date(iso))}`,
+  freeSession: 'Treino livre',
+  target: 'Meta',
+  last: 'Última sessão',
+  lastValue: (weight: number | null, values: number[], unit: 'reps' | 'seconds', iso: string) => {
+    const load = weight === null ? '' : `${kg.format(weight)} kg · `;
+    const list = values.join(' / ') + (unit === 'seconds' ? ' s' : '');
+    return `${load}${list} (${shortDate.format(new Date(iso))})`;
+  },
+  noLast: 'Primeira vez com este exercício.',
+  set: (n: number) => `Série ${n}`,
+  load: 'Carga (kg)',
+  reps: 'Reps',
+  seconds: 'Tempo (s)',
+  rir: 'RIR',
+  doneLabel: (n: number) => `Série ${n} concluída`,
+  removeSet: (n: number) => `Remover série ${n}`,
+  addSet: 'Série',
+  swap: 'Trocar exercício',
+  removeExercise: (name: string) => `Remover ${name} do treino`,
+  addExercise: 'Adicionar exercício',
+  rest: (label: string) => `Iniciar descanso ${label}`,
+  resting: (label: string) => `Descanso ${label}`,
+  restDone: 'Descanso concluído',
+  stop: 'Parar',
+  notes: 'Notas do treino',
+  finish: 'Finalizar treino',
+  finishing: 'Finalizando…',
+  discard: 'Descartar treino',
+  discardTitle: 'Descartar este treino?',
+  discardBody: 'As séries registradas neste treino serão descartadas.',
+  invalidNumber: 'Confira os números da série.',
+  cancel: 'Cancelar',
+  genericError: 'Não foi possível salvar. Tente novamente.',
+} as const;
+
+export const sessionErrorByCode: Record<string, string> = {
+  'workout_session.open_exists': 'Já existe um treino em andamento.',
+  'workout_session.not_found': 'Treino não encontrado. Recarregue a tela.',
+  'workout_session.finished': 'Este treino já foi finalizado.',
+  'workout_session.nothing_done': 'Marque pelo menos uma série como concluída antes de finalizar.',
+  'workout_session.notes_too_long': 'Use até 500 caracteres nas notas.',
+  'workout_day.not_found': 'Dia do plano não encontrado. Recarregue a tela.',
+  'exercise.not_found': 'Exercício não encontrado na biblioteca.',
+  'set.weight_out_of_range': 'Use uma carga de 0 a 1.000 kg.',
+  'set.reps_out_of_range': 'Use repetições inteiras de 0 a 1.000.',
+  'set.seconds_out_of_range': 'Use um tempo inteiro em segundos.',
+  'set.rir_out_of_range': 'Use RIR inteiro de 0 a 10.',
+  'set.notes_too_long': 'Use até 200 caracteres nas notas da série.',
 };

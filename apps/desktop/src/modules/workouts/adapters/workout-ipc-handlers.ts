@@ -18,8 +18,20 @@ import {
   UpdatePlanExercise,
   UpdateWorkoutDay,
   UpdateWorkoutPlan,
-  type PlanDeps,
 } from '../application/manage-plans';
+import {
+  AddPerformance,
+  AddSet,
+  DiscardSession,
+  FinishSession,
+  GetOpenSession,
+  RemovePerformance,
+  RemoveSet,
+  ReplacePerformance,
+  StartSession,
+  UpdateSet,
+  type SessionDeps,
+} from '../application/workout-sessions';
 
 type WorkoutChannels =
   | 'exercises:list'
@@ -37,9 +49,19 @@ type WorkoutChannels =
   | 'plan-exercises:add'
   | 'plan-exercises:update'
   | 'plan-exercises:remove'
-  | 'plan-exercises:move';
+  | 'plan-exercises:move'
+  | 'workout-sessions:open'
+  | 'workout-sessions:start'
+  | 'workout-sessions:finish'
+  | 'workout-sessions:discard'
+  | 'workout-sets:update'
+  | 'workout-sets:add'
+  | 'workout-sets:remove'
+  | 'workout-performances:add'
+  | 'workout-performances:replace'
+  | 'workout-performances:remove';
 
-export function workoutIpcHandlers(deps: PlanDeps): Pick<IpcHandlers, WorkoutChannels> {
+export function workoutIpcHandlers(deps: SessionDeps): Pick<IpcHandlers, WorkoutChannels> {
   return {
     'exercises:list': (input) => new ListExercises(deps).execute(input),
     'exercises:create': (input) => new CreateExercise(deps).execute(input),
@@ -57,5 +79,15 @@ export function workoutIpcHandlers(deps: PlanDeps): Pick<IpcHandlers, WorkoutCha
     'plan-exercises:update': (input) => new UpdatePlanExercise(deps).execute(input),
     'plan-exercises:remove': (input) => new RemovePlanExercise(deps).execute(input),
     'plan-exercises:move': (input) => new MovePlanExercise(deps).execute(input),
+    'workout-sessions:open': (input) => new GetOpenSession(deps).execute(input),
+    'workout-sessions:start': (input) => new StartSession(deps).execute(input),
+    'workout-sessions:finish': (input) => new FinishSession(deps).execute(input),
+    'workout-sessions:discard': (input) => new DiscardSession(deps).execute(input),
+    'workout-sets:update': (input) => new UpdateSet(deps).execute(input),
+    'workout-sets:add': (input) => new AddSet(deps).execute(input),
+    'workout-sets:remove': (input) => new RemoveSet(deps).execute(input),
+    'workout-performances:add': (input) => new AddPerformance(deps).execute(input),
+    'workout-performances:replace': (input) => new ReplacePerformance(deps).execute(input),
+    'workout-performances:remove': (input) => new RemovePerformance(deps).execute(input),
   };
 }

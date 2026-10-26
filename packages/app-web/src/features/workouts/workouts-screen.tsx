@@ -4,16 +4,17 @@ import { useSearchParams } from 'react-router';
 import { ExerciseLibrary } from './exercise-library';
 import { workoutMessages as m } from './messages.pt-BR';
 import { PlansTab } from './plans-tab';
+import { SessionTab } from './session-tab';
 
-const TABS = ['plans', 'exercises'] as const;
+const TABS = ['session', 'plans', 'exercises'] as const;
 type Tab = (typeof TABS)[number];
 
-/** Workouts (README §10, §16.2). Sessions arrive in the next V0.3 delivery. */
+/** Workouts (README §10, §16.2): train, plans and the exercise library. */
 export function WorkoutsScreen() {
   const { profileId } = useCurrentProfile();
   const [params, setParams] = useSearchParams();
   const requested = params.get('tab');
-  const tab: Tab = TABS.find((t) => t === requested) ?? 'plans';
+  const tab: Tab = TABS.find((t) => t === requested) ?? 'session';
   if (!profileId) return null;
 
   return (
@@ -31,6 +32,9 @@ export function WorkoutsScreen() {
             </TabsTrigger>
           ))}
         </TabsList>
+        <TabsContent value="session">
+          <SessionTab profileId={profileId} />
+        </TabsContent>
         <TabsContent value="plans">
           <PlansTab profileId={profileId} />
         </TabsContent>

@@ -37,6 +37,7 @@ import type {
   ProjectDto,
   ProjectUpdateInput,
   RenameTagInput,
+  SetValuesDto,
   SaveMealTemplateInput,
   SetMealConsumedInput,
   Tag,
@@ -49,6 +50,7 @@ import type {
   UpdateWeightInput,
   WaterLogInput,
   WorkoutPlanDto,
+  WorkoutSessionDto,
   WeightDisplay,
   WeightEntry,
   WeightInput,
@@ -184,6 +186,22 @@ export interface EvullyClient {
     ): Promise<WorkoutPlanDto>;
     removeExercise(profileId: string, id: string): Promise<WorkoutPlanDto>;
     moveExercise(profileId: string, id: string, direction: 'up' | 'down'): Promise<WorkoutPlanDto>;
+  };
+  workoutSessions: {
+    open(profileId: string): Promise<WorkoutSessionDto | null>;
+    start(profileId: string, workoutDayId: string | null): Promise<WorkoutSessionDto>;
+    finish(profileId: string, id: string, notes: string | null): Promise<null>;
+    discard(profileId: string, id: string): Promise<null>;
+    updateSet(profileId: string, id: string, values: SetValuesDto): Promise<WorkoutSessionDto>;
+    addSet(profileId: string, performanceId: string): Promise<WorkoutSessionDto>;
+    removeSet(profileId: string, id: string): Promise<WorkoutSessionDto>;
+    addExercise(
+      profileId: string,
+      sessionId: string,
+      exerciseId: string,
+    ): Promise<WorkoutSessionDto>;
+    replaceExercise(profileId: string, id: string, exerciseId: string): Promise<WorkoutSessionDto>;
+    removeExercise(profileId: string, id: string): Promise<WorkoutSessionDto>;
   };
   mealTemplates: {
     list(profileId: string): Promise<MealTemplateDto[]>;

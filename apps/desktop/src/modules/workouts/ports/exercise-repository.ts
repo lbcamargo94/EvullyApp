@@ -12,6 +12,8 @@ export interface ExerciseRecord extends ExerciseDraft {
 export interface ExerciseRepository {
   /** Active system exercises plus the profile's own, ordered by name. */
   list(profileId: string): Promise<ExerciseRecord[]>;
+  /** Every exercise the profile can see, including deactivated ones (for history). */
+  listAll(profileId: string): Promise<ExerciseRecord[]>;
   /** The profile's own active exercise (never a system one). */
   findOwn(profileId: string, id: string): Promise<ExerciseRecord | null>;
   insert(exercise: ExerciseRecord): Promise<void>;

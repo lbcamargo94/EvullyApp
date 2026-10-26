@@ -22,3 +22,4 @@ export * from './nutrition/preferences';
 export * from './workouts/exercise';
 export * from './workouts/plan';
 export * from './workouts/plan-templates';
+export * from './workouts/session';

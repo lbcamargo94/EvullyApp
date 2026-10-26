@@ -121,7 +121,69 @@ export const workoutPlanSchema = z.object({
   ),
 });
 
+// ------------------------------------------------------------ sessions (README §10.4)
+
+const setValues = {
+  weightKg: z.number().min(0).nullable(),
+  repetitions: whole.min(0).nullable(),
+  durationSeconds: whole.min(0).nullable(),
+  rir: whole.min(0).nullable(),
+  completed: z.boolean(),
+  notes: z.string().max(200).nullable(),
+};
+
+export const startSessionInputSchema = z.object({
+  ...profileScoped,
+  /** Null for a free session without a plan. */
+  workoutDayId: z.uuid().nullable(),
+});
+export const finishSessionInputSchema = workoutItemIdInputSchema.extend({
+  notes: z.string().max(500).nullable(),
+});
+export const updateSetInputSchema = workoutItemIdInputSchema.extend(setValues);
+export const addSetInputSchema = z.object({ ...profileScoped, performanceId: z.uuid() });
+export const addPerformanceInputSchema = z.object({
+  ...profileScoped,
+  sessionId: z.uuid(),
+  exerciseId: z.uuid(),
+});
+export const replacePerformanceInputSchema = workoutItemIdInputSchema.extend({
+  exerciseId: z.uuid(),
+});
+
+const summarySchema = z.object({
+  date: z.string(),
+  weightKg: z.number().nullable(),
+  values: z.array(z.number()),
+  unit: z.enum(['reps', 'seconds']),
+});
+
+export const workoutSessionSchema = z.object({
+  id: z.string(),
+  planName: z.string().nullable(),
+  dayName: z.string().nullable(),
+  startedAt: z.string(),
+  finishedAt: z.string().nullable(),
+  notes: z.string().nullable(),
+  performances: z.array(
+    z.object({
+      id: z.string(),
+      exerciseId: z.string(),
+      exerciseName: z.string(),
+      muscleGroup: muscleGroupSchema,
+      /** From the plan, when the exercise came from it. */
+      prescription: prescriptionSchema.nullable(),
+      targetType: z.enum(['reps', 'seconds']),
+      /** Previous finished session with this exercise. */
+      last: summarySchema.nullable(),
+      sets: z.array(z.object({ id: z.string(), setNumber: z.number(), ...setValues })),
+    }),
+  ),
+});
+
 export type MuscleGroup = z.infer<typeof muscleGroupSchema>;
+export type WorkoutSessionDto = z.infer<typeof workoutSessionSchema>;
+export type SetValuesDto = Omit<z.infer<typeof updateSetInputSchema>, 'profileId' | 'id'>;
 export type PrescriptionDto = z.infer<typeof prescriptionSchema>;
 export type WorkoutPlanDto = z.infer<typeof workoutPlanSchema>;
 export type PlanTemplateCode = z.infer<typeof importPlanTemplateInputSchema>['template'];

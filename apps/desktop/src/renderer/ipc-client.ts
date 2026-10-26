@@ -136,6 +136,20 @@ export const ipcEvullyClient: EvullyClient = {
     moveExercise: (profileId, id, direction) =>
       call('plan-exercises:move', { profileId, id, direction }),
   },
+  workoutSessions: {
+    open: (profileId) => call('workout-sessions:open', { profileId }),
+    start: (profileId, workoutDayId) => call('workout-sessions:start', { profileId, workoutDayId }),
+    finish: (profileId, id, notes) => call('workout-sessions:finish', { profileId, id, notes }),
+    discard: (profileId, id) => call('workout-sessions:discard', { profileId, id }),
+    updateSet: (profileId, id, values) => call('workout-sets:update', { profileId, id, ...values }),
+    addSet: (profileId, performanceId) => call('workout-sets:add', { profileId, performanceId }),
+    removeSet: (profileId, id) => call('workout-sets:remove', { profileId, id }),
+    addExercise: (profileId, sessionId, exerciseId) =>
+      call('workout-performances:add', { profileId, sessionId, exerciseId }),
+    replaceExercise: (profileId, id, exerciseId) =>
+      call('workout-performances:replace', { profileId, id, exerciseId }),
+    removeExercise: (profileId, id) => call('workout-performances:remove', { profileId, id }),
+  },
   mealTemplates: {
     list: (profileId) => call('meal-templates:list', { profileId }),
     save: (input) => call('meal-templates:save', input),

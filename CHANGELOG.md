@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Treinar** (Treinos): iniciar o treino pelo dia do plano (o de hoje vem
+  marcado) ou um treino livre; uma sessão aberta por vez, retomada se o
+  app fechar.
+- Tela de execução: meta e última sessão de cada exercício, séries com
+  carga, repetições ou tempo, RIR e ✓ salvas automaticamente; adicionar e
+  remover séries; trocar, adicionar ou remover exercícios; cronômetro de
+  descanso pela prescrição; finalizar ou descartar o treino.
+- A carga de cada série já vem com a da última sessão.
+
 ## [0.3.0-alpha.2] - 2026-10-25
 
 ### Added

@@ -1412,6 +1412,18 @@ exercise_sets           performance_id, set_number, weight_kg nulo,
 ao exercício. Isso permite trocar ou adicionar exercícios durante a
 sessão.
 
+Regras (as três tabelas guardam `profile_id` e usam soft delete):
+
+- Uma sessão aberta por perfil. Ela começa por um dia de plano (com as
+  séries da prescrição) ou livre; cada série é salva ao sair do campo, e
+  uma sessão interrompida é retomada.
+- Cada série nasce com a carga da mesma série da última sessão daquele
+  exercício; repetições e RIR ficam vazios. A "última sessão" é a sessão
+  finalizada mais recente com o exercício.
+- Finalizar exige pelo menos uma série concluída. Descartar pede
+  confirmação. Valores: carga 0–1.000 kg, repetições 0–1.000, tempo em
+  segundos, RIR 0–10.
+
 ### 10.5 Histórico por exercício
 
 Última sessão, melhor carga, melhor série, evolução, volume, frequência e
