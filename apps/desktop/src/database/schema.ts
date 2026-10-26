@@ -208,6 +208,52 @@ export interface ExercisesTable {
   updated_at: string;
 }
 
+export interface WorkoutPlansTable {
+  id: string;
+  profile_id: string;
+  name: string;
+  status: 'active' | 'archived';
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface WorkoutDaysTable {
+  id: string;
+  profile_id: string;
+  plan_id: string;
+  name: string;
+  /** 1 = Monday … 7 = Sunday. */
+  weekday: number | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface WorkoutPlanExercisesTable {
+  id: string;
+  profile_id: string;
+  workout_day_id: string;
+  exercise_id: string;
+  sort_order: number;
+  sets: number;
+  target_type: 'reps' | 'seconds';
+  min_reps: number | null;
+  max_reps: number | null;
+  min_seconds: number | null;
+  max_seconds: number | null;
+  per_side: number;
+  min_rir: number | null;
+  max_rir: number | null;
+  min_rest_seconds: number | null;
+  max_rest_seconds: number | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -276,4 +322,7 @@ export interface DatabaseSchema {
   nutrition_targets: NutritionTargetsTable;
   water_logs: WaterLogsTable;
   exercises: ExercisesTable;
+  workout_plans: WorkoutPlansTable;
+  workout_days: WorkoutDaysTable;
+  workout_plan_exercises: WorkoutPlanExercisesTable;
 }

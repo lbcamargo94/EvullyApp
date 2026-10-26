@@ -118,6 +118,24 @@ export const ipcEvullyClient: EvullyClient = {
     update: (input) => call('exercises:update', input),
     deactivate: (profileId, id) => call('exercises:deactivate', { profileId, id }),
   },
+  workoutPlans: {
+    list: (profileId) => call('workout-plans:list', { profileId }),
+    create: (profileId, name) => call('workout-plans:create', { profileId, name }),
+    update: (profileId, id, values) => call('workout-plans:update', { profileId, id, ...values }),
+    importTemplate: (profileId, template) =>
+      call('workout-plans:import-template', { profileId, template }),
+    addDay: (profileId, planId, day) => call('workout-days:add', { profileId, planId, ...day }),
+    updateDay: (profileId, id, day) => call('workout-days:update', { profileId, id, ...day }),
+    removeDay: (profileId, id) => call('workout-days:remove', { profileId, id }),
+    moveDay: (profileId, id, direction) => call('workout-days:move', { profileId, id, direction }),
+    addExercise: (profileId, dayId, exerciseId, prescription) =>
+      call('plan-exercises:add', { profileId, dayId, exerciseId, prescription }),
+    updateExercise: (profileId, id, prescription) =>
+      call('plan-exercises:update', { profileId, id, prescription }),
+    removeExercise: (profileId, id) => call('plan-exercises:remove', { profileId, id }),
+    moveExercise: (profileId, id, direction) =>
+      call('plan-exercises:move', { profileId, id, direction }),
+  },
   mealTemplates: {
     list: (profileId) => call('meal-templates:list', { profileId }),
     save: (input) => call('meal-templates:save', input),

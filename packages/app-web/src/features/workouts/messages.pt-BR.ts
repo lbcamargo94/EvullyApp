@@ -1,4 +1,4 @@
-import type { MuscleGroup } from '@evully/contracts';
+import type { MuscleGroup, PrescriptionDto } from '@evully/contracts';
 
 export const muscleGroupLabels: Record<MuscleGroup, string> = {
   chest: 'Peito',
@@ -18,7 +18,7 @@ export const muscleGroupLabels: Record<MuscleGroup, string> = {
 
 export const workoutMessages = {
   title: 'Treinos',
-  tabs: { exercises: 'Exercícios' },
+  tabs: { plans: 'Planos', exercises: 'Exercícios' },
 } as const;
 
 export const exerciseMessages = {
@@ -76,4 +76,106 @@ export const exerciseErrorByCode: Record<string, string> = {
   'exercise.notes_too_long': 'Use até 500 caracteres nas notas.',
   'exercise.duplicate': 'Já existe um exercício com esse nome.',
   'exercise.not_found': 'Exercício não encontrado. Recarregue a tela.',
+};
+
+export const weekdayLabels = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+
+const range = (min: number | null, max: number | null) =>
+  min === null ? null : min === max ? String(min) : `${min}–${max}`;
+
+/** "3 × 6–8 · RIR 1–2 · descanso 150–180 s" (README §10.3). */
+export function formatPrescription(p: PrescriptionDto): string {
+  const target =
+    p.targetType === 'reps'
+      ? `${p.sets} × ${range(p.minReps, p.maxReps)}`
+      : `${p.sets} × ${range(p.minSeconds, p.maxSeconds)} s`;
+  const parts = [p.perSide ? `${target} por lado` : target];
+  const rir = range(p.minRir, p.maxRir);
+  if (rir !== null) parts.push(`RIR ${rir}`);
+  const rest = range(p.minRestSeconds, p.maxRestSeconds);
+  if (rest !== null) parts.push(`descanso ${rest} s`);
+  return parts.join(' · ');
+}
+
+export const planMessages = {
+  empty: 'Nenhum plano ainda. Crie um ou importe um plano-modelo.',
+  newPlan: 'Novo plano',
+  planName: 'Nome do plano',
+  create: 'Criar',
+  importTemplate: 'Importar plano-modelo',
+  templates: {
+    cutting_2026: 'Cutting 2026 (segunda a sexta)',
+    core_home: 'Core em casa (3× por semana)',
+  },
+  importHint: 'A importação cria uma cópia que você pode editar à vontade.',
+  importAction: 'Importar',
+  active: 'Planos ativos',
+  archived: 'Arquivados',
+  open: (name: string) => `Abrir ${name}`,
+  summary: (days: number, exercises: number) =>
+    `${days} ${days === 1 ? 'dia' : 'dias'} · ${exercises} ${exercises === 1 ? 'exercício' : 'exercícios'}`,
+  back: 'Voltar aos planos',
+  rename: 'Renomear',
+  save: 'Salvar',
+  cancel: 'Cancelar',
+  archive: 'Arquivar',
+  restore: 'Restaurar',
+  addDay: 'Adicionar dia',
+  dayName: 'Nome do dia',
+  dayNamePlaceholder: 'Ex.: PUSH',
+  weekday: 'Dia da semana',
+  noWeekday: 'Sem dia fixo',
+  moveUp: (name: string) => `Subir ${name}`,
+  moveDown: (name: string) => `Descer ${name}`,
+  editDay: (name: string) => `Editar ${name}`,
+  removeDay: (name: string) => `Remover ${name}`,
+  removeDayTitle: 'Remover este dia?',
+  removeDayBody: (name: string) => `“${name}” e os exercícios dele saem do plano.`,
+  remove: 'Remover',
+  noExercises: 'Nenhum exercício neste dia.',
+  addExercise: 'Adicionar exercício',
+  searchExercise: 'Buscar exercício na biblioteca',
+  noMatch: 'Nenhum exercício encontrado.',
+  editPrescription: (name: string) => `Editar prescrição de ${name}`,
+  removeExercise: (name: string) => `Remover ${name} do dia`,
+  inactive: 'desativado na biblioteca',
+  genericError: 'Não foi possível salvar. Tente novamente.',
+} as const;
+
+export const prescriptionMessages = {
+  sets: 'Séries',
+  target: 'Meta',
+  reps: 'Repetições',
+  seconds: 'Segundos',
+  min: 'Mín.',
+  max: 'Máx.',
+  perSide: 'Por lado',
+  rir: 'RIR',
+  rest: 'Descanso (s)',
+  notes: 'Notas',
+  optional: 'opcional',
+  save: 'Salvar',
+  add: 'Adicionar',
+  cancel: 'Cancelar',
+  invalid: 'Confira os números: use inteiros.',
+} as const;
+
+export const planErrorByCode: Record<string, string> = {
+  'workout_plan.name_required': 'Informe o nome do plano.',
+  'workout_plan.name_too_long': 'Use até 60 caracteres no nome do plano.',
+  'workout_plan.duplicate': 'Já existe um plano com esse nome.',
+  'workout_plan.not_found': 'Plano não encontrado. Recarregue a tela.',
+  'workout_day.name_required': 'Informe o nome do dia.',
+  'workout_day.name_too_long': 'Use até 40 caracteres no nome do dia.',
+  'workout_day.invalid_weekday': 'Escolha um dia da semana válido.',
+  'workout_day.not_found': 'Dia não encontrado. Recarregue a tela.',
+  'plan_exercise.not_found': 'Exercício não encontrado no plano. Recarregue a tela.',
+  'exercise.not_found': 'Exercício não encontrado na biblioteca.',
+  'prescription.sets_out_of_range': 'Use de 1 a 20 séries.',
+  'prescription.reps_out_of_range': 'Repetições de 1 a 100, com mínimo até o máximo.',
+  'prescription.seconds_out_of_range': 'Segundos de 1 a 3.600, com mínimo até o máximo.',
+  'prescription.target_required': 'Informe as repetições ou os segundos.',
+  'prescription.rir_out_of_range': 'RIR de 0 a 10, com mínimo até o máximo.',
+  'prescription.rest_out_of_range': 'Descanso de 0 a 900 s, com mínimo até o máximo.',
+  'prescription.notes_too_long': 'Use até 200 caracteres nas notas.',
 };

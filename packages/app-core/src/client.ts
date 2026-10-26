@@ -24,6 +24,8 @@ import type {
   MealTemplateDto,
   MeasurementTypeDto,
   NutritionDay,
+  PlanTemplateCode,
+  PrescriptionDto,
   NutritionPreferencesDto,
   NutritionPreferencesInput,
   NutritionTargetDto,
@@ -46,6 +48,7 @@ import type {
   UpdateProfileInput,
   UpdateWeightInput,
   WaterLogInput,
+  WorkoutPlanDto,
   WeightDisplay,
   WeightEntry,
   WeightInput,
@@ -146,6 +149,41 @@ export interface EvullyClient {
     create(input: ExerciseInput): Promise<ExerciseDto>;
     update(input: UpdateExerciseInput): Promise<ExerciseDto>;
     deactivate(profileId: string, id: string): Promise<null>;
+  };
+  workoutPlans: {
+    list(profileId: string): Promise<WorkoutPlanDto[]>;
+    create(profileId: string, name: string): Promise<WorkoutPlanDto>;
+    update(
+      profileId: string,
+      id: string,
+      values: { name: string; status: 'active' | 'archived' },
+    ): Promise<WorkoutPlanDto>;
+    importTemplate(profileId: string, template: PlanTemplateCode): Promise<WorkoutPlanDto>;
+    addDay(
+      profileId: string,
+      planId: string,
+      day: { name: string; weekday: number | null },
+    ): Promise<WorkoutPlanDto>;
+    updateDay(
+      profileId: string,
+      id: string,
+      day: { name: string; weekday: number | null },
+    ): Promise<WorkoutPlanDto>;
+    removeDay(profileId: string, id: string): Promise<WorkoutPlanDto>;
+    moveDay(profileId: string, id: string, direction: 'up' | 'down'): Promise<WorkoutPlanDto>;
+    addExercise(
+      profileId: string,
+      dayId: string,
+      exerciseId: string,
+      prescription: PrescriptionDto,
+    ): Promise<WorkoutPlanDto>;
+    updateExercise(
+      profileId: string,
+      id: string,
+      prescription: PrescriptionDto,
+    ): Promise<WorkoutPlanDto>;
+    removeExercise(profileId: string, id: string): Promise<WorkoutPlanDto>;
+    moveExercise(profileId: string, id: string, direction: 'up' | 'down'): Promise<WorkoutPlanDto>;
   };
   mealTemplates: {
     list(profileId: string): Promise<MealTemplateDto[]>;

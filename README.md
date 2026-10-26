@@ -1351,6 +1351,15 @@ Quinta:  UPPER + antebraço
 Sexta:   LEGS B + lombar
 ```
 
+- Um perfil pode ter **vários planos ativos** ao mesmo tempo (ex.: academia
+  e core em casa); planos podem ser arquivados e restaurados. Nome único
+  por perfil, sem diferenciar maiúsculas.
+- `workout_days.weekday`: 1 (segunda) a 7 (domingo) ou nulo. As três
+  tabelas guardam `profile_id` e usam soft delete.
+- Os planos de §10.7 e §10.8 podem ser **importados** como cópia editável;
+  os exercícios vêm do catálogo do sistema. Um exercício desativado na
+  biblioteca continua no plano, sinalizado.
+
 ### 10.3 Prescrição
 
 Os exemplos do programa usam faixas e exercícios por tempo, então a
@@ -1368,6 +1377,10 @@ notes
 ```
 
 Exemplo: Supino reto — 3 × 6–8 — RIR 1–2 — descanso 150–180 s.
+
+Valores inteiros: séries 1–20, repetições 1–100, segundos 1–3.600, RIR
+0–10, descanso 0–900 s; em cada faixa, mínimo ≤ máximo, e um valor só
+vira faixa fixa (ex.: 10–10). Só a faixa do `target_type` é guardada.
 
 ### 10.4 Execução
 
