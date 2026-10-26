@@ -1429,6 +1429,12 @@ Regras (as três tabelas guardam `profile_id` e usam soft delete):
 Última sessão, melhor carga, melhor série, evolução, volume, frequência e
 histórico completo.
 
+Só valores registrados, sem estimativas (nada de 1RM calculado): a partir
+das sessões finalizadas, **melhor carga** = maior carga de uma série
+concluída; **melhor série** = maior carga, desempate por mais repetições;
+**volume** da sessão = Σ carga × repetições das séries concluídas;
+**frequência** = sessões com o exercício nas últimas 4 semanas.
+
 ### 10.6 Progressão de carga
 
 Sempre como **sugestão**, nunca alteração silenciosa. Método inicial:
@@ -1443,6 +1449,15 @@ Sugestão: considere aumentar a carga na próxima sessão.
 
 O usuário decide. Não existe incremento universal; ele é configurado por
 exercício (`load_increment_kg`).
+
+- A regra olha a **última sessão** finalizada com o exercício: as N
+  séries prescritas concluídas, cada uma com repetições ≥ máximo (ou tempo
+  ≥ máximo) e, se houver RIR prescrito, RIR dentro da faixa.
+- O incremento vale **por perfil** (`profile_exercise_settings`), também
+  para os exercícios do sistema; sem ele, vale o do exercício. Sem nenhum,
+  a sugestão aparece sem o "+X kg".
+- A sugestão é só texto no card do exercício: a carga pré-preenchida
+  continua a da última sessão.
 
 ### 10.7 Programa inicial (seed opcional)
 

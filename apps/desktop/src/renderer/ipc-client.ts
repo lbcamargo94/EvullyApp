@@ -117,6 +117,9 @@ export const ipcEvullyClient: EvullyClient = {
     create: (input) => call('exercises:create', input),
     update: (input) => call('exercises:update', input),
     deactivate: (profileId, id) => call('exercises:deactivate', { profileId, id }),
+    history: (profileId, exerciseId) => call('exercises:history', { profileId, exerciseId }),
+    setIncrement: (profileId, exerciseId, loadIncrementKg) =>
+      call('exercises:set-increment', { profileId, exerciseId, loadIncrementKg }),
   },
   workoutPlans: {
     list: (profileId) => call('workout-plans:list', { profileId }),

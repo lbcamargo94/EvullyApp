@@ -1,9 +1,15 @@
 import { errorCode, useDeactivateExercise } from '@evully/app-core';
 import type { ExerciseDto } from '@evully/contracts';
 import { Button, ConfirmDialog } from '@evully/ui';
-import { ChevronDown, Pencil, Trash2 } from 'lucide-react';
+import { ChartLine, ChevronDown, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { exerciseErrorByCode, exerciseMessages as m, muscleGroupLabels } from './messages.pt-BR';
+import { ExerciseHistoryPanel } from './exercise-history-panel';
+import {
+  exerciseErrorByCode,
+  exerciseMessages as m,
+  historyMessages,
+  muscleGroupLabels,
+} from './messages.pt-BR';
 
 const kg = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
 
@@ -19,6 +25,7 @@ export function ExerciseRow({
 }) {
   const remove = useDeactivateExercise(profileId);
   const [open, setOpen] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,6 +65,16 @@ export function ExerciseRow({
         >
           {e.isSystem ? m.system : m.own}
         </span>
+        <Button
+          type="button"
+          variant={showHistory ? 'secondary' : 'ghost'}
+          className="min-h-9 px-2"
+          aria-label={historyMessages.open(e.name)}
+          aria-pressed={showHistory}
+          onClick={() => setShowHistory((v) => !v)}
+        >
+          <ChartLine aria-hidden="true" className="size-4" />
+        </Button>
         {!e.isSystem && (
           <>
             <Button
@@ -82,6 +99,7 @@ export function ExerciseRow({
         )}
       </div>
       {open && <Details exercise={e} />}
+      {showHistory && <ExerciseHistoryPanel profileId={profileId} exerciseId={e.id} />}
       {error && (
         <p role="alert" className="text-sm text-danger">
           {error}

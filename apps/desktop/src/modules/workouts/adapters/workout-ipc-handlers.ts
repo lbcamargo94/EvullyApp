@@ -5,6 +5,7 @@ import {
   ListExercises,
   UpdateExercise,
 } from '../application/manage-exercises';
+import { GetExerciseHistory, SetExerciseIncrement } from '../application/exercise-history';
 import {
   AddPlanExercise,
   AddWorkoutDay,
@@ -38,6 +39,8 @@ type WorkoutChannels =
   | 'exercises:create'
   | 'exercises:update'
   | 'exercises:deactivate'
+  | 'exercises:history'
+  | 'exercises:set-increment'
   | 'workout-plans:list'
   | 'workout-plans:create'
   | 'workout-plans:update'
@@ -67,6 +70,8 @@ export function workoutIpcHandlers(deps: SessionDeps): Pick<IpcHandlers, Workout
     'exercises:create': (input) => new CreateExercise(deps).execute(input),
     'exercises:update': (input) => new UpdateExercise(deps).execute(input),
     'exercises:deactivate': (input) => new DeactivateExercise(deps).execute(input),
+    'exercises:history': (input) => new GetExerciseHistory(deps).execute(input),
+    'exercises:set-increment': (input) => new SetExerciseIncrement(deps).execute(input),
     'workout-plans:list': (input) => new ListWorkoutPlans(deps).execute(input),
     'workout-plans:create': (input) => new CreateWorkoutPlan(deps).execute(input),
     'workout-plans:update': (input) => new UpdateWorkoutPlan(deps).execute(input),

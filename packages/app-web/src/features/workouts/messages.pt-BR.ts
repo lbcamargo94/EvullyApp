@@ -216,6 +216,10 @@ export const sessionMessages = {
   rest: (label: string) => `Iniciar descanso ${label}`,
   resting: (label: string) => `Descanso ${label}`,
   restDone: 'Descanso concluído',
+  suggestion: (increment: string | null) =>
+    `Na última sessão você fez todas as séries no topo da faixa. Sugestão: considere aumentar a carga${
+      increment ? ` (+${increment} kg)` : ''
+    }. Você decide.`,
   stop: 'Parar',
   notes: 'Notas do treino',
   finish: 'Finalizar treino',
@@ -242,3 +246,37 @@ export const sessionErrorByCode: Record<string, string> = {
   'set.rir_out_of_range': 'Use RIR inteiro de 0 a 10.',
   'set.notes_too_long': 'Use até 200 caracteres nas notas da série.',
 };
+
+const longDate = new Intl.DateTimeFormat('pt-BR', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+});
+export const formatKgValue = (n: number) => kg.format(n);
+export const formatShortDate = (iso: string) => shortDate.format(new Date(iso));
+
+export const historyMessages = {
+  open: (name: string) => `Histórico de ${name}`,
+  title: 'Histórico',
+  empty: 'Nenhum treino finalizado com este exercício ainda.',
+  bestLoad: 'Melhor carga',
+  bestSet: 'Melhor série',
+  recent: 'Últimas 4 semanas',
+  recentValue: (n: number) => (n === 1 ? '1 sessão' : `${n} sessões`),
+  lastSession: 'Última sessão',
+  kg: (value: string) => `${value} kg`,
+  setValue: (weight: string, reps: number | null) =>
+    reps === null ? `${weight} kg` : `${weight} kg × ${reps}`,
+  on: (iso: string) => `em ${longDate.format(new Date(iso))}`,
+  chartTitle: 'Carga máxima por sessão',
+  chartAlt: (n: number) => `Gráfico da carga máxima em ${n} sessões.`,
+  sessions: 'Sessões',
+  volume: (value: string) => `volume ${value} kg`,
+  incrementTitle: 'Incremento de carga',
+  incrementHint: 'Usado nas sugestões de progressão. Vale só para este perfil.',
+  incrementLabel: 'Incremento (kg)',
+  incrementSave: 'Salvar',
+  incrementSaved: 'Incremento salvo.',
+  invalidIncrement: 'Use um número maior que zero e até 50.',
+  genericError: 'Não foi possível salvar. Tente novamente.',
+} as const;

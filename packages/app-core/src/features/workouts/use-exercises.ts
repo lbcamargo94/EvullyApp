@@ -42,3 +42,28 @@ export function useDeactivateExercise(profileId: string) {
   const client = useEvullyClient();
   return useExerciseMutation(profileId, (id: string) => client.exercises.deactivate(profileId, id));
 }
+
+const historyKey = (profileId: string, exerciseId: string) =>
+  ['exercise-history', profileId, exerciseId] as const;
+
+export function useExerciseHistory(profileId: string, exerciseId: string) {
+  const client = useEvullyClient();
+  return useQuery({
+    queryKey: historyKey(profileId, exerciseId),
+    queryFn: () => client.exercises.history(profileId, exerciseId),
+  });
+}
+
+/** The increment also changes the suggestions shown in the open session. */
+export function useSetExerciseIncrement(profileId: string, exerciseId: string) {
+  const client = useEvullyClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (loadIncrementKg: number | null) =>
+      client.exercises.setIncrement(profileId, exerciseId, loadIncrementKg),
+    onSuccess: async (history) => {
+      queryClient.setQueryData(historyKey(profileId, exerciseId), history);
+      await queryClient.invalidateQueries({ queryKey: ['workout-session', profileId] });
+    },
+  });
+}

@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Histórico por exercício** (Treinos › Exercícios › ícone de gráfico):
+  última sessão, melhor carga, melhor série, sessões nas últimas 4 semanas,
+  gráfico da carga máxima por sessão e a lista das sessões com as séries e
+  o volume.
+- **Sugestão de progressão dupla** no treino: quando a última sessão teve
+  todas as séries no topo da faixa (e RIR dentro da faixa), o card sugere
+  considerar aumentar a carga. É só uma sugestão; nada muda sozinho.
+- **Incremento de carga por perfil**, também para os exercícios do Evully.
+
 ## [0.3.0-alpha.3] - 2026-10-26
 
 ### Added

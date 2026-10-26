@@ -22,3 +22,8 @@ export function parseLocalDate(value: string): LocalDate {
 export function daysBetween(from: LocalDate, to: LocalDate): number {
   return Math.round((Date.parse(to) - Date.parse(from)) / MS_PER_DAY);
 }
+
+/** The date `days` after `date` (negative goes back). */
+export function addDaysToLocalDate(date: LocalDate, days: number): LocalDate {
+  return new Date(Date.parse(date) + days * MS_PER_DAY).toISOString().slice(0, 10) as LocalDate;
+}

@@ -176,12 +176,52 @@ export const workoutSessionSchema = z.object({
       targetType: z.enum(['reps', 'seconds']),
       /** Previous finished session with this exercise. */
       last: summarySchema.nullable(),
+      /** Double progression met last time (README §10.6); null when not. */
+      suggestion: z.object({ incrementKg: z.number().nullable() }).nullable(),
       sets: z.array(z.object({ id: z.string(), setNumber: z.number(), ...setValues })),
     }),
   ),
 });
 
+// ------------------------------------------------------------ history (README §10.5)
+
+export const exerciseHistoryInputSchema = z.object({ ...profileScoped, exerciseId: z.uuid() });
+export const setExerciseIncrementInputSchema = exerciseHistoryInputSchema.extend({
+  loadIncrementKg: z.number().positive().nullable(),
+});
+
+export const exerciseHistorySchema = z.object({
+  exerciseId: z.string(),
+  /** Increment in use: the profile's, else the exercise's own. */
+  loadIncrementKg: z.number().nullable(),
+  /** Set by this profile (overrides the exercise's). */
+  profileIncrementKg: z.number().nullable(),
+  bestLoad: z.object({ weightKg: z.number(), startedAt: z.string() }).nullable(),
+  bestSet: z
+    .object({ weightKg: z.number(), repetitions: z.number().nullable(), startedAt: z.string() })
+    .nullable(),
+  recentSessions: z.number(),
+  sessions: z.array(
+    z.object({
+      sessionId: z.string(),
+      startedAt: z.string(),
+      topWeightKg: z.number().nullable(),
+      volumeKg: z.number(),
+      sets: z.array(
+        z.object({
+          setNumber: z.number(),
+          weightKg: z.number().nullable(),
+          repetitions: z.number().nullable(),
+          durationSeconds: z.number().nullable(),
+          rir: z.number().nullable(),
+        }),
+      ),
+    }),
+  ),
+});
+
 export type MuscleGroup = z.infer<typeof muscleGroupSchema>;
+export type ExerciseHistoryDto = z.infer<typeof exerciseHistorySchema>;
 export type WorkoutSessionDto = z.infer<typeof workoutSessionSchema>;
 export type SetValuesDto = Omit<z.infer<typeof updateSetInputSchema>, 'profileId' | 'id'>;
 export type PrescriptionDto = z.infer<typeof prescriptionSchema>;

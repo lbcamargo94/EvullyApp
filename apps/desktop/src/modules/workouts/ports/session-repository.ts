@@ -42,6 +42,11 @@ export interface SessionRepository {
     exerciseId: string,
     beforeSessionId: string,
   ): Promise<{ startedAt: string; sets: SetRecord[] } | null>;
+  /** Finished sessions with the exercise, newest first, with their sets. */
+  history(
+    profileId: string,
+    exerciseId: string,
+  ): Promise<{ sessionId: string; startedAt: string; sets: SetRecord[] }[]>;
   insertSession(
     session: { id: string; profileId: string; workoutDayId: string | null; startedAt: string },
     performances: NewPerformance[],
