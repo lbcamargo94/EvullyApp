@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.4.0-alpha.3] - 2026-10-26
+
 ### Added
 - **Meta semanal de cardio**: sessões e/ou minutos por semana, definidos
   no card **Esta semana** do Cardio, com barras de progresso. Mudar a meta
