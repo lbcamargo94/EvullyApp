@@ -35,6 +35,7 @@ import {
 } from '../modules/weights/adapters/kysely-weight-repository';
 import { weightIpcHandlers } from '../modules/weights/adapters/weight-ipc-handlers';
 import { KyselyExerciseRepository } from '../modules/workouts/adapters/kysely-exercise-repository';
+import { KyselyWorkoutPlanRepository } from '../modules/workouts/adapters/kysely-workout-plan-repository';
 import { workoutIpcHandlers } from '../modules/workouts/adapters/workout-ipc-handlers';
 import type { IpcHandlers } from '../shared/ipc-channels';
 
@@ -97,6 +98,7 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
     ...workoutIpcHandlers({
       profiles,
       exercises: new KyselyExerciseRepository(db),
+      plans: new KyselyWorkoutPlanRepository(db),
       clock,
       ids,
     }),

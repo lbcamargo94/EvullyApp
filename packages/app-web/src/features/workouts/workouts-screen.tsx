@@ -3,16 +3,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
 import { useSearchParams } from 'react-router';
 import { ExerciseLibrary } from './exercise-library';
 import { workoutMessages as m } from './messages.pt-BR';
+import { PlansTab } from './plans-tab';
 
-const TABS = ['exercises'] as const;
+const TABS = ['plans', 'exercises'] as const;
 type Tab = (typeof TABS)[number];
 
-/** Workouts (README §10, §16.2). Plans and sessions arrive in the next V0.3 deliveries. */
+/** Workouts (README §10, §16.2). Sessions arrive in the next V0.3 delivery. */
 export function WorkoutsScreen() {
   const { profileId } = useCurrentProfile();
   const [params, setParams] = useSearchParams();
   const requested = params.get('tab');
-  const tab: Tab = TABS.find((t) => t === requested) ?? 'exercises';
+  const tab: Tab = TABS.find((t) => t === requested) ?? 'plans';
   if (!profileId) return null;
 
   return (
@@ -30,6 +31,9 @@ export function WorkoutsScreen() {
             </TabsTrigger>
           ))}
         </TabsList>
+        <TabsContent value="plans">
+          <PlansTab profileId={profileId} />
+        </TabsContent>
         <TabsContent value="exercises">
           <ExerciseLibrary profileId={profileId} />
         </TabsContent>

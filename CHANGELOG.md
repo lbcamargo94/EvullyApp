@@ -6,6 +6,14 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Planos de treino** (Treinos › Planos): criar, renomear, arquivar e
+  restaurar planos; dias com dia da semana opcional; exercícios da
+  biblioteca com prescrição (séries, repetições ou segundos em faixa, por
+  lado, RIR, descanso e notas), editável no lugar e reordenável.
+- **Importar plano-modelo**: "Cutting 2026" (segunda a sexta) e "Core em
+  casa", como cópias editáveis.
+
 ## [0.3.0-alpha.1] - 2026-10-25
 
 ### Added
