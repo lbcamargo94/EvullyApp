@@ -1577,6 +1577,17 @@ notes
 Exemplo inicial: caminhada de 40–45 min, 5–6× por semana. Bike doméstica
 também é suportada.
 
+Os passos de uma sessão são só um dado dela; o total de passos do dia é o
+hábito "Passos" (§11.2). Os dois nunca são somados.
+
+- Também guarda `session_date` (data local) com `started_at` (instante),
+  como as pesagens; `activity_name` só em "personalizado". Soft delete.
+- Duração inteira de 1 a 600 min; distância 0–300 km; passos até 100.000;
+  FC média 30–250 bpm; intensidade leve, moderada ou intensa; nunca em
+  data futura.
+- Semana de segunda a domingo: o resumo mostra sessões, minutos e km, no
+  total e por atividade.
+
 ### 11.2 Hábitos
 
 Sistema genérico; nunca uma coluna por hábito.
@@ -2337,6 +2348,12 @@ Decisões que serão tomadas quando a versão correspondente começar.
 | Data de nascimento do seed. | 16/08/1994. |
 | Data-alvo da V0.1. | O quanto antes; sem data fixa. |
 
+**Decididas em 26/10/2026 (início da V0.4):**
+
+| Questão | Decisão |
+|---|---|
+| Passos vêm de hábitos, de cardio ou de ambos? | Os dois, sem somar: o total do dia é um hábito de quantidade (com meta); uma sessão de cardio pode guardar os passos dela, só como dado da sessão (§11.1, §11.2). |
+
 **Decididas em 21/10/2026 (início da V0.2):**
 
 | Questão | Decisão |
@@ -2353,7 +2370,6 @@ recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
 
 | Questão | Versão |
 |---|---|
-| Passos vêm de hábitos, de cardio ou de ambos? | V0.4 |
 | Fotos de progresso são criptografadas em disco? | futuro |
 | Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.4 |
 | Assinatura de código (Authenticode) do instalador. | V1.0 |

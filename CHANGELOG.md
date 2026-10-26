@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Cardio** no menu (V0.4): registrar caminhada, bicicleta, corrida,
+  elíptico ou outra atividade, com data, início e duração; distância,
+  passos da sessão, intensidade, FC média e notas são opcionais.
+- Resumo **Esta semana** (sessões, minutos e km, também por atividade) e
+  histórico por semana, com editar e excluir.
+
+### Changed
+- O teste de exclusão definitiva de perfil passa a cobrir o cardio.
+
 ## [0.3.0] - 2026-10-26
 
 Versão estável da V0.3 — Treino: biblioteca de exercícios, planos com

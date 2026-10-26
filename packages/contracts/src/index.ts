@@ -9,3 +9,4 @@ export * from './backup';
 export * from './imports';
 export * from './nutrition';
 export * from './workouts';
+export * from './cardio';

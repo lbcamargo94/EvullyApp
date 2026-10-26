@@ -304,6 +304,24 @@ export interface ProfileExerciseSettingsTable {
   updated_at: string;
 }
 
+export interface CardioSessionsTable {
+  id: string;
+  profile_id: string;
+  session_date: string;
+  started_at: string;
+  activity_type: 'walking' | 'cycling' | 'running' | 'elliptical' | 'custom';
+  activity_name: string | null;
+  duration_minutes: number;
+  distance_km: number | null;
+  steps: number | null;
+  intensity: 'light' | 'moderate' | 'vigorous' | null;
+  heart_rate_average: number | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 export interface TagsTable {
   id: string;
   profile_id: string;
@@ -379,4 +397,5 @@ export interface DatabaseSchema {
   exercise_performances: ExercisePerformancesTable;
   exercise_sets: ExerciseSetsTable;
   profile_exercise_settings: ProfileExerciseSettingsTable;
+  cardio_sessions: CardioSessionsTable;
 }

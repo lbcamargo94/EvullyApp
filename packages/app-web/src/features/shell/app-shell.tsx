@@ -5,7 +5,7 @@ import {
   useProfile,
   useTrackingState,
 } from '@evully/app-core';
-import { Apple, Dumbbell, LayoutDashboard, Ruler, Scale, Settings } from 'lucide-react';
+import { Activity, Apple, Dumbbell, LayoutDashboard, Ruler, Scale, Settings } from 'lucide-react';
 import { useCallback } from 'react';
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router';
 import { BackupErrorBanner } from '../settings/backup-error-banner';
@@ -65,6 +65,10 @@ export function AppShell() {
           <NavLink to="/app/workouts" className={navItem}>
             <Dumbbell aria-hidden="true" className="size-5" />
             {m.workouts}
+          </NavLink>
+          <NavLink to="/app/cardio" className={navItem}>
+            <Activity aria-hidden="true" className="size-5" />
+            {m.cardio}
           </NavLink>
           <NavLink to="/app/settings" className={navItem}>
             <Settings aria-hidden="true" className="size-5" />

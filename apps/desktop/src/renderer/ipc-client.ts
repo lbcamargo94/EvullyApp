@@ -158,6 +158,12 @@ export const ipcEvullyClient: EvullyClient = {
       call('workout-performances:replace', { profileId, id, exerciseId }),
     removeExercise: (profileId, id) => call('workout-performances:remove', { profileId, id }),
   },
+  cardio: {
+    overview: (profileId) => call('cardio:overview', { profileId }),
+    register: (input) => call('cardio:register', input),
+    update: (input) => call('cardio:update', input),
+    remove: (profileId, id) => call('cardio:delete', { profileId, id }),
+  },
   mealTemplates: {
     list: (profileId) => call('meal-templates:list', { profileId }),
     save: (input) => call('meal-templates:save', input),
