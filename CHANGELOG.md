@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.3.0-alpha.3] - 2026-10-26
+
 ### Added
 - **Treinar** (Treinos): iniciar o treino pelo dia do plano (o de hoje vem
   marcado) ou um treino livre; uma sessão aberta por vez, retomada se o
@@ -259,7 +261,8 @@ Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
   instalador Windows (`Evully-Setup-<versão>.exe`).
 - Verificação de licenças copyleft (`npm run licenses:check`).
 
-[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.2...HEAD
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.3...HEAD
+[0.3.0-alpha.3]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.2...v0.3.0-alpha.3
 [0.3.0-alpha.2]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.1...v0.3.0-alpha.2
 [0.3.0-alpha.1]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0...v0.3.0-alpha.1
 [0.2.0]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.5...v0.2.0
