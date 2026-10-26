@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.3.0-alpha.1] - 2026-10-25
+
 ### Added
 - Treino (V0.3): menu **Treinos** com a **Biblioteca de exercícios**.
   Catálogo do Evully com os exercícios do programa inicial (peito, costas,
@@ -237,7 +239,8 @@ Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
   instalador Windows (`Evully-Setup-<versão>.exe`).
 - Verificação de licenças copyleft (`npm run licenses:check`).
 
-[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.1...HEAD
+[0.3.0-alpha.1]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0...v0.3.0-alpha.1
 [0.2.0]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.5...v0.2.0
 [0.2.0-alpha.5]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.4...v0.2.0-alpha.5
 [0.2.0-alpha.4]: https://github.com/lbcamargo94/EvullyApp/compare/v0.2.0-alpha.3...v0.2.0-alpha.4
