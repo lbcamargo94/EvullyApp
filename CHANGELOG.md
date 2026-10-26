@@ -6,6 +6,17 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-26
+
+Versão estável da V0.3 — Treino: biblioteca de exercícios, planos com
+prescrição e planos-modelo, execução do treino com séries e descanso,
+histórico por exercício, sugestão de progressão dupla e questionário do
+módulo. Detalhes de cada etapa nas pré-versões abaixo.
+
+### Changed
+- O teste de exclusão definitiva de perfil passa a cobrir os dados de
+  treino (exercícios próprios, planos, sessões, séries e incrementos).
+
 ## [0.3.0-alpha.5] - 2026-10-26
 
 ### Added
@@ -286,7 +297,8 @@ Primeira pré-versão: estrutura da V0.1, sem funcionalidades de uso.
   instalador Windows (`Evully-Setup-<versão>.exe`).
 - Verificação de licenças copyleft (`npm run licenses:check`).
 
-[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.5...HEAD
+[Unreleased]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.5...v0.3.0
 [0.3.0-alpha.5]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.4...v0.3.0-alpha.5
 [0.3.0-alpha.4]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.3...v0.3.0-alpha.4
 [0.3.0-alpha.3]: https://github.com/lbcamargo94/EvullyApp/compare/v0.3.0-alpha.2...v0.3.0-alpha.3
