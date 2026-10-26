@@ -6,6 +6,7 @@ export * from './features/profiles/use-profiles';
 export * from './features/nutrition/use-foods';
 export * from './features/nutrition/use-nutrition-day';
 export * from './features/settings/use-app-settings';
+export * from './features/workouts/use-exercises';
 export * from './features/shell/idle-timer';
 export * from './features/settings/use-tracking-settings';
 export * from './features/tracking/use-tracking';

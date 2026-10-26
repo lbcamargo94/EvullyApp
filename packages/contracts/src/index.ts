@@ -8,3 +8,4 @@ export * from './measurements';
 export * from './backup';
 export * from './imports';
 export * from './nutrition';
+export * from './workouts';

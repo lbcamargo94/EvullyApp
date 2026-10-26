@@ -1325,6 +1325,14 @@ is_active
 Grupos: peito, costas, ombros, bíceps, tríceps, antebraço, quadríceps,
 posteriores, glúteos, panturrilha, abdômen/core, lombar, cardio/outros.
 
+- **Exercícios do sistema** (`profile_id` nulo, com `code` estável): os
+  exercícios citados em §10.7–10.9, criados pela migration, com instruções
+  curtas e neutras de execução (nunca orientação médica). Somente leitura.
+- **Exercícios do perfil**: criados, editados e desativados
+  (`is_active = 0`) pelo próprio perfil; o histórico é preservado.
+- Nome único entre o catálogo do sistema e os exercícios do perfil, sem
+  diferenciar maiúsculas. `secondary_muscles` é uma lista de grupos.
+
 ### 10.2 Planos
 
 ```text

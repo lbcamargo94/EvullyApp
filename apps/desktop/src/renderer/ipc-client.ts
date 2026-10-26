@@ -112,6 +112,12 @@ export const ipcEvullyClient: EvullyClient = {
     add: (input) => call('water:add', input),
     remove: (profileId, id) => call('water:remove', { profileId, id }),
   },
+  exercises: {
+    list: (profileId) => call('exercises:list', { profileId }),
+    create: (input) => call('exercises:create', input),
+    update: (input) => call('exercises:update', input),
+    deactivate: (profileId, id) => call('exercises:deactivate', { profileId, id }),
+  },
   mealTemplates: {
     list: (profileId) => call('meal-templates:list', { profileId }),
     save: (input) => call('meal-templates:save', input),

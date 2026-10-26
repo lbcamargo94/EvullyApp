@@ -19,3 +19,4 @@ export * from './nutrition/food-log';
 export * from './nutrition/meal-template';
 export * from './nutrition/targets';
 export * from './nutrition/preferences';
+export * from './workouts/exercise';

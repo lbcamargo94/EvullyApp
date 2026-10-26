@@ -8,6 +8,8 @@ import type {
   BackupStatus,
   CopyMealInput,
   CreateTagInput,
+  ExerciseDto,
+  ExerciseInput,
   FoodDto,
   FoodInput,
   FoodLogInput,
@@ -38,6 +40,7 @@ import type {
   Tag,
   TrackingState,
   UpdateAppSettingsInput,
+  UpdateExerciseInput,
   UpdateFoodInput,
   UpdateMeasurementInput,
   UpdateProfileInput,
@@ -137,6 +140,12 @@ export interface EvullyClient {
   water: {
     add(input: WaterLogInput): Promise<NutritionDay>;
     remove(profileId: string, id: string): Promise<NutritionDay>;
+  };
+  exercises: {
+    list(profileId: string): Promise<ExerciseDto[]>;
+    create(input: ExerciseInput): Promise<ExerciseDto>;
+    update(input: UpdateExerciseInput): Promise<ExerciseDto>;
+    deactivate(profileId: string, id: string): Promise<null>;
   };
   mealTemplates: {
     list(profileId: string): Promise<MealTemplateDto[]>;

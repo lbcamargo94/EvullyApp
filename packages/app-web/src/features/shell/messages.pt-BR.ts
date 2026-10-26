@@ -3,6 +3,7 @@ export const shellMessages = {
   dashboard: 'Dashboard',
   weight: 'Peso',
   diet: 'Dieta',
+  workouts: 'Treinos',
   measurements: 'Medidas',
   settings: 'Configurações',
   registerMeasurements: 'Registrar medidas',
