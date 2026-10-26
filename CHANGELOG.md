@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Meta semanal de cardio**: sessões e/ou minutos por semana, definidos
+  no card **Esta semana** do Cardio, com barras de progresso. Mudar a meta
+  vale a partir de hoje; deixar os dois campos vazios remove a meta.
+- **Painel inicial**: cards **Hábitos de hoje** e **Cardio da semana**,
+  que só aparecem para quem usa cada módulo.
+
+### Changed
+- O teste de exclusão definitiva de perfil passa a cobrir as metas de cardio.
+
 ## [0.4.0-alpha.2] - 2026-10-26
 
 ### Added

@@ -90,4 +90,59 @@ describe('cardio (README §11.1)', () => {
       NotFoundError,
     );
   });
+
+  it('keeps weekly targets as history, per profile, and allows clearing', async () => {
+    const { db, handlers, lucas, ana } = await setup();
+    expect((await handlers['cardio:overview']({ profileId: lucas.id })).target).toBeNull();
+
+    await handlers['cardio-target:set']({
+      profileId: lucas.id,
+      sessionsPerWeek: 5,
+      minutesPerWeek: 200,
+    });
+    const latest = await handlers['cardio-target:set']({
+      profileId: lucas.id,
+      sessionsPerWeek: 4,
+      minutesPerWeek: null,
+    });
+    expect(latest).toMatchObject({
+      effectiveFrom: '2026-10-28',
+      sessionsPerWeek: 4,
+      minutesPerWeek: null,
+    });
+    // A row starting in the future is not in force yet.
+    await db
+      .insertInto('cardio_targets')
+      .values({
+        id: '01930000-0000-7000-8000-ffffffffffff',
+        profile_id: lucas.id,
+        effective_from: '2026-11-02',
+        sessions_per_week: 6,
+        minutes_per_week: 300,
+        created_at: '2026-10-28T12:00:01.000Z',
+      })
+      .execute();
+    expect((await handlers['cardio:overview']({ profileId: lucas.id })).target).toMatchObject({
+      sessionsPerWeek: 4,
+      minutesPerWeek: null,
+    });
+    expect((await handlers['cardio:overview']({ profileId: ana.id })).target).toBeNull();
+
+    expect(
+      await handlers['cardio-target:set']({
+        profileId: lucas.id,
+        sessionsPerWeek: null,
+        minutesPerWeek: null,
+      }),
+    ).toBeNull();
+    expect((await handlers['cardio:overview']({ profileId: lucas.id })).target).toBeNull();
+    expect(await db.selectFrom('cardio_targets').select('id').execute()).toHaveLength(4);
+    await expect(
+      handlers['cardio-target:set']({
+        profileId: lucas.id,
+        sessionsPerWeek: 20,
+        minutesPerWeek: null,
+      }),
+    ).rejects.toThrow(ValidationError);
+  });
 });

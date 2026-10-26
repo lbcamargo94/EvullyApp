@@ -8,6 +8,8 @@ import type {
   BackupStatus,
   CardioInput,
   CardioOverview,
+  CardioTargetDto,
+  CardioTargetInput,
   CardioSessionDto,
   CopyMealInput,
   CreateTagInput,
@@ -230,6 +232,7 @@ export interface EvullyClient {
     register(input: CardioInput): Promise<CardioSessionDto>;
     update(input: UpdateCardioInput): Promise<CardioSessionDto>;
     remove(profileId: string, id: string): Promise<null>;
+    setTarget(input: CardioTargetInput): Promise<CardioTargetDto | null>;
   };
   habits: {
     list(profileId: string): Promise<HabitDto[]>;

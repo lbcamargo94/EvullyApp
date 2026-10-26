@@ -11,6 +11,7 @@ import { Button, Card, ConfirmDialog } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { CardioForm } from './cardio-form';
+import { CardioTargetForm, CardioTargetProgress } from './cardio-target';
 import {
   activityLabels,
   cardioErrorByCode,
@@ -50,7 +51,7 @@ export function CardioScreen() {
           editing={editing}
           onDone={() => setEditing(null)}
         />
-        <ThisWeek week={overview.thisWeek} />
+        <ThisWeek profileId={profileId} overview={overview} />
       </div>
       <section aria-label={m.history} className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">{m.history}</h2>
@@ -63,16 +64,39 @@ export function CardioScreen() {
   );
 }
 
-function ThisWeek({ week }: { week: Week }) {
+function ThisWeek({ profileId, overview }: { profileId: string; overview: CardioOverview }) {
+  const { thisWeek: week, target } = overview;
+  const [editingTarget, setEditingTarget] = useState(false);
   return (
     <Card aria-labelledby="cardio-week-title" className="flex-[1_1_280px] gap-3">
-      <h2 id="cardio-week-title" className="text-lg font-semibold">
-        {m.thisWeek}
-      </h2>
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 id="cardio-week-title" className="text-lg font-semibold">
+          {m.thisWeek}
+        </h2>
+        {!editingTarget && (
+          <Button
+            type="button"
+            variant="ghost"
+            className="min-h-9 px-2"
+            onClick={() => setEditingTarget(true)}
+          >
+            {target ? m.targetEdit : m.targetSet}
+          </Button>
+        )}
+      </div>
       <span className="text-[32px] leading-tight font-semibold tabular-nums">
         {m.minutes(week.minutes)}
       </span>
       <span className="text-sm text-text-muted">{weekLine(week)}</span>
+      {editingTarget ? (
+        <CardioTargetForm
+          profileId={profileId}
+          target={target}
+          onDone={() => setEditingTarget(false)}
+        />
+      ) : (
+        target && <CardioTargetProgress week={week} target={target} />
+      )}
       {week.byActivity.length > 0 && (
         <ul className="flex flex-col gap-1 text-sm">
           {week.byActivity.map((a) => (

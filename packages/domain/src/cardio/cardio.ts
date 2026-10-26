@@ -134,3 +134,30 @@ export function weekSummary(sessions: readonly Summable[], weekStart: LocalDate)
     byActivity: [...groups.values()],
   };
 }
+
+export const MAX_CARDIO_TARGET_SESSIONS = 14;
+export const MAX_CARDIO_TARGET_MINUTES = 3000;
+
+/** Weekly cardio target typed by the user (README §11.1); both null means no target. */
+export interface CardioTargetValues {
+  sessionsPerWeek: number | null;
+  minutesPerWeek: number | null;
+}
+
+/** Whole numbers: 1–14 sessions and 1–3000 minutes per week; never computed by the app. */
+export function normalizeCardioTarget(draft: CardioTargetValues): CardioTargetValues {
+  return {
+    sessionsPerWeek: wholeIn(
+      draft.sessionsPerWeek,
+      1,
+      MAX_CARDIO_TARGET_SESSIONS,
+      'cardio_target.out_of_range',
+    ),
+    minutesPerWeek: wholeIn(
+      draft.minutesPerWeek,
+      1,
+      MAX_CARDIO_TARGET_MINUTES,
+      'cardio_target.out_of_range',
+    ),
+  };
+}

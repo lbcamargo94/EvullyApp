@@ -63,6 +63,14 @@ export const cardioMessages = {
   removeTitle: 'Excluir este cardio?',
   removeBody: 'O registro sai do histórico e dos totais da semana.',
   removeConfirm: 'Excluir',
+  targetSet: 'Definir meta',
+  targetEdit: 'Alterar meta',
+  targetSessions: 'Sessões por semana',
+  targetMinutes: 'Minutos por semana',
+  targetHint: 'Você define a meta; ela vale a partir de hoje. Deixe os dois vazios para remover.',
+  targetSave: 'Salvar meta',
+  targetInvalid: 'Use números inteiros.',
+  ofTarget: (value: number, goal: number) => `${value} / ${goal}`,
 } as const;
 
 export const cardioErrorByCode: Record<string, string> = {
@@ -75,4 +83,5 @@ export const cardioErrorByCode: Record<string, string> = {
   'cardio.activity_name_too_long': 'Use até 40 caracteres no nome.',
   'cardio.notes_too_long': 'Use até 280 caracteres nas notas.',
   'cardio.not_found': 'Registro não encontrado. Recarregue a tela.',
+  'cardio_target.out_of_range': 'Use de 1 a 14 sessões e de 1 a 3.000 minutos por semana.',
 };

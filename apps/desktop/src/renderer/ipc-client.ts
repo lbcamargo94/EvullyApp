@@ -163,6 +163,7 @@ export const ipcEvullyClient: EvullyClient = {
     register: (input) => call('cardio:register', input),
     update: (input) => call('cardio:update', input),
     remove: (profileId, id) => call('cardio:delete', { profileId, id }),
+    setTarget: (input) => call('cardio-target:set', input),
   },
   habits: {
     list: (profileId) => call('habits:list', { profileId }),
