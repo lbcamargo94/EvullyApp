@@ -16,3 +16,17 @@ export interface IdGenerator {
   /** New UUID v7 (README §6.1). */
   next(): string;
 }
+
+export interface QuestionnaireRecord<T> {
+  id: string;
+  profileId: string;
+  status: 'completed' | 'skipped';
+  answers: T;
+  completedAt: string;
+}
+
+/** Answers of one module questionnaire, kept as history (README §8.2). */
+export interface QuestionnaireRepository<T> {
+  latest(profileId: string): Promise<QuestionnaireRecord<T> | null>;
+  insert(record: QuestionnaireRecord<T>): Promise<void>;
+}

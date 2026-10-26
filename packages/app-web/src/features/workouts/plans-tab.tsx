@@ -4,6 +4,7 @@ import { Button, Card, Input, NativeSelect } from '@evully/ui';
 import { useState, type FormEvent } from 'react';
 import { planErrorByCode, planMessages as m } from './messages.pt-BR';
 import { PlanEditor } from './plan-editor';
+import { PlanSuggestions } from './plan-suggestions';
 
 /** Treinos › Planos (README §10.2): list, create, import templates, open the editor. */
 export function PlansTab({ profileId }: { profileId: string }) {
@@ -19,6 +20,7 @@ export function PlansTab({ profileId }: { profileId: string }) {
 
   return (
     <div className="flex flex-col gap-5">
+      <PlanSuggestions profileId={profileId} />
       <div className="flex flex-wrap items-start gap-4">
         <NewPlan profileId={profileId} onCreated={setOpenId} />
         <ImportTemplate profileId={profileId} onImported={setOpenId} />

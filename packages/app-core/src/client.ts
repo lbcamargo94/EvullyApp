@@ -51,6 +51,8 @@ import type {
   UpdateWeightInput,
   WaterLogInput,
   WorkoutPlanDto,
+  WorkoutPreferencesDto,
+  WorkoutPreferencesInput,
   WorkoutSessionDto,
   WeightDisplay,
   WeightEntry,
@@ -193,6 +195,11 @@ export interface EvullyClient {
     ): Promise<WorkoutPlanDto>;
     removeExercise(profileId: string, id: string): Promise<WorkoutPlanDto>;
     moveExercise(profileId: string, id: string, direction: 'up' | 'down'): Promise<WorkoutPlanDto>;
+  };
+  workoutPreferences: {
+    get(profileId: string): Promise<WorkoutPreferencesDto>;
+    answer(input: WorkoutPreferencesInput): Promise<WorkoutPreferencesDto>;
+    skip(profileId: string): Promise<WorkoutPreferencesDto>;
   };
   workoutSessions: {
     open(profileId: string): Promise<WorkoutSessionDto | null>;

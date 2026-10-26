@@ -6,6 +6,17 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Questionário de Treinos**: na primeira abertura, experiência, dias por
+  semana, local e equipamentos (tudo opcional). Pode ser pulado e refeito
+  em Configurações › Treino.
+- **Sugestões de planos-modelo** em Treinos › Planos, com botão Importar;
+  nada é importado sem você.
+
+### Changed
+- O armazenamento dos questionários de módulo (Dieta e Treino) passou a
+  usar um único componente interno.
+
 ## [0.3.0-alpha.4] - 2026-10-26
 
 ### Added

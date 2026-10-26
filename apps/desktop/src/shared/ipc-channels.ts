@@ -28,6 +28,8 @@ import {
   workoutSessionSchema,
   addWorkoutDayInputSchema,
   appInfoSchema,
+  workoutPreferencesInputSchema,
+  workoutPreferencesSchema,
   createWorkoutPlanInputSchema,
   importPlanTemplateInputSchema,
   moveWorkoutItemInputSchema,
@@ -206,6 +208,18 @@ export const ipcChannels = {
   'workout-performances:remove': {
     input: workoutItemIdInputSchema,
     output: workoutSessionSchema,
+  },
+  'workout-preferences:get': {
+    input: profileScopedInputSchema,
+    output: workoutPreferencesSchema,
+  },
+  'workout-preferences:answer': {
+    input: workoutPreferencesInputSchema,
+    output: workoutPreferencesSchema,
+  },
+  'workout-preferences:skip': {
+    input: profileScopedInputSchema,
+    output: workoutPreferencesSchema,
   },
   'backup:status': { input: z.undefined(), output: backupStatusSchema },
   'backup:create-manual': { input: z.undefined(), output: backupResultSchema.nullable() },

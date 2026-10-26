@@ -1,4 +1,10 @@
 import type { AppInfo, LegalDocuments } from '@evully/contracts';
+import {
+  NUTRITION_QUESTIONNAIRE_VERSION,
+  WORKOUT_QUESTIONNAIRE_VERSION,
+  type NutritionPreferences,
+  type WorkoutPreferences,
+} from '@evully/domain';
 import type { Kysely } from 'kysely';
 import type { DatabaseSchema } from '../database/schema';
 import { backupIpcHandlers } from '../modules/backup/adapters/backup-ipc-handlers';
@@ -15,7 +21,6 @@ import { measurementIpcHandlers } from '../modules/measurements/adapters/measure
 import { KyselyFoodLogRepository } from '../modules/nutrition/adapters/kysely-food-log-repository';
 import { KyselyFoodRepository } from '../modules/nutrition/adapters/kysely-food-repository';
 import { KyselyMealTemplateRepository } from '../modules/nutrition/adapters/kysely-meal-template-repository';
-import { KyselyNutritionQuestionnaireRepository } from '../modules/nutrition/adapters/kysely-nutrition-questionnaire-repository';
 import {
   KyselyNutritionTargetRepository,
   KyselyWaterLogRepository,
@@ -25,6 +30,7 @@ import { KyselyProfileRepository } from '../modules/profiles/adapters/kysely-pro
 import { profileIpcHandlers } from '../modules/profiles/adapters/profile-ipc-handlers';
 import { KyselySettingsRepository } from '../modules/settings/adapters/kysely-settings-repository';
 import { settingsIpcHandlers } from '../modules/settings/adapters/settings-ipc-handlers';
+import { KyselyQuestionnaireRepository } from '../modules/shared/kysely-questionnaire-repository';
 import type { Clock, IdGenerator } from '../modules/shared/ports';
 import { KyselyProjectRepository } from '../modules/tracking/adapters/kysely-project-repository';
 import { KyselyTrackingRepository } from '../modules/tracking/adapters/kysely-tracking-repository';
@@ -92,7 +98,11 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
       templates: mealTemplates,
       targets: new KyselyNutritionTargetRepository(db),
       water: new KyselyWaterLogRepository(db),
-      questionnaires: new KyselyNutritionQuestionnaireRepository(db),
+      questionnaires: new KyselyQuestionnaireRepository<NutritionPreferences>(
+        db,
+        'nutrition',
+        NUTRITION_QUESTIONNAIRE_VERSION,
+      ),
       clock,
       ids,
     }),
@@ -101,6 +111,11 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
       exercises: new KyselyExerciseRepository(db),
       plans: new KyselyWorkoutPlanRepository(db),
       sessions: new KyselySessionRepository(db),
+      questionnaires: new KyselyQuestionnaireRepository<WorkoutPreferences>(
+        db,
+        'workouts',
+        WORKOUT_QUESTIONNAIRE_VERSION,
+      ),
       clock,
       ids,
     }),

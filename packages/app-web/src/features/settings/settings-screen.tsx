@@ -8,10 +8,19 @@ import { settingsMessages as m } from './messages.pt-BR';
 import { NutritionPreferencesSection } from './nutrition-preferences-section';
 import { NutritionTargetsSection } from './nutrition-targets-section';
 import { ProfileSection } from './profile-section';
+import { WorkoutPreferencesSection } from './workout-preferences-section';
 import { ProjectSection } from './project-section';
 import { TrackingSection } from './tracking-section';
 
-const TABS = ['tracking', 'project', 'nutrition', 'profile', 'general', 'about'] as const;
+const TABS = [
+  'tracking',
+  'project',
+  'nutrition',
+  'workouts',
+  'profile',
+  'general',
+  'about',
+] as const;
 type Tab = (typeof TABS)[number];
 
 /** Settings (README §8.7). The tab lives in the URL so links can open one (`?tab=general`). */
@@ -45,6 +54,9 @@ export function SettingsScreen() {
         <TabsContent value="nutrition">
           {profileId && <NutritionTargetsSection profileId={profileId} />}
           {profileId && <NutritionPreferencesSection profileId={profileId} />}
+        </TabsContent>
+        <TabsContent value="workouts">
+          {profileId && <WorkoutPreferencesSection profileId={profileId} />}
         </TabsContent>
         <TabsContent value="profile">
           {profileId && <ProfileSection profileId={profileId} />}

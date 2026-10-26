@@ -1308,6 +1308,18 @@ Ao ativar o módulo: experiência, dias disponíveis por semana, local
 (academia, casa) e equipamentos. As regras sugerem planos-modelo; o
 usuário decide (§10.6, §21.2).
 
+Na V0.3 (`workouts@1`, em `profile_questionnaires` com código `workouts`;
+regras `workout-rules@1`):
+
+- Aparece na primeira abertura de Treinos; todas as respostas são
+  opcionais; pode ser pulado e refeito em Configurações — Treino. Cada
+  resposta é um novo registro; vale a mais recente.
+- Sugestões (nada é importado sem o usuário): **Cutting 2026** com
+  academia (ou academia e casa) e 5 ou mais dias por semana; **Core em
+  casa** para quem treina em casa, ou como complemento de quem treina na
+  academia. Academia com menos de 5 dias: orienta montar o próprio plano.
+- Experiência e equipamentos são só registrados por enquanto.
+
 ### 10.1 Biblioteca de exercícios — `exercises`
 
 ```text

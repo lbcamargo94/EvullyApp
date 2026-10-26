@@ -7,6 +7,12 @@ import {
 } from '../application/manage-exercises';
 import { GetExerciseHistory, SetExerciseIncrement } from '../application/exercise-history';
 import {
+  AnswerWorkoutQuestionnaire,
+  GetWorkoutPreferences,
+  SkipWorkoutQuestionnaire,
+  type WorkoutPreferenceDeps,
+} from '../application/workout-preferences';
+import {
   AddPlanExercise,
   AddWorkoutDay,
   CreateWorkoutPlan,
@@ -62,9 +68,14 @@ type WorkoutChannels =
   | 'workout-sets:remove'
   | 'workout-performances:add'
   | 'workout-performances:replace'
-  | 'workout-performances:remove';
+  | 'workout-performances:remove'
+  | 'workout-preferences:get'
+  | 'workout-preferences:answer'
+  | 'workout-preferences:skip';
 
-export function workoutIpcHandlers(deps: SessionDeps): Pick<IpcHandlers, WorkoutChannels> {
+export function workoutIpcHandlers(
+  deps: SessionDeps & WorkoutPreferenceDeps,
+): Pick<IpcHandlers, WorkoutChannels> {
   return {
     'exercises:list': (input) => new ListExercises(deps).execute(input),
     'exercises:create': (input) => new CreateExercise(deps).execute(input),
@@ -94,5 +105,8 @@ export function workoutIpcHandlers(deps: SessionDeps): Pick<IpcHandlers, Workout
     'workout-performances:add': (input) => new AddPerformance(deps).execute(input),
     'workout-performances:replace': (input) => new ReplacePerformance(deps).execute(input),
     'workout-performances:remove': (input) => new RemovePerformance(deps).execute(input),
+    'workout-preferences:get': (input) => new GetWorkoutPreferences(deps).execute(input),
+    'workout-preferences:answer': (input) => new AnswerWorkoutQuestionnaire(deps).execute(input),
+    'workout-preferences:skip': (input) => new SkipWorkoutQuestionnaire(deps).execute(input),
   };
 }
