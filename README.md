@@ -2402,7 +2402,7 @@ Decisões que serão tomadas quando a versão correspondente começar.
 
 | Questão | Decisão |
 |---|---|
-| Atualização automática: quando e onde publicar? | Antecipada da V1.0 (0.5.0-alpha.3). `electron-updater` busca as versões no repositório **público só de releases** `lbcamargo94/evully-releases`; o código continua privado. O app procura ao abrir e a cada 4 h, baixa em segundo plano e só instala quando a pessoa clica em "Reiniciar e atualizar", depois do backup de fechamento. Canal em Configurações › Sobre: pré-versões (padrão durante o desenvolvimento) ou só estáveis. Segurança em [SECURITY.md](SECURITY.md), §2.8. |
+| Atualização automática: quando e onde publicar? | Antecipada da V1.0 (0.5.0-alpha.3). `electron-updater` busca as versões no repositório **público só de releases** `lbcamargo94/evully-releases`; o código continua privado. O app procura só ao abrir e no botão "Verificar atualizações" (sem verificação periódica, para não gastar recursos), baixa em segundo plano e instala a versão verificada ao fechar o app ou quando a pessoa clica em "Reiniciar e atualizar", sempre depois do backup de fechamento. Canal em Configurações › Sobre: pré-versões (padrão durante o desenvolvimento) ou só estáveis. Segurança em [SECURITY.md](SECURITY.md), §2.8. |
 
 **Decididas em 21/10/2026 (início da V0.2):**
 

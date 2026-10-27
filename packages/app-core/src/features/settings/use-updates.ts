@@ -5,13 +5,20 @@ import { useEvullyClient } from '../../client-context';
 const key = ['updates'] as const;
 const busy = (s: UpdateStatus | undefined) => s?.state === 'checking' || s?.state === 'downloading';
 
-/** Polled: fast while checking or downloading, otherwise every minute. */
+/**
+ * Polled only while something can change: fast while checking or downloading,
+ * slower until the start-up check begins; stops once a result is known.
+ */
 export function useUpdateStatus() {
   const client = useEvullyClient();
   return useQuery({
     queryKey: key,
     queryFn: () => client.updates.status(),
-    refetchInterval: (query) => (busy(query.state.data) ? 1000 : 60_000),
+    refetchInterval: (query) => {
+      const status = query.state.data;
+      if (busy(status)) return 1000;
+      return status?.state === 'idle' ? 5000 : false;
+    },
   });
 }
 

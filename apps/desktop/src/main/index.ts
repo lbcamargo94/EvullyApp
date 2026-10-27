@@ -121,7 +121,10 @@ async function start(): Promise<void> {
   app.on('before-quit', (event) => {
     if (closing) return;
     event.preventDefault();
-    void shutdown().finally(() => app.quit());
+    void shutdown().finally(() => {
+      updater.installOnQuit();
+      app.quit();
+    });
   });
   updater.start();
 }

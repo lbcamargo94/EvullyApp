@@ -116,8 +116,9 @@ Fora de escopo na Fase 1:
   - a chave privada fica só no computador de quem publica
     (`%USERPROFILE%\.evully\update-signing-key.pem`), fora do repositório,
     com cópia de segurança; perdê-la exige uma instalação manual com chave nova;
-  - nunca instala sozinha ao fechar: só quando a pessoa pede, depois do
-    backup de fechamento; sem downgrade;
+  - instala só atualização já baixada e verificada: quando a pessoa pede ou
+    ao fechar o app, sempre depois do backup de fechamento; sem downgrade;
+  - procura versões só ao abrir e no botão "Verificar atualizações";
   - o renderer só pode pedir "verificar" e "instalar"; nenhuma URL ou
     caminho vem dele; os logs registram só versão e a primeira linha do erro.
 - Assinatura de código (Authenticode) avaliada na V1.0. Sem ela, o
