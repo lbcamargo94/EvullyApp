@@ -19,6 +19,7 @@
     "adm-zip": "^0.6.1",
     "better-sqlite3": "^13.0.3",
     "electron-log": "^5.4.0",
+    "electron-updater": "6.8.10",
     "kysely": "^0.29.6",
     "uuid": "^14.0.2"
   },

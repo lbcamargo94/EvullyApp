@@ -44,6 +44,8 @@ import type { Clock, IdGenerator } from '../modules/shared/ports';
 import { KyselyProjectRepository } from '../modules/tracking/adapters/kysely-project-repository';
 import { KyselyTrackingRepository } from '../modules/tracking/adapters/kysely-tracking-repository';
 import { trackingIpcHandlers } from '../modules/tracking/adapters/tracking-ipc-handlers';
+import { updateIpcHandlers } from '../modules/updates/adapters/update-ipc-handlers';
+import type { Updater } from '../modules/updates/ports/updater';
 import {
   KyselyTagRepository,
   KyselyWeightRepository,
@@ -64,10 +66,20 @@ interface Dependencies {
   legal: () => Promise<LegalDocuments>;
   backup: { defaultDirectory: string; tempDirectory: string; dialogs: BackupDialogs };
   importFiles: ImportFiles;
+  updater: Updater;
 }
 
 /** Wires adapters into use cases (ARCHITECTURE.md §3). The only place that knows every module. */
-export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }: Dependencies) {
+export function buildApp({
+  db,
+  clock,
+  ids,
+  appInfo,
+  legal,
+  backup,
+  importFiles,
+  updater,
+}: Dependencies) {
   const profiles = new KyselyProfileRepository(db);
   const settings = new KyselySettingsRepository(db, clock, ids);
   const projects = new KyselyProjectRepository(db);
@@ -97,6 +109,7 @@ export function buildApp({ db, clock, ids, appInfo, legal, backup, importFiles }
       }),
     ),
     ...settingsIpcHandlers(settings, clock),
+    ...updateIpcHandlers(updater),
     ...trackingIpcHandlers({ profiles, projects, tracking, clock, ids }),
     ...weightIpcHandlers({ profiles, projects, weights, tags, clock, ids }),
     ...measurementIpcHandlers({ profiles, projects, tracking, measurements, clock, ids }),

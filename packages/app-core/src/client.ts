@@ -71,6 +71,7 @@ import type {
   SleepInput,
   SleepLogDto,
   UpdateSleepInput,
+  UpdateStatus,
 } from '@evully/contracts';
 
 /**
@@ -92,6 +93,11 @@ export interface EvullyClient {
     archive(id: string): Promise<null>;
     restore(id: string): Promise<ProfileSummary>;
     deletePermanently(input: DeleteProfileInput): Promise<null>;
+  };
+  updates: {
+    status(): Promise<UpdateStatus>;
+    check(): Promise<UpdateStatus>;
+    install(): Promise<null>;
   };
   settings: {
     get(): Promise<AppSettings>;

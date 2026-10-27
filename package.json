@@ -22,7 +22,8 @@
     "docs:check": "node scripts/check-docs.mjs",
     "licenses:check": "node scripts/check-licenses.mjs",
     "notices": "node scripts/generate-notices.mjs",
-    "notices:check": "node scripts/generate-notices.mjs --check"
+    "notices:check": "node scripts/generate-notices.mjs --check",
+    "release:publish": "node scripts/publish-update.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.0",

@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { openDatabase } from '../database/connection';
 import { hasPendingMigrations, migrateToLatest } from '../database/migrator';
 import { systemClock, uuidV7Generator } from '../modules/shared/system-adapters';
+import { ElectronUpdater } from './auto-update';
 import { buildApp } from './composition-root';
 import { readLegalDocuments } from './legal';
 import { withNativeTheme } from './native-theme';
@@ -63,6 +64,21 @@ async function start(): Promise<void> {
   const file = databaseFile();
   const existed = existsSync(file);
   const db = openDatabase(file);
+
+  // Automatic backup on close (README §8.7.2); a failure never blocks quitting.
+  let closing = false;
+  const shutdown = async () => {
+    closing = true;
+    await evully.lifecycle
+      .onClose()
+      .then((result) => log.info(`automatic backup: ${result}`))
+      .finally(() => db.destroy());
+  };
+  const updater = new ElectronUpdater({
+    channel: async () => (await evully.handlers['settings:get'](undefined)).updateChannel,
+    beforeInstall: shutdown,
+  });
+
   const evully = buildApp({
     db,
     clock: systemClock,
@@ -78,6 +94,7 @@ async function start(): Promise<void> {
       dialogs: electronDialogs,
     },
     importFiles: electronImportFiles,
+    updater,
   });
 
   // Back up an existing database before changing its schema (README §6.4).
@@ -101,20 +118,12 @@ async function start(): Promise<void> {
     if (process.platform !== 'darwin') app.quit();
   });
 
-  // Automatic backup on close (README §8.7.2); a failure never blocks quitting.
-  let closing = false;
   app.on('before-quit', (event) => {
     if (closing) return;
-    closing = true;
     event.preventDefault();
-    void evully.lifecycle
-      .onClose()
-      .then((result) => log.info(`automatic backup: ${result}`))
-      .finally(async () => {
-        await db.destroy();
-        app.quit();
-      });
+    void shutdown().finally(() => app.quit());
   });
+  updater.start();
 }
 
 start().catch((error: unknown) => {

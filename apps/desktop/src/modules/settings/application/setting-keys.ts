@@ -4,10 +4,13 @@ export const SETTING_KEYS = {
   healthNoticeAcceptedAt: 'health_notice_accepted_at',
   inactivityLockMinutes: 'inactivity_lock_minutes',
   theme: 'theme',
+  updateChannel: 'update_channel',
 } as const satisfies Record<keyof AppSettings, string>;
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
   healthNoticeAcceptedAt: null,
   inactivityLockMinutes: 15,
   theme: 'system',
+  // Pre-releases while the app is in active development (README §33).
+  updateChannel: 'prerelease',
 };

@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Atualização automática**: o Evully procura versões novas ao abrir e a
+  cada 4 horas, baixa em segundo plano e mostra **"Nova versão pronta ·
+  Reiniciar e atualizar"**. Só instala quando você clica, depois do backup
+  de fechamento. Em Configurações › Sobre: status, **Verificar
+  atualizações** e o canal (pré-versões ou só estáveis).
+- Cada atualização é conferida com uma assinatura digital própria antes de
+  ser instalada.
+
 ## [0.5.0-alpha.2] - 2026-10-27
 
 ### Added

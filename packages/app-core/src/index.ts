@@ -9,6 +9,7 @@ export * from './features/cardio/use-cardio';
 export * from './features/sleep/use-sleep';
 export * from './features/habits/use-habits';
 export * from './features/settings/use-app-settings';
+export * from './features/settings/use-updates';
 export * from './features/workouts/use-exercises';
 export * from './features/workouts/use-workout-plans';
 export * from './features/workouts/use-workout-preferences';

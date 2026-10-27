@@ -7,6 +7,7 @@ import { migrateToLatest } from '../src/database/migrator';
 import { buildApp } from '../src/main/composition-root';
 import type { BackupDialogs } from '../src/modules/backup/ports/backup-ports';
 import type { ImportFiles } from '../src/modules/imports/ports/import-ports';
+import type { Updater } from '../src/modules/updates/ports/updater';
 import type { Clock, IdGenerator } from '../src/modules/shared/ports';
 
 export const fixedClock = (
@@ -41,6 +42,20 @@ export const noImportFiles: ImportFiles = {
   saveText: async () => false,
 };
 
+/** Updates are disabled in tests. */
+export const noUpdates: Updater = {
+  status: () => ({
+    state: 'disabled',
+    currentVersion: '0.0.0-test',
+    availableVersion: null,
+    progress: null,
+    checkedAt: null,
+    error: null,
+  }),
+  check: async () => noUpdates.status(),
+  install: async () => null,
+};
+
 /** Migrated database in a temp folder plus the app's handlers wired to it. */
 export async function createTestApp(
   clock: Clock = fixedClock(),
@@ -63,6 +78,7 @@ export async function createTestApp(
       dialogs,
     },
     importFiles,
+    updater: noUpdates,
   });
   const dispose = async () => {
     await db.destroy();
