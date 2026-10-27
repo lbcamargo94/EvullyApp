@@ -12,7 +12,6 @@ const { autoUpdater } = updaterPackage;
 /** Public repository with only installers (README §33); matches electron-builder.yml. */
 const RELEASES = 'https://github.com/lbcamargo94/evully-releases/releases/download';
 const FIRST_CHECK_MS = 10_000;
-const CHECK_EVERY_MS = 4 * 60 * 60 * 1000;
 
 interface Options {
   channel: () => Promise<UpdateChannel>;
@@ -22,8 +21,8 @@ interface Options {
 
 /**
  * electron-updater over GitHub Releases. Downloads in the background, then
- * checks our Ed25519 signature; only a verified update can be installed, and
- * only when the user asks (never silently on quit).
+ * checks our Ed25519 signature; only a verified update can be installed: when
+ * the user asks, or when the app closes. Checks only on start and on request.
  */
 export class ElectronUpdater implements Updater {
   private current: UpdateStatus = {
@@ -59,7 +58,6 @@ export class ElectronUpdater implements Updater {
       this.set({ state: 'error', error: network ? 'network' : 'unknown', progress: null });
     });
     setTimeout(() => void this.check(), FIRST_CHECK_MS);
-    setInterval(() => void this.check(), CHECK_EVERY_MS);
   }
 
   status(): UpdateStatus {
@@ -84,6 +82,13 @@ export class ElectronUpdater implements Updater {
     autoUpdater.quitAndInstall(true, true);
     app.quit(); // in case the installer could not start, the app still closes cleanly
     return null;
+  }
+
+  /** Called on quit, after the close backup: installs a verified update without reopening. */
+  installOnQuit(): void {
+    if (this.current.state !== 'ready') return;
+    log.info(`installing update ${this.current.availableVersion ?? ''} on quit`);
+    autoUpdater.quitAndInstall(true, false);
   }
 
   private async verify(event: UpdateDownloadedEvent): Promise<void> {

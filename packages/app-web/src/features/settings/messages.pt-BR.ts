@@ -172,7 +172,7 @@ export const aboutMessages = {
 
 export const updateMessages = {
   disabled: 'Atualizações automáticas só funcionam no app instalado.',
-  idle: 'O Evully procura versões novas ao abrir e a cada 4 horas.',
+  idle: 'O Evully procura versões novas ao abrir o app.',
   checking: 'Procurando atualizações…',
   downloading: (v: string, progress: number) => `Baixando a versão ${v}… ${progress}%`,
   ready: (v: string) => `A versão ${v} está pronta para instalar.`,
@@ -188,10 +188,10 @@ export const updateMessages = {
   channel: 'Receber',
   prerelease: 'Pré-versões e versões estáveis',
   stable: 'Somente versões estáveis',
-  hint: 'Antes de instalar, o Evully faz o backup automático de fechamento. Seus dados ficam em %APPDATA%\\Evully e são mantidos.',
+  hint: 'Uma versão já baixada é instalada ao fechar o Evully, ou agora em “Reiniciar e atualizar”. Antes, o Evully faz o backup de fechamento; seus dados em %APPDATA%\\Evully são mantidos.',
   install: 'Reiniciar e atualizar',
   installing: 'Fechando…',
   bannerTitle: (v: string) => `Nova versão ${v} pronta`,
-  bannerBody: 'O Evully fecha, instala e abre de novo em alguns segundos.',
+  bannerBody: 'Reinicie agora ou ela será instalada quando você fechar o Evully.',
   later: 'Depois',
 } as const;
