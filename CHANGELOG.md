@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.5.0-alpha.6] - 2026-10-27
+
 ### Changed
 - O log técnico registra cada busca de atualização (ao abrir ou pelo botão)
   e o resultado, e guarda só a primeira linha das mensagens de erro.
