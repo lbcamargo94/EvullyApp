@@ -1,8 +1,15 @@
-import { localToday, useCardioOverview, useHabitDay } from '@evully/app-core';
+import {
+  indicatorsOf,
+  localToday,
+  useCardioOverview,
+  useHabitDay,
+  useSleepLogs,
+} from '@evully/app-core';
 import { Card } from '@evully/ui';
 import { Check, Circle } from 'lucide-react';
 import { Link } from 'react-router';
 import { CardioTargetProgress } from '../cardio/cardio-target';
+import { formatDuration, formatWeekday } from '../sleep/messages.pt-BR';
 import { shellMessages as m } from './messages.pt-BR';
 
 function CardHeader({
@@ -82,12 +89,39 @@ function WeekCardioCard({ profileId }: { profileId: string }) {
   );
 }
 
-/** Habits and cardio on the dashboard; each card only for profiles that use the module. */
+/** Last night and the 7-day average (README §12.2); hidden until the profile logs sleep. */
+function SleepCard({ profileId }: { profileId: string }) {
+  const { data: nights } = useSleepLogs(profileId);
+  const last = nights?.[0];
+  if (!nights || !last) return null;
+  const { last7 } = indicatorsOf(nights, localToday());
+
+  return (
+    <Card aria-labelledby="sleep-card-title" className="gap-3">
+      <CardHeader id="sleep-card-title" title={m.sleepTitle} to="/app/sleep" link={m.openSleep} />
+      <dl className="flex flex-col gap-2 text-sm">
+        <div className="flex justify-between gap-3">
+          <dt className="text-text-muted">{m.lastNight(formatWeekday(last.sleepDate))}</dt>
+          <dd className="font-semibold tabular-nums">{formatDuration(last.durationMinutes)}</dd>
+        </div>
+        <div className="flex justify-between gap-3">
+          <dt className="text-text-muted">{m.sleepAverage7}</dt>
+          <dd className="font-semibold tabular-nums">
+            {last7.minutes === null ? '—' : formatDuration(last7.minutes)}
+          </dd>
+        </div>
+      </dl>
+    </Card>
+  );
+}
+
+/** Habits, cardio and sleep on the dashboard; each card only for profiles that use the module. */
 export function TodayActivityCards({ profileId }: { profileId: string }) {
   return (
     <div className="grid gap-5 empty:hidden sm:grid-cols-[repeat(auto-fit,minmax(280px,1fr))]">
       <TodayHabitsCard profileId={profileId} />
       <WeekCardioCard profileId={profileId} />
+      <SleepCard profileId={profileId} />
     </div>
   );
 }

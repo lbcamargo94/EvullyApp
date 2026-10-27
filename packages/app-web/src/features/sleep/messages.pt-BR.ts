@@ -11,6 +11,10 @@ export const formatDayMonth = (date: string) => dayMonth.format(new Date(`${date
 export const formatDuration = (minutes: number) =>
   `${Math.floor(minutes / 60)}h${String(minutes % 60).padStart(2, '0')}`;
 
+/** Minutes after midnight → "23:40". */
+export const formatClock = (minutes: number) =>
+  `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+
 export const qualityLabels: Record<number, string> = {
   1: 'Péssima',
   2: 'Ruim',
@@ -50,6 +54,15 @@ export const sleepMessages = {
   removeTitle: 'Excluir esta noite?',
   removeBody: 'O registro sai do histórico.',
   removeConfirm: 'Excluir',
+  indicators: 'Indicadores',
+  average7: 'Média 7 dias',
+  average30: 'Média 30 dias',
+  meanBedtime: 'Dorme, em média',
+  meanWakeTime: 'Acorda, em média',
+  consistency: 'Consistência',
+  consistencyHint: '30 dias',
+  deviation: (minutes: number) => `±${minutes} min`,
+  nights: (n: number) => (n === 1 ? '1 noite' : `${n} noites`),
 } as const;
 
 export const sleepErrorByCode: Record<string, string> = {

@@ -22,7 +22,7 @@ import { TodayNutritionCard } from './today-nutrition-card';
 
 /**
  * Dashboard (README §8.5): project progress, weight as chosen, up to 3 measurements,
- * and today's nutrition, habits and cardio for the modules in use.
+ * and today's nutrition, habits, cardio and sleep for the modules in use.
  */
 export function HomeScreen() {
   const { profileId } = useCurrentProfile();
