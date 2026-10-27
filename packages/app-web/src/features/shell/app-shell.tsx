@@ -11,6 +11,7 @@ import {
   Dumbbell,
   LayoutDashboard,
   ListChecks,
+  Moon,
   Ruler,
   Scale,
   Settings,
@@ -82,6 +83,10 @@ export function AppShell() {
           <NavLink to="/app/habits" className={navItem}>
             <ListChecks aria-hidden="true" className="size-5" />
             {m.habits}
+          </NavLink>
+          <NavLink to="/app/sleep" className={navItem}>
+            <Moon aria-hidden="true" className="size-5" />
+            {m.sleep}
           </NavLink>
           <NavLink to="/app/settings" className={navItem}>
             <Settings aria-hidden="true" className="size-5" />

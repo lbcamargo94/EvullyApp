@@ -6,6 +6,17 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Sono** no menu (V0.5): registrar a noite com horário de deitar, de
+  dormir (opcional) e de acordar, com o total calculado, qualidade de 1 a 5
+  e notas. A noite pertence ao dia em que você acorda; uma noite por dia,
+  com atalho para editar a que já existe. Histórico com editar e excluir.
+
+### Changed
+- "Adicionar exemplos" dos hábitos não cria mais "Horário de dormir"; o
+  módulo de sono cobre esse dado. Quem já tem o hábito continua com ele.
+- O teste de exclusão definitiva de perfil passa a cobrir o sono.
+
 ## [0.4.0] - 2026-10-27
 
 Versão estável da V0.4 — Cardio e hábitos: registro de cardio com resumo

@@ -1620,8 +1620,8 @@ A água é registrada na nutrição (§9.4.1).
 - **Dia cumprido**: sim/não marcado; quantidade ou duração ≥ meta (ou > 0
   sem meta); horário registrado. A tela mostra os últimos 7 dias.
 - Nome único entre os hábitos ativos do perfil. Desativar mantém os
-  registros. "Adicionar exemplos" cria Creatina, Passos (meta 8.000) e
-  Horário de dormir; caminhada, treino e cardio já têm módulos próprios.
+  registros. "Adicionar exemplos" cria Creatina e Passos (meta 8.000);
+  caminhada, treino, cardio e sono já têm módulos próprios.
 
 ---
 
@@ -1647,6 +1647,18 @@ Dormiu:   23:48
 Acordou:  07:42
 Total:    7h54
 ```
+
+- Horários guardados como instantes UTC; `sleep_time` é opcional. Na tela,
+  "Deitou" ou "Dormiu" no horário de acordar ou depois dele conta como da
+  véspera (ex.: deitou 23:30, acordou 07:00).
+- Ordem deitou ≤ dormiu < acordou; no máximo 20 h entre deitar e acordar;
+  nada no futuro. Qualidade opcional de 1 (péssima) a 5 (ótima). Soft
+  delete.
+- Uma noite por dia (`sleep_date`), garantida por índice único entre os
+  registros ativos; ao repetir o dia, a tela oferece editar a noite
+  existente. Cochilos ficam para depois.
+- O hábito "Horário de dormir" saiu dos exemplos de hábitos (§11.2), pois o
+  módulo de sono cobre o horário.
 
 ### 12.2 Indicadores
 

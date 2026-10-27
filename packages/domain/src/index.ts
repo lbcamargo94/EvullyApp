@@ -27,3 +27,4 @@ export * from './workouts/history';
 export * from './workouts/preferences';
 export * from './cardio/cardio';
 export * from './habits/habit';
+export * from './sleep/sleep';

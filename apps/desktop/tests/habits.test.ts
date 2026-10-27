@@ -26,15 +26,15 @@ describe('habits (README §11.2)', () => {
       targetValue: null,
     });
     const habits = await handlers['habits:add-examples']({ profileId: lucas.id });
-    expect(habits.map((h) => h.name)).toEqual(['passos', 'Creatina', 'Horário de dormir']);
+    expect(habits.map((h) => h.name)).toEqual(['passos', 'Creatina']);
     const again = await handlers['habits:add-examples']({ profileId: lucas.id });
-    expect(again).toHaveLength(3);
+    expect(again).toHaveLength(2);
     const moved = await handlers['habits:move']({
       profileId: lucas.id,
-      id: must(habits[2]).id,
+      id: must(habits[1]).id,
       direction: 'up',
     });
-    expect(moved.map((h) => h.name)).toEqual(['passos', 'Horário de dormir', 'Creatina']);
+    expect(moved.map((h) => h.name)).toEqual(['Creatina', 'passos']);
   });
 
   it('logs one value per habit per day, with done and the last 7 days', async () => {

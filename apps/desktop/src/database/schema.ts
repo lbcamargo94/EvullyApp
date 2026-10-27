@@ -331,6 +331,21 @@ export interface CardioTargetsTable {
   created_at: string;
 }
 
+export interface SleepLogsTable {
+  id: string;
+  profile_id: string;
+  sleep_date: string;
+  bed_time: string;
+  sleep_time: string | null;
+  wake_time: string;
+  duration_minutes: number;
+  quality: number | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
 export interface HabitDefinitionsTable {
   id: string;
   profile_id: string;
@@ -435,4 +450,5 @@ export interface DatabaseSchema {
   cardio_targets: CardioTargetsTable;
   habit_definitions: HabitDefinitionsTable;
   habit_logs: HabitLogsTable;
+  sleep_logs: SleepLogsTable;
 }

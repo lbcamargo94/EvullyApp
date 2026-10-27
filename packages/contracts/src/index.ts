@@ -11,3 +11,4 @@ export * from './nutrition';
 export * from './workouts';
 export * from './cardio';
 export * from './habits';
+export * from './sleep';

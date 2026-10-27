@@ -31,7 +31,7 @@ export const habitMessages = {
   backToToday: 'Voltar para hoje',
   empty: 'Nenhum hábito ainda. Crie em Gerenciar ou adicione os exemplos.',
   addExamples: 'Adicionar exemplos',
-  examplesHint: 'Creatina, Passos (meta 8.000) e Horário de dormir.',
+  examplesHint: 'Creatina e Passos (meta 8.000).',
   done: 'Cumprido',
   done7: (n: number) => `${n} de 7 dias`,
   last7: 'Últimos 7 dias',

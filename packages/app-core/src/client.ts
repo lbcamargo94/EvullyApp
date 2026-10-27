@@ -68,6 +68,9 @@ import type {
   WeightEntry,
   WeightInput,
   WeightSummary,
+  SleepInput,
+  SleepLogDto,
+  UpdateSleepInput,
 } from '@evully/contracts';
 
 /**
@@ -243,6 +246,12 @@ export interface EvullyClient {
     addExamples(profileId: string): Promise<HabitDto[]>;
     day(profileId: string, date: string): Promise<HabitDay>;
     log(profileId: string, habitId: string, date: string, value: number | null): Promise<HabitDay>;
+  };
+  sleep: {
+    list(profileId: string): Promise<SleepLogDto[]>;
+    register(input: SleepInput): Promise<SleepLogDto>;
+    update(input: UpdateSleepInput): Promise<SleepLogDto>;
+    remove(profileId: string, id: string): Promise<null>;
   };
   mealTemplates: {
     list(profileId: string): Promise<MealTemplateDto[]>;
