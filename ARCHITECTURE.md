@@ -251,5 +251,7 @@ licenças e `npm audit`.
 | 07/10/2026 | `better-sqlite3` 13 sem recompilação para o Electron | Usa Node-API; elimina a necessidade de compilador C++ no Windows e no CI. |
 | 06/10/2026 | Padronização do Claude Code: `CLAUDE.md` curto, skills `evully-task` e `evully-docs-sync`, permissões em `.claude/settings.json`, verificação de docs por script | Agente consistente e economia de tokens: regras carregadas sempre são mínimas; o detalhe fica nos docs e nas skills, lidos sob demanda. |
 
+| 27/10/2026 | Atualização automática antecipada: `electron-updater` + repositório público só de releases + assinatura Ed25519 própria verificada antes de instalar | Pedido do usuário para o início do desenvolvimento; o código segue privado sem token no app, e a assinatura cobre a falta de Authenticode ([SECURITY.md](SECURITY.md), §2.8). |
+
 Novas decisões arquiteturais são adicionadas a esta tabela com data e
 motivo.

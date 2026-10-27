@@ -106,8 +106,20 @@ Fora de escopo na Fase 1:
 ### 2.8 Distribuição
 
 - Instalador publicado junto com o hash SHA-256.
-- Sem atualização automática na Fase 1. Se for adicionada, somente via
-  HTTPS e com pacotes assinados.
+- Atualização automática (desde a 0.5.0-alpha.3, README §33):
+  - somente via HTTPS, do repositório público só de releases
+    `lbcamargo94/evully-releases`; nenhum token no app;
+  - o `electron-updater` confere o sha512 do `latest.yml`; além disso, cada
+    instalador tem uma **assinatura Ed25519 própria** (`.sig`) sobre
+    `evully-update:v1:<versão>:<sha512>`, conferida com a chave pública
+    embutida no app. Sem assinatura válida, a atualização não é instalada;
+  - a chave privada fica só no computador de quem publica
+    (`%USERPROFILE%\.evully\update-signing-key.pem`), fora do repositório,
+    com cópia de segurança; perdê-la exige uma instalação manual com chave nova;
+  - nunca instala sozinha ao fechar: só quando a pessoa pede, depois do
+    backup de fechamento; sem downgrade;
+  - o renderer só pode pedir "verificar" e "instalar"; nenhuma URL ou
+    caminho vem dele; os logs registram só versão e a primeira linha do erro.
 - Assinatura de código (Authenticode) avaliada na V1.0. Sem ela, o
   Windows SmartScreen exibe aviso na instalação.
 

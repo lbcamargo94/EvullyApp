@@ -3,6 +3,7 @@ import { Card } from '@evully/ui';
 import { useState, type ReactNode } from 'react';
 import { shellMessages } from '../shell/messages.pt-BR';
 import { aboutMessages as m } from './messages.pt-BR';
+import { UpdateSection } from './update-section';
 
 const textBox =
   'max-h-72 overflow-auto rounded-md border border-border bg-surface-muted p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap';
@@ -24,6 +25,7 @@ export function AboutSection() {
             )}
           </p>
         )}
+        <UpdateSection />
       </Section>
 
       <Section id="about-health" title={m.healthTitle}>

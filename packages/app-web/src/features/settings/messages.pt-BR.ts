@@ -169,3 +169,29 @@ export const aboutMessages = {
   showNotices: 'Mostrar avisos de terceiros',
   unavailable: 'Não foi possível carregar este texto.',
 } as const;
+
+export const updateMessages = {
+  disabled: 'Atualizações automáticas só funcionam no app instalado.',
+  idle: 'O Evully procura versões novas ao abrir e a cada 4 horas.',
+  checking: 'Procurando atualizações…',
+  downloading: (v: string, progress: number) => `Baixando a versão ${v}… ${progress}%`,
+  ready: (v: string) => `A versão ${v} está pronta para instalar.`,
+  upToDate: 'Você está na versão mais recente.',
+  checkedAt: (iso: string) => `verificado em ${dateTime.format(new Date(iso))}`,
+  errors: {
+    network: 'Não foi possível procurar atualizações. Confira a internet e tente de novo.',
+    signature: 'A atualização baixada não passou na verificação de segurança e não será instalada.',
+    unknown: 'Não foi possível atualizar agora. Tente de novo mais tarde.',
+  },
+  progressLabel: 'Download da atualização',
+  check: 'Verificar atualizações',
+  channel: 'Receber',
+  prerelease: 'Pré-versões e versões estáveis',
+  stable: 'Somente versões estáveis',
+  hint: 'Antes de instalar, o Evully faz o backup automático de fechamento. Seus dados ficam em %APPDATA%\\Evully e são mantidos.',
+  install: 'Reiniciar e atualizar',
+  installing: 'Fechando…',
+  bannerTitle: (v: string) => `Nova versão ${v} pronta`,
+  bannerBody: 'O Evully fecha, instala e abre de novo em alguns segundos.',
+  later: 'Depois',
+} as const;

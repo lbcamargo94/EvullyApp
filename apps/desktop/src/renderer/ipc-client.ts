@@ -40,6 +40,11 @@ export const ipcEvullyClient: EvullyClient = {
     restore: (id) => call('profiles:restore', { id }),
     deletePermanently: (input) => call('profiles:delete-permanently', input),
   },
+  updates: {
+    status: () => call('updates:status', undefined),
+    check: () => call('updates:check', undefined),
+    install: () => call('updates:install', undefined),
+  },
   settings: {
     get: () => call('settings:get', undefined),
     update: (input) => call('settings:update', input),

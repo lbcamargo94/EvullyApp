@@ -223,7 +223,7 @@ Este é o **único** roadmap do projeto.
 | V0.6 | Estatísticas e dashboard completo |
 | V0.7 | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
 | V0.8 | UX/polimento |
-| V1.0 | Desktop estável + instalador Windows + atualização automática |
+| V1.0 | Desktop estável + instalador Windows (a atualização automática foi antecipada; §33) |
 | V1.1 | Analytics Engine determinístico |
 | V1.2 | Recommendation Engine determinístico |
 | V1.3 | Notificações locais / Evully Reminders |
@@ -1786,7 +1786,7 @@ Para quem usa computadores diferentes (§2.5):
 Objetivo: `Evully-Setup.exe`.
 
 - instalador e atalhos;
-- atualização manual inicialmente;
+- atualização automática pelo próprio app, com assinatura própria (§33);
 - diretório de dados separado do executável (§5.4);
 - desinstalação não apaga dados pessoais sem confirmação explícita;
 - logs locais de erro;
@@ -2398,6 +2398,12 @@ Decisões que serão tomadas quando a versão correspondente começar.
 |---|---|
 | Passos vêm de hábitos, de cardio ou de ambos? | Os dois, sem somar: o total do dia é um hábito de quantidade (com meta); uma sessão de cardio pode guardar os passos dela, só como dado da sessão (§11.1, §11.2). |
 
+**Decididas em 27/10/2026 (V0.5):**
+
+| Questão | Decisão |
+|---|---|
+| Atualização automática: quando e onde publicar? | Antecipada da V1.0 (0.5.0-alpha.3). `electron-updater` busca as versões no repositório **público só de releases** `lbcamargo94/evully-releases`; o código continua privado. O app procura ao abrir e a cada 4 h, baixa em segundo plano e só instala quando a pessoa clica em "Reiniciar e atualizar", depois do backup de fechamento. Canal em Configurações › Sobre: pré-versões (padrão durante o desenvolvimento) ou só estáveis. Segurança em [SECURITY.md](SECURITY.md), §2.8. |
+
 **Decididas em 21/10/2026 (início da V0.2):**
 
 | Questão | Decisão |
@@ -2417,7 +2423,6 @@ recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
 | Fotos de progresso são criptografadas em disco? | futuro |
 | Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.4 |
 | Assinatura de código (Authenticode) do instalador. | V1.0 |
-| Atualização automática (`electron-updater` com GitHub Releases): onde publicar os instaladores, já que o repositório é privado (repositório público só de releases ou token). Até lá, atualiza-se instalando a versão nova por cima; os dados em `%APPDATA%\Evully` são mantidos e há backup antes de migrations. | V1.0 (antecipável) |
 | Confirmar Better Auth como solução de autenticação. | Início da Fase 2 |
 | Provedor de hospedagem e de pagamentos. | Início da Fase 2 / Fase 3 |
 | Tipos de medida personalizados por perfil. | futuro |

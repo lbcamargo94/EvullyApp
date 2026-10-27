@@ -18,6 +18,7 @@ describe('settings', () => {
       healthNoticeAcceptedAt: null,
       inactivityLockMinutes: 15,
       theme: 'system',
+      updateChannel: 'prerelease',
     });
   });
 
@@ -28,6 +29,7 @@ describe('settings', () => {
       healthNoticeAcceptedAt: '2026-10-07T10:00:00.000Z',
       inactivityLockMinutes: 5,
       theme: 'system',
+      updateChannel: 'prerelease',
     });
     await handlers['settings:update']({ inactivityLockMinutes: 0 });
     expect((await handlers['settings:get'](undefined)).inactivityLockMinutes).toBe(0);

@@ -19,6 +19,7 @@ import {
 import { useCallback } from 'react';
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router';
 import { BackupErrorBanner } from '../settings/backup-error-banner';
+import { UpdateBanner } from '../settings/update-banner';
 import { Logo } from './logo';
 import { shellMessages as m } from './messages.pt-BR';
 import { ProfileSwitcher } from './profile-switcher';
@@ -99,6 +100,7 @@ export function AppShell() {
         <header className="flex flex-wrap items-center justify-between gap-4">
           {profile && <ProfileSwitcher currentName={profile.name} />}
         </header>
+        <UpdateBanner />
         <BackupErrorBanner />
         <main className="flex flex-col gap-6">
           <Outlet />

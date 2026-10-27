@@ -34,3 +34,11 @@ electronFuses:
   enableNodeCliInspectArguments: false
   enableEmbeddedAsarIntegrityValidation: true
   onlyLoadAppFromAsar: true
+# Automatic updates (README §33, SECURITY.md §2.8): installers are published to a
+# public releases-only repository; the source stays private. Every release gets
+# latest.yml (pre-releases too), which electron-updater reads.
+detectUpdateChannel: false
+publish:
+  provider: github
+  owner: lbcamargo94
+  repo: evully-releases
