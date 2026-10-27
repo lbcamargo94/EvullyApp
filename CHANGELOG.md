@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.4.0-alpha.4] - 2026-10-26
+
 ### Security
 - Electron atualizado de 44.6.0 para 44.9.3, que corrige a confiança em
   certificados intermediários comprometidos da eMudhra
