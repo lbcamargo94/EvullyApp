@@ -36,5 +36,6 @@ export {
   profileInitial,
   projectTimeline,
   type ChangeTone,
+  type SleepIndicators,
   type TrackingProposal,
 } from '@evully/domain';

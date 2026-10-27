@@ -1665,6 +1665,17 @@ Total:    7h54
 Média de 7 dias, média de 30 dias, consistência, horário médio de dormir
 e horário médio de acordar.
 
+- Janelas contadas pela `sleep_date`, terminando hoje; cada média mostra
+  em quantas noites se baseia e fica vazia sem noites.
+- Horário médio de dormir usa `sleep_time` (ou `bed_time`); horários
+  médios são médias circulares (23:30 e 00:30 → 00:00), na hora local do
+  dispositivo.
+- **Consistência:** variação média, em minutos, dos horários de dormir e
+  de acordar nos últimos 30 dias ("±25 min"); exige 2 noites. É um número
+  exato, sem interpretação médica.
+- O painel inicial mostra um card **Sono** (última noite e média de 7
+  dias) só para quem registra sono.
+
 Futuramente pode correlacionar sono e performance, sem atribuir
 causalidade médica.
 

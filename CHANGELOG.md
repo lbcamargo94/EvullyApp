@@ -6,6 +6,13 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Indicadores de sono** na tela Sono: médias de 7 e 30 dias (com o
+  número de noites), horário médio de dormir e de acordar, e consistência
+  (variação média dos horários em 30 dias).
+- **Painel inicial**: card **Sono** com a última noite e a média de 7 dias,
+  só para quem registra sono.
+
 ## [0.5.0-alpha.1] - 2026-10-27
 
 ### Added

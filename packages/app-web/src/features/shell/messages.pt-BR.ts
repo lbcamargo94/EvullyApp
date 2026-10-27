@@ -54,6 +54,10 @@ export const shellMessages = {
   habitsDone: (done: number, total: number) => `${done} de ${total} cumpridos`,
   habitDone: 'cumprido',
   habitPending: 'pendente',
+  sleepTitle: 'Sono',
+  openSleep: 'Abrir Sono',
+  lastNight: (day: string) => `Última noite (${day})`,
+  sleepAverage7: 'Média 7 dias',
   cardioTitle: 'Cardio da semana',
   openCardio: 'Abrir Cardio',
   cardioWeek: (sessions: number, minutes: number) =>

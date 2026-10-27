@@ -1,5 +1,7 @@
 import {
   errorCode,
+  indicatorsOf,
+  localToday,
   isoToLocalTime,
   useCurrentProfile,
   useDeleteSleep,
@@ -18,6 +20,7 @@ import {
   sleepMessages as m,
 } from './messages.pt-BR';
 import { SleepForm } from './sleep-form';
+import { SleepIndicatorsCard } from './sleep-indicators';
 
 /** Sleep (README §12): quick entry of a night and the history. */
 export function SleepScreen() {
@@ -37,8 +40,9 @@ export function SleepScreen() {
           onDone={() => setEditing(null)}
           onEditDate={(date) => setEditing(nights.find((n) => n.sleepDate === date) ?? null)}
         />
-        <History profileId={profileId} nights={nights} onEdit={setEditing} />
+        <SleepIndicatorsCard indicators={indicatorsOf(nights, localToday())} />
       </div>
+      <History profileId={profileId} nights={nights} onEdit={setEditing} />
     </>
   );
 }
@@ -68,7 +72,7 @@ function History({
   };
 
   return (
-    <Card aria-labelledby="sleep-history-title" className="flex-[1_1_340px] gap-2">
+    <Card aria-labelledby="sleep-history-title" className="gap-2">
       <h2 id="sleep-history-title" className="text-lg font-semibold">
         {m.history}
       </h2>

@@ -1,4 +1,5 @@
-import type { SleepInput, UpdateSleepInput } from '@evully/contracts';
+import type { SleepInput, SleepLogDto, UpdateSleepInput } from '@evully/contracts';
+import { parseLocalDate, sleepIndicators, type SleepIndicators } from '@evully/domain';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEvullyClient } from '../../client-context';
 
@@ -41,4 +42,22 @@ export function useUpdateSleep(profileId: string) {
 export function useDeleteSleep(profileId: string) {
   const client = useEvullyClient();
   return useSleepMutation(profileId, (id: string) => client.sleep.remove(profileId, id));
+}
+
+const clockOf = (iso: string) => {
+  const d = new Date(iso);
+  return d.getHours() * 60 + d.getMinutes();
+};
+
+/** Indicators from the nights, with clock times in this device's time zone (README §12.2). */
+export function indicatorsOf(nights: readonly SleepLogDto[], today: string): SleepIndicators {
+  return sleepIndicators(
+    nights.map((n) => ({
+      sleepDate: n.sleepDate,
+      durationMinutes: n.durationMinutes,
+      startClock: clockOf(n.sleepTime ?? n.bedTime),
+      wakeClock: clockOf(n.wakeTime),
+    })),
+    parseLocalDate(today),
+  );
 }

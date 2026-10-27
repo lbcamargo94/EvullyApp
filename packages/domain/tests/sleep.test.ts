@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   nightClockDate,
   normalizeSleepDraft,
+  sleepIndicators,
   parseLocalDate,
   ValidationError,
   type SleepDraft,
@@ -63,5 +64,56 @@ describe('nightClockDate', () => {
     expect(nightClockDate(wakeDate, 23 * 60 + 48, 7 * 60 + 42)).toBe('2026-10-26');
     expect(nightClockDate(wakeDate, 7 * 60 + 42, 7 * 60 + 42)).toBe('2026-10-26');
     expect(nightClockDate(wakeDate, 30, 7 * 60)).toBe('2026-10-27');
+  });
+});
+
+describe('sleepIndicators (README §12.2)', () => {
+  const at = (h: number, min = 0) => h * 60 + min;
+  const n = (
+    sleepDate: string,
+    durationMinutes: number,
+    startClock: number,
+    wakeClock: number,
+  ) => ({
+    sleepDate,
+    durationMinutes,
+    startClock,
+    wakeClock,
+  });
+
+  it('averages the last 7 and 30 days', () => {
+    const result = sleepIndicators(
+      [
+        n('2026-10-27', 480, at(23), at(7)),
+        n('2026-10-21', 420, at(23), at(6)),
+        n('2026-10-20', 300, at(23), at(4)), // outside 7 days, inside 30
+        n('2026-09-27', 600, at(21), at(7)), // outside 30 days
+        n('2026-10-28', 999, at(23), at(7)), // future, ignored
+      ],
+      today,
+    );
+    expect(result.last7).toEqual({ minutes: 450, nights: 2 });
+    expect(result.last30).toEqual({ minutes: 400, nights: 3 });
+  });
+
+  it('averages clock times across midnight and measures consistency', () => {
+    const result = sleepIndicators(
+      [n('2026-10-27', 450, at(23, 30), at(7)), n('2026-10-26', 450, at(0, 30), at(7, 40))],
+      today,
+    );
+    expect(result.bedtime).toBe(0);
+    expect(result.wakeTime).toBe(at(7, 20));
+    expect(result.consistency).toBe(25); // ±30 for bedtime, ±20 for waking
+  });
+
+  it('is empty without nights and has no consistency for one night', () => {
+    expect(sleepIndicators([], today)).toEqual({
+      last7: { minutes: null, nights: 0 },
+      last30: { minutes: null, nights: 0 },
+      bedtime: null,
+      wakeTime: null,
+      consistency: null,
+    });
+    expect(sleepIndicators([n('2026-10-27', 480, at(23), at(7))], today).consistency).toBeNull();
   });
 });

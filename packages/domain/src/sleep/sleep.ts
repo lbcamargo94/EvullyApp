@@ -79,3 +79,79 @@ export function normalizeSleepDraft(
 export function nightClockDate(wakeDate: LocalDate, clock: number, wakeClock: number): LocalDate {
   return clock >= wakeClock ? addDaysToLocalDate(wakeDate, -1) : wakeDate;
 }
+
+const DAY_MINUTES = 24 * 60;
+
+/** A night with local clock times in minutes after midnight (the caller knows the time zone). */
+export interface SleepNightClock {
+  sleepDate: string;
+  durationMinutes: number;
+  /** Fell asleep, or went to bed when that is unknown. */
+  startClock: number;
+  wakeClock: number;
+}
+
+export interface SleepAverage {
+  /** Whole minutes; null without nights in the window. */
+  minutes: number | null;
+  nights: number;
+}
+
+export interface SleepIndicators {
+  last7: SleepAverage;
+  last30: SleepAverage;
+  /** Mean clock times over 30 days, minutes after midnight; null without nights. */
+  bedtime: number | null;
+  wakeTime: number | null;
+  /** Mean deviation in minutes of both clock times over 30 days; null below 2 nights. */
+  consistency: number | null;
+}
+
+const toAngle = (clock: number) => (clock / DAY_MINUTES) * 2 * Math.PI;
+
+/** Circular mean, so 23:30 and 00:30 average to 00:00 instead of 12:00. */
+function meanClock(clocks: readonly number[]): number {
+  const sin = clocks.reduce((t, c) => t + Math.sin(toAngle(c)), 0);
+  const cos = clocks.reduce((t, c) => t + Math.cos(toAngle(c)), 0);
+  const minutes = Math.round((Math.atan2(sin, cos) / (2 * Math.PI)) * DAY_MINUTES);
+  return (minutes + DAY_MINUTES) % DAY_MINUTES;
+}
+
+/** Shortest distance between two clock times, across midnight. */
+function clockDistance(a: number, b: number): number {
+  const d = Math.abs(a - b) % DAY_MINUTES;
+  return Math.min(d, DAY_MINUTES - d);
+}
+
+const meanDeviation = (clocks: readonly number[], mean: number) =>
+  clocks.reduce((t, c) => t + clockDistance(c, mean), 0) / clocks.length;
+
+function average(nights: readonly SleepNightClock[]): SleepAverage {
+  if (nights.length === 0) return { minutes: null, nights: 0 };
+  const total = nights.reduce((t, n) => t + n.durationMinutes, 0);
+  return { minutes: Math.round(total / nights.length), nights: nights.length };
+}
+
+/**
+ * Indicators of README §12.2 over the nights ending on `today`: 7- and 30-day
+ * averages, mean bedtime and wake time, and consistency. Exact figures, no advice.
+ */
+export function sleepIndicators(
+  nights: readonly SleepNightClock[],
+  today: LocalDate,
+): SleepIndicators {
+  const within = (days: number) => {
+    const from = addDaysToLocalDate(today, 1 - days);
+    return nights.filter((n) => n.sleepDate >= from && n.sleepDate <= today);
+  };
+  const month = within(30);
+  const starts = month.map((n) => n.startClock);
+  const wakes = month.map((n) => n.wakeClock);
+  const bedtime = month.length ? meanClock(starts) : null;
+  const wakeTime = month.length ? meanClock(wakes) : null;
+  const consistency =
+    month.length >= 2 && bedtime !== null && wakeTime !== null
+      ? Math.round((meanDeviation(starts, bedtime) + meanDeviation(wakes, wakeTime)) / 2)
+      : null;
+  return { last7: average(within(7)), last30: average(month), bedtime, wakeTime, consistency };
+}
