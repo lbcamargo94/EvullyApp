@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.5.0-alpha.5] - 2026-10-27
+
 ### Changed
 - Atualização automática: o Evully procura versões novas só ao abrir e no
   botão "Verificar atualizações" (sem verificação a cada 4 horas). Uma
