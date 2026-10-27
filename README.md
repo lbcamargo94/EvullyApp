@@ -218,7 +218,7 @@ Este é o **único** roadmap do projeto.
 | **V0.1** ✓ 0.1.0 (21/10/2026) | Fundação + perfis + questionário de acompanhamento + projetos + peso + medidas + dashboard adaptável + backup manual e automático + importação CSV |
 | **V0.2** ✓ 0.2.0 (25/10/2026) | Nutrição: alimentos, refeições, metas nutricionais |
 | **V0.3** ✓ 0.3.0 (26/10/2026) | Treino: exercícios, planos, execução, séries, progressão |
-| V0.4 | Cardio + hábitos |
+| **V0.4** ✓ 0.4.0 (27/10/2026) | Cardio + hábitos |
 | V0.5 | Sono |
 | V0.6 | Estatísticas e dashboard completo |
 | V0.7 | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |

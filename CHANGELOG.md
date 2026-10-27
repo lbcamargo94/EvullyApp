@@ -6,6 +6,17 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-27
+
+Versão estável da V0.4 — Cardio e hábitos: registro de cardio com resumo
+semanal e meta semanal, hábitos genéricos com registro diário e últimos
+7 dias, e cards de hábitos e cardio no painel inicial. Detalhes de cada
+etapa nas pré-versões abaixo.
+
+### Changed
+- O teste de exclusão definitiva de perfil passa a cobrir cardio, metas de
+  cardio e hábitos.
+
 ## [0.4.0-alpha.4] - 2026-10-26
 
 ### Security
