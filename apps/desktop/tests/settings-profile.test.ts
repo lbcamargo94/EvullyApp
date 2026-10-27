@@ -30,6 +30,7 @@ const PROFILE_TABLES = [
   'cardio_targets',
   'habit_definitions',
   'habit_logs',
+  'sleep_logs',
 ] as const;
 
 describe('settings: profiles, theme and legal documents', () => {
@@ -160,6 +161,15 @@ describe('settings: profiles, theme and legal documents', () => {
         notes: null,
       });
       await handlers['cardio-target:set']({ profileId, sessionsPerWeek: 5, minutesPerWeek: 200 });
+      await handlers['sleep:register']({
+        profileId,
+        sleepDate: '2026-10-20',
+        bedTime: '2026-10-19T23:00:00.000Z',
+        sleepTime: null,
+        wakeTime: '2026-10-20T07:00:00.000Z',
+        quality: null,
+        notes: null,
+      });
       const [habit] = await handlers['habits:add-examples']({ profileId });
       await handlers['habits:log']({
         profileId,

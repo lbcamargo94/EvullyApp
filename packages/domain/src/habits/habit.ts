@@ -99,5 +99,4 @@ export function daysEndingOn(date: LocalDate | string, count: number): LocalDate
 export const HABIT_EXAMPLES: readonly HabitDraft[] = [
   { name: 'Creatina', type: 'boolean', unit: null, targetValue: null },
   { name: 'Passos', type: 'quantity', unit: 'passos', targetValue: 8000 },
-  { name: 'Horário de dormir', type: 'time', unit: null, targetValue: null },
 ];
