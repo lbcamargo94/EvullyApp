@@ -12,6 +12,8 @@ const { autoUpdater } = updaterPackage;
 /** Public repository with only installers (README §33); matches electron-builder.yml. */
 const RELEASES = 'https://github.com/lbcamargo94/evully-releases/releases/download';
 const FIRST_CHECK_MS = 10_000;
+/** Any line break, including the Unicode separators some error dumps use. */
+const LINE_BREAK = /[\r\n\u0085\u2028\u2029]/;
 
 interface Options {
   channel: () => Promise<UpdateChannel>;
@@ -43,32 +45,41 @@ export class ElectronUpdater implements Updater {
     autoUpdater.autoInstallOnAppQuit = false;
     autoUpdater.allowDowngrade = false;
     autoUpdater.on('checking-for-update', () => this.set({ state: 'checking', error: null }));
-    autoUpdater.on('update-not-available', () =>
-      this.set({ state: 'up_to_date', checkedAt: new Date().toISOString() }),
-    );
-    autoUpdater.on('update-available', (info) =>
-      this.set({ state: 'downloading', availableVersion: info.version, progress: 0 }),
-    );
+    autoUpdater.on('update-not-available', () => {
+      log.info('no update available');
+      this.set({ state: 'up_to_date', checkedAt: new Date().toISOString() });
+    });
+    autoUpdater.on('update-available', (info) => {
+      log.info(`update ${info.version} available, downloading`);
+      this.set({ state: 'downloading', availableVersion: info.version, progress: 0 });
+    });
     autoUpdater.on('download-progress', (p) => this.set({ progress: Math.round(p.percent) }));
     autoUpdater.on('update-downloaded', (event) => void this.verify(event));
     autoUpdater.on('error', (error) => {
       // First line only: no headers or tokens from the request dump.
-      log.warn(`update failed: ${error.message.split('\n')[0]?.slice(0, 200) ?? ''}`);
+      log.warn(`update failed: ${error.message.split(LINE_BREAK)[0]?.slice(0, 200) ?? ''}`);
       const network = /net::|ENOTFOUND|ECONN|ETIMEDOUT|404|status code/i.test(error.message);
       this.set({ state: 'error', error: network ? 'network' : 'unknown', progress: null });
     });
-    setTimeout(() => void this.check(), FIRST_CHECK_MS);
+    setTimeout(() => void this.run('start'), FIRST_CHECK_MS);
   }
 
   status(): UpdateStatus {
     return this.current;
   }
 
-  async check(): Promise<UpdateStatus> {
+  check(): Promise<UpdateStatus> {
+    return this.run('manual');
+  }
+
+  private async run(source: 'start' | 'manual'): Promise<UpdateStatus> {
     if (['disabled', 'checking', 'downloading', 'ready'].includes(this.current.state)) {
+      log.info(`update check (${source}) skipped: ${this.current.state}`);
       return this.current;
     }
-    autoUpdater.allowPrerelease = (await this.options.channel()) === 'prerelease';
+    const channel = await this.options.channel();
+    log.info(`checking for updates (${source}, ${channel})`);
+    autoUpdater.allowPrerelease = channel === 'prerelease';
     await autoUpdater.checkForUpdates().catch(() => null); // reported by the 'error' event
     return this.current;
   }
