@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.5.0-alpha.1] - 2026-10-27
+
 ### Added
 - **Sono** no menu (V0.5): registrar a noite com horário de deitar, de
   dormir (opcional) e de acordar, com o total calculado, qualidade de 1 a 5
