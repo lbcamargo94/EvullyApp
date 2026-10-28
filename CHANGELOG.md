@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-28
+
+Versão estável da V0.5 — Sono: registro de noites (deitou, dormiu, acordou,
+qualidade e notas), indicadores de 7 e 30 dias, horários médios e
+consistência, e card de sono no painel inicial. Também traz a atualização
+automática: o Evully procura versões novas ao abrir e pelo botão, e instala
+ao fechar ou em "Reiniciar e atualizar". Detalhes de cada etapa nas
+pré-versões abaixo.
+
 ## [0.5.0-alpha.6] - 2026-10-27
 
 ### Changed
