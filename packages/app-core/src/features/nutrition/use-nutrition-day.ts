@@ -23,6 +23,16 @@ export function useNutritionDay(profileId: string | null, date: string) {
   });
 }
 
+/** Consumed calories and protein per day, for the statistics (README §13.2). */
+export function useNutritionHistory(profileId: string | null) {
+  const client = useEvullyClient();
+  return useQuery({
+    queryKey: ['nutrition-history', profileId ?? ''],
+    queryFn: () => client.nutrition.history(profileId ?? ''),
+    enabled: profileId !== null,
+  });
+}
+
 /** Every food log change returns the whole day, which replaces the cached one. */
 function useDayMutation<TInput>(profileId: string, run: (input: TInput) => Promise<NutritionDay>) {
   const queryClient = useQueryClient();

@@ -7,6 +7,7 @@ export const shellMessages = {
   cardio: 'Cardio',
   habits: 'Hábitos',
   sleep: 'Sono',
+  stats: 'Estatísticas',
   measurements: 'Medidas',
   settings: 'Configurações',
   registerMeasurements: 'Registrar medidas',

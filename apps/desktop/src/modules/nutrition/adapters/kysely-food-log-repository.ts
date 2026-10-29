@@ -1,7 +1,12 @@
 import type { FoodSnapshot, LocalDate } from '@evully/domain';
 import type { Kysely, Selectable } from 'kysely';
 import type { DatabaseSchema, FoodLogsTable } from '../../../database/schema';
-import type { FoodLogRecord, FoodLogRepository, MealRef } from '../ports/food-log-repository';
+import type {
+  DailyConsumed,
+  FoodLogRecord,
+  FoodLogRepository,
+  MealRef,
+} from '../ports/food-log-repository';
 
 const toRecord = (r: Selectable<FoodLogsTable>): FoodLogRecord => ({
   id: r.id,
@@ -125,6 +130,27 @@ export class KyselyFoodLogRepository implements FoodLogRepository {
       .where('deleted_at', 'is', null)
       .executeTakeFirst();
     return result.numUpdatedRows > 0n;
+  }
+
+  async dailyConsumed(profileId: string): Promise<DailyConsumed[]> {
+    const rows = await this.db
+      .selectFrom('food_logs')
+      .select((eb) => [
+        'log_date',
+        eb.fn.sum<number>('calories_kcal').as('calories'),
+        eb.fn.sum<number>('protein_g').as('protein'),
+      ])
+      .where('profile_id', '=', profileId)
+      .where('deleted_at', 'is', null)
+      .where('consumed_at', 'is not', null)
+      .groupBy('log_date')
+      .orderBy('log_date')
+      .execute();
+    return rows.map((r) => ({
+      date: r.log_date as LocalDate,
+      caloriesKcal: Number(r.calories),
+      proteinG: Number(r.protein),
+    }));
   }
 
   async isFoodUsed(foodId: string): Promise<boolean> {

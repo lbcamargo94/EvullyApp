@@ -95,6 +95,7 @@ export const ipcEvullyClient: EvullyClient = {
   },
   nutrition: {
     day: (profileId, date) => call('nutrition:day', { profileId, date }),
+    history: (profileId) => call('nutrition:history', { profileId }),
     add: (input) => call('nutrition:add', input),
     updateQuantity: (profileId, id, quantity) =>
       call('nutrition:update-quantity', { profileId, id, quantity }),

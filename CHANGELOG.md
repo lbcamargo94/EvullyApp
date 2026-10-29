@@ -6,6 +6,13 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Tela Estatísticas** (menu › Estatísticas), com período de 30 dias,
+  90 dias, projeto ou tudo: peso do dia e média móvel, média semanal do
+  peso, velocidade de mudança (kg/semana), medidas (uma por vez), calorias
+  e proteína consumidas contra a meta de cada dia e duração do sono contra
+  a meta.
+
 ## [0.6.0-alpha.1] - 2026-10-28
 
 ### Added

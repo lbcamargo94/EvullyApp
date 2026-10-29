@@ -29,6 +29,9 @@ const SettingsScreen = lazy(() =>
 const HabitsScreen = lazy(() =>
   import('./features/habits/habits-screen').then((m) => ({ default: m.HabitsScreen })),
 );
+const StatsScreen = lazy(() =>
+  import('./features/stats/stats-screen').then((m) => ({ default: m.StatsScreen })),
+);
 const SleepScreen = lazy(() =>
   import('./features/sleep/sleep-screen').then((m) => ({ default: m.SleepScreen })),
 );
@@ -131,6 +134,14 @@ function AppRoutes() {
           element={
             <Suspense fallback={null}>
               <CardioScreen />
+            </Suspense>
+          }
+        />
+        <Route
+          path="stats"
+          element={
+            <Suspense fallback={null}>
+              <StatsScreen />
             </Suspense>
           }
         />
