@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.6.0-alpha.2] - 2026-10-29
+
 ### Added
 - **Tela Estatísticas** (menu › Estatísticas), com período de 30 dias,
   90 dias, projeto ou tudo: peso do dia e média móvel, média semanal do
