@@ -1,7 +1,7 @@
 {
   "name": "@evully/desktop",
   "productName": "Evully",
-  "version": "0.5.0",
+  "version": "0.6.0-alpha.1",
   "private": true,
   "license": "UNLICENSED",
   "description": "Evully — acompanhamento de corpo, treino e hábitos",

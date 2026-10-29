@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.6.0-alpha.1] - 2026-10-28
+
 ### Added
 - **Card "Hoje" no painel**: calorias, proteína e água, hábitos de
   quantidade com meta (como passos), o sono da última noite contra a meta e
