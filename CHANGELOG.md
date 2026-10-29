@@ -6,6 +6,14 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Card "Hoje" no painel**: calorias, proteína e água, hábitos de
+  quantidade com meta (como passos), o sono da última noite contra a meta e
+  o treino do dia pelos planos ativos, com **Começar treino** (ou
+  **Continuar treino** com um treino aberto). Substitui o card de nutrição.
+- **Meta de sono por noite** na tela de Sono (Indicadores › Definir meta),
+  guardada como histórico a partir de hoje.
+
 ## [0.5.0] - 2026-10-28
 
 Versão estável da V0.5 — Sono: registro de noites (deitou, dormiu, acordou,

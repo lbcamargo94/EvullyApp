@@ -1710,6 +1710,18 @@ Treino     18:00 — PULL
 [ COMEÇAR TREINO ]
 ```
 
+- O card **Hoje** (0.6.0-alpha.1) reúne calorias, proteína e água; hábitos
+  de quantidade com meta (ex.: passos); o sono da noite que terminou hoje
+  contra a meta; e o treino do dia. Cada linha só aparece para quem usa o
+  módulo.
+- **Meta de sono** (`sleep_targets`): minutos por noite, de 1 h a 16 h,
+  digitada pela pessoa na tela de Sono; histórico com vigência a partir de
+  hoje, como as metas nutricionais (§9.6); em branco remove. O app nunca sugere
+  o valor.
+- **Treino do dia:** os dias dos planos ativos marcados com o dia da semana
+  de hoje, com **Começar treino**; com um treino aberto, **Continuar
+  treino**. Sem horário: os planos não guardam hora.
+
 ### 13.2 Estatísticas
 
 Gráficos separados para peso do dia, média móvel, média semanal,

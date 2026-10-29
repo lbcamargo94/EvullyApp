@@ -82,4 +82,40 @@ describe('sleep (README §7.7, §12.1)', () => {
       NotFoundError,
     );
   });
+
+  it('keeps nightly targets as history, per profile, and allows clearing', async () => {
+    const { db, handlers, lucas, ana } = await setup();
+    expect(await handlers['sleep-target:get']({ profileId: lucas.id })).toBeNull();
+
+    await handlers['sleep-target:set']({ profileId: lucas.id, minutesPerNight: 480 });
+    const latest = await handlers['sleep-target:set']({
+      profileId: lucas.id,
+      minutesPerNight: 450,
+    });
+    expect(latest).toMatchObject({ effectiveFrom: '2026-10-27', minutesPerNight: 450 });
+    // A row starting in the future is not in force yet.
+    await db
+      .insertInto('sleep_targets')
+      .values({
+        id: '01930000-0000-7000-8000-ffffffffffff',
+        profile_id: lucas.id,
+        effective_from: '2026-11-02',
+        minutes_per_night: 540,
+        created_at: '2026-10-27T12:00:01.000Z',
+      })
+      .execute();
+    expect(await handlers['sleep-target:get']({ profileId: lucas.id })).toMatchObject({
+      minutesPerNight: 450,
+    });
+    expect(await handlers['sleep-target:get']({ profileId: ana.id })).toBeNull();
+
+    expect(
+      await handlers['sleep-target:set']({ profileId: lucas.id, minutesPerNight: null }),
+    ).toBeNull();
+    expect(await handlers['sleep-target:get']({ profileId: lucas.id })).toBeNull();
+    expect(await db.selectFrom('sleep_targets').select('id').execute()).toHaveLength(4);
+    await expect(
+      handlers['sleep-target:set']({ profileId: lucas.id, minutesPerNight: 30 }),
+    ).rejects.toThrow(ValidationError);
+  });
 });

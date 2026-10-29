@@ -175,6 +175,8 @@ export const ipcEvullyClient: EvullyClient = {
     register: (input) => call('sleep:register', input),
     update: (input) => call('sleep:update', input),
     remove: (profileId, id) => call('sleep:delete', { profileId, id }),
+    target: (profileId) => call('sleep-target:get', { profileId }),
+    setTarget: (input) => call('sleep-target:set', input),
   },
   habits: {
     list: (profileId) => call('habits:list', { profileId }),

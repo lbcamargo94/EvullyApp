@@ -70,6 +70,8 @@ import type {
   WeightSummary,
   SleepInput,
   SleepLogDto,
+  SleepTargetDto,
+  SleepTargetInput,
   UpdateSleepInput,
   UpdateStatus,
 } from '@evully/contracts';
@@ -258,6 +260,8 @@ export interface EvullyClient {
     register(input: SleepInput): Promise<SleepLogDto>;
     update(input: UpdateSleepInput): Promise<SleepLogDto>;
     remove(profileId: string, id: string): Promise<null>;
+    target(profileId: string): Promise<SleepTargetDto | null>;
+    setTarget(input: SleepTargetInput): Promise<SleepTargetDto | null>;
   };
   mealTemplates: {
     list(profileId: string): Promise<MealTemplateDto[]>;

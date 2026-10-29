@@ -31,6 +31,7 @@ const PROFILE_TABLES = [
   'habit_definitions',
   'habit_logs',
   'sleep_logs',
+  'sleep_targets',
 ] as const;
 
 describe('settings: profiles, theme and legal documents', () => {
@@ -170,6 +171,7 @@ describe('settings: profiles, theme and legal documents', () => {
         quality: null,
         notes: null,
       });
+      await handlers['sleep-target:set']({ profileId, minutesPerNight: 480 });
       const [habit] = await handlers['habits:add-examples']({ profileId });
       await handlers['habits:log']({
         profileId,

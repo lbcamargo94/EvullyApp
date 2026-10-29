@@ -1,7 +1,12 @@
 import type { LocalDate } from '@evully/domain';
 import type { Kysely, Selectable } from 'kysely';
 import type { DatabaseSchema, SleepLogsTable } from '../../../database/schema';
-import type { SleepRecord, SleepRepository } from '../ports/sleep-repository';
+import type {
+  SleepRecord,
+  SleepRepository,
+  SleepTargetRecord,
+  SleepTargetRepository,
+} from '../ports/sleep-repository';
 
 const toRecord = (r: Selectable<SleepLogsTable>): SleepRecord => ({
   id: r.id,
@@ -83,5 +88,40 @@ export class KyselySleepRepository implements SleepRepository {
       .where('deleted_at', 'is', null)
       .executeTakeFirst();
     return Number(result.numUpdatedRows) > 0;
+  }
+}
+
+export class KyselySleepTargetRepository implements SleepTargetRepository {
+  constructor(private readonly db: Kysely<DatabaseSchema>) {}
+
+  async list(profileId: string): Promise<SleepTargetRecord[]> {
+    const rows = await this.db
+      .selectFrom('sleep_targets')
+      .selectAll()
+      .where('profile_id', '=', profileId)
+      // Creation order; UUID v7 ids break ties within the same instant.
+      .orderBy('created_at')
+      .orderBy('id')
+      .execute();
+    return rows.map((r) => ({
+      id: r.id,
+      profileId: r.profile_id,
+      effectiveFrom: r.effective_from as LocalDate,
+      minutesPerNight: r.minutes_per_night,
+      createdAt: r.created_at,
+    }));
+  }
+
+  async insert(t: SleepTargetRecord): Promise<void> {
+    await this.db
+      .insertInto('sleep_targets')
+      .values({
+        id: t.id,
+        profile_id: t.profileId,
+        effective_from: t.effectiveFrom,
+        minutes_per_night: t.minutesPerNight,
+        created_at: t.createdAt,
+      })
+      .execute();
   }
 }

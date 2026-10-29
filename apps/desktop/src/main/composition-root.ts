@@ -20,7 +20,10 @@ import {
 } from '../modules/cardio/adapters/kysely-cardio-repository';
 import { habitIpcHandlers } from '../modules/habits/adapters/habit-ipc-handlers';
 import { KyselyHabitRepository } from '../modules/habits/adapters/kysely-habit-repository';
-import { KyselySleepRepository } from '../modules/sleep/adapters/kysely-sleep-repository';
+import {
+  KyselySleepRepository,
+  KyselySleepTargetRepository,
+} from '../modules/sleep/adapters/kysely-sleep-repository';
 import { sleepIpcHandlers } from '../modules/sleep/adapters/sleep-ipc-handlers';
 import { importIpcHandlers } from '../modules/imports/adapters/import-ipc-handlers';
 import { PendingImports } from '../modules/imports/application/pending-imports';
@@ -149,7 +152,13 @@ export function buildApp({
       ids,
     }),
     ...habitIpcHandlers({ profiles, habits: new KyselyHabitRepository(db), clock, ids }),
-    ...sleepIpcHandlers({ profiles, sleep: new KyselySleepRepository(db), clock, ids }),
+    ...sleepIpcHandlers({
+      profiles,
+      sleep: new KyselySleepRepository(db),
+      targets: new KyselySleepTargetRepository(db),
+      clock,
+      ids,
+    }),
     ...backupIpcHandlers({
       backup: backupDeps,
       settings: backupSettings,

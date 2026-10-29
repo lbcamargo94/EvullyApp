@@ -63,6 +63,15 @@ export const sleepMessages = {
   consistencyHint: '30 dias',
   deviation: (minutes: number) => `±${minutes} min`,
   nights: (n: number) => (n === 1 ? '1 noite' : `${n} noites`),
+  target: 'Meta por noite',
+  targetSet: 'Definir meta',
+  targetEdit: 'Alterar meta',
+  targetHint:
+    'Quanto você quer dormir por noite. Vale a partir de hoje; deixe em branco para remover.',
+  targetHours: 'Horas',
+  targetMinutes: 'Minutos',
+  targetSave: 'Salvar meta',
+  targetInvalid: 'Use números inteiros, com minutos de 0 a 59.',
 } as const;
 
 export const sleepErrorByCode: Record<string, string> = {
@@ -74,4 +83,5 @@ export const sleepErrorByCode: Record<string, string> = {
   'sleep.notes_too_long': 'Use até 280 caracteres nas notas.',
   'sleep.invalid_time': 'Confira os horários.',
   'sleep.not_found': 'Registro não encontrado. Recarregue a tela.',
+  'sleep_target.out_of_range': 'Use uma meta entre 1 h e 16 h.',
 };
