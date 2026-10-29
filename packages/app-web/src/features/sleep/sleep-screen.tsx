@@ -40,7 +40,10 @@ export function SleepScreen() {
           onDone={() => setEditing(null)}
           onEditDate={(date) => setEditing(nights.find((n) => n.sleepDate === date) ?? null)}
         />
-        <SleepIndicatorsCard indicators={indicatorsOf(nights, localToday())} />
+        <SleepIndicatorsCard
+          profileId={profileId}
+          indicators={indicatorsOf(nights, localToday())}
+        />
       </div>
       <History profileId={profileId} nights={nights} onEdit={setEditing} />
     </>

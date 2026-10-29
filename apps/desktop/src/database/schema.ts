@@ -346,6 +346,14 @@ export interface SleepLogsTable {
   deleted_at: string | null;
 }
 
+export interface SleepTargetsTable {
+  id: string;
+  profile_id: string;
+  effective_from: string;
+  minutes_per_night: number | null;
+  created_at: string;
+}
+
 export interface HabitDefinitionsTable {
   id: string;
   profile_id: string;
@@ -451,4 +459,5 @@ export interface DatabaseSchema {
   habit_definitions: HabitDefinitionsTable;
   habit_logs: HabitLogsTable;
   sleep_logs: SleepLogsTable;
+  sleep_targets: SleepTargetsTable;
 }

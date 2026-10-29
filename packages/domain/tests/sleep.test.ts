@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   nightClockDate,
   normalizeSleepDraft,
+  normalizeSleepTarget,
   sleepIndicators,
   parseLocalDate,
   ValidationError,
@@ -115,5 +116,20 @@ describe('sleepIndicators (README §12.2)', () => {
       consistency: null,
     });
     expect(sleepIndicators([n('2026-10-27', 480, at(23), at(7))], today).consistency).toBeNull();
+  });
+});
+
+describe('normalizeSleepTarget (README §13.1)', () => {
+  it('keeps whole minutes between 1 h and 16 h and allows clearing', () => {
+    expect(normalizeSleepTarget({ minutesPerNight: 480 })).toEqual({ minutesPerNight: 480 });
+    expect(normalizeSleepTarget({ minutesPerNight: 60 })).toEqual({ minutesPerNight: 60 });
+    expect(normalizeSleepTarget({ minutesPerNight: 960 })).toEqual({ minutesPerNight: 960 });
+    expect(normalizeSleepTarget({ minutesPerNight: null })).toEqual({ minutesPerNight: null });
+  });
+
+  it.each([59, 961, 450.5, 0])('rejects %s minutes', (minutesPerNight) => {
+    expect(() => normalizeSleepTarget({ minutesPerNight })).toThrow(
+      expect.objectContaining({ code: 'sleep_target.out_of_range' }) as ValidationError,
+    );
   });
 });

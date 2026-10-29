@@ -24,6 +24,19 @@ export const sleepLogSchema = z.object({
   durationMinutes: z.number(),
 });
 
+const targetValues = { minutesPerNight: z.number().int().positive().nullable() };
+
+/** A new nightly target from today on; null clears it (README §13.1). */
+export const sleepTargetInputSchema = z.object({ profileId: z.uuid(), ...targetValues });
+export const sleepTargetSchema = z.object({
+  id: z.string(),
+  effectiveFrom: localDate,
+  ...targetValues,
+  createdAt: z.string(),
+});
+
 export type SleepInput = z.infer<typeof sleepInputSchema>;
 export type UpdateSleepInput = z.infer<typeof updateSleepInputSchema>;
 export type SleepLogDto = z.infer<typeof sleepLogSchema>;
+export type SleepTargetInput = z.infer<typeof sleepTargetInputSchema>;
+export type SleepTargetDto = z.infer<typeof sleepTargetSchema>;

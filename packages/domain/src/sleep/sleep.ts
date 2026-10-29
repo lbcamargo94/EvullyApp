@@ -4,6 +4,13 @@ import { addDaysToLocalDate, daysBetween, parseLocalDate, type LocalDate } from 
 export const SLEEP_QUALITIES = [1, 2, 3, 4, 5] as const;
 export const MAX_SLEEP_SPAN_MINUTES = 20 * 60;
 export const SLEEP_NOTES_MAX_LENGTH = 280;
+export const MIN_SLEEP_TARGET_MINUTES = 60;
+export const MAX_SLEEP_TARGET_MINUTES = 16 * 60;
+
+/** Nightly sleep target typed by the person (README §13.1); null clears it. */
+export interface SleepTargetValues {
+  minutesPerNight: number | null;
+}
 
 /**
  * One night as typed (README §7.7, §12.1). Times are UTC instants; `sleepTime`
@@ -69,6 +76,19 @@ export function normalizeSleepDraft(
     notes,
     durationMinutes: Math.round((wake - asleep) / 60_000),
   };
+}
+
+export function normalizeSleepTarget(draft: SleepTargetValues): SleepTargetValues {
+  const minutes = draft.minutesPerNight;
+  if (
+    minutes !== null &&
+    (!Number.isInteger(minutes) ||
+      minutes < MIN_SLEEP_TARGET_MINUTES ||
+      minutes > MAX_SLEEP_TARGET_MINUTES)
+  ) {
+    throw invalid('sleep_target.out_of_range');
+  }
+  return { minutesPerNight: minutes };
 }
 
 /**

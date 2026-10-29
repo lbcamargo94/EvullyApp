@@ -1,13 +1,32 @@
-import type { SleepInput, SleepLogDto, UpdateSleepInput } from '@evully/contracts';
-import { ConflictError, normalizeSleepDraft, NotFoundError } from '@evully/domain';
+import type {
+  SleepInput,
+  SleepLogDto,
+  SleepTargetDto,
+  SleepTargetInput,
+  UpdateSleepInput,
+} from '@evully/contracts';
+import {
+  ConflictError,
+  effectiveAt,
+  normalizeSleepDraft,
+  normalizeSleepTarget,
+  NotFoundError,
+  type LocalDate,
+} from '@evully/domain';
 import { GetProfile } from '../../profiles/application/get-profile';
 import type { ProfileRepository } from '../../profiles/ports/profile-repository';
 import type { Clock, IdGenerator } from '../../shared/ports';
-import type { SleepRecord, SleepRepository } from '../ports/sleep-repository';
+import type {
+  SleepRecord,
+  SleepRepository,
+  SleepTargetRecord,
+  SleepTargetRepository,
+} from '../ports/sleep-repository';
 
 export interface SleepDeps {
   profiles: ProfileRepository;
   sleep: SleepRepository;
+  targets: SleepTargetRepository;
   clock: Clock;
   ids: IdGenerator;
 }
@@ -22,6 +41,19 @@ const toDto = (s: SleepRecord): SleepLogDto => ({
   quality: s.quality,
   notes: s.notes,
 });
+
+/** The target in force on `date`; null when none or the latest one was cleared. */
+function targetOn(targets: readonly SleepTargetRecord[], date: LocalDate): SleepTargetDto | null {
+  const t = effectiveAt(targets, date);
+  return t && t.minutesPerNight !== null
+    ? {
+        id: t.id,
+        effectiveFrom: t.effectiveFrom,
+        minutesPerNight: t.minutesPerNight,
+        createdAt: t.createdAt,
+      }
+    : null;
+}
 
 const notFound = () => new NotFoundError('sleep.not_found', 'Night not found');
 
@@ -89,5 +121,34 @@ export class DeleteSleep {
     if (!(await this.deps.sleep.softDelete(profileId, id, this.deps.clock.nowIso())))
       throw notFound();
     return null;
+  }
+}
+
+/** Today's nightly target (README §13.1). */
+export class GetSleepTarget {
+  constructor(private readonly deps: SleepDeps) {}
+
+  async execute({ profileId }: { profileId: string }): Promise<SleepTargetDto | null> {
+    await new GetProfile(this.deps.profiles).execute({ id: profileId });
+    return targetOn(await this.deps.targets.list(profileId), this.deps.clock.today());
+  }
+}
+
+/** Adds a target from today on; earlier nights keep theirs. Null clears it. */
+export class SetSleepTarget {
+  constructor(private readonly deps: SleepDeps) {}
+
+  async execute({ profileId, ...values }: SleepTargetInput): Promise<SleepTargetDto | null> {
+    const { profiles, targets, clock, ids } = this.deps;
+    await new GetProfile(profiles).execute({ id: profileId });
+    const record: SleepTargetRecord = {
+      id: ids.next(),
+      profileId,
+      effectiveFrom: clock.today(),
+      ...normalizeSleepTarget(values),
+      createdAt: clock.nowIso(),
+    };
+    await targets.insert(record);
+    return targetOn([record], record.effectiveFrom);
   }
 }

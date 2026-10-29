@@ -1,9 +1,15 @@
-import type { SleepInput, SleepLogDto, UpdateSleepInput } from '@evully/contracts';
+import type {
+  SleepInput,
+  SleepLogDto,
+  SleepTargetInput,
+  UpdateSleepInput,
+} from '@evully/contracts';
 import { parseLocalDate, sleepIndicators, type SleepIndicators } from '@evully/domain';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEvullyClient } from '../../client-context';
 
 const key = (profileId: string) => ['sleep', profileId] as const;
+const targetKey = (profileId: string) => ['sleep-target', profileId] as const;
 
 export function useSleepLogs(profileId: string | null) {
   const client = useEvullyClient();
@@ -42,6 +48,26 @@ export function useUpdateSleep(profileId: string) {
 export function useDeleteSleep(profileId: string) {
   const client = useEvullyClient();
   return useSleepMutation(profileId, (id: string) => client.sleep.remove(profileId, id));
+}
+
+/** Today's nightly target, or null (README §13.1). */
+export function useSleepTarget(profileId: string | null) {
+  const client = useEvullyClient();
+  return useQuery({
+    queryKey: targetKey(profileId ?? ''),
+    queryFn: () => client.sleep.target(profileId ?? ''),
+    enabled: profileId !== null,
+  });
+}
+
+export function useSetSleepTarget(profileId: string) {
+  const client = useEvullyClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: Omit<SleepTargetInput, 'profileId'>) =>
+      client.sleep.setTarget({ profileId, ...input }),
+    onSuccess: (target) => queryClient.setQueryData(targetKey(profileId), target),
+  });
 }
 
 const clockOf = (iso: string) => {
