@@ -142,6 +142,20 @@ export const nutritionDaySchema = z.object({
   water: z.object({ totalMl: z.number(), logs: z.array(waterLogSchema) }),
 });
 
+/**
+ * Consumed calories and protein of each day with consumed logs, oldest first,
+ * with the target in force on that day (README §13.2).
+ */
+export const nutritionHistorySchema = z.array(
+  z.object({
+    date: localDate,
+    caloriesKcal: z.number(),
+    proteinG: z.number(),
+    targetCaloriesKcal: z.number().nullable(),
+    targetProteinG: z.number().nullable(),
+  }),
+);
+
 // ------------------------------------------------------------ meal shortcuts (README §9.5)
 
 const mealAt = z.object({ date: localDate, ...mealRef });
@@ -216,6 +230,7 @@ export type MealType = z.infer<typeof mealTypeSchema>;
 export type FoodLogInput = z.infer<typeof foodLogInputSchema>;
 export type FoodLogDto = z.infer<typeof foodLogSchema>;
 export type NutritionDay = z.infer<typeof nutritionDaySchema>;
+export type NutritionHistory = z.infer<typeof nutritionHistorySchema>;
 export type SetMealConsumedInput = z.infer<typeof setMealConsumedInputSchema>;
 export type FoodInput = z.infer<typeof foodInputSchema>;
 export type UpdateFoodInput = z.infer<typeof updateFoodInputSchema>;

@@ -1,4 +1,9 @@
-import type { FoodLogInput, NutritionDay, SetMealConsumedInput } from '@evully/contracts';
+import type {
+  FoodLogInput,
+  NutritionDay,
+  NutritionHistory,
+  SetMealConsumedInput,
+} from '@evully/contracts';
 import {
   assertCanConsume,
   dailyTotals,
@@ -103,6 +108,28 @@ export class GetNutritionDay {
 
   execute({ profileId, date }: { profileId: string; date: string }): Promise<NutritionDay> {
     return nutritionDay(this.deps, profileId, parseLocalDate(date));
+  }
+}
+
+const round1 = (value: number) => Math.round(value * 10) / 10;
+
+/** Consumed calories and protein per day with the target of each day (README §13.2). */
+export class GetNutritionHistory {
+  constructor(private readonly deps: FoodLogDeps) {}
+
+  async execute({ profileId }: { profileId: string }): Promise<NutritionHistory> {
+    await new GetProfile(this.deps.profiles).execute({ id: profileId });
+    const targets = await this.deps.targets.list(profileId);
+    return (await this.deps.logs.dailyConsumed(profileId)).map((d) => {
+      const target = effectiveAt(targets, d.date);
+      return {
+        date: d.date,
+        caloriesKcal: round1(d.caloriesKcal),
+        proteinG: round1(d.proteinG),
+        targetCaloriesKcal: target?.caloriesKcal ?? null,
+        targetProteinG: target?.proteinG ?? null,
+      };
+    });
   }
 }
 

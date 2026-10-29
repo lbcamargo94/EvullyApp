@@ -1730,6 +1730,18 @@ proteína, sono, cardio, passos, cargas, volume de treino e frequência.
 
 Não sobrecarregar o dashboard com todos os gráficos.
 
+- Tela **Estatísticas** no menu (0.6.0-alpha.2), com um período para todos
+  os gráficos: 30 dias, 90 dias, projeto atual (padrão quando há projeto)
+  ou tudo. Cada gráfico só aparece para quem tem registros no módulo.
+- **Peso:** peso do dia e média móvel de 7 dias (§7.2); média de cada
+  semana ISO (segunda a domingo); velocidade = diferença entre as médias de
+  semanas seguidas, dividida pelo número de semanas entre elas (kg/semana).
+- **Medidas:** uma medida por vez, cintura por padrão.
+- **Calorias e proteína:** só alimentos marcados como consumidos, por dia,
+  com a meta vigente em cada dia.
+- **Sono:** duração de cada noite e a meta atual.
+- Treino, cardio e passos chegam na 0.6.0-alpha.3.
+
 ### 13.3 Análise de evolução
 
 Depois de dados suficientes, gerar resumos objetivos por funções

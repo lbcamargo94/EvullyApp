@@ -8,6 +8,7 @@ import {
 import {
   Activity,
   Apple,
+  ChartLine,
   Dumbbell,
   LayoutDashboard,
   ListChecks,
@@ -88,6 +89,10 @@ export function AppShell() {
           <NavLink to="/app/sleep" className={navItem}>
             <Moon aria-hidden="true" className="size-5" />
             {m.sleep}
+          </NavLink>
+          <NavLink to="/app/stats" className={navItem}>
+            <ChartLine aria-hidden="true" className="size-5" />
+            {m.stats}
           </NavLink>
           <NavLink to="/app/settings" className={navItem}>
             <Settings aria-hidden="true" className="size-5" />

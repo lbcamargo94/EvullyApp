@@ -194,4 +194,47 @@ describe('food logs (README §9.4, §9.5)', () => {
     ).rejects.toThrow(NotFoundError);
     expect(lucas.id).toBeTruthy();
   });
+
+  it('sums consumed logs per day with the target of each day (README §13.2)', async () => {
+    const { handlers, lucas, ana, riceFood, chickenFood, lunch } = await setup();
+    const [rice] = (await lunch(riceFood.id, 150, '2026-10-21')).logs;
+    await lunch(chickenFood.id, 100); // planned only
+    const [, chicken] = (await lunch(chickenFood.id, 200)).logs;
+    await handlers['nutrition:set-consumed']({
+      profileId: lucas.id,
+      id: must(rice).id,
+      consumed: true,
+    });
+    await handlers['nutrition:set-consumed']({
+      profileId: lucas.id,
+      id: must(chicken).id,
+      consumed: true,
+    });
+    await handlers['nutrition-targets:set']({
+      profileId: lucas.id,
+      caloriesKcal: 2400,
+      proteinG: 190,
+      carbohydrateG: null,
+      fatG: null,
+      waterMl: null,
+    });
+
+    expect(await handlers['nutrition:history']({ profileId: lucas.id })).toEqual([
+      {
+        date: '2026-10-21',
+        caloriesKcal: 192,
+        proteinG: 3.8,
+        targetCaloriesKcal: null,
+        targetProteinG: null,
+      },
+      {
+        date: '2026-10-22',
+        caloriesKcal: 330,
+        proteinG: 62,
+        targetCaloriesKcal: 2400,
+        targetProteinG: 190,
+      },
+    ]);
+    expect(await handlers['nutrition:history']({ profileId: ana.id })).toEqual([]);
+  });
 });

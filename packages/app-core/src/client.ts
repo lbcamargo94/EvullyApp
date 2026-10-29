@@ -33,6 +33,7 @@ import type {
   MealTemplateDto,
   MeasurementTypeDto,
   NutritionDay,
+  NutritionHistory,
   PlanTemplateCode,
   PrescriptionDto,
   NutritionPreferencesDto,
@@ -150,6 +151,7 @@ export interface EvullyClient {
   };
   nutrition: {
     day(profileId: string, date: string): Promise<NutritionDay>;
+    history(profileId: string): Promise<NutritionHistory>;
     add(input: FoodLogInput): Promise<NutritionDay>;
     updateQuantity(profileId: string, id: string, quantity: number): Promise<NutritionDay>;
     setConsumed(profileId: string, id: string, consumed: boolean): Promise<NutritionDay>;

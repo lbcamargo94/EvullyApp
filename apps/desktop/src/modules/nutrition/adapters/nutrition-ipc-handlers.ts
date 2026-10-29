@@ -3,6 +3,7 @@ import type { IpcHandlers } from '../../../shared/ipc-channels';
 import {
   AddFoodLog,
   GetNutritionDay,
+  GetNutritionHistory,
   RemoveFoodLog,
   SetFoodLogConsumed,
   SetMealConsumed,
@@ -37,6 +38,7 @@ type NutritionChannels =
   | 'foods:update'
   | 'foods:remove'
   | 'nutrition:day'
+  | 'nutrition:history'
   | 'nutrition:add'
   | 'nutrition:update-quantity'
   | 'nutrition:set-consumed'
@@ -71,6 +73,7 @@ export function nutritionIpcHandlers(
     'foods:update': async (input) => toDto(await update.execute(input)),
     'foods:remove': (input) => remove.execute(input),
     'nutrition:day': (input) => new GetNutritionDay(deps).execute(input),
+    'nutrition:history': (input) => new GetNutritionHistory(deps).execute(input),
     'nutrition:add': (input) => new AddFoodLog(deps).execute(input),
     'nutrition:update-quantity': (input) => new UpdateFoodLogQuantity(deps).execute(input),
     'nutrition:set-consumed': (input) => new SetFoodLogConsumed(deps).execute(input),

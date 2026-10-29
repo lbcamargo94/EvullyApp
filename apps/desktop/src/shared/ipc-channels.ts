@@ -80,6 +80,7 @@ import {
   saveMealTemplateInputSchema,
   nutritionDayInputSchema,
   nutritionDaySchema,
+  nutritionHistorySchema,
   setFoodLogConsumedInputSchema,
   setMealConsumedInputSchema,
   updateFoodLogQuantityInputSchema,
@@ -159,6 +160,7 @@ export const ipcChannels = {
   'foods:update': { input: updateFoodInputSchema, output: foodSchema },
   'foods:remove': { input: foodIdInputSchema, output: z.null() },
   'nutrition:day': { input: nutritionDayInputSchema, output: nutritionDaySchema },
+  'nutrition:history': { input: profileScopedInputSchema, output: nutritionHistorySchema },
   'nutrition:add': { input: foodLogInputSchema, output: nutritionDaySchema },
   'nutrition:update-quantity': {
     input: updateFoodLogQuantityInputSchema,
