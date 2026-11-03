@@ -5,7 +5,11 @@ import {
   ListExercises,
   UpdateExercise,
 } from '../application/manage-exercises';
-import { GetExerciseHistory, SetExerciseIncrement } from '../application/exercise-history';
+import {
+  GetExerciseHistory,
+  GetWorkoutStats,
+  SetExerciseIncrement,
+} from '../application/exercise-history';
 import {
   AnswerWorkoutQuestionnaire,
   GetWorkoutPreferences,
@@ -69,6 +73,7 @@ type WorkoutChannels =
   | 'workout-performances:add'
   | 'workout-performances:replace'
   | 'workout-performances:remove'
+  | 'workout-stats:get'
   | 'workout-preferences:get'
   | 'workout-preferences:answer'
   | 'workout-preferences:skip';
@@ -105,6 +110,7 @@ export function workoutIpcHandlers(
     'workout-performances:add': (input) => new AddPerformance(deps).execute(input),
     'workout-performances:replace': (input) => new ReplacePerformance(deps).execute(input),
     'workout-performances:remove': (input) => new RemovePerformance(deps).execute(input),
+    'workout-stats:get': (input) => new GetWorkoutStats(deps).execute(input),
     'workout-preferences:get': (input) => new GetWorkoutPreferences(deps).execute(input),
     'workout-preferences:answer': (input) => new AnswerWorkoutQuestionnaire(deps).execute(input),
     'workout-preferences:skip': (input) => new SkipWorkoutQuestionnaire(deps).execute(input),

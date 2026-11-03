@@ -14,7 +14,7 @@ export const statsMessages = {
   periodLabel: 'Período',
   periods: { days30: '30 dias', days90: '90 dias', project: 'Projeto', all: 'Tudo' },
   emptyAll:
-    'Ainda não há registros para mostrar. Registre peso, medidas, dieta ou sono e os gráficos aparecem aqui.',
+    'Ainda não há registros para mostrar. Registre peso, medidas, dieta, sono, treino, cardio ou passos e os gráficos aparecem aqui.',
   emptyPeriod: 'Sem registros neste período.',
   chartAlt: (title: string, points: number) =>
     `Gráfico de ${title.toLowerCase()}: ${points} ${points === 1 ? 'ponto' : 'pontos'} no período.`,
@@ -37,4 +37,18 @@ export const statsMessages = {
   nutritionHint: 'Só alimentos marcados como consumidos.',
   sleepTitle: 'Sono',
   sleep: 'Duração da noite',
+  volumeTitle: 'Volume de treino',
+  volumeHint: 'Carga × repetições das séries concluídas, por semana.',
+  volume: 'Volume da semana',
+  frequencyTitle: 'Frequência de treino',
+  frequency: 'Treinos finalizados',
+  workouts: (count: number) => `${count} ${count === 1 ? 'treino' : 'treinos'}`,
+  loadTitle: 'Carga por exercício',
+  loadHint: 'Maior carga de cada treino.',
+  exerciseLabel: 'Exercício',
+  cardioTitle: 'Cardio',
+  cardio: 'Minutos da semana',
+  stepsTitle: 'Passos',
+  steps: 'Passos do dia',
+  stepsUnit: 'passos',
 } as const;

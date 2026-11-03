@@ -1,4 +1,4 @@
-import { formatLocalDate } from '@evully/app-core';
+import { formatLocalDate, type periodStart } from '@evully/app-core';
 import { Card } from '@evully/ui';
 import type { ReactNode } from 'react';
 import {
@@ -14,18 +14,24 @@ import {
 } from 'recharts';
 import { statsMessages as m } from './messages.pt-BR';
 
+export type From = ReturnType<typeof periodStart>;
+
 export type StatRow = { date: string } & Record<string, number | string | null>;
 
 export interface StatSeries {
   key: string;
   name: string;
-  /** `dots`: one point per record; `line`: the highlighted line; `target`: dashed step line. */
-  kind: 'bar' | 'line' | 'dots' | 'target';
+  /**
+   * `dots`: one point per record; `line`: the highlighted line; `connected`:
+   * a line with a mark on each record; `target`: dashed step line.
+   */
+  kind: 'bar' | 'line' | 'connected' | 'dots' | 'target';
 }
 
 const COLORS: Record<StatSeries['kind'], string> = {
   bar: 'var(--color-brand)',
   line: 'var(--color-brand)',
+  connected: 'var(--color-brand)',
   dots: 'var(--color-neutral)',
   target: 'var(--color-text-muted)',
 };
@@ -60,8 +66,9 @@ function renderSeries(s: StatSeries) {
       />
     );
   }
+  const dot = s.kind === 'connected' ? { r: 3, fill: COLORS.connected, stroke: 'none' } : false;
   return (
-    <Line key={s.key} {...common} stroke={COLORS.line} strokeWidth={3} dot={false} connectNulls />
+    <Line key={s.key} {...common} stroke={COLORS.line} strokeWidth={3} dot={dot} connectNulls />
   );
 }
 
@@ -78,6 +85,7 @@ export function StatChart({
   weekly = false,
   zeroLine = false,
   fromZero = false,
+  integer = false,
 }: {
   id: string;
   title: string;
@@ -91,6 +99,8 @@ export function StatChart({
   weekly?: boolean;
   zeroLine?: boolean;
   fromZero?: boolean;
+  /** Counts: the axis has no fractions. */
+  integer?: boolean;
 }) {
   return (
     <Card aria-labelledby={id} className="min-w-0 gap-3">
@@ -121,6 +131,7 @@ export function StatChart({
                 />
                 <YAxis
                   domain={fromZero ? [0, 'auto'] : ['auto', 'auto']}
+                  allowDecimals={!integer}
                   tickFormatter={axisFormat}
                   stroke="var(--color-text-muted)"
                   fontSize={12}

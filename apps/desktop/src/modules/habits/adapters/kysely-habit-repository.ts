@@ -85,6 +85,22 @@ export class KyselyHabitRepository implements HabitRepository {
     });
   }
 
+  async logsOf(profileId: string, habitId: string): Promise<HabitLogRecord[]> {
+    const rows = await this.db
+      .selectFrom('habit_logs')
+      .select(['habit_definition_id', 'log_date', 'value'])
+      .where('profile_id', '=', profileId)
+      .where('habit_definition_id', '=', habitId)
+      .where('deleted_at', 'is', null)
+      .orderBy('log_date')
+      .execute();
+    return rows.map((r) => ({
+      habitId: r.habit_definition_id,
+      logDate: r.log_date as LocalDate,
+      value: r.value,
+    }));
+  }
+
   async logsBetween(profileId: string, from: LocalDate, to: LocalDate): Promise<HabitLogRecord[]> {
     const rows = await this.db
       .selectFrom('habit_logs')

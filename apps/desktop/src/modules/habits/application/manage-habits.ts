@@ -1,4 +1,10 @@
-import type { HabitDay, HabitDto, HabitInput, UpdateHabitInput } from '@evully/contracts';
+import type {
+  HabitDay,
+  HabitDto,
+  HabitHistory,
+  HabitInput,
+  UpdateHabitInput,
+} from '@evully/contracts';
 import {
   daysEndingOn,
   HABIT_EXAMPLES,
@@ -171,6 +177,23 @@ export class GetHabitDay {
 
   execute({ profileId, date }: { profileId: string; date: string }) {
     return habitDay(this.deps, profileId, date);
+  }
+}
+
+/** Every logged value of one active habit (README §13.2). */
+export class GetHabitHistory {
+  constructor(private readonly deps: HabitDeps) {}
+
+  async execute({
+    profileId,
+    habitId,
+  }: {
+    profileId: string;
+    habitId: string;
+  }): Promise<HabitHistory> {
+    await activeHabit(this.deps, profileId, habitId);
+    const logs = await this.deps.habits.logsOf(profileId, habitId);
+    return logs.map((l) => ({ date: l.logDate, value: l.value }));
   }
 }
 

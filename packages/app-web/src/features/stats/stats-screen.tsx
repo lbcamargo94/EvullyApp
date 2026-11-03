@@ -2,19 +2,25 @@ import {
   formatCm,
   formatKg,
   inPeriod,
+  isStepsHabit,
   localToday,
   parseLocalDate,
   periodStart,
   useActiveProject,
+  useCardioOverview,
   useCurrentProfile,
+  useHabitHistory,
+  useHabits,
   useMeasurementSummary,
   useNutritionHistory,
   useSleepLogs,
   useSleepTarget,
   useWeightSummary,
+  useWorkoutStats,
   weeklyAverages,
   weeklyRates,
   STATS_PERIODS,
+  type LocalDate,
   type StatsPeriod,
 } from '@evully/app-core';
 import type {
@@ -25,8 +31,9 @@ import type {
 } from '@evully/contracts';
 import { useState } from 'react';
 import { formatDuration } from '../sleep/messages.pt-BR';
+import { CardioChart, StepsChart, WorkoutCharts } from './activity-charts';
 import { formatRate, formatWhole, statsMessages as m } from './messages.pt-BR';
-import { StatChart } from './stat-chart';
+import { StatChart, type From } from './stat-chart';
 
 const kg = formatKg;
 const hours = (minutes: number) => `${Math.round(minutes / 60)}h`;
@@ -39,11 +46,8 @@ export function StatsScreen() {
   const [chosen, setChosen] = useState<StatsPeriod | null>(null);
   const period = chosen ?? (projectStart ? 'project' : 'days90');
   if (!profileId) return null;
-  const from = periodStart(
-    period,
-    parseLocalDate(localToday()),
-    projectStart ? parseLocalDate(projectStart) : null,
-  );
+  const today = localToday();
+  const from = periodStart(period, today, projectStart ? parseLocalDate(projectStart) : null);
 
   return (
     <>
@@ -71,40 +75,82 @@ export function StatsScreen() {
           ))}
         </div>
       </div>
-      <StatsCharts profileId={profileId} from={from} />
+      <StatsCharts profileId={profileId} from={from} today={today} />
     </>
   );
 }
 
-type From = ReturnType<typeof periodStart>;
+function useBodyData(profileId: string) {
+  const { data: weight } = useWeightSummary(profileId);
+  const { data: measurements } = useMeasurementSummary(profileId);
+  return {
+    weighed: weight?.series.length ? weight : null,
+    measured: measurements?.items.filter((i) => i.series.length > 0) ?? [],
+  };
+}
 
-function available(
-  weight: WeightSummary | undefined,
-  measurements: MeasurementSummary | undefined,
-  nutrition: NutritionHistory,
-  nights: SleepLogDto[],
-) {
-  const weighed = weight?.series.length ? weight : null;
-  const measured = measurements?.items.filter((i) => i.series.length > 0) ?? [];
-  const any = !!weighed || measured.length > 0 || nutrition.length > 0 || nights.length > 0;
-  return { weighed, measured, any };
+function useActivityData(profileId: string) {
+  const { data: cardio } = useCardioOverview(profileId);
+  const { data: habits = [] } = useHabits(profileId);
+  const stepsHabit = habits.find(isStepsHabit);
+  const { data: steps = [] } = useHabitHistory(profileId, stepsHabit?.id ?? null);
+  return {
+    cardioSessions: cardio?.weeks.flatMap((w) => w.sessions) ?? [],
+    cardioTarget: cardio?.target?.minutesPerWeek ?? null,
+    stepsHabit,
+    steps,
+  };
+}
+
+/** What each module has recorded; every chart is built only from its own part. */
+function useStatsData(profileId: string) {
+  const { data: nutrition = [] } = useNutritionHistory(profileId);
+  const { data: nights = [] } = useSleepLogs(profileId);
+  const { data: workouts = [] } = useWorkoutStats(profileId);
+  return {
+    ...useBodyData(profileId),
+    ...useActivityData(profileId),
+    nutrition,
+    nights,
+    workouts,
+  };
 }
 
 /** A chart only for the modules with records; a hint when there is nothing at all. */
-function StatsCharts({ profileId, from }: { profileId: string; from: From }) {
-  const { data: weight } = useWeightSummary(profileId);
-  const { data: measurements } = useMeasurementSummary(profileId);
-  const { data: nutrition = [] } = useNutritionHistory(profileId);
-  const { data: nights = [] } = useSleepLogs(profileId);
-  const { weighed, measured, any } = available(weight, measurements, nutrition, nights);
-  if (!any) return <p className="text-text-muted">{m.emptyAll}</p>;
+function StatsCharts({
+  profileId,
+  from,
+  today,
+}: {
+  profileId: string;
+  from: From;
+  today: LocalDate;
+}) {
+  const data = useStatsData(profileId);
+  const any = [
+    data.measured,
+    data.nutrition,
+    data.nights,
+    data.workouts,
+    data.cardioSessions,
+    data.steps,
+  ].some((records) => records.length > 0);
+  if (!any && !data.weighed) return <p className="text-text-muted">{m.emptyAll}</p>;
 
   return (
     <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(420px,1fr))]">
-      {weighed && <WeightCharts summary={weighed} from={from} />}
-      {measured.length > 0 && <MeasurementChart items={measured} from={from} />}
-      {nutrition.length > 0 && <NutritionCharts history={nutrition} from={from} />}
-      {nights.length > 0 && <SleepChart profileId={profileId} nights={nights} from={from} />}
+      {data.weighed && <WeightCharts summary={data.weighed} from={from} />}
+      <MeasurementChart items={data.measured} from={from} />
+      <NutritionCharts history={data.nutrition} from={from} />
+      <SleepChart profileId={profileId} nights={data.nights} from={from} />
+      <WorkoutCharts stats={data.workouts} from={from} today={today} />
+      <CardioChart
+        sessions={data.cardioSessions}
+        target={data.cardioTarget}
+        from={from}
+        today={today}
+      />
+      <StepsChart habit={data.stepsHabit} history={data.steps} from={from} />
     </div>
   );
 }
@@ -131,7 +177,7 @@ function WeightCharts({ summary, from }: { summary: WeightSummary; from: From })
         id="stats-weekly"
         title={m.weeklyTitle}
         data={weeks.map((w) => ({ date: w.weekStart, average: w.average }))}
-        series={[{ key: 'average', name: m.weeklyAverage, kind: 'line' }]}
+        series={[{ key: 'average', name: m.weeklyAverage, kind: 'connected' }]}
         format={kg}
         axisFormat={(v) => formatWhole(v)}
         weekly
@@ -177,7 +223,7 @@ function MeasurementChart({ items, from }: { items: MeasurementSummary['items'];
         </label>
       }
       data={inPeriod(item.series, from).map((p) => ({ date: p.date, value: p.valueCm }))}
-      series={[{ key: 'value', name: item.name, kind: 'line' }]}
+      series={[{ key: 'value', name: item.name, kind: 'connected' }]}
       format={formatCm}
       axisFormat={(v) => formatWhole(v)}
     />
@@ -185,6 +231,7 @@ function MeasurementChart({ items, from }: { items: MeasurementSummary['items'];
 }
 
 function NutritionCharts({ history, from }: { history: NutritionHistory; from: From }) {
+  if (history.length === 0) return null;
   const days = inPeriod(history, from);
   return (
     <>
@@ -233,6 +280,7 @@ function SleepChart({
   from: From;
 }) {
   const { data: target = null } = useSleepTarget(profileId);
+  if (nights.length === 0) return null;
   const all = nights.map((n) => ({
     date: n.sleepDate,
     value: n.durationMinutes,

@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Estatísticas de treino, cardio e passos:** volume e frequência de treino
+  por semana, carga por exercício, minutos de cardio por semana contra a
+  meta e passos por dia contra a meta do hábito.
+
+### Fixed
+- Em Estatísticas, medidas e média semanal com um único registro agora
+  aparecem no gráfico.
+
 ## [0.6.0-alpha.2] - 2026-10-29
 
 ### Added

@@ -7,6 +7,11 @@ export function localToday(now: Date = new Date()): LocalDate {
   return parseLocalDate(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`);
 }
 
+/** Local date of an ISO instant, in the device's time zone. */
+export function localDateOf(iso: string): LocalDate {
+  return localToday(new Date(iso));
+}
+
 /** `2026-12-06` → `06/12/2026` (README §16.1). */
 export function formatLocalDate(date: string): string {
   const [year, month, day] = date.split('-');

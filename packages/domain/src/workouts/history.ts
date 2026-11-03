@@ -39,7 +39,7 @@ const beats = (set: DoneSet & { weightKg: number }, best: BestSet | null) =>
   (set.weightKg === best.weightKg && (set.repetitions ?? 0) > (best.repetitions ?? 0));
 
 /** Top load and volume of one session (completed sets with a load only). */
-function statsOf(session: HistorySession): SessionStats {
+export function sessionStats(session: HistorySession): SessionStats {
   const loaded = session.sets.filter(
     (s): s is HistorySession['sets'][number] & { weightKg: number } =>
       s.completed && s.weightKg !== null,
@@ -60,7 +60,7 @@ export function exerciseHistory(
   sessions: readonly HistorySession[],
   since: string,
 ): ExerciseHistoryStats {
-  const stats = sessions.map(statsOf);
+  const stats = sessions.map(sessionStats);
   let bestLoad: ExerciseHistoryStats['bestLoad'] = null;
   for (const s of stats) {
     if (s.topWeightKg !== null && (!bestLoad || s.topWeightKg > bestLoad.weightKg)) {

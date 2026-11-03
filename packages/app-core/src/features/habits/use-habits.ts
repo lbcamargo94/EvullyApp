@@ -24,6 +24,15 @@ export function useHabitDay(profileId: string | null, date: string) {
   });
 }
 
+export function useHabitHistory(profileId: string | null, habitId: string | null) {
+  const client = useEvullyClient();
+  return useQuery({
+    queryKey: ['habits', profileId ?? '', 'history', habitId ?? ''] as const,
+    queryFn: () => client.habits.history(profileId ?? '', habitId ?? ''),
+    enabled: profileId !== null && habitId !== null,
+  });
+}
+
 /** Logging a value returns the day, which replaces the cached one. */
 export function useLogHabit(profileId: string) {
   const client = useEvullyClient();

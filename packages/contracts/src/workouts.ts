@@ -183,6 +183,23 @@ export const workoutSessionSchema = z.object({
   ),
 });
 
+// ------------------------------------------------------------ statistics (README §13.2)
+
+/** Finished sessions, oldest first; exercises only with completed values. */
+export const workoutStatsSchema = z.array(
+  z.object({
+    startedAt: z.string(),
+    exercises: z.array(
+      z.object({
+        exerciseId: z.string(),
+        name: z.string(),
+        topWeightKg: z.number().nullable(),
+        volumeKg: z.number(),
+      }),
+    ),
+  }),
+);
+
 // ------------------------------------------------------------ history (README §10.5)
 
 export const exerciseHistoryInputSchema = z.object({ ...profileScoped, exerciseId: z.uuid() });
@@ -252,6 +269,7 @@ export type MuscleGroup = z.infer<typeof muscleGroupSchema>;
 export type WorkoutPreferencesDto = z.infer<typeof workoutPreferencesSchema>;
 export type WorkoutPreferencesInput = z.infer<typeof workoutPreferencesInputSchema>;
 export type ExerciseHistoryDto = z.infer<typeof exerciseHistorySchema>;
+export type WorkoutStats = z.infer<typeof workoutStatsSchema>;
 export type WorkoutSessionDto = z.infer<typeof workoutSessionSchema>;
 export type SetValuesDto = Omit<z.infer<typeof updateSetInputSchema>, 'profileId' | 'id'>;
 export type PrescriptionDto = z.infer<typeof prescriptionSchema>;

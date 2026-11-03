@@ -15,6 +15,15 @@ export function useOpenSession(profileId: string | null) {
   });
 }
 
+export function useWorkoutStats(profileId: string | null) {
+  const client = useEvullyClient();
+  return useQuery({
+    queryKey: ['workout-stats', profileId ?? ''] as const,
+    queryFn: () => client.workoutSessions.stats(profileId ?? ''),
+    enabled: profileId !== null,
+  });
+}
+
 type Sessions = EvullyClient['workoutSessions'];
 
 /**
