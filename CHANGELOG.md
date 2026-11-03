@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.6.0-alpha.3] - 2026-11-03
+
 ### Added
 - **Estatísticas de treino, cardio e passos:** volume e frequência de treino
   por semana, carga por exercício, minutos de cardio por semana contra a
