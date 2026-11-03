@@ -148,4 +148,30 @@ describe('exercise history and progression (README §10.5, §10.6)', () => {
         .loadIncrementKg,
     ).toBe(5);
   });
+
+  it('reports finished sessions with top load and volume per exercise', async () => {
+    const { handlers, lucas, ana, push, benchId, train } = await setup();
+    await train([done(90, 8, 2), done(100, 5, 1), { ...done(120, 1, 0), completed: false }]);
+    // Open and discarded sessions do not count.
+    const discarded = await handlers['workout-sessions:start']({
+      profileId: lucas.id,
+      workoutDayId: push.id,
+    });
+    await handlers['workout-sessions:discard']({ profileId: lucas.id, id: discarded.id });
+    await handlers['workout-sessions:start']({ profileId: lucas.id, workoutDayId: push.id });
+
+    const stats = await handlers['workout-stats:get']({ profileId: lucas.id });
+    expect(stats).toHaveLength(1);
+    expect(stats[0]?.startedAt).toBe('2026-10-27T18:00:00.000Z');
+    expect(stats[0]?.exercises.find((e) => e.exerciseId === benchId)).toMatchObject({
+      topWeightKg: 100,
+      volumeKg: 1220,
+    });
+    // Exercises with no completed set stay with no load and no volume.
+    expect(stats[0]?.exercises.find((e) => e.exerciseId !== benchId)).toMatchObject({
+      topWeightKg: null,
+      volumeKg: 0,
+    });
+    expect(await handlers['workout-stats:get']({ profileId: ana.id })).toEqual([]);
+  });
 });

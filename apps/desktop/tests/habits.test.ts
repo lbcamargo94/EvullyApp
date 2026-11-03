@@ -150,4 +150,33 @@ describe('habits (README §11.2)', () => {
       }),
     ).resolves.toMatchObject({ name: 'Creatina' });
   });
+
+  it('returns the logs of one habit, oldest first, for its profile only', async () => {
+    const { handlers, lucas, ana } = await setup();
+    const create = (name: string, unit: string) =>
+      handlers['habits:create']({
+        profileId: lucas.id,
+        name,
+        type: 'quantity',
+        unit,
+        targetValue: null,
+      });
+    const steps = await create('Passos', 'passos');
+    const water = await create('Copos', 'copos');
+    const log = (habitId: string, date: string, value: number | null) =>
+      handlers['habits:log']({ profileId: lucas.id, habitId, date, value });
+    await log(steps.id, '2026-10-25', 9000);
+    await log(steps.id, '2026-10-24', 7000);
+    await log(steps.id, '2026-10-26', 100);
+    await log(steps.id, '2026-10-26', null);
+    await log(water.id, '2026-10-25', 3);
+
+    expect(await handlers['habits:history']({ profileId: lucas.id, habitId: steps.id })).toEqual([
+      { date: '2026-10-24', value: 7000 },
+      { date: '2026-10-25', value: 9000 },
+    ]);
+    await expect(
+      handlers['habits:history']({ profileId: ana.id, habitId: steps.id }),
+    ).rejects.toThrow(NotFoundError);
+  });
 });

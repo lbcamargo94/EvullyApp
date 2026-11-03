@@ -18,6 +18,7 @@ import type {
   ExerciseInput,
   FoodDto,
   HabitDay,
+  HabitHistory,
   HabitDto,
   HabitInput,
   FoodInput,
@@ -65,6 +66,7 @@ import type {
   WorkoutPreferencesDto,
   WorkoutPreferencesInput,
   WorkoutSessionDto,
+  WorkoutStats,
   WeightDisplay,
   WeightEntry,
   WeightInput,
@@ -225,6 +227,7 @@ export interface EvullyClient {
     skip(profileId: string): Promise<WorkoutPreferencesDto>;
   };
   workoutSessions: {
+    stats(profileId: string): Promise<WorkoutStats>;
     open(profileId: string): Promise<WorkoutSessionDto | null>;
     start(profileId: string, workoutDayId: string | null): Promise<WorkoutSessionDto>;
     finish(profileId: string, id: string, notes: string | null): Promise<null>;
@@ -255,6 +258,7 @@ export interface EvullyClient {
     move(profileId: string, id: string, direction: 'up' | 'down'): Promise<HabitDto[]>;
     addExamples(profileId: string): Promise<HabitDto[]>;
     day(profileId: string, date: string): Promise<HabitDay>;
+    history(profileId: string, habitId: string): Promise<HabitHistory>;
     log(profileId: string, habitId: string, date: string, value: number | null): Promise<HabitDay>;
   };
   sleep: {

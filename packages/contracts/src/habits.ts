@@ -14,6 +14,7 @@ const habitValues = {
 export const habitInputSchema = z.object({ profileId: z.uuid(), ...habitValues });
 export const updateHabitInputSchema = habitInputSchema.extend({ id: z.uuid() });
 export const habitIdInputSchema = z.object({ profileId: z.uuid(), id: z.uuid() });
+export const habitHistoryInputSchema = z.object({ profileId: z.uuid(), habitId: z.uuid() });
 export const moveHabitInputSchema = habitIdInputSchema.extend({
   direction: z.enum(['up', 'down']),
 });
@@ -38,8 +39,12 @@ export const habitDaySchema = z.object({
   ),
 });
 
+/** Every logged value of one habit, oldest first (README §13.2). */
+export const habitHistorySchema = z.array(z.object({ date: localDate, value: z.number() }));
+
 export type HabitType = z.infer<typeof habitTypeSchema>;
 export type HabitInput = z.infer<typeof habitInputSchema>;
 export type UpdateHabitInput = z.infer<typeof updateHabitInputSchema>;
 export type HabitDto = z.infer<typeof habitSchema>;
 export type HabitDay = z.infer<typeof habitDaySchema>;
+export type HabitHistory = z.infer<typeof habitHistorySchema>;

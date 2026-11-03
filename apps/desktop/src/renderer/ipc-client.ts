@@ -151,6 +151,7 @@ export const ipcEvullyClient: EvullyClient = {
     skip: (profileId) => call('workout-preferences:skip', { profileId }),
   },
   workoutSessions: {
+    stats: (profileId) => call('workout-stats:get', { profileId }),
     open: (profileId) => call('workout-sessions:open', { profileId }),
     start: (profileId, workoutDayId) => call('workout-sessions:start', { profileId, workoutDayId }),
     finish: (profileId, id, notes) => call('workout-sessions:finish', { profileId, id, notes }),
@@ -187,6 +188,7 @@ export const ipcEvullyClient: EvullyClient = {
     move: (profileId, id, direction) => call('habits:move', { profileId, id, direction }),
     addExamples: (profileId) => call('habits:add-examples', { profileId }),
     day: (profileId, date) => call('habits:day', { profileId, date }),
+    history: (profileId, habitId) => call('habits:history', { profileId, habitId }),
     log: (profileId, habitId, date, value) =>
       call('habits:log', { profileId, habitId, date, value }),
   },

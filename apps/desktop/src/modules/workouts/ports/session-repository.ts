@@ -47,6 +47,14 @@ export interface SessionRepository {
     profileId: string,
     exerciseId: string,
   ): Promise<{ sessionId: string; startedAt: string; sets: SetRecord[] }[]>;
+  /** Every finished session with the sets of each exercise, oldest first. */
+  finishedSessions(profileId: string): Promise<
+    {
+      id: string;
+      startedAt: string;
+      exercises: { exerciseId: string; sets: SetRecord[] }[];
+    }[]
+  >;
   insertSession(
     session: { id: string; profileId: string; workoutDayId: string | null; startedAt: string },
     performances: NewPerformance[],

@@ -4,6 +4,7 @@ import {
   CreateHabit,
   DeactivateHabit,
   GetHabitDay,
+  GetHabitHistory,
   ListHabits,
   MoveHabit,
   SetHabitLog,
@@ -19,6 +20,7 @@ type HabitChannels =
   | 'habits:move'
   | 'habits:add-examples'
   | 'habits:day'
+  | 'habits:history'
   | 'habits:log';
 
 export function habitIpcHandlers(deps: HabitDeps): Pick<IpcHandlers, HabitChannels> {
@@ -30,6 +32,7 @@ export function habitIpcHandlers(deps: HabitDeps): Pick<IpcHandlers, HabitChanne
     'habits:move': (input) => new MoveHabit(deps).execute(input),
     'habits:add-examples': (input) => new AddHabitExamples(deps).execute(input),
     'habits:day': (input) => new GetHabitDay(deps).execute(input),
+    'habits:history': (input) => new GetHabitHistory(deps).execute(input),
     'habits:log': (input) => new SetHabitLog(deps).execute(input),
   };
 }

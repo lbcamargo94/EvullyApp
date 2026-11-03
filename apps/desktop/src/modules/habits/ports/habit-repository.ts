@@ -23,6 +23,8 @@ export interface HabitRepository {
   reorder(profileId: string, ids: readonly string[], now: string): Promise<void>;
   /** Active logs from `from` to `to` (inclusive). */
   logsBetween(profileId: string, from: LocalDate, to: LocalDate): Promise<HabitLogRecord[]>;
+  /** Active logs of one habit, oldest first. */
+  logsOf(profileId: string, habitId: string): Promise<HabitLogRecord[]>;
   /** One log per habit per day: replaces the day's value. */
   saveLog(profileId: string, log: HabitLogRecord, newId: string, now: string): Promise<void>;
   clearLog(profileId: string, habitId: string, logDate: LocalDate, now: string): Promise<void>;

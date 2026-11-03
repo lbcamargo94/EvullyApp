@@ -24,6 +24,18 @@ export interface WeeklyRate {
   ratePerWeek: number;
 }
 
+export interface WeekTotal {
+  weekStart: LocalDate;
+  total: number;
+}
+
+export interface ExerciseLoads {
+  exerciseId: string;
+  name: string;
+  /** Heaviest load of each session with a load, in session order. */
+  points: StatPoint[];
+}
+
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
 /**
@@ -74,4 +86,49 @@ export function weeklyRates(weeks: readonly WeekAverage[]): WeeklyRate[] {
       { weekStart: week.weekStart, ratePerWeek: round2((week.average - previous.average) / gap) },
     ];
   });
+}
+
+/**
+ * Sum of the values of each ISO week, oldest first, from the week of the first
+ * point to the week of `until`. Weeks without records count as zero, so a
+ * stopped week is not hidden from the chart.
+ */
+export function weeklyTotals(points: readonly StatPoint[], until: LocalDate): WeekTotal[] {
+  const totals = new Map<LocalDate, number>();
+  for (const p of points) {
+    const start = weekStartOf(parseLocalDate(p.date));
+    totals.set(start, (totals.get(start) ?? 0) + p.value);
+  }
+  const [first] = [...totals.keys()].sort();
+  if (!first) return [];
+  const weeks: WeekTotal[] = [];
+  const last = weekStartOf(until);
+  for (let week = first; daysBetween(week, last) >= 0; week = addDaysToLocalDate(week, 7)) {
+    weeks.push({ weekStart: week, total: round2(totals.get(week) ?? 0) });
+  }
+  return weeks;
+}
+
+/**
+ * Load history per exercise, with the most trained exercise first. Sessions
+ * must come oldest first; exercises without a load (e.g. planks) are left out.
+ */
+export function exerciseLoads(
+  sessions: readonly {
+    date: string;
+    exercises: readonly { exerciseId: string; name: string; topWeightKg: number | null }[];
+  }[],
+): ExerciseLoads[] {
+  const byExercise = new Map<string, ExerciseLoads>();
+  for (const session of sessions) {
+    for (const { exerciseId, name, topWeightKg } of session.exercises) {
+      if (topWeightKg === null) continue;
+      const entry = byExercise.get(exerciseId) ?? { exerciseId, name, points: [] };
+      entry.points.push({ date: session.date, value: topWeightKg });
+      byExercise.set(exerciseId, entry);
+    }
+  }
+  return [...byExercise.values()].sort(
+    (a, b) => b.points.length - a.points.length || a.name.localeCompare(b.name, 'pt-BR'),
+  );
 }

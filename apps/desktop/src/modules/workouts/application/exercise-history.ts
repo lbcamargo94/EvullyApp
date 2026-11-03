@@ -1,8 +1,9 @@
-import type { ExerciseHistoryDto } from '@evully/contracts';
+import type { ExerciseHistoryDto, WorkoutStats } from '@evully/contracts';
 import {
   addDaysToLocalDate,
   exerciseHistory,
   NotFoundError,
+  sessionStats,
   ValidationError,
 } from '@evully/domain';
 import { GetProfile } from '../../profiles/application/get-profile';
@@ -66,6 +67,30 @@ export class GetExerciseHistory {
           })),
       })),
     };
+  }
+}
+
+/** Finished sessions with the top load and volume per exercise (README §13.2). */
+export class GetWorkoutStats {
+  constructor(private readonly deps: SessionDeps) {}
+
+  async execute({ profileId }: { profileId: string }): Promise<WorkoutStats> {
+    const { profiles, sessions, exercises } = this.deps;
+    await new GetProfile(profiles).execute({ id: profileId });
+    const names = new Map((await exercises.listAll(profileId)).map((e) => [e.id, e.name]));
+    return (await sessions.finishedSessions(profileId)).map((session) => ({
+      startedAt: session.startedAt,
+      exercises: session.exercises.flatMap(({ exerciseId, sets }) => {
+        const name = names.get(exerciseId);
+        if (name === undefined) return [];
+        const { topWeightKg, volumeKg } = sessionStats({
+          sessionId: session.id,
+          startedAt: session.startedAt,
+          sets,
+        });
+        return [{ exerciseId, name, topWeightKg, volumeKg }];
+      }),
+    }));
   }
 }
 

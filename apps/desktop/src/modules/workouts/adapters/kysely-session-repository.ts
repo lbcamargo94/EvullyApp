@@ -70,6 +70,16 @@ async function insertSet(
     .execute();
 }
 
+function groupBy<T>(items: readonly T[], keyOf: (item: T) => string): Map<string, T[]> {
+  const groups = new Map<string, T[]>();
+  for (const item of items) {
+    const group = groups.get(keyOf(item));
+    if (group) group.push(item);
+    else groups.set(keyOf(item), [item]);
+  }
+  return groups;
+}
+
 export class KyselySessionRepository implements SessionRepository {
   constructor(private readonly db: Kysely<DatabaseSchema>) {}
 
@@ -202,6 +212,46 @@ export class KyselySessionRepository implements SessionRepository {
       bySession.set(r.session_id, entry);
     }
     return [...bySession.values()];
+  }
+
+  async finishedSessions(profileId: string) {
+    const sessions = await this.db
+      .selectFrom('workout_sessions')
+      .select(['id', 'started_at'])
+      .where('profile_id', '=', profileId)
+      .where('deleted_at', 'is', null)
+      .where('finished_at', 'is not', null)
+      .orderBy('started_at')
+      .orderBy('id')
+      .execute();
+    const performances = await this.db
+      .selectFrom('exercise_performances')
+      .select(['id', 'session_id', 'exercise_id'])
+      .where('profile_id', '=', profileId)
+      .where('deleted_at', 'is', null)
+      .orderBy('sort_order')
+      .orderBy('id')
+      .execute();
+    const sets = await this.db
+      .selectFrom('exercise_sets')
+      .selectAll()
+      .where('profile_id', '=', profileId)
+      .where('deleted_at', 'is', null)
+      .orderBy('set_number')
+      .execute();
+    const setsOf = groupBy(sets, (s) => s.performance_id);
+    const performancesOf = groupBy(performances, (p) => p.session_id);
+    return sessions.map((s) => ({
+      id: s.id,
+      startedAt: s.started_at,
+      // A session may hold the same exercise twice: merge its performances.
+      exercises: [...groupBy(performancesOf.get(s.id) ?? [], (p) => p.exercise_id)].map(
+        ([exerciseId, repeats]) => ({
+          exerciseId,
+          sets: repeats.flatMap((p) => setsOf.get(p.id) ?? []).map(toSet),
+        }),
+      ),
+    }));
   }
 
   async insertSession(

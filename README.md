@@ -1740,7 +1740,14 @@ Não sobrecarregar o dashboard com todos os gráficos.
 - **Calorias e proteína:** só alimentos marcados como consumidos, por dia,
   com a meta vigente em cada dia.
 - **Sono:** duração de cada noite e a meta atual.
-- Treino, cardio e passos chegam na 0.6.0-alpha.3.
+- **Treino:** volume por semana (carga × repetições das séries concluídas
+  com carga), frequência por semana (treinos finalizados) e maior carga de
+  cada treino por exercício, abrindo no exercício com mais treinos.
+  Exercícios só de tempo não têm carga e ficam de fora.
+- **Cardio:** minutos por semana e a meta atual.
+- **Passos:** total do dia no hábito de quantidade com unidade "passos" e a
+  meta do hábito. Passos de sessões de cardio não entram (§11.1).
+- Nos gráficos semanais somados, semanas sem registro contam como zero.
 
 ### 13.3 Análise de evolução
 
