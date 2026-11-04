@@ -52,6 +52,7 @@ export interface SessionRepository {
     {
       id: string;
       startedAt: string;
+      workoutDayId: string | null;
       exercises: { exerciseId: string; sets: SetRecord[] }[];
     }[]
   >;

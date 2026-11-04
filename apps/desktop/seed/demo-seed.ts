@@ -325,10 +325,11 @@ function setValues(rnd: Random, p: Performance, prefilled: number | null, topRep
   };
 }
 
-async function train(ctx: Context, date: LocalDate, workoutDayId: string) {
-  if (ctx.rnd.chance(0.12)) return;
+/** Today's workout is always done, in the morning, to show it finished on Hoje. */
+async function train(ctx: Context, date: LocalDate, workoutDayId: string, today: boolean) {
+  if (!today && ctx.rnd.chance(0.12)) return;
   const { handlers, profileId, rnd } = ctx;
-  ctx.clock.set(date, '18:30');
+  ctx.clock.set(date, today ? '06:30' : '18:30');
   const session = await handlers['workout-sessions:start']({ profileId, workoutDayId });
   for (const p of session.performances) {
     const topReps = rnd.chance(0.35);
@@ -342,7 +343,7 @@ async function train(ctx: Context, date: LocalDate, workoutDayId: string) {
       });
     }
   }
-  ctx.clock.set(date, '19:40');
+  ctx.clock.set(date, today ? '07:40' : '19:40');
   await handlers['workout-sessions:finish']({ profileId, id: session.id, notes: null });
   ctx.result.workouts++;
 }
@@ -462,13 +463,13 @@ export async function seedDemo(
     await sleep(ctx, date);
     await weighIn(ctx, date, day);
     await measure(ctx, date, day, setup.types);
+    const workoutDayId = setup.trainingDays.get(weekday);
+    if (workoutDayId) await train(ctx, date, workoutDayId, isToday);
     await eat(ctx, date, foods, isToday);
     if (isToday) {
       await habits(ctx, date, setup.habitIds, false, true);
       continue;
     }
-    const workoutDayId = setup.trainingDays.get(weekday);
-    if (workoutDayId) await train(ctx, date, workoutDayId);
     if (cardioDay) await cardio(ctx, date);
     await habits(ctx, date, setup.habitIds, cardioDay, false);
   }

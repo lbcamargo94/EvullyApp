@@ -80,6 +80,7 @@ export class GetWorkoutStats {
     const names = new Map((await exercises.listAll(profileId)).map((e) => [e.id, e.name]));
     return (await sessions.finishedSessions(profileId)).map((session) => ({
       startedAt: session.startedAt,
+      dayId: session.workoutDayId,
       exercises: session.exercises.flatMap(({ exerciseId, sets }) => {
         const name = names.get(exerciseId);
         if (name === undefined) return [];

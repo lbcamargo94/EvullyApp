@@ -162,7 +162,7 @@ describe('exercise history and progression (README §10.5, §10.6)', () => {
 
     const stats = await handlers['workout-stats:get']({ profileId: lucas.id });
     expect(stats).toHaveLength(1);
-    expect(stats[0]?.startedAt).toBe('2026-10-27T18:00:00.000Z');
+    expect(stats[0]).toMatchObject({ startedAt: '2026-10-27T18:00:00.000Z', dayId: push.id });
     expect(stats[0]?.exercises.find((e) => e.exerciseId === benchId)).toMatchObject({
       topWeightKg: 100,
       volumeKg: 1220,

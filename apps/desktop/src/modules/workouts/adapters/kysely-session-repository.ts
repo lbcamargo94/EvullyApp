@@ -217,7 +217,7 @@ export class KyselySessionRepository implements SessionRepository {
   async finishedSessions(profileId: string) {
     const sessions = await this.db
       .selectFrom('workout_sessions')
-      .select(['id', 'started_at'])
+      .select(['id', 'started_at', 'workout_day_id'])
       .where('profile_id', '=', profileId)
       .where('deleted_at', 'is', null)
       .where('finished_at', 'is not', null)
@@ -244,6 +244,7 @@ export class KyselySessionRepository implements SessionRepository {
     return sessions.map((s) => ({
       id: s.id,
       startedAt: s.started_at,
+      workoutDayId: s.workout_day_id,
       // A session may hold the same exercise twice: merge its performances.
       exercises: [...groupBy(performancesOf.get(s.id) ?? [], (p) => p.exercise_id)].map(
         ([exerciseId, repeats]) => ({

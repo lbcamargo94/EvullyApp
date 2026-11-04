@@ -16,13 +16,15 @@ import { Link } from 'react-router';
 import { MeasurementCards } from '../measurements/measurement-cards';
 import { objectiveLabels } from '../tracking/messages.pt-BR';
 import { WeightSummaryCard } from '../weights/weight-summary-card';
+import { EvolutionCard } from './evolution-card';
 import { shellMessages as m } from './messages.pt-BR';
 import { TodayActivityCards } from './today-activity-cards';
 import { TodayCard } from './today-card';
 
 /**
  * Dashboard (README §8.5): project progress, weight as chosen, up to 3 measurements,
- * and today's nutrition, habits, cardio and sleep for the modules in use.
+ * today's nutrition, habits, cardio and sleep for the modules in use, and the
+ * evolution of the last 14 days (README §13.3).
  */
 export function HomeScreen() {
   const { profileId } = useCurrentProfile();
@@ -54,6 +56,7 @@ export function HomeScreen() {
         {measurements && <MeasurementCards summary={measurements} />}
       </div>
       {profileId && <TodayCard profileId={profileId} />}
+      {profileId && <EvolutionCard profileId={profileId} />}
       {profileId && <TodayActivityCards profileId={profileId} />}
     </>
   );
