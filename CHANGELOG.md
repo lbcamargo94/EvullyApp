@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.6.0-alpha.4] - 2026-11-04
+
 ### Added
 - **Últimos 14 dias** no painel: variação do peso médio por semana, cintura,
   treinos concluídos sobre os planejados, proteína e sono médios e
