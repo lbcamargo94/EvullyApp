@@ -58,6 +58,7 @@ Same for any doc over ~300 lines.
 | Task | Command |
 |---|---|
 | Run app (dev, data in `%APPDATA%\Evully-dev`) | `npm run dev` |
+| Demo profile with ~4 months of data in the dev DB (app closed; extend `apps/desktop/seed/demo-seed.ts` with each feature) | `npm run seed` |
 | Lint (incl. architecture boundaries) | `npm run lint` |
 | Typecheck | `npm run typecheck` |
 | Tests (desktop tests run under Electron) | `npm test` |
