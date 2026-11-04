@@ -1,6 +1,7 @@
 import {
   errorCode,
   isoWeekday,
+  localDateOf,
   localToday,
   useHabitDay,
   useNutritionDay,
@@ -10,9 +11,11 @@ import {
   useSleepLogs,
   useSleepTarget,
   useWorkoutPlans,
+  useWorkoutStats,
 } from '@evully/app-core';
 import type { NutritionDay, WorkoutPlanDto, WorkoutSessionDto } from '@evully/contracts';
 import { Button, Card, ProgressBar } from '@evully/ui';
+import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { formatNumber } from '../nutrition/messages.pt-BR';
@@ -97,20 +100,27 @@ function useSleepRows(profileId: string, today: string): Row[] {
 interface TodayWorkout {
   session: WorkoutSessionDto | null;
   planned: { plan: string; day: WorkoutPlanDto['days'][number] }[];
+  /** Plan days (or null, a free workout) of the sessions finished today. */
+  finished: (string | null)[];
 }
 
-/** The open session or today's days of the active plans; null when no plan has weekdays. */
+/**
+ * The open session, today's days of the active plans and the workouts already
+ * finished today; null when there is nothing to show.
+ */
 function useTodayWorkout(profileId: string, today: string): TodayWorkout | null {
   const { data: plans = [] } = useWorkoutPlans(profileId);
   const { data: session = null } = useOpenSession(profileId);
+  const { data: stats = [] } = useWorkoutStats(profileId);
+  const finished = stats.filter((s) => localDateOf(s.startedAt) === today).map((s) => s.dayId);
   const active = plans.filter((p) => p.status === 'active');
   const scheduled = active.some((p) => p.days.some((d) => d.weekday !== null));
-  if (!session && !scheduled) return null;
+  if (!session && !scheduled && finished.length === 0) return null;
   const weekday = isoWeekday(today);
   const planned = active.flatMap((p) =>
     p.days.filter((d) => d.weekday === weekday).map((day) => ({ plan: p.name, day })),
   );
-  return { session, planned };
+  return { session, planned, finished };
 }
 
 /**
@@ -161,7 +171,7 @@ function WorkoutSection({ profileId, workout }: { profileId: string; workout: To
   const start = useSessionMutation(profileId, (api, pid, dayId: string) => api.start(pid, dayId));
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
-  const { session, planned } = workout;
+  const { session, planned, finished } = workout;
 
   const begin = async (dayId: string) => {
     try {
@@ -190,7 +200,9 @@ function WorkoutSection({ profileId, workout }: { profileId: string; workout: To
           </Button>
         </div>
       ) : planned.length === 0 ? (
-        <span className="text-sm">{m.noWorkoutToday}</span>
+        <span className="text-sm">
+          {finished.length > 0 ? m.workoutDoneToday : m.noWorkoutToday}
+        </span>
       ) : (
         planned.map(({ plan, day }) => (
           <div key={day.id} className="flex flex-wrap items-center justify-between gap-3">
@@ -200,9 +212,16 @@ function WorkoutSection({ profileId, workout }: { profileId: string; workout: To
                 {m.workoutPlan(plan, day.exercises.length)}
               </span>
             </span>
-            <Button type="button" disabled={start.isPending} onClick={() => void begin(day.id)}>
-              {m.startWorkout}
-            </Button>
+            {finished.includes(day.id) ? (
+              <span className="flex items-center gap-1 text-sm font-semibold">
+                <Check aria-hidden="true" className="size-4 text-brand" />
+                {m.workoutDone}
+              </span>
+            ) : (
+              <Button type="button" disabled={start.isPending} onClick={() => void begin(day.id)}>
+                {m.startWorkout}
+              </Button>
+            )}
           </div>
         ))
       )}

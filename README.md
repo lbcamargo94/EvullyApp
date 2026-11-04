@@ -1766,6 +1766,25 @@ Performance:     estável
 
 Sem aconselhamento médico automático.
 
+- Card **Últimos 14 dias** no painel (0.6.0-alpha.4), calculado por
+  `evolutionSummary` no domínio. A janela são os 14 dias que terminam hoje;
+  cada linha só aparece com dados suficientes:
+  - **Peso médio:** média dos últimos 7 dias menos a dos 7 anteriores
+    (kg/semana), com ao menos 3 pesagens em cada semana. Cor pela direção
+    do objetivo (§7.6).
+  - **Cintura:** última medida da janela menos a última de antes dela (ou a
+    primeira da janela); precisa de duas medidas.
+  - **Treinos:** finalizados na janela sobre os dias previstos dos planos
+    ativos (cada dia da semana marcado conta duas vezes); sem dias marcados,
+    só o total.
+  - **Proteína média** (dias com alimento consumido) e **sono médio** (noites
+    registradas).
+  - **Performance:** volume de treino da janela contra os 14 dias anteriores;
+    até ±5% é "estável", acima "subindo", abaixo "caindo". Precisa de volume
+    nos dois períodos.
+- No card **Hoje**, um dia planejado já finalizado hoje aparece como
+  "Concluído"; um treino livre finalizado hoje, como "Treino concluído hoje".
+
 ---
 
 ## 14. V0.7 — Backup, restauração e exportação

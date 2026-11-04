@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Últimos 14 dias** no painel: variação do peso médio por semana, cintura,
+  treinos concluídos sobre os planejados, proteína e sono médios e
+  performance (volume de treino comparado aos 14 dias anteriores). Cada
+  linha só aparece com dados suficientes.
+
+### Fixed
+- O card Hoje mostra o treino do dia como concluído depois de finalizado, em
+  vez de oferecer começar de novo.
+
 ## [0.6.0-alpha.3] - 2026-11-03
 
 ### Added

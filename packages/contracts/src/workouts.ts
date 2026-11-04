@@ -189,6 +189,8 @@ export const workoutSessionSchema = z.object({
 export const workoutStatsSchema = z.array(
   z.object({
     startedAt: z.string(),
+    /** Plan day the session followed; null for a free workout. */
+    dayId: z.string().nullable(),
     exercises: z.array(
       z.object({
         exerciseId: z.string(),
