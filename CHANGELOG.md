@@ -6,6 +6,18 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-09
+
+Versão estável da V0.6 (Estatísticas e dashboard completo). Traz:
+
+- o card **Hoje** no painel, com calorias, proteína, água, passos, sono e o
+  treino do dia, além da meta de sono;
+- a tela **Estatísticas**, com gráficos de peso, medidas, calorias,
+  proteína, sono, treino, cardio e passos, filtrados por período;
+- o resumo dos **últimos 14 dias** no painel.
+
+Detalhes de cada etapa nas pré-versões abaixo.
+
 ## [0.6.0-alpha.4] - 2026-11-04
 
 ### Added
