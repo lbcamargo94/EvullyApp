@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.7.0-alpha.1] - 2026-11-10
+
 ### Added
 - **Restaurar backup** em Configurações › Geral e backup: escolha um backup
   das pastas de backup ou um arquivo, confira data, versão e perfis, e
