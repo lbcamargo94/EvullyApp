@@ -8,7 +8,7 @@ import { UpdateSection } from './update-section';
 const textBox =
   'max-h-72 overflow-auto rounded-md border border-border bg-surface-muted p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap';
 
-/** Settings › Sobre (README §8.4): version, health notice, license, notices, restore steps. */
+/** Settings › Sobre (README §8.4): version, health notice, license and notices. */
 export function AboutSection() {
   const { data: info } = useAppInfo();
   const [showNotices, setShowNotices] = useState(false);
@@ -34,15 +34,6 @@ export function AboutSection() {
             <p key={line}>{line}</p>
           ))}
         </div>
-      </Section>
-
-      <Section id="about-restore" title={m.restoreTitle}>
-        <ol className="flex list-decimal flex-col gap-1.5 pl-5">
-          {m.restoreSteps.map((step) => (
-            <li key={step}>{step}</li>
-          ))}
-        </ol>
-        <p className="text-sm text-text-muted">{m.restoreNote}</p>
       </Section>
 
       <Section id="about-license" title={m.licenseTitle}>

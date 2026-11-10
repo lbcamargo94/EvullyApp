@@ -925,8 +925,8 @@ pelo menos um valor; nenhum campo é obrigatório individualmente.
 | Medidas | Registrar sessão com as medidas do perfil (com dicas de como medir); histórico; gráfico por medida. |
 | Configurações — Acompanhamento | Objetivo, áreas de foco, medidas acompanhadas e ordem, exibição do peso, etiquetas, refazer questionário. |
 | Configurações — Projeto | Criar, editar e concluir projeto. |
-| Configurações — Geral | Tema (igual ao Windows, claro ou escuro), retorno à seleção de perfil por inatividade (nunca, 5, 15 ou 30 min), backup (manual, automático, pasta adicional, último backup). |
-| Configurações — Sobre | Versão do app, aviso de saúde, licença e avisos de terceiros, como restaurar um backup manualmente (§8.7.3). |
+| Configurações — Geral | Tema (igual ao Windows, claro ou escuro), retorno à seleção de perfil por inatividade (nunca, 5, 15 ou 30 min), backup (manual, automático, pasta adicional, último backup) e restauração (§14.2, desde a V0.7). |
+| Configurações — Sobre | Versão do app, aviso de saúde, licença e avisos de terceiros. |
 | Importar CSV | Escolher arquivo, pré-visualizar, ver erros e confirmar. Acessível pelas telas Peso e Medidas. |
 
 No topo de todas as telas: `Perfil atual: Lucas ▼`. Trocar de perfil
@@ -1011,12 +1011,10 @@ manifest.json   { app_version, schema_version, created_at, kind, sha256 }
   sem impedir o fechamento.
 - Configurações mostra a data do último backup bem-sucedido.
 
-#### 8.7.3 Restauração antes da V0.7
+#### 8.7.3 Restauração
 
-A tela de restauração chega na V0.7. Até lá, um backup pode ser
-restaurado manualmente, com o app fechado: extrair o `evully.db` do zip
-e substituí-lo em `%APPDATA%\Evully`, guardando o arquivo atual. O
-passo a passo fica em Configurações — Sobre e no guia do usuário.
+Desde a V0.7 (0.7.0-alpha.1), pelo próprio app em Configurações — Geral
+(§14.2). O passo a passo manual da V0.1 saiu de Configurações — Sobre.
 
 ### 8.8 Importação CSV
 
@@ -1809,6 +1807,28 @@ evully-backup-YYYY-MM-DD-HHMM.zip
 6. Restaurar.
 7. Confirmar sucesso.
 
+Implementação (0.7.0-alpha.1):
+
+- **Escolha:** os backups do Evully da pasta padrão e da pasta adicional,
+  do mais novo para o mais antigo, ou um arquivo escolhido no diálogo do
+  Windows. A tela nunca envia caminhos: só pasta e nome de um arquivo
+  listado.
+- **Validação:** o zip precisa conter exatamente `evully.db` e
+  `manifest.json` (nenhuma outra entrada, logo nenhum caminho absoluto ou
+  com `..`); o `sha256` do banco confere com o manifesto; `PRAGMA
+  integrity_check` passa; a última migration do banco não é mais nova que a
+  do app (`backup.restore_invalid`, `backup.restore_corrupt`,
+  `backup.restore_newer`).
+- **Resumo:** nome do arquivo, data, versão do app que o criou e nomes dos
+  perfis do backup, com o aviso de que os dados de **todos os perfis** serão
+  substituídos. Os nomes só aparecem na tela, nunca no log.
+- **Confirmação** ("Substituir e reiniciar"): backup do estado atual
+  (`kind = pre-restore`, nunca removido pela limpeza automática); o banco
+  validado fica em `restore-pending.db` no diretório de dados e o app
+  reinicia. Na abertura, antes de abrir o banco, o arquivo substitui o
+  `evully.db` (os `-wal`/`-shm` antigos são removidos); um backup de versão
+  anterior passa pelas migrations normais, com o backup pré-migração.
+
 ### 14.3 Exportação
 
 - JSON completo;
@@ -1920,6 +1940,12 @@ No topo: `Perfil atual: Lucas ▼`.
 costas), `file_path`, `notes`. Os arquivos ficam no diretório de dados do
 app; o banco guarda apenas metadados e caminho relativo.
 
+Decidido em 09/11/2026: ao importar, cada foto é reduzida (lado maior até
+2048 px, JPEG com qualidade em torno de 80) e perde os metadados EXIF,
+inclusive a localização GPS; o app guarda só a cópia reduzida, e o backup
+passa a incluir `photos/` (§14.1). A redução usa o `nativeImage` do
+Electron, sem dependência nova.
+
 ---
 
 ## 18. Testes
@@ -1946,7 +1972,7 @@ app; o banco guarda apenas metadados e caminho relativo.
 - isolamento entre perfis em todos os repositórios;
 - soft delete, arquivamento e exclusão definitiva de perfil;
 - histórico de configurações (inserção apenas);
-- backup e, a partir da V0.7, restauração.
+- backup e restauração (validação, backup `pre-restore` e troca na abertura).
 
 ### 18.3 Fluxos críticos (interface)
 

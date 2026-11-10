@@ -32,7 +32,9 @@ test('seed the development database', { timeout: 600_000 }, async () => {
       backup: {
         defaultDirectory: join(folder, 'backups'),
         tempDirectory: join(folder, 'tmp'),
+        pendingRestoreFile: join(folder, 'restore-pending.db'),
         dialogs: noDialogs,
+        restart: { restart: () => undefined },
       },
       importFiles: noImportFiles,
       updater: noUpdates,

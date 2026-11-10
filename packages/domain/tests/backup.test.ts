@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  assertRestorable,
   backupFileName,
   backupsToDelete,
   isAutomaticBackupDue,
@@ -57,5 +58,35 @@ describe('backupsToDelete', () => {
     ];
     const backups = [...others, ...Array.from({ length: 11 }, (_, i) => auto(i + 1))];
     expect(backupsToDelete(backups)).toEqual(['auto-1.zip']);
+  });
+});
+
+describe('assertRestorable (README §14.2)', () => {
+  const valid = {
+    manifestSha256: 'abc',
+    actualSha256: 'abc',
+    integrityOk: true,
+    schemaVersion: '0017_sleep_logs',
+    appSchemaVersion: '0018_sleep_targets',
+  };
+
+  it('accepts an intact backup from the same or an older schema', () => {
+    expect(() => assertRestorable(valid)).not.toThrow();
+    expect(() => assertRestorable({ ...valid, schemaVersion: '0018_sleep_targets' })).not.toThrow();
+  });
+
+  it('refuses a database that does not match the manifest or fails the integrity check', () => {
+    expect(() => assertRestorable({ ...valid, actualSha256: 'abd' })).toThrow(
+      expect.objectContaining({ code: 'backup.restore_corrupt' }),
+    );
+    expect(() => assertRestorable({ ...valid, integrityOk: false })).toThrow(
+      expect.objectContaining({ code: 'backup.restore_corrupt' }),
+    );
+  });
+
+  it('refuses a backup from a newer Evully', () => {
+    expect(() => assertRestorable({ ...valid, schemaVersion: '0019_progress_photos' })).toThrow(
+      expect.objectContaining({ code: 'backup.restore_newer' }),
+    );
   });
 });

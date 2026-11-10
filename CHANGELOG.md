@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Restaurar backup** em Configurações › Geral e backup: escolha um backup
+  das pastas de backup ou um arquivo, confira data, versão e perfis, e
+  confirme. O Evully valida o arquivo, faz um backup do estado atual e
+  reinicia para concluir.
+
+### Removed
+- O passo a passo de restauração manual em Configurações › Sobre.
+
 ## [0.6.0] - 2026-11-09
 
 Versão estável da V0.6 (Estatísticas e dashboard completo). Traz:

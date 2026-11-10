@@ -7,6 +7,7 @@ import {
 import { Button, Card } from '@evully/ui';
 import { useState } from 'react';
 import { settingsMessages as m } from './messages.pt-BR';
+import { RestorePanel } from './restore-panel';
 
 const row = 'flex flex-wrap items-center justify-between gap-3 border-t border-border py-4';
 
@@ -100,7 +101,7 @@ export function BackupSection() {
         </div>
       </div>
 
-      <p className="border-t border-border pt-4 text-sm text-text-muted">{m.restoreHint}</p>
+      <RestorePanel />
     </Card>
   );
 }

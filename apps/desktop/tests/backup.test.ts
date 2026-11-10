@@ -33,6 +33,7 @@ describe('backup', () => {
     const app = await createTestApp(clock, {
       chooseSavePath: async () => savePath,
       chooseDirectory: async () => extraDir,
+      chooseBackupFile: async () => null,
     });
     dispose = app.dispose;
     await app.handlers['profiles:create'](person);
@@ -95,6 +96,7 @@ describe('backup', () => {
     const app = await createTestApp(clock, {
       chooseSavePath: async () => null,
       chooseDirectory: async () => extraHolder.dir,
+      chooseBackupFile: async () => null,
     });
     dispose = app.dispose;
     extraHolder.dir = join(app.dir, 'onedrive');

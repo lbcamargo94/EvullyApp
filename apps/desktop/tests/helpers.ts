@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { openDatabase } from '../src/database/connection';
 import { migrateToLatest } from '../src/database/migrator';
 import { buildApp } from '../src/main/composition-root';
-import type { BackupDialogs } from '../src/modules/backup/ports/backup-ports';
+import type { AppRestart, BackupDialogs } from '../src/modules/backup/ports/backup-ports';
 import type { ImportFiles } from '../src/modules/imports/ports/import-ports';
 import type { Updater } from '../src/modules/updates/ports/updater';
 import type { Clock, IdGenerator } from '../src/modules/shared/ports';
@@ -34,6 +34,7 @@ export const sequentialIds = (): IdGenerator => {
 export const noDialogs: BackupDialogs = {
   chooseSavePath: async () => null,
   chooseDirectory: async () => null,
+  chooseBackupFile: async () => null,
 };
 
 /** Import dialogs that are always cancelled. */
@@ -61,6 +62,7 @@ export async function createTestApp(
   clock: Clock = fixedClock(),
   dialogs: BackupDialogs = noDialogs,
   importFiles: ImportFiles = noImportFiles,
+  restart: AppRestart = { restart: () => undefined },
 ) {
   const dir = mkdtempSync(join(tmpdir(), 'evully-test-'));
   const db = openDatabase(join(dir, 'evully.db'));
@@ -75,7 +77,9 @@ export async function createTestApp(
     backup: {
       defaultDirectory: join(dir, 'backups'),
       tempDirectory: join(dir, 'tmp'),
+      pendingRestoreFile: join(dir, 'restore-pending.db'),
       dialogs,
+      restart,
     },
     importFiles,
     updater: noUpdates,

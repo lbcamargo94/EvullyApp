@@ -210,5 +210,8 @@ export const ipcEvullyClient: EvullyClient = {
     setAutomatic: (automaticEnabled) => call('backup:set-automatic', { automaticEnabled }),
     chooseExtraDirectory: (clear) => call('backup:choose-extra-directory', { clear }),
     dismissError: () => call('backup:dismiss-error', undefined),
+    restorable: () => call('backup:restorable', undefined),
+    prepareRestore: (input) => call('backup:prepare-restore', input),
+    restore: (token) => call('backup:restore', { token }),
   },
 };
