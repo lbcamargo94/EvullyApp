@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.7.0-alpha.2] - 2026-11-10
+
 ### Added
 - **Exportar dados** em Configurações › Perfil, só do perfil atual:
   - **JSON** completo, com todos os registros do perfil;
