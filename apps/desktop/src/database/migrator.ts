@@ -42,6 +42,9 @@ const migrations: Record<string, Migration> = {
   '0018_sleep_targets': m0018,
 };
 
+/** Latest migration of this app: a backup with a newer one cannot be restored (README §14.2). */
+export const LATEST_MIGRATION = Object.keys(migrations).sort().at(-1) ?? '';
+
 const provider: MigrationProvider = { getMigrations: async () => migrations };
 
 /** Applies pending migrations; throws if any fails. */

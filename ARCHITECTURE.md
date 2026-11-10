@@ -252,6 +252,7 @@ licenças e `npm audit`.
 | 06/10/2026 | Padronização do Claude Code: `CLAUDE.md` curto, skills `evully-task` e `evully-docs-sync`, permissões em `.claude/settings.json`, verificação de docs por script | Agente consistente e economia de tokens: regras carregadas sempre são mínimas; o detalhe fica nos docs e nas skills, lidos sob demanda. |
 
 | 27/10/2026 | Atualização automática antecipada: `electron-updater` + repositório público só de releases + assinatura Ed25519 própria verificada antes de instalar | Pedido do usuário para o início do desenvolvimento; o código segue privado sem token no app, e a assinatura cobre a falta de Authenticode ([SECURITY.md](SECURITY.md), §2.8). |
+| 09/11/2026 | Restauração de backup aplicada no reinício: o banco validado espera em `restore-pending.db` e substitui o `evully.db` na abertura, antes da conexão | Trocar o arquivo com a conexão aberta arrisca WAL e páginas em cache; no reinício a troca é um `rename`, e as migrations e o backup pré-migração seguem o fluxo normal (README, §14.2). |
 
 Novas decisões arquiteturais são adicionadas a esta tabela com data e
 motivo.

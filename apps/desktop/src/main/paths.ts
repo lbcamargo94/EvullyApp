@@ -20,6 +20,11 @@ export function backupsDirectory(): string {
   return join(app.getPath('userData'), 'backups');
 }
 
+/** A validated backup waiting to replace the database on the next start (README §14.2). */
+export function pendingRestoreFile(): string {
+  return join(app.getPath('userData'), 'restore-pending.db');
+}
+
 /** Private scratch folder for database snapshots while a backup is written. */
 export function scratchDirectory(): string {
   return join(app.getPath('userData'), 'tmp');

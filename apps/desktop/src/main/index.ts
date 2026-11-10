@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { openDatabase } from '../database/connection';
 import { hasPendingMigrations, migrateToLatest } from '../database/migrator';
+import { applyPendingRestore } from '../modules/backup/adapters/fs-backup-reader';
 import { systemClock, uuidV7Generator } from '../modules/shared/system-adapters';
 import { ElectronUpdater } from './auto-update';
 import { buildApp } from './composition-root';
@@ -12,7 +13,13 @@ import { withNativeTheme } from './native-theme';
 import { electronDialogs } from './electron-dialogs';
 import { electronImportFiles } from './electron-import-files';
 import { registerIpcHandlers } from './ipc-router';
-import { backupsDirectory, configureDataDirectory, databaseFile, scratchDirectory } from './paths';
+import {
+  backupsDirectory,
+  configureDataDirectory,
+  databaseFile,
+  pendingRestoreFile,
+  scratchDirectory,
+} from './paths';
 
 configureDataDirectory();
 log.initialize();
@@ -62,6 +69,8 @@ async function start(): Promise<void> {
   await app.whenReady();
 
   const file = databaseFile();
+  // A confirmed restore replaces the database before it opens (README §14.2).
+  if (applyPendingRestore(file, pendingRestoreFile())) log.info('backup restored');
   const existed = existsSync(file);
   const db = openDatabase(file);
 
@@ -91,7 +100,15 @@ async function start(): Promise<void> {
     backup: {
       defaultDirectory: backupsDirectory(),
       tempDirectory: scratchDirectory(),
+      pendingRestoreFile: pendingRestoreFile(),
       dialogs: electronDialogs,
+      restart: {
+        restart: () =>
+          setImmediate(() => {
+            app.relaunch();
+            app.quit();
+          }),
+      },
     },
     importFiles: electronImportFiles,
     updater,

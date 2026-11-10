@@ -26,4 +26,16 @@ export const electronDialogs: BackupDialogs = {
       : await dialog.showOpenDialog(options);
     return result.canceled ? null : (result.filePaths[0] ?? null);
   },
+  async chooseBackupFile() {
+    const window = BrowserWindow.getFocusedWindow();
+    const options = {
+      title: 'Escolher backup do Evully para restaurar',
+      filters: [{ name: 'Backup do Evully', extensions: ['zip'] }],
+      properties: ['openFile'] as 'openFile'[],
+    };
+    const result = window
+      ? await dialog.showOpenDialog(window, options)
+      : await dialog.showOpenDialog(options);
+    return result.canceled ? null : (result.filePaths[0] ?? null);
+  },
 };

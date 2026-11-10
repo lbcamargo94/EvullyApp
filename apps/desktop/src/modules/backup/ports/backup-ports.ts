@@ -34,4 +34,35 @@ export interface BackupFolder {
 export interface BackupDialogs {
   chooseSavePath(defaultFileName: string): Promise<string | null>;
   chooseDirectory(): Promise<string | null>;
+  /** A backup zip to restore. */
+  chooseBackupFile(): Promise<string | null>;
+}
+
+/** A backup zip opened for restore, its database extracted to a private scratch file. */
+export interface OpenedBackup {
+  manifest: BackupManifest;
+  /** Extracted `evully.db`, removed by `discard` or moved by `stage`. */
+  databaseFile: string;
+  sha256: string;
+  integrityOk: boolean;
+  /** Latest migration recorded in the extracted database. */
+  schemaVersion: string;
+  profiles: string[];
+}
+
+export interface BackupReader {
+  /**
+   * Accepts only a zip holding exactly `evully.db` and `manifest.json` (no
+   * other entries, so no absolute or `..` paths). Throws
+   * `backup.restore_invalid` for anything else.
+   */
+  open(path: string): Promise<OpenedBackup>;
+  discard(databaseFile: string): Promise<void>;
+  /** Moves the extracted database to where the next start swaps it in. */
+  stage(databaseFile: string): Promise<void>;
+}
+
+/** Quits and starts the app again, so the staged restore is applied before the database opens. */
+export interface AppRestart {
+  restart(): void;
 }

@@ -6,13 +6,15 @@ import {
   type WorkoutPreferences,
 } from '@evully/domain';
 import type { Kysely } from 'kysely';
+import { LATEST_MIGRATION } from '../database/migrator';
 import type { DatabaseSchema } from '../database/schema';
 import { backupIpcHandlers } from '../modules/backup/adapters/backup-ipc-handlers';
 import { FsBackupFolder, FsBackupWriter } from '../modules/backup/adapters/fs-backup';
+import { FsBackupReader } from '../modules/backup/adapters/fs-backup-reader';
 import { BackupSettings } from '../modules/backup/application/backup-settings';
 import { CreateBackup, type BackupDeps } from '../modules/backup/application/create-backup';
 import { RunAutomaticBackup } from '../modules/backup/application/run-automatic-backup';
-import type { BackupDialogs } from '../modules/backup/ports/backup-ports';
+import type { AppRestart, BackupDialogs } from '../modules/backup/ports/backup-ports';
 import { cardioIpcHandlers } from '../modules/cardio/adapters/cardio-ipc-handlers';
 import {
   KyselyCardioRepository,
@@ -67,7 +69,14 @@ interface Dependencies {
   appInfo: () => AppInfo;
   /** LICENSE and THIRD_PARTY_NOTICES, read from the app resources. */
   legal: () => Promise<LegalDocuments>;
-  backup: { defaultDirectory: string; tempDirectory: string; dialogs: BackupDialogs };
+  backup: {
+    defaultDirectory: string;
+    tempDirectory: string;
+    /** Where a validated restore waits for the next start (README §14.2). */
+    pendingRestoreFile: string;
+    dialogs: BackupDialogs;
+    restart: AppRestart;
+  };
   importFiles: ImportFiles;
   updater: Updater;
 }
@@ -162,8 +171,12 @@ export function buildApp({
     ...backupIpcHandlers({
       backup: backupDeps,
       settings: backupSettings,
+      reader: new FsBackupReader(backup.tempDirectory, backup.pendingRestoreFile),
       dialogs: backup.dialogs,
+      restart: backup.restart,
+      ids,
       defaultDirectory: backup.defaultDirectory,
+      appSchemaVersion: LATEST_MIGRATION,
     }),
     ...importIpcHandlers({
       profiles,

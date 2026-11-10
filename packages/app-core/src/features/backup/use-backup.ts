@@ -1,4 +1,4 @@
-import type { BackupStatus } from '@evully/contracts';
+import type { BackupStatus, PrepareRestoreInput } from '@evully/contracts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEvullyClient } from '../../client-context';
 
@@ -50,4 +50,27 @@ export function useChooseExtraBackupDirectory() {
 export function useDismissBackupError() {
   const client = useEvullyClient();
   return useBackupMutation(() => requireBackup(client).dismissError());
+}
+
+/** Backups in the default and the extra folder that can be restored (README §14.2). */
+export function useRestorableBackups(enabled: boolean) {
+  const client = useEvullyClient();
+  return useQuery({
+    queryKey: [...key, 'restorable'],
+    queryFn: () => requireBackup(client).restorable(),
+    enabled: enabled && client.backup !== undefined,
+  });
+}
+
+export function usePrepareRestore() {
+  const client = useEvullyClient();
+  return useMutation({
+    mutationFn: (input: PrepareRestoreInput) => requireBackup(client).prepareRestore(input),
+  });
+}
+
+/** Stages the backup and restarts the app; the swap happens on the next start. */
+export function useRestoreBackup() {
+  const client = useEvullyClient();
+  return useMutation({ mutationFn: (token: string) => requireBackup(client).restore(token) });
 }

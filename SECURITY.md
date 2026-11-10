@@ -63,8 +63,10 @@ Fora de escopo na Fase 1:
 - Acesso a arquivos restrito ao diretório de dados do app ou a caminhos
   escolhidos pelo usuário em diálogo do sistema.
 - Restauração de backup (V0.7): validar `manifest.json`, `sha256`,
-  `PRAGMA integrity_check` e rejeitar entradas do zip com caminhos
-  absolutos ou `..` (zip slip).
+  `PRAGMA integrity_check` e versão do schema; o zip só pode conter
+  `evully.db` e `manifest.json`, o que rejeita caminhos absolutos ou `..`
+  (zip slip). O banco é extraído para a pasta temporária privada do app e
+  aberto só para leitura; a tela nunca envia caminhos (README, §14.2).
 - Backups nunca sobrescrevem arquivos sem confirmação.
 - A única exclusão física é "Apagar perfil definitivamente", que exige
   confirmação digitada e cria backup antes (README, §8.3.1).

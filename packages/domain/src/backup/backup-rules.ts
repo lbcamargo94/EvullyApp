@@ -1,6 +1,7 @@
+import { ValidationError } from '../errors';
 import { daysBetween, type LocalDate } from '../local-date';
 
-export type BackupKind = 'manual' | 'automatic' | 'pre-migration' | 'pre-delete';
+export type BackupKind = 'manual' | 'automatic' | 'pre-migration' | 'pre-delete' | 'pre-restore';
 
 /** Automatic copies kept per folder (README §8.7.2). */
 export const AUTOMATIC_BACKUPS_TO_KEEP = 10;
@@ -34,8 +35,9 @@ export interface StoredBackup {
 }
 
 /**
- * Automatic backups beyond the newest `keep`. Manual and pre-migration
- * backups, and files without a manifest, are never selected.
+ * Automatic backups beyond the newest `keep`. Manual, pre-migration,
+ * pre-delete and pre-restore backups, and files without a manifest, are
+ * never selected.
  */
 export function backupsToDelete(
   backups: readonly StoredBackup[],
@@ -46,4 +48,24 @@ export function backupsToDelete(
     .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .slice(keep)
     .map((b) => b.fileName);
+}
+
+/**
+ * A backup can be restored (README §14.2) when its database is the one the
+ * manifest describes and its schema is not newer than the app's. Schema
+ * versions are migration names (`0018_sleep_targets`), which sort in order.
+ */
+export function assertRestorable(backup: {
+  manifestSha256: string;
+  actualSha256: string;
+  integrityOk: boolean;
+  schemaVersion: string;
+  appSchemaVersion: string;
+}): void {
+  if (backup.manifestSha256 !== backup.actualSha256 || !backup.integrityOk) {
+    throw new ValidationError('backup.restore_corrupt', 'The backup database is damaged');
+  }
+  if (backup.schemaVersion > backup.appSchemaVersion) {
+    throw new ValidationError('backup.restore_newer', 'The backup is from a newer Evully');
+  }
 }

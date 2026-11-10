@@ -6,6 +6,9 @@ import type {
   ApplyMealTemplateInput,
   BackupResult,
   BackupStatus,
+  PrepareRestoreInput,
+  RestorableBackups,
+  RestorePreview,
   CardioInput,
   CardioOverview,
   CardioTargetDto,
@@ -288,6 +291,10 @@ export interface EvullyClient {
     setAutomatic(enabled: boolean): Promise<BackupStatus>;
     chooseExtraDirectory(clear: boolean): Promise<BackupStatus>;
     dismissError(): Promise<BackupStatus>;
+    restorable(): Promise<RestorableBackups>;
+    prepareRestore(input: PrepareRestoreInput): Promise<RestorePreview | null>;
+    /** Stages the backup and restarts the app. */
+    restore(token: string): Promise<null>;
   };
 }
 
