@@ -68,6 +68,10 @@ Fora de escopo na Fase 1:
   (zip slip). O banco é extraído para a pasta temporária privada do app e
   aberto só para leitura; a tela nunca envia caminhos (README, §14.2).
 - Backups nunca sobrescrevem arquivos sem confirmação.
+- Exportação (V0.7): só o perfil pedido (consultas por `profile_id` ou pelo
+  registro pai, com teste de isolamento); o caminho vem do diálogo de salvar
+  no processo principal; nos CSVs, texto iniciado por `=`, `+`, `-`, `@`
+  ganha `'` na frente contra injeção de fórmulas (README, §14.3).
 - A única exclusão física é "Apagar perfil definitivamente", que exige
   confirmação digitada e cria backup antes (README, §8.3.1).
 - Desenvolvimento usa diretório de dados separado (`Evully-dev`); seed e

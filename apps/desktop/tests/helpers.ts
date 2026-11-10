@@ -6,6 +6,7 @@ import { openDatabase } from '../src/database/connection';
 import { migrateToLatest } from '../src/database/migrator';
 import { buildApp } from '../src/main/composition-root';
 import type { AppRestart, BackupDialogs } from '../src/modules/backup/ports/backup-ports';
+import type { ExportFiles } from '../src/modules/exports/ports/export-ports';
 import type { ImportFiles } from '../src/modules/imports/ports/import-ports';
 import type { Updater } from '../src/modules/updates/ports/updater';
 import type { Clock, IdGenerator } from '../src/modules/shared/ports';
@@ -20,6 +21,7 @@ export const fixedClock = (
   localTime: () => time,
   // Tests run as if the user were in UTC.
   localToIso: (date, t) => `${date}T${t}:00.000Z`,
+  isoToLocal: (iso) => ({ date: parseLocalDate(iso.slice(0, 10)), time: iso.slice(11, 16) }),
 });
 
 /** Deterministic UUID v7-shaped ids: …-7000-8000-000000000001, …0002, … */
@@ -43,6 +45,12 @@ export const noImportFiles: ImportFiles = {
   saveText: async () => false,
 };
 
+/** Export save dialogs that are always cancelled. */
+export const noExportFiles: ExportFiles = {
+  saveJson: async () => null,
+  saveZip: async () => null,
+};
+
 /** Updates are disabled in tests. */
 export const noUpdates: Updater = {
   status: () => ({
@@ -63,6 +71,7 @@ export async function createTestApp(
   dialogs: BackupDialogs = noDialogs,
   importFiles: ImportFiles = noImportFiles,
   restart: AppRestart = { restart: () => undefined },
+  exportFiles: ExportFiles = noExportFiles,
 ) {
   const dir = mkdtempSync(join(tmpdir(), 'evully-test-'));
   const db = openDatabase(join(dir, 'evully.db'));
@@ -82,6 +91,7 @@ export async function createTestApp(
       restart,
     },
     importFiles,
+    exportFiles,
     updater: noUpdates,
   });
   const dispose = async () => {
