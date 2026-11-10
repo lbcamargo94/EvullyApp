@@ -19,6 +19,7 @@ export * from './features/settings/use-tracking-settings';
 export * from './features/tracking/use-tracking';
 export * from './features/backup/use-backup';
 export * from './features/imports/use-imports';
+export * from './features/exports/use-exports';
 export * from './features/measurements/use-measurements';
 export * from './features/weights/use-weights';
 export * from './format/dates';

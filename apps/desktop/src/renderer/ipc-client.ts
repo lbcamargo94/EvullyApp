@@ -204,6 +204,9 @@ export const ipcEvullyClient: EvullyClient = {
     cancel: (profileId, token) => call('import:cancel', { profileId, token }),
     saveTemplate: (profileId, kind) => call('import:template', { profileId, kind }),
   },
+  exports: {
+    create: (profileId, format) => call('exports:create', { profileId, format }),
+  },
   backup: {
     status: () => call('backup:status', undefined),
     createManual: () => call('backup:create-manual', undefined),

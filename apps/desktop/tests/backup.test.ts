@@ -91,6 +91,7 @@ describe('backup', () => {
       today: () => `2026-10-${String(day).padStart(2, '0')}` as never,
       localTime: () => '07:00',
       localToIso: (date: string, t: string) => `${date}T${t}:00.000Z`,
+      isoToLocal: (iso: string) => ({ date: iso.slice(0, 10) as never, time: iso.slice(11, 16) }),
     };
     const extraHolder: { dir: string } = { dir: '' };
     const app = await createTestApp(clock, {

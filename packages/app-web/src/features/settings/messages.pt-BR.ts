@@ -176,6 +176,19 @@ export const profileSettingsMessages = {
   deleting: 'Fazendo backup e apagando…',
 } as const;
 
+export const exportMessages = {
+  title: 'Exportar dados',
+  hint: 'Salva uma cópia dos dados deste perfil para guardar ou abrir em outro programa. Os outros perfis não entram.',
+  json: 'Exportar JSON',
+  jsonHint: 'Arquivo completo com todos os registros do perfil, para guardar ou transferir.',
+  csv: 'Exportar CSV',
+  csvHint:
+    'Planilhas por categoria (pesos, medidas, treinos, alimentação, água, sono, cardio e hábitos) num arquivo zip, no formato do Excel.',
+  exporting: 'Exportando…',
+  done: (fileName: string) => `Dados exportados: ${fileName}`,
+  failed: 'Não foi possível exportar. Tente outra pasta.',
+} as const;
+
 export const aboutMessages = {
   versionTitle: 'Versão',
   version: (v: string) => `Evully ${v}`,

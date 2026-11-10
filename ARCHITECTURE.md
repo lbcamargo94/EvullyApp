@@ -253,6 +253,7 @@ licenças e `npm audit`.
 
 | 27/10/2026 | Atualização automática antecipada: `electron-updater` + repositório público só de releases + assinatura Ed25519 própria verificada antes de instalar | Pedido do usuário para o início do desenvolvimento; o código segue privado sem token no app, e a assinatura cobre a falta de Authenticode ([SECURITY.md](SECURITY.md), §2.8). |
 | 09/11/2026 | Restauração de backup aplicada no reinício: o banco validado espera em `restore-pending.db` e substitui o `evully.db` na abertura, antes da conexão | Trocar o arquivo com a conexão aberta arrisca WAL e páginas em cache; no reinício a troca é um `rename`, e as migrations e o backup pré-migração seguem o fluxo normal (README, §14.2). |
+| 10/11/2026 | Exportação JSON do perfil = linhas das tabelas (snake_case) com `format`/`formatVersion` e a última migration; o módulo `exports` lista as tabelas do perfil, as filhas e os catálogos, e um teste falha se uma tabela nova não for classificada. `Clock` ganhou `isoToLocal` para as horas locais dos CSVs | O mesmo arquivo serve à transferência de perfil (README, §14.4) sem um segundo formato; o teste impede que um módulo novo fique fora da exportação; a hora local continua vindo só do `Clock`. |
 
 Novas decisões arquiteturais são adicionadas a esta tabela com data e
 motivo.

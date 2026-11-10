@@ -1831,9 +1831,26 @@ Implementação (0.7.0-alpha.1):
 
 ### 14.3 Exportação
 
-- JSON completo;
-- CSV por categoria: `weights.csv`, `measurements.csv`, `workouts.csv`,
-  `exercise_sets.csv`, `nutrition.csv`, `sleep.csv`, `cardio.csv`.
+Em Configurações › Perfil › **Exportar dados**, sempre do **perfil atual**
+(os outros perfis não entram). O diálogo do sistema escolhe onde salvar e
+pergunta antes de substituir um arquivo.
+
+- **JSON completo** (`evully-dados-<perfil>-YYYY-MM-DD.json`): `format:
+  "evully-profile-export"`, `formatVersion`, versão do app, última migration,
+  data da exportação, o perfil e, em `data`, as linhas de cada tabela do
+  perfil, mais os alimentos, exercícios do sistema e tipos de medida que o
+  perfil usa. Registros excluídos e filhos de registros excluídos ficam de
+  fora; um registro excluído que um registro mantido ainda referencia (o dia
+  de plano de um treino antigo, a etiqueta de uma pesagem) entra, com
+  `deleted_at`, para o arquivo ficar consistente na transferência (§14.4).
+- **CSV por categoria** num zip (`evully-csv-<perfil>-YYYY-MM-DD.zip`), no
+  formato do Excel brasileiro dos modelos de importação (§8.8): `;`, vírgula
+  decimal, `dd/mm/aaaa`, horas locais `HH:mm`, UTF-8 com BOM. Arquivos:
+  `weights.csv`, `measurements.csv` (mesmas colunas da importação: podem ser
+  importados de volta), `workouts.csv` (treinos finalizados, com volume),
+  `exercise_sets.csv`, `nutrition.csv`, `water.csv`, `sleep.csv`,
+  `cardio.csv` e `habits.csv`. Texto que começa com `=`, `+`, `-` ou `@`
+  recebe um `'` na frente, para o Excel não executar como fórmula.
 
 ### 14.4 Transferência de perfil entre computadores
 

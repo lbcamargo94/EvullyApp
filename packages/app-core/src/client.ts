@@ -7,6 +7,8 @@ import type {
   BackupResult,
   BackupStatus,
   PrepareRestoreInput,
+  ExportFormat,
+  ExportResult,
   RestorableBackups,
   RestorePreview,
   CardioInput,
@@ -283,6 +285,10 @@ export interface EvullyClient {
     confirm(profileId: string, token: string): Promise<ImportResult>;
     cancel(profileId: string, token: string): Promise<null>;
     saveTemplate(profileId: string, kind: ImportKind): Promise<boolean>;
+  };
+  /** Export of one profile (README §14.3); absent where files cannot be saved. */
+  exports?: {
+    create(profileId: string, format: ExportFormat): Promise<ExportResult>;
   };
   /** Absent on platforms without local data (web, mobile). */
   backup?: {

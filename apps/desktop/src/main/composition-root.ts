@@ -20,6 +20,9 @@ import {
   KyselyCardioRepository,
   KyselyCardioTargetRepository,
 } from '../modules/cardio/adapters/kysely-cardio-repository';
+import { exportIpcHandlers } from '../modules/exports/adapters/export-ipc-handlers';
+import { KyselyExportRepository } from '../modules/exports/adapters/kysely-export-repository';
+import type { ExportFiles } from '../modules/exports/ports/export-ports';
 import { habitIpcHandlers } from '../modules/habits/adapters/habit-ipc-handlers';
 import { KyselyHabitRepository } from '../modules/habits/adapters/kysely-habit-repository';
 import {
@@ -78,6 +81,7 @@ interface Dependencies {
     restart: AppRestart;
   };
   importFiles: ImportFiles;
+  exportFiles: ExportFiles;
   updater: Updater;
 }
 
@@ -90,6 +94,7 @@ export function buildApp({
   legal,
   backup,
   importFiles,
+  exportFiles,
   updater,
 }: Dependencies) {
   const profiles = new KyselyProfileRepository(db);
@@ -177,6 +182,13 @@ export function buildApp({
       ids,
       defaultDirectory: backup.defaultDirectory,
       appSchemaVersion: LATEST_MIGRATION,
+    }),
+    ...exportIpcHandlers({
+      repository: new KyselyExportRepository(db),
+      files: exportFiles,
+      clock,
+      appVersion: appInfo().version,
+      schemaVersion: LATEST_MIGRATION,
     }),
     ...importIpcHandlers({
       profiles,

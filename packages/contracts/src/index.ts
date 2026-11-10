@@ -7,6 +7,7 @@ export * from './weights';
 export * from './measurements';
 export * from './backup';
 export * from './imports';
+export * from './exports';
 export * from './nutrition';
 export * from './workouts';
 export * from './cardio';

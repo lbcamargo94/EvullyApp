@@ -6,6 +6,13 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Exportar dados** em Configurações › Perfil, só do perfil atual:
+  - **JSON** completo, com todos os registros do perfil;
+  - **CSV** num zip, uma planilha por categoria (pesos, medidas, treinos,
+    séries, alimentação, água, sono, cardio e hábitos) no formato do Excel;
+    pesos e medidas podem ser importados de volta.
+
 ## [0.7.0-alpha.1] - 2026-11-10
 
 ### Added

@@ -6,6 +6,7 @@ import {
   type LocalDate,
 } from '@evully/domain';
 import type { Clock } from '../src/modules/shared/ports';
+import { localParts } from '../src/modules/shared/system-adapters';
 import type { IpcHandlers } from '../src/shared/ipc-channels';
 
 /**
@@ -36,6 +37,7 @@ export function seedClock(today: LocalDate): SeedClock {
     today: () => date,
     localTime: () => time,
     localToIso,
+    isoToLocal: (iso) => localParts(new Date(iso)),
     set(d, t) {
       date = d;
       time = t;

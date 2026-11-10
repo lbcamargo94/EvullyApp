@@ -10,16 +10,18 @@ import { Button, Card, ConfirmDialog } from '@evully/ui';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { DeleteProfileDialog } from './delete-profile-dialog';
+import { ExportCard } from './export-card';
 import { profileSettingsMessages as m, settingsMessages } from './messages.pt-BR';
 import { settingsError } from './settings-feedback';
 
 const dateFormat = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short' });
 
-/** Settings › Perfil: archive this profile; restore or permanently delete archived ones (README §8.3.1). */
+/** Settings › Perfil: archive or export this profile; restore or permanently delete archived ones (README §8.3.1). */
 export function ProfileSection({ profileId }: { profileId: string }) {
   return (
     <>
       <CurrentProfileCard profileId={profileId} />
+      <ExportCard profileId={profileId} />
       <ArchivedProfilesCard />
     </>
   );

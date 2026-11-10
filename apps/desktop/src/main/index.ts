@@ -11,6 +11,7 @@ import { buildApp } from './composition-root';
 import { readLegalDocuments } from './legal';
 import { withNativeTheme } from './native-theme';
 import { electronDialogs } from './electron-dialogs';
+import { electronExportFiles } from './electron-export-files';
 import { electronImportFiles } from './electron-import-files';
 import { registerIpcHandlers } from './ipc-router';
 import {
@@ -111,6 +112,7 @@ async function start(): Promise<void> {
       },
     },
     importFiles: electronImportFiles,
+    exportFiles: electronExportFiles,
     updater,
   });
 
