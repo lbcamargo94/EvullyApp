@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp, Pencil, Trash2 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { AddPlanExercise } from './add-plan-exercise';
 import { planErrorByCode, planMessages as m, weekdayLabels } from './messages.pt-BR';
+import { IconButton } from './icon-button';
 import { PlanExerciseRow } from './plan-exercise-row';
 
 type Day = WorkoutPlanDto['days'][number];
@@ -123,31 +124,6 @@ export function DayEditor({
         }
       />
     </Card>
-  );
-}
-
-export function IconButton({
-  label,
-  disabled,
-  onClick,
-  children,
-}: {
-  label: string;
-  disabled?: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <Button
-      type="button"
-      variant="ghost"
-      className="min-h-9 px-2"
-      aria-label={label}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </Button>
   );
 }
 

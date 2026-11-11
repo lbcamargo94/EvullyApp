@@ -19,6 +19,8 @@ const forbid = (layer, patterns) => ({
 
 const node = ['node:*', 'fs', 'path', 'os', 'child_process'];
 const infra = ['kysely', 'better-sqlite3', 'electron', 'electron-log*', '@nestjs/*'];
+/** Use cases and ports reach infrastructure only through ports. */
+const inner = [...node, ...infra, 'adm-zip', 'zod', '**/adapters/**', '**/main/**'];
 const ui = ['react', 'react-dom', 'react-dom/*', '@radix-ui/*', '@evully/ui', '@evully/app-web'];
 
 export default tseslint.config(
@@ -81,5 +83,37 @@ export default tseslint.config(
   {
     files: ['apps/desktop/src/renderer/**'],
     rules: forbid('the desktop renderer', [...node, ...infra.filter((p) => p !== 'electron')]),
+  },
+  {
+    // Use cases and ports: domain, contracts and other ports only.
+    files: ['apps/desktop/src/modules/*/application/**', 'apps/desktop/src/modules/*/ports/**'],
+    rules: forbid('application/ports', [...inner, '**/database/**']),
+  },
+  {
+    // The export works on raw table rows (ARCHITECTURE.md §9, 10/11/2026): it may
+    // name the row types of database/schema, never import database code.
+    files: [
+      'apps/desktop/src/modules/exports/application/**',
+      'apps/desktop/src/modules/exports/ports/**',
+    ],
+    rules: {
+      ...forbid('application/ports', inner),
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/database/**', '!**/database/schema'],
+              message: 'application/ports must not import database code (ARCHITECTURE.md §8).',
+            },
+            {
+              group: ['**/database/schema'],
+              allowTypeImports: true,
+              message: 'Only row types may come from database/schema (ARCHITECTURE.md §8).',
+            },
+          ],
+        },
+      ],
+    },
   },
 );

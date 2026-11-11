@@ -1,16 +1,7 @@
-/** `manifest.json` of a profile transfer zip (README §14.4). */
-export interface TransferManifest {
-  format: string;
-  formatVersion: number;
-  appVersion: string;
-  /** Latest migration of the database that wrote the file. */
-  schemaVersion: string;
-  createdAt: string;
-  profileId: string;
-  profileName: string;
-  /** SHA-256 of `profile.json`. */
-  sha256: string;
-}
+import type { TransferManifest } from '@evully/contracts';
+
+/** `manifest.json` of a profile transfer zip (README §14.4); schema in contracts. */
+export type { TransferManifest };
 
 /** A transfer zip read in the main process; its entries were already checked. */
 export interface OpenedTransfer {
