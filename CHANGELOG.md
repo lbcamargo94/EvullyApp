@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.7.0-alpha.3] - 2026-11-10
+
 ### Added
 - **Transferir perfil** entre computadores:
   - em Configurações › Perfil, "Exportar perfil" gera um arquivo zip;
