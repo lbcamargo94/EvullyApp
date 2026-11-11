@@ -17,13 +17,14 @@ import {
   Scale,
   Settings,
 } from 'lucide-react';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router';
 import { BackupErrorBanner } from '../settings/backup-error-banner';
 import { UpdateBanner } from '../settings/update-banner';
 import { Logo } from './logo';
 import { shellMessages as m } from './messages.pt-BR';
 import { ProfileSwitcher } from './profile-switcher';
+import { QueryErrorBanner } from './query-error-banner';
 import { useInactivity } from './use-inactivity';
 
 const navItem =
@@ -37,6 +38,7 @@ export function AppShell() {
   const { data: info } = useAppInfo();
   const { data: tracking } = useTrackingState(profileId);
   const navigate = useNavigate();
+  const mainRef = useRef<HTMLElement>(null);
 
   const lock = useCallback(() => {
     clear();
@@ -50,6 +52,14 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-screen flex-wrap bg-background text-text">
+      {/* A button, not `#main-content`: a hash link would change the HashRouter route. */}
+      <button
+        type="button"
+        onClick={() => mainRef.current?.focus()}
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:text-brand-foreground"
+      >
+        {m.skipToContent}
+      </button>
       <nav
         aria-label={m.mainMenu}
         className="flex flex-[1_1_220px] flex-col gap-7 border-r border-border bg-surface px-4 py-6"
@@ -107,7 +117,8 @@ export function AppShell() {
         </header>
         <UpdateBanner />
         <BackupErrorBanner />
-        <main className="flex flex-col gap-6">
+        <QueryErrorBanner />
+        <main ref={mainRef} tabIndex={-1} className="flex flex-col gap-6 outline-none">
           <Outlet />
         </main>
       </div>

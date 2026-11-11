@@ -1,6 +1,6 @@
 import { changeTone, formatChange, formatCm, formatLocalDate } from '@evully/app-core';
 import type { MeasurementSummary } from '@evully/contracts';
-import { Card, NativeSelect, TrendBadge } from '@evully/ui';
+import { Card, EmptyState, NativeSelect, TrendBadge } from '@evully/ui';
 import { useState } from 'react';
 import {
   CartesianGrid,
@@ -14,6 +14,15 @@ import {
 import { measurementMessages as m } from './messages.pt-BR';
 
 const shortDate = (date: string) => formatLocalDate(date).slice(0, 5);
+
+type Series = MeasurementSummary['items'][number]['series'];
+
+/** Text alternative: how many records and the first and last values (DESIGN.md §7). */
+function chartAlt(name: string, series: Series): string {
+  const point = (p: Series[number] | undefined) =>
+    p ? m.chartPoint(formatCm(p.valueCm), formatLocalDate(p.date)) : '';
+  return m.chartAlt(name, series.length, point(series[0]), point(series.at(-1)));
+}
 
 /** One tracked measurement over time, chosen with a selector (README §8.6). */
 export function MeasurementChart({ summary }: { summary: MeasurementSummary }) {
@@ -42,9 +51,9 @@ export function MeasurementChart({ summary }: { summary: MeasurementSummary }) {
       </div>
 
       {item.series.length === 0 ? (
-        <p className="py-16 text-center text-text-muted">{m.chartEmpty}</p>
+        <EmptyState className="py-16">{m.chartEmpty}</EmptyState>
       ) : (
-        <div role="img" aria-label={m.chartAlt(item.name, item.series.length)} className="h-64">
+        <div role="img" aria-label={chartAlt(item.name, item.series)} className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={item.series} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
               <CartesianGrid stroke="var(--color-border)" vertical={false} />

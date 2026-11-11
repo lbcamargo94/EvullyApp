@@ -269,7 +269,8 @@ export const historyMessages = {
     reps === null ? `${weight} kg` : `${weight} kg × ${reps}`,
   on: (iso: string) => `em ${longDate.format(new Date(iso))}`,
   chartTitle: 'Carga máxima por sessão',
-  chartAlt: (n: number) => `Gráfico da carga máxima em ${n} sessões.`,
+  chartAlt: (n: number, first: string, last: string) =>
+    `Gráfico da carga máxima em ${n} sessões, de ${first} a ${last}.`,
   sessions: 'Sessões',
   volume: (value: string) => `volume ${value} kg`,
   incrementTitle: 'Incremento de carga',

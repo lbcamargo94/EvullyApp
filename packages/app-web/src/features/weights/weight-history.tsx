@@ -1,6 +1,6 @@
 import { formatKg, formatLocalDate, isoToLocalTime, useDeleteWeight } from '@evully/app-core';
 import type { WeightEntry } from '@evully/contracts';
-import { Card, ConfirmDialog } from '@evully/ui';
+import { Card, ConfirmDialog, EmptyState } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { weightMessages as m } from './messages.pt-BR';
@@ -30,7 +30,7 @@ export function WeightHistory({
     <Card aria-label={m.historyTitle}>
       <h2 className="text-lg font-semibold">{m.historyTitle}</h2>
       {entries.length === 0 ? (
-        <p className="text-text-muted">{m.historyEmpty}</p>
+        <EmptyState>{m.historyEmpty}</EmptyState>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] border-collapse text-left tabular-nums">

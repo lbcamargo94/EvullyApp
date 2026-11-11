@@ -1,6 +1,6 @@
 import { formatLocalDate, useDeleteMeasurement } from '@evully/app-core';
 import type { MeasurementSession, MeasurementTypeDto } from '@evully/contracts';
-import { Card, ConfirmDialog } from '@evully/ui';
+import { Card, ConfirmDialog, EmptyState } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { measurementMessages as m } from './messages.pt-BR';
@@ -37,7 +37,7 @@ export function MeasurementHistory({
     <Card aria-label={m.historyTitle}>
       <h2 className="text-lg font-semibold">{m.historyTitle}</h2>
       {sessions.length === 0 ? (
-        <p className="text-text-muted">{m.historyEmpty}</p>
+        <EmptyState>{m.historyEmpty}</EmptyState>
       ) : (
         <>
           <div className="overflow-x-auto">

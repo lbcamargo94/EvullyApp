@@ -5,7 +5,7 @@ import {
   useSetExerciseIncrement,
 } from '@evully/app-core';
 import type { ExerciseHistoryDto } from '@evully/contracts';
-import { Button, Input } from '@evully/ui';
+import { Button, EmptyState, Input } from '@evully/ui';
 import { useState, type FormEvent } from 'react';
 import {
   CartesianGrid,
@@ -36,7 +36,7 @@ export function ExerciseHistoryPanel({
       className="ml-6 flex flex-col gap-4 rounded-md bg-surface-muted p-4"
     >
       {history.sessions.length === 0 ? (
-        <p className="text-sm text-text-muted">{m.empty}</p>
+        <EmptyState>{m.empty}</EmptyState>
       ) : (
         <>
           <dl className="grid gap-3 sm:grid-cols-4">
@@ -76,6 +76,13 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
   );
 }
 
+/** Text alternative with the first and last top loads (DESIGN.md §7). */
+function loadChartAlt(data: { date: string; load: number | null }[]): string {
+  const point = (p: (typeof data)[number] | undefined) =>
+    p ? `${m.kg(formatKgValue(p.load ?? 0))} (${formatShortDate(p.date)})` : '';
+  return m.chartAlt(data.length, point(data[0]), point(data.at(-1)));
+}
+
 function LoadChart({ history }: { history: ExerciseHistoryDto }) {
   const data = history.sessions
     .filter((s) => s.topWeightKg !== null)
@@ -85,7 +92,7 @@ function LoadChart({ history }: { history: ExerciseHistoryDto }) {
   return (
     <figure className="m-0 flex flex-col gap-1">
       <figcaption className="text-sm font-semibold">{m.chartTitle}</figcaption>
-      <div role="img" aria-label={m.chartAlt(data.length)} className="h-48">
+      <div role="img" aria-label={loadChartAlt(data)} className="h-48">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid stroke="var(--color-border)" vertical={false} />

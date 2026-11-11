@@ -1,5 +1,5 @@
 import { addDays, localToday, parseLocalDate, useHabitDay } from '@evully/app-core';
-import { Button, Card } from '@evully/ui';
+import { Button, Card, EmptyState } from '@evully/ui';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { HabitRow } from './habit-row';
@@ -49,7 +49,7 @@ export function HabitDayView({ profileId }: { profileId: string }) {
       </div>
       {day && day.habits.length === 0 && (
         <Card className="gap-3">
-          <p className="text-text-muted">{m.empty}</p>
+          <EmptyState>{m.empty}</EmptyState>
           <ExamplesButton profileId={profileId} />
         </Card>
       )}

@@ -16,8 +16,10 @@ export const statsMessages = {
   emptyAll:
     'Ainda não há registros para mostrar. Registre peso, medidas, dieta, sono, treino, cardio ou passos e os gráficos aparecem aqui.',
   emptyPeriod: 'Sem registros neste período.',
-  chartAlt: (title: string, points: number) =>
-    `Gráfico de ${title.toLowerCase()}: ${points} ${points === 1 ? 'ponto' : 'pontos'} no período.`,
+  chartAlt: (title: string, points: number, values: string[]) =>
+    `Gráfico de ${title.toLowerCase()}: ${points} ${points === 1 ? 'ponto' : 'pontos'} no período.${values.map((v) => ` ${v}.`).join('')}`,
+  chartSeries: (name: string, first: string, last: string) =>
+    first === last ? `${name}: ${first}` : `${name}: de ${first} a ${last}`,
   weekOf: (date: string) => `Semana de ${date}`,
   weightTitle: 'Peso',
   weightDaily: 'Peso do dia',

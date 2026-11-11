@@ -1,5 +1,5 @@
 import { formatLocalDate, type periodStart } from '@evully/app-core';
-import { Card } from '@evully/ui';
+import { Card, EmptyState } from '@evully/ui';
 import type { ReactNode } from 'react';
 import {
   Bar,
@@ -37,6 +37,22 @@ const COLORS: Record<StatSeries['kind'], string> = {
 };
 
 const shortDate = (date: string) => formatLocalDate(date).slice(0, 5);
+
+/** First and last value of each plotted series, for the text alternative (DESIGN.md §7). */
+function seriesSummary(
+  data: StatRow[],
+  series: StatSeries[],
+  format: (value: number) => string,
+): string[] {
+  return series.flatMap((s) => {
+    const values = data.filter((row) => typeof row[s.key] === 'number');
+    const first = values[0];
+    const last = values.at(-1);
+    if (!first || !last) return [];
+    const point = (row: StatRow) => `${format(Number(row[s.key]))} (${shortDate(row.date)})`;
+    return [m.chartSeries(s.name, point(first), point(last))];
+  });
+}
 
 function renderSeries(s: StatSeries) {
   const common = { dataKey: s.key, name: s.name, isAnimationActive: false };
@@ -114,10 +130,14 @@ export function StatChart({
         {action}
       </div>
       {data.length === 0 ? (
-        <p className="py-12 text-center text-text-muted">{m.emptyPeriod}</p>
+        <EmptyState className="py-12">{m.emptyPeriod}</EmptyState>
       ) : (
         <figure className="m-0">
-          <div role="img" aria-label={m.chartAlt(title, data.length)} className="h-56">
+          <div
+            role="img"
+            aria-label={m.chartAlt(title, data.length, seriesSummary(data, series, format))}
+            className="h-56"
+          >
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
                 <CartesianGrid stroke="var(--color-border)" vertical={false} />

@@ -8,7 +8,7 @@ import {
   useSleepLogs,
 } from '@evully/app-core';
 import type { SleepLogDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog } from '@evully/ui';
+import { Button, Card, ConfirmDialog, EmptyState } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import {
@@ -79,7 +79,7 @@ function History({
       <h2 id="sleep-history-title" className="text-lg font-semibold">
         {m.history}
       </h2>
-      {nights.length === 0 && <p className="text-sm text-text-muted">{m.empty}</p>}
+      {nights.length === 0 && <EmptyState>{m.empty}</EmptyState>}
       <ul className="flex flex-col">
         {nights.map((n) => (
           <li key={n.id} className="flex flex-wrap items-center gap-2 border-t border-border py-2">

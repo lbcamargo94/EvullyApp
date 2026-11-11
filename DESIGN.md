@@ -64,11 +64,11 @@ Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 | `brand-foreground` | Texto sobre `brand` | `#FFFFFF` | `#0A0A0A` |
 | `brand-soft` | Fundo de item ativo, avatar | `#E3E4FB` | `#262626` |
 | `brand-soft-foreground` | Texto sobre `brand-soft` | `#3F42B8` | `#FAFAFA` |
-| `positive` | Variação favorável (§7.6 do README) | `#1A7A4A` | `#4CC38A` |
-| `caution` | Variação contrária (nunca vermelho) | `#9A5B00` | `#F0B54A` |
-| `neutral` | Variação neutra ou estável | `#6B7190` | `#A1A1A1` |
+| `positive` | Variação favorável (§7.6 do README) | `#197648` | `#4CC38A` |
+| `caution` | Variação contrária (nunca vermelho) | `#975900` | `#F0B54A` |
+| `neutral` | Variação neutra ou estável | `#606682` | `#A1A1A1` |
 | `positive-soft`, `caution-soft`, `neutral-soft` | Fundo dos selos de variação | `#E3F1EA`, `#FBEFD9`, `#E8E8FA` | `#14281D`, `#2E2410`, `#262626` |
-| `danger` | Somente ações destrutivas (apagar perfil) | `#C2413B` | `#F07A74` |
+| `danger` | Somente ações destrutivas (apagar perfil) | `#B63D37` | `#F07A74` |
 | `focus-ring` | Anel de foco | `brand` | `brand` |
 
 O **tema claro usa o índigo da marca em tom bem claro** no fundo e nas
@@ -82,7 +82,9 @@ Regras:
 - `danger` nunca é usado para resultados de peso ou medidas; só para
   ações destrutivas e erros de sistema.
 - Todo par texto/fundo atende **WCAG AA** (4,5:1 para texto normal, 3:1
-  para texto grande e ícones), verificado na prévia.
+  para texto grande, ícones e o anel de foco). Os pares em uso estão em
+  `packages/tokens/scripts/check-contrast.mjs`, que roda em `npm test` nos
+  dois temas; um par novo entra nesse script.
 
 ### 3.2 Tipografia
 
@@ -116,7 +118,7 @@ Regras:
 | `MeasurementField` | Campo em cm com dica "como medir". |
 | `ProfileAvatar` | Avatar e nome; nunca exibe dados pessoais. |
 | `QuestionnaireStep` | Passo do questionário com progresso, voltar e pular. |
-| `EmptyState` | Tela ou seção vazia com explicação e ação principal. |
+| `EmptyState` | Lista, gráfico ou seção vazia: texto explicativo em borda tracejada e ação opcional (`packages/ui`). |
 | `ImportPreview` | Pré-visualização de CSV com linhas válidas, erros e duplicadas. |
 
 Cada componente define seus estados: **padrão, carregando, vazio, erro e
@@ -139,14 +141,21 @@ dados insuficientes**, quando aplicáveis.
 ## 6. Feedback, movimento e acessibilidade
 
 - **Toasts** (Sonner) para confirmar ações ("Peso registrado").
-- **Mensagens na própria tela** para erros de carregamento, com ação de
-  tentar novamente.
+- **Erros de carregamento** num aviso único no topo do conteúdo
+  (`QueryErrorBanner`), com "Tentar de novo"; nada é apagado. Uma tela que
+  explica o próprio erro marca a consulta com `meta: { localError: true }`.
 - **Confirmação em diálogo** para ações destrutivas, com o botão
   destrutivo em `danger`.
 - Movimento mínimo (transições de até 200 ms) e respeito a
   `prefers-reduced-motion`.
 - Foco sempre visível, navegação completa por teclado, rótulos em todos
   os campos e textos alternativos em ícones sem texto.
+- "Pular para o conteúdo" é o primeiro item do teclado em todas as telas
+  do perfil e leva o foco ao `<main>` (um botão, porque o desktop usa
+  `HashRouter`).
+- `eslint-plugin-jsx-a11y` roda no `npm run lint`. O foco automático é
+  permitido só no primeiro campo de um formulário ou diálogo que o usuário
+  acabou de abrir.
 
 ## 7. Gráficos
 
@@ -155,6 +164,8 @@ dados insuficientes**, quando aplicáveis.
   contínua (`brand`). A tendência é o elemento de maior destaque.
 - Eixos com formatação `pt-BR`, grade suave e tooltip com data e valor.
 - Sem gradientes ou efeitos que dificultem a leitura.
+- Todo gráfico tem `role="img"` e uma descrição em texto com a quantidade
+  de pontos e o primeiro e o último valor de cada série.
 
 ## 8. Catálogo de componentes
 
