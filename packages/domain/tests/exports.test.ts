@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  assertTransferable,
   csvCell,
   exportFileName,
   exportNameSlug,
@@ -7,6 +8,8 @@ import {
   formatCsvDecimal,
   parseCsv,
   parseLocalDate,
+  transferFileName,
+  TRANSFER_FORMAT,
   writeCsv,
 } from '../src';
 
@@ -54,5 +57,42 @@ describe('CSV writer', () => {
     const today = parseLocalDate('2026-11-10');
     expect(exportFileName('Ana', today, 'json')).toBe('evully-dados-ana-2026-11-10.json');
     expect(exportFileName('Ana', today, 'csv')).toBe('evully-csv-ana-2026-11-10.zip');
+  });
+});
+
+describe('profile transfer rules (README §14.4)', () => {
+  const ok = {
+    format: TRANSFER_FORMAT,
+    formatVersion: 1,
+    manifestSha256: 'abc',
+    actualSha256: 'abc',
+    schemaVersion: '0018_sleep_targets',
+    appSchemaVersion: '0018_sleep_targets',
+  };
+
+  it('accepts a matching file from the same or an older schema', () => {
+    expect(() => assertTransferable(ok)).not.toThrow();
+    expect(() => assertTransferable({ ...ok, schemaVersion: '0017_sleep_logs' })).not.toThrow();
+  });
+
+  it('refuses other files, damaged data and newer versions', () => {
+    const code = (input: typeof ok) => {
+      try {
+        assertTransferable(input);
+        return null;
+      } catch (e) {
+        return (e as { code: string }).code;
+      }
+    };
+    expect(code({ ...ok, format: 'evully-profile-export' })).toBe('transfer.invalid');
+    expect(code({ ...ok, actualSha256: 'def' })).toBe('transfer.corrupt');
+    expect(code({ ...ok, schemaVersion: '0019_future' })).toBe('transfer.newer');
+    expect(code({ ...ok, formatVersion: 2 })).toBe('transfer.newer');
+  });
+
+  it('names the file after the profile', () => {
+    expect(transferFileName('Ana Lú', parseLocalDate('2026-11-10'))).toBe(
+      'evully-perfil-ana-lu-2026-11-10.zip',
+    );
   });
 });

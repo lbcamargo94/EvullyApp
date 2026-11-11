@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { DeleteProfileDialog } from './delete-profile-dialog';
 import { ExportCard } from './export-card';
+import { TransferCard } from './transfer-card';
 import { profileSettingsMessages as m, settingsMessages } from './messages.pt-BR';
 import { settingsError } from './settings-feedback';
 
@@ -22,6 +23,7 @@ export function ProfileSection({ profileId }: { profileId: string }) {
     <>
       <CurrentProfileCard profileId={profileId} />
       <ExportCard profileId={profileId} />
+      <TransferCard profileId={profileId} />
       <ArchivedProfilesCard />
     </>
   );

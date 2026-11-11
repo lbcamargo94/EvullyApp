@@ -3,6 +3,7 @@ import { Avatar } from '@evully/ui';
 import { Lock, Plus } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router';
 import { Logo } from '../shell/logo';
+import { ImportProfileButton } from './import-profile-button';
 import { profileMessages as m } from './messages.pt-BR';
 
 const tile =
@@ -52,6 +53,8 @@ export function ProfileSelectScreen() {
           {m.addProfile}
         </button>
       </div>
+
+      <ImportProfileButton variant="ghost" onImported={() => undefined} />
 
       <p className="flex items-center gap-2 text-sm text-text-muted">
         <Lock aria-hidden="true" className="size-4" />

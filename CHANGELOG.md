@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Added
+- **Transferir perfil** entre computadores:
+  - em Configurações › Perfil, "Exportar perfil" gera um arquivo zip;
+  - "Importar perfil" fica nessa mesma tela, na seleção de perfis e na
+    criação do primeiro perfil;
+  - antes de gravar, o Evully confere o arquivo e mostra um resumo;
+  - se o perfil já existe, você escolhe substituir (com backup antes) ou
+    cancelar.
+
 ## [0.7.0-alpha.2] - 2026-11-10
 
 ### Added

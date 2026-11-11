@@ -207,6 +207,12 @@ export const ipcEvullyClient: EvullyClient = {
   exports: {
     create: (profileId, format) => call('exports:create', { profileId, format }),
   },
+  transfer: {
+    exportProfile: (profileId) => call('transfer:export', { profileId }),
+    prepareImport: () => call('transfer:prepare-import', undefined),
+    confirmImport: (token) => call('transfer:import', { token }),
+    cancelImport: (token) => call('transfer:cancel', { token }),
+  },
   backup: {
     status: () => call('backup:status', undefined),
     createManual: () => call('backup:create-manual', undefined),

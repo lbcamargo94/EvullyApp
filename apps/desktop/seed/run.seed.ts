@@ -5,7 +5,13 @@ import { openDatabase } from '../src/database/connection';
 import { migrateToLatest } from '../src/database/migrator';
 import { buildApp } from '../src/main/composition-root';
 import { systemClock, uuidV7Generator } from '../src/modules/shared/system-adapters';
-import { noDialogs, noExportFiles, noImportFiles, noUpdates } from '../tests/helpers';
+import {
+  noDialogs,
+  noExportFiles,
+  noImportFiles,
+  noTransferFiles,
+  noUpdates,
+} from '../tests/helpers';
 import { seedClock, seedDemo } from './demo-seed';
 
 /**
@@ -38,6 +44,7 @@ test('seed the development database', { timeout: 600_000 }, async () => {
       },
       importFiles: noImportFiles,
       exportFiles: noExportFiles,
+      transferFiles: noTransferFiles,
       updater: noUpdates,
     });
     const { days, weights, workouts, cardio, nights } = await seedDemo(handlers, clock, today);
