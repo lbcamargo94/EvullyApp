@@ -13,6 +13,7 @@ import { withNativeTheme } from './native-theme';
 import { electronDialogs } from './electron-dialogs';
 import { electronExportFiles } from './electron-export-files';
 import { electronImportFiles } from './electron-import-files';
+import { electronTransferFiles } from './electron-transfer-files';
 import { registerIpcHandlers } from './ipc-router';
 import {
   backupsDirectory,
@@ -113,6 +114,7 @@ async function start(): Promise<void> {
     },
     importFiles: electronImportFiles,
     exportFiles: electronExportFiles,
+    transferFiles: electronTransferFiles,
     updater,
   });
 

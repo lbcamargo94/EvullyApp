@@ -23,6 +23,10 @@ import {
 import { exportIpcHandlers } from '../modules/exports/adapters/export-ipc-handlers';
 import { KyselyExportRepository } from '../modules/exports/adapters/kysely-export-repository';
 import type { ExportFiles } from '../modules/exports/ports/export-ports';
+import type { ExportDeps } from '../modules/exports/application/export-profile';
+import { KyselyTransferRepository } from '../modules/transfer/adapters/kysely-transfer-repository';
+import { transferIpcHandlers } from '../modules/transfer/adapters/transfer-ipc-handlers';
+import type { TransferFiles } from '../modules/transfer/ports/transfer-ports';
 import { habitIpcHandlers } from '../modules/habits/adapters/habit-ipc-handlers';
 import { KyselyHabitRepository } from '../modules/habits/adapters/kysely-habit-repository';
 import {
@@ -82,6 +86,7 @@ interface Dependencies {
   };
   importFiles: ImportFiles;
   exportFiles: ExportFiles;
+  transferFiles: TransferFiles;
   updater: Updater;
 }
 
@@ -95,6 +100,7 @@ export function buildApp({
   backup,
   importFiles,
   exportFiles,
+  transferFiles,
   updater,
 }: Dependencies) {
   const profiles = new KyselyProfileRepository(db);
@@ -114,6 +120,14 @@ export function buildApp({
     settings: backupSettings,
     clock,
     appVersion: appInfo().version,
+  };
+
+  const exportDeps: ExportDeps = {
+    repository: new KyselyExportRepository(db),
+    files: exportFiles,
+    clock,
+    appVersion: appInfo().version,
+    schemaVersion: LATEST_MIGRATION,
   };
 
   const handlers: IpcHandlers = {
@@ -183,12 +197,14 @@ export function buildApp({
       defaultDirectory: backup.defaultDirectory,
       appSchemaVersion: LATEST_MIGRATION,
     }),
-    ...exportIpcHandlers({
-      repository: new KyselyExportRepository(db),
-      files: exportFiles,
-      clock,
-      appVersion: appInfo().version,
-      schemaVersion: LATEST_MIGRATION,
+    ...exportIpcHandlers(exportDeps),
+    ...transferIpcHandlers({
+      export: exportDeps,
+      repository: new KyselyTransferRepository(db),
+      files: transferFiles,
+      backup: backupDeps,
+      ids,
+      defaultBackupDirectory: backup.defaultDirectory,
     }),
     ...importIpcHandlers({
       profiles,

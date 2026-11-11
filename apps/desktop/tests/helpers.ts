@@ -7,6 +7,7 @@ import { migrateToLatest } from '../src/database/migrator';
 import { buildApp } from '../src/main/composition-root';
 import type { AppRestart, BackupDialogs } from '../src/modules/backup/ports/backup-ports';
 import type { ExportFiles } from '../src/modules/exports/ports/export-ports';
+import type { TransferFiles } from '../src/modules/transfer/ports/transfer-ports';
 import type { ImportFiles } from '../src/modules/imports/ports/import-ports';
 import type { Updater } from '../src/modules/updates/ports/updater';
 import type { Clock, IdGenerator } from '../src/modules/shared/ports';
@@ -51,6 +52,12 @@ export const noExportFiles: ExportFiles = {
   saveZip: async () => null,
 };
 
+/** Transfer dialogs that are always cancelled. */
+export const noTransferFiles: TransferFiles = {
+  save: async () => null,
+  open: async () => null,
+};
+
 /** Updates are disabled in tests. */
 export const noUpdates: Updater = {
   status: () => ({
@@ -72,6 +79,7 @@ export async function createTestApp(
   importFiles: ImportFiles = noImportFiles,
   restart: AppRestart = { restart: () => undefined },
   exportFiles: ExportFiles = noExportFiles,
+  transferFiles: TransferFiles = noTransferFiles,
 ) {
   const dir = mkdtempSync(join(tmpdir(), 'evully-test-'));
   const db = openDatabase(join(dir, 'evully.db'));
@@ -92,6 +100,7 @@ export async function createTestApp(
     },
     importFiles,
     exportFiles,
+    transferFiles,
     updater: noUpdates,
   });
   const dispose = async () => {

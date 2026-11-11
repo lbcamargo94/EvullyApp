@@ -72,6 +72,12 @@ Fora de escopo na Fase 1:
   registro pai, com teste de isolamento); o caminho vem do diálogo de salvar
   no processo principal; nos CSVs, texto iniciado por `=`, `+`, `-`, `@`
   ganha `'` na frente contra injeção de fórmulas (README, §14.3).
+- Transferência de perfil (V0.7): o zip só pode conter `profile.json` e
+  `manifest.json` (nada é extraído para o disco), limite de 200 MB, `sha256`
+  conferido. Tabelas e colunas só entram se o próprio banco as reporta
+  (`pragma_table_info`), os valores vão como parâmetros, toda linha precisa
+  ser do perfil do manifesto e a gravação é uma transação, com backup antes
+  de substituir (README, §14.4).
 - A única exclusão física é "Apagar perfil definitivamente", que exige
   confirmação digitada e cria backup antes (README, §8.3.1).
 - Desenvolvimento usa diretório de dados separado (`Evully-dev`); seed e

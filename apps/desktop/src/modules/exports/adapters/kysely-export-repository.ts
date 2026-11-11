@@ -1,18 +1,12 @@
 import { sql, type Kysely } from 'kysely';
 import type { DatabaseSchema } from '../../../database/schema';
 import {
+  CHILD_PARENT,
   PROFILE_EXPORT_TABLES,
   type ExportRepository,
   type ProfileTables,
   type SharedIds,
 } from '../ports/export-ports';
-
-/** Child table → its parent table and the column that points to it. */
-const CHILDREN = {
-  body_weight_tags: { parent: 'body_weights', column: 'body_weight_id' },
-  body_measurement_values: { parent: 'body_measurements', column: 'measurement_id' },
-  meal_template_items: { parent: 'meal_templates', column: 'meal_template_id' },
-} as const;
 
 export class KyselyExportRepository implements ExportRepository {
   constructor(private readonly db: Kysely<DatabaseSchema>) {}
@@ -36,7 +30,7 @@ export class KyselyExportRepository implements ExportRepository {
       `.execute(this.db);
       tables[table] = rows;
     }
-    for (const [table, { parent, column }] of Object.entries(CHILDREN)) {
+    for (const [table, { parent, column }] of Object.entries(CHILD_PARENT)) {
       const { rows } = await sql<Record<string, unknown>>`
         SELECT c.* FROM ${sql.table(table)} c
         JOIN ${sql.table(parent)} p ON p.id = c.${sql.ref(column)}

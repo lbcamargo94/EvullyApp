@@ -37,6 +37,13 @@ export const CHILD_EXPORT_TABLES = [
   'meal_template_items',
 ] as const satisfies readonly (keyof DatabaseSchema)[];
 
+/** Child table → its parent table and the column that points to it. */
+export const CHILD_PARENT = {
+  body_weight_tags: { parent: 'body_weights', column: 'body_weight_id' },
+  body_measurement_values: { parent: 'body_measurements', column: 'measurement_id' },
+  meal_template_items: { parent: 'meal_templates', column: 'meal_template_id' },
+} as const satisfies Record<(typeof CHILD_EXPORT_TABLES)[number], unknown>;
+
 /** Shared catalogs: only the rows the profile references are exported. */
 export const SHARED_EXPORT_TABLES = [
   'foods',

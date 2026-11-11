@@ -12,6 +12,7 @@ export const settingsMessages = {
     'pre-migration': 'antes de atualização',
     'pre-delete': 'antes de apagar um perfil',
     'pre-restore': 'antes de restaurar',
+    'pre-import': 'antes de importar um perfil',
   },
   backupNow: 'Fazer backup agora',
   backingUp: 'Fazendo backup…',

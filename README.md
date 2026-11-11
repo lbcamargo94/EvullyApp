@@ -1866,6 +1866,33 @@ Para quem usa computadores diferentes (§2.5):
    **cancelar**. Mesclagem registro a registro fica para a sincronização
    da Fase 2.
 
+Implementação (V0.7):
+
+- "Exportar perfil" e "Importar perfil" ficam em Configurações › Perfil ›
+  **Transferir perfil**. "Importar perfil" também aparece na seleção de
+  perfis e, num computador ainda sem perfis, abaixo de "Vamos criar seu
+  perfil".
+- O zip contém só `profile.json` (o JSON completo da §14.3) e
+  `manifest.json` (`format: "evully-profile-transfer"`, `formatVersion`,
+  versão do app, última migration, data, id e nome do perfil e o `sha256`
+  do `profile.json`). Só esse zip é aceito na importação.
+- Antes de gravar, o Evully recusa:
+  - zip com outras entradas;
+  - `sha256` diferente;
+  - formato ou migration mais novos que os do app;
+  - tabela ou coluna que o banco não tem;
+  - linha de outro perfil;
+  - registro filho sem o pai no arquivo.
+
+  Arquivos de versões anteriores são aceitos. Se o banco recusar algum
+  dado, nada é gravado.
+- O resumo mostra nome, data, versão, contagens por módulo e se o perfil já
+  existe (em uso ou arquivado). Ao substituir, o Evully cria um backup
+  `pre-import` (nunca removido pela limpeza automática), apaga o perfil e
+  grava o do arquivo numa única transação. Alimentos, exercícios do sistema
+  e tipos de medida são gravados só se faltarem. Os outros perfis não são
+  tocados. Depois, o app volta para a seleção de perfis.
+
 ---
 
 ## 15. V0.8 a V1.0 — Polimento e distribuição Windows
@@ -1989,7 +2016,8 @@ Electron, sem dependência nova.
 - isolamento entre perfis em todos os repositórios;
 - soft delete, arquivamento e exclusão definitiva de perfil;
 - histórico de configurações (inserção apenas);
-- backup e restauração (validação, backup `pre-restore` e troca na abertura).
+- backup e restauração (validação, backup `pre-restore` e troca na abertura);
+- exportação e transferência de perfil (isolamento, ida e volta entre dois bancos, substituição com backup `pre-import`, arquivos recusados).
 
 ### 18.3 Fluxos críticos (interface)
 

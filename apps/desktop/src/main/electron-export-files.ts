@@ -5,7 +5,7 @@ import { basename } from 'node:path';
 import type { ExportFiles } from '../modules/exports/ports/export-ports';
 
 /** Native save dialog; the dialog itself asks before replacing an existing file. */
-async function choosePath(options: SaveDialogOptions): Promise<string | null> {
+export async function choosePath(options: SaveDialogOptions): Promise<string | null> {
   const window = BrowserWindow.getFocusedWindow();
   const result = window
     ? await dialog.showSaveDialog(window, options)

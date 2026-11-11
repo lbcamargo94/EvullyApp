@@ -2,7 +2,8 @@ import { useCreateProfile, useCurrentProfile, useProfiles } from '@evully/app-co
 import { Card } from '@evully/ui';
 import { useNavigate } from 'react-router';
 import { Logo } from '../shell/logo';
-import { profileMessages as m } from './messages.pt-BR';
+import { ImportProfileButton } from './import-profile-button';
+import { profileMessages as m, transferMessages } from './messages.pt-BR';
 import { ProfileForm, emptyProfile } from './profile-form';
 
 export function ProfileCreateScreen() {
@@ -32,6 +33,15 @@ export function ProfileCreateScreen() {
             {...(hasProfiles && { onCancel: () => void navigate('/profiles') })}
           />
         </Card>
+        {!hasProfiles && (
+          <div className="flex flex-wrap items-center gap-3 text-sm text-text-muted">
+            <span>{transferMessages.otherComputer}</span>
+            <ImportProfileButton
+              variant="ghost"
+              onImported={() => void navigate('/profiles', { replace: true })}
+            />
+          </div>
+        )}
       </div>
     </main>
   );

@@ -6,6 +6,7 @@ export const backupKindSchema = z.enum([
   'pre-migration',
   'pre-delete',
   'pre-restore',
+  'pre-import',
 ]);
 
 /** State shown in Settings › Backup (README §8.7). Paths are chosen in the main process only. */

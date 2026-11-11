@@ -9,6 +9,8 @@ import type {
   PrepareRestoreInput,
   ExportFormat,
   ExportResult,
+  TransferImportResult,
+  TransferPreview,
   RestorableBackups,
   RestorePreview,
   CardioInput,
@@ -289,6 +291,14 @@ export interface EvullyClient {
   /** Export of one profile (README §14.3); absent where files cannot be saved. */
   exports?: {
     create(profileId: string, format: ExportFormat): Promise<ExportResult>;
+  };
+  /** Profile transfer between computers (README §14.4); desktop only. */
+  transfer?: {
+    exportProfile(profileId: string): Promise<ExportResult>;
+    /** Opens the file dialog and validates the file; null if cancelled. Nothing is written. */
+    prepareImport(): Promise<TransferPreview | null>;
+    confirmImport(token: string): Promise<TransferImportResult>;
+    cancelImport(token: string): Promise<null>;
   };
   /** Absent on platforms without local data (web, mobile). */
   backup?: {

@@ -15,6 +15,7 @@ export * from './backup/backup-rules';
 export * from './imports/csv';
 export * from './imports/import-plan';
 export * from './exports/csv-writer';
+export * from './transfer/transfer-rules';
 export * from './nutrition/food';
 export * from './nutrition/food-log';
 export * from './nutrition/meal-template';
