@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.8.0-alpha.1] - 2026-11-11
+
 ### Acessibilidade e consistência (V0.8)
 
 - Cores do tema claro (neutro, perigo, positivo e atenção) um pouco mais
