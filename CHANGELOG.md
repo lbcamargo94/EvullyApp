@@ -6,6 +6,19 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-10
+
+Versão estável da V0.7 (Backup, restauração e exportação). Traz:
+
+- **Restaurar backup** em Configurações › Geral e backup, com validação do
+  arquivo e backup do estado atual antes;
+- **Exportar dados** do perfil atual em JSON completo ou em planilhas CSV
+  no formato do Excel;
+- **Transferir perfil** entre computadores, com resumo antes de importar e
+  backup antes de substituir.
+
+Detalhes de cada etapa nas pré-versões abaixo.
+
 ## [0.7.0-alpha.3] - 2026-11-10
 
 ### Added

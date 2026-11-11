@@ -221,7 +221,7 @@ Este é o **único** roadmap do projeto.
 | **V0.4** ✓ 0.4.0 (27/10/2026) | Cardio + hábitos |
 | **V0.5** ✓ 0.5.0 (28/10/2026) | Sono |
 | **V0.6** ✓ 0.6.0 (09/11/2026) | Estatísticas e dashboard completo |
-| V0.7 | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
+| **V0.7** ✓ 0.7.0 (10/11/2026) | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
 | V0.8 | UX/polimento |
 | V1.0 | Desktop estável + instalador Windows (a atualização automática foi antecipada; §33) |
 | V1.1 | Analytics Engine determinístico |
