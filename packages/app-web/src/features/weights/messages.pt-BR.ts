@@ -30,6 +30,7 @@ export const weightMessages = {
   chartEmpty: 'Registre algumas pesagens para ver o gráfico.',
   chartAlt: (count: number, first: string, last: string) =>
     `Gráfico com ${count} ${count === 1 ? 'dia' : 'dias'} de pesagem, de ${first} a ${last}.`,
+  chartPoint: (value: string, date: string) => `${value} em ${date}`,
 
   trend: 'Tendência',
   current: 'Peso de hoje',

@@ -7,7 +7,7 @@ import {
   useDeleteCardio,
 } from '@evully/app-core';
 import type { CardioOverview, CardioSessionDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog } from '@evully/ui';
+import { Button, Card, ConfirmDialog, EmptyState } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { CardioForm } from './cardio-form';
@@ -55,7 +55,7 @@ export function CardioScreen() {
       </div>
       <section aria-label={m.history} className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">{m.history}</h2>
-        {overview.weeks.length === 0 && <Card>{m.empty}</Card>}
+        {overview.weeks.length === 0 && <EmptyState>{m.empty}</EmptyState>}
         {overview.weeks.map((w) => (
           <WeekCard key={w.summary.weekStart} profileId={profileId} week={w} onEdit={setEditing} />
         ))}

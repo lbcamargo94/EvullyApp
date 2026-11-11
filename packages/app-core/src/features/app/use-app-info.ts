@@ -13,5 +13,6 @@ export function useLegalDocuments(enabled = true) {
     queryFn: () => client.app.legal(),
     enabled,
     staleTime: Infinity,
+    meta: { localError: true },
   });
 }

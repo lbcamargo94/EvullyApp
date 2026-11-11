@@ -1,6 +1,6 @@
 import { addDays, formatKg, formatLocalDate, localToday } from '@evully/app-core';
 import type { WeightSummary } from '@evully/contracts';
-import { Card } from '@evully/ui';
+import { Card, EmptyState } from '@evully/ui';
 import { useState } from 'react';
 import {
   CartesianGrid,
@@ -89,15 +89,15 @@ export function WeightChart({
       </div>
 
       {data.length === 0 || !first || !last ? (
-        <p className="py-16 text-center text-text-muted">{m.chartEmpty}</p>
+        <EmptyState className="py-16">{m.chartEmpty}</EmptyState>
       ) : (
         <figure className="m-0">
           <div
             role="img"
             aria-label={m.chartAlt(
               data.length,
-              formatLocalDate(first.date),
-              formatLocalDate(last.date),
+              m.chartPoint(formatKg(first.weightKg), formatLocalDate(first.date)),
+              m.chartPoint(formatKg(last.weightKg), formatLocalDate(last.date)),
             )}
             className="h-64"
           >

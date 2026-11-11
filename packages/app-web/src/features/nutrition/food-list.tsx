@@ -1,6 +1,6 @@
 import { errorCode, foodSearchKey, useRemoveFood } from '@evully/app-core';
 import type { FoodDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, Input } from '@evully/ui';
+import { Button, Card, ConfirmDialog, EmptyState, Input } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { foodErrorByCode, foodMessages as m, formatNumber, unitLabels } from './messages.pt-BR';
@@ -52,7 +52,7 @@ export function FoodList({ foods, onEdit }: { foods: FoodDto[]; onEdit: (food: F
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      {foods.length === 0 && <p className="text-sm text-text-muted">{m.empty}</p>}
+      {foods.length === 0 && <EmptyState>{m.empty}</EmptyState>}
       {foods.length > 0 && shown.length === 0 && (
         <p className="text-sm text-text-muted">{m.noResults}</p>
       )}

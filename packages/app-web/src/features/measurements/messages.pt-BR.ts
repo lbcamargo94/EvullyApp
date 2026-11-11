@@ -20,8 +20,9 @@ export const measurementMessages = {
   chartTitle: 'Evolução',
   chooseMeasure: 'Medida',
   chartEmpty: 'Registre esta medida para ver o gráfico.',
-  chartAlt: (name: string, count: number) =>
-    `Gráfico de ${name} com ${count} ${count === 1 ? 'registro' : 'registros'}.`,
+  chartAlt: (name: string, count: number, first: string, last: string) =>
+    `Gráfico de ${name} com ${count} ${count === 1 ? 'registro' : 'registros'}, de ${first} a ${last}.`,
+  chartPoint: (value: string, date: string) => `${value} em ${date}`,
   current: 'Atual',
   start: 'Início do projeto',
   firstValue: 'Primeiro registro',

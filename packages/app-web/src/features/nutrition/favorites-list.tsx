@@ -1,6 +1,6 @@
 import { errorCode, useMealTemplates, useRemoveMealTemplate } from '@evully/app-core';
 import type { MealTemplateDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog } from '@evully/ui';
+import { Button, Card, ConfirmDialog, EmptyState } from '@evully/ui';
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { dietMessages as m, foodLogErrorByCode, formatNumber, unitLabels } from './messages.pt-BR';
@@ -26,7 +26,7 @@ export function FavoritesList({ profileId }: { profileId: string }) {
   return (
     <div className="flex flex-col gap-4">
       <p className="max-w-3xl text-text-muted">{m.favoritesHint}</p>
-      {templates.length === 0 && <Card>{m.favoritesEmpty}</Card>}
+      {templates.length === 0 && <EmptyState>{m.favoritesEmpty}</EmptyState>}
       {templates.map((t) => (
         <Card key={t.id} aria-label={t.name} className="gap-2">
           <div className="flex items-center justify-between gap-2">

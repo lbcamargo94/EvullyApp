@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -37,6 +38,16 @@ export default tseslint.config(
     files: ['**/*.tsx', 'packages/app-core/**/*.ts'],
     plugins: { 'react-hooks': reactHooks },
     rules: reactHooks.configs.recommended.rules,
+  },
+  {
+    // Accessibility (DESIGN.md §6, WCAG 2.2 AA).
+    files: ['**/*.tsx'],
+    ...jsxA11y.flatConfigs.recommended,
+    rules: {
+      ...jsxA11y.flatConfigs.recommended.rules,
+      // Focus moves to the first field only after the user opens a form or dialog.
+      'jsx-a11y/no-autofocus': 'off',
+    },
   },
   {
     files: ['packages/domain/src/**'],

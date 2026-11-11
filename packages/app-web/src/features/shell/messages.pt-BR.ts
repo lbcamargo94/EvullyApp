@@ -16,6 +16,10 @@ export const formatSignedCm = (value: number) =>
   `${sign(value)}${oneDecimal.format(Math.abs(value))} cm`;
 
 export const shellMessages = {
+  skipToContent: 'Pular para o conteúdo',
+  loadErrorTitle: 'Não foi possível carregar alguns dados',
+  loadErrorBody: 'Nada foi apagado. Tente de novo; se continuar, reinicie o Evully.',
+  retry: 'Tentar de novo',
   mainMenu: 'Menu principal',
   dashboard: 'Dashboard',
   weight: 'Peso',

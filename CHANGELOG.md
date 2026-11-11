@@ -6,6 +6,21 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Acessibilidade e consistência (V0.8)
+
+- Cores do tema claro (neutro, perigo, positivo e atenção) um pouco mais
+  escuras: todo texto atinge o contraste WCAG AA nos dois temas, verificado
+  em `npm test`.
+- "Pular para o conteúdo" no início de cada tela e foco visível nos itens
+  de menu.
+- Gráficos descrevem para leitores de tela o primeiro e o último valor.
+- Aviso único quando dados não carregam, com "Tentar de novo".
+- Estados vazios com o mesmo visual em todas as listas e gráficos.
+- Lint de acessibilidade (`eslint-plugin-jsx-a11y`).
+- Ferramentas de lint com `minimatch` 11.0.8 (alerta GHSA-g3hv-75wg-m249).
+  O electron-builder ainda exige a 10.x; ela roda só no build, com os
+  padrões de arquivo do próprio projeto.
+
 ## [0.7.0] - 2026-11-10
 
 Versão estável da V0.7 (Backup, restauração e exportação). Traz:

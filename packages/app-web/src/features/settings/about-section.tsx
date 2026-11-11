@@ -73,6 +73,8 @@ function LegalText({ text, failed }: { text: string | undefined; failed: boolean
   if (failed || text === '') return <p className="text-sm text-text-muted">{m.unavailable}</p>;
   if (text === undefined) return null;
   return (
+    // A scrollable box must take focus so keyboard users can scroll it (WCAG 2.1.1).
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
     <pre tabIndex={0} className={textBox}>
       {text}
     </pre>

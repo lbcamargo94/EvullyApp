@@ -11,13 +11,13 @@
   --evully-brand-foreground: #FFFFFF;
   --evully-brand-soft: #E3E4FB;
   --evully-brand-soft-foreground: #3F42B8;
-  --evully-positive: #1A7A4A;
+  --evully-positive: #197648;
   --evully-positive-soft: #E3F1EA;
-  --evully-caution: #9A5B00;
+  --evully-caution: #975900;
   --evully-caution-soft: #FBEFD9;
-  --evully-neutral: #6B7190;
+  --evully-neutral: #606682;
   --evully-neutral-soft: #E8E8FA;
-  --evully-danger: #C2413B;
+  --evully-danger: #B63D37;
 }
 
 @media (prefers-color-scheme: dark) {
