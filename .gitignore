@@ -12,3 +12,6 @@ coverage/
 .DS_Store
 Thumbs.db
 .claude/settings.local.json
+
+# Local knowledge graph (graphify): cache and absolute local paths
+graphify-out/
