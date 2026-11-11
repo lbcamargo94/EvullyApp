@@ -1,6 +1,5 @@
-import type { TransferPreview } from '@evully/contracts';
+import type { TransferDocument, TransferPreview } from '@evully/contracts';
 import { ValidationError } from '@evully/domain';
-import { z } from 'zod';
 import {
   CHILD_EXPORT_TABLES,
   CHILD_PARENT,
@@ -9,30 +8,6 @@ import {
 } from '../../exports/ports/export-ports';
 import type { CellValue, TableRows, TransferPlan } from '../ports/transfer-ports';
 
-const cell = z.union([z.string(), z.number(), z.null()]);
-const row = z.record(z.string(), cell);
-
-export const transferManifestSchema = z.object({
-  format: z.string(),
-  formatVersion: z.number().int(),
-  appVersion: z.string(),
-  schemaVersion: z.string(),
-  createdAt: z.string(),
-  profileId: z.string(),
-  profileName: z.string(),
-  sha256: z.string(),
-});
-
-/** `profile.json`: the JSON export of README §14.3. */
-export const transferDocumentSchema = z.object({
-  format: z.literal('evully-profile-export'),
-  appVersion: z.string(),
-  exportedAt: z.string(),
-  profile: z.object({ id: z.string(), name: z.string() }).catchall(cell),
-  data: z.record(z.string(), z.array(row)),
-});
-
-export type TransferDocument = z.infer<typeof transferDocumentSchema>;
 type Row = Record<string, CellValue>;
 
 const invalid = (why: string) =>

@@ -210,7 +210,7 @@ configurada por pasta em `eslint.config.js`:
 |---|---|
 | `packages/domain` | `packages/domain` |
 | `packages/contracts` | `packages/contracts`, `zod` |
-| `*/application`, `*/ports` | domínio, contratos, ports |
+| `*/application`, `*/ports` | domínio, contratos, ports (sem `zod`, banco, adapters ou `main`; a exportação pode citar os tipos de linha de `database/schema` com `import type`) |
 | `*/adapters` | aplicação, ports, domínio, contratos, bibliotecas de infraestrutura |
 | `packages/app-core` | contratos, domínio, TanStack Query (sem DOM, `react-dom`, shadcn, React Native, Electron, Node ou `fetch` direto: dados só via `EvullyClient`) |
 | `packages/app-web` | `packages/app-core`, `packages/ui`, `packages/tokens` |
@@ -256,6 +256,7 @@ licenças e `npm audit`.
 | 10/11/2026 | Exportação JSON do perfil = linhas das tabelas (snake_case) com `format`/`formatVersion` e a última migration; o módulo `exports` lista as tabelas do perfil, as filhas e os catálogos, e um teste falha se uma tabela nova não for classificada. `Clock` ganhou `isoToLocal` para as horas locais dos CSVs | O mesmo arquivo serve à transferência de perfil (README, §14.4) sem um segundo formato; o teste impede que um módulo novo fique fora da exportação; a hora local continua vindo só do `Clock`. |
 | 10/11/2026 | Importação de perfil com inserts SQL genéricos por tabela, limitados às tabelas do módulo `exports` e às colunas que `pragma_table_info` reporta; substituir = apagar o perfil (cascata) e gravar o arquivo na mesma transação | Um repositório por tabela duplicaria 30 tabelas; a lista de colunas vem do banco, os valores são parâmetros e a cascata existente já define o que pertence ao perfil (README, §14.4). |
 | 11/11/2026 | Acessibilidade verificada por ferramenta: `eslint-plugin-jsx-a11y` (recomendado, sem `no-autofocus`) nos `.tsx` e um script de contraste dos tokens em `npm test`; o plugin roda no ESLint 10 por `overrides` de peer dependency. Erros de carregamento aparecem num aviso único no shell, com "Tentar de novo" (`useQueryErrors`); telas com mensagem própria marcam a consulta com `meta.localError` | Regras de acessibilidade que só dependem de revisão se perdem; o plugin ainda não declara o ESLint 10, mas funciona. Um aviso global cobre as ~90 consultas sem repetir tratamento em cada tela. |
+| 11/11/2026 | A regra de `*/application` e `*/ports` do §8 passou a ser aplicada no lint do desktop; os schemas do arquivo de transferência foram para `packages/contracts`; a exportação é a única exceção, com `import type` dos tipos de linha de `database/schema` | A tabela do §8 dizia que o CI garantia a fronteira, mas não havia regra para os módulos do desktop. A exportação trata linhas de tabela por definição (decisão de 10/11) e os CSVs dependem dos campos tipados; tipos genéricos tirariam essa checagem. |
 
 Novas decisões arquiteturais são adicionadas a esta tabela com data e
 motivo.

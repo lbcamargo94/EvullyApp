@@ -29,5 +29,33 @@ export const transferImportResultSchema = z.object({
   replaced: z.boolean(),
 });
 
+const cell = z.union([z.string(), z.number(), z.null()]);
+const row = z.record(z.string(), cell);
+
+/** `manifest.json` of a profile transfer zip. */
+export const transferManifestSchema = z.object({
+  format: z.string(),
+  formatVersion: z.number().int(),
+  appVersion: z.string(),
+  /** Latest migration of the database that wrote the file. */
+  schemaVersion: z.string(),
+  createdAt: z.string(),
+  profileId: z.string(),
+  profileName: z.string(),
+  /** SHA-256 of `profile.json`. */
+  sha256: z.string(),
+});
+
+/** `profile.json`: the JSON export of README §14.3, as raw table rows. */
+export const transferDocumentSchema = z.object({
+  format: z.literal('evully-profile-export'),
+  appVersion: z.string(),
+  exportedAt: z.string(),
+  profile: z.object({ id: z.string(), name: z.string() }).catchall(cell),
+  data: z.record(z.string(), z.array(row)),
+});
+
 export type TransferPreview = z.infer<typeof transferPreviewSchema>;
+export type TransferManifest = z.infer<typeof transferManifestSchema>;
+export type TransferDocument = z.infer<typeof transferDocumentSchema>;
 export type TransferImportResult = z.infer<typeof transferImportResultSchema>;

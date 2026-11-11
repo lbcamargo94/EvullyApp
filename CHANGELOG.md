@@ -6,6 +6,14 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Arquitetura
+
+- O lint passa a aplicar a fronteira de `application/` e `ports/` dos
+  módulos do desktop (ARCHITECTURE.md §8); os schemas do arquivo de
+  transferência de perfil foram para `packages/contracts`.
+- Fim do import circular entre o editor de dia de treino e a linha de
+  exercício do plano (`IconButton` em arquivo próprio).
+
 ## [0.8.0-alpha.1] - 2026-11-11
 
 ### Acessibilidade e consistência (V0.8)
