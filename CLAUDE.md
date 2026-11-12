@@ -2,7 +2,7 @@
 
 Local-first fitness app (Electron + React + TS + SQLite), multi-profile,
 growing to web (NestJS API + React SPA/PWA + Next.js site) and native
-mobile (Expo). **Current phase: V0.7 done (0.7.0 released); next is V0.8 (UX/polish), not started.**
+mobile (Expo). **Current phase: V0.8 (UX/polish) in progress; 0.8.0-alpha.1 released.**
 
 ## Language
 - Talk to the user in **Portuguese (pt-BR)**. UI text in pt-BR.
@@ -62,6 +62,7 @@ Same for any doc over ~300 lines.
 | Lint (incl. architecture boundaries) | `npm run lint` |
 | Typecheck | `npm run typecheck` |
 | Tests (desktop tests run under Electron) | `npm test` |
+| End-to-end flows (builds first, Playwright on the real app) | `npm run e2e` |
 | Format | `npm run format` / `npm run format:check` |
 | Docs references | `npm run docs:check` |
 | Copyleft license check | `npm run licenses:check` |

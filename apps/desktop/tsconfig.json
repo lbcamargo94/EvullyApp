@@ -8,6 +8,8 @@
     "src",
     "tests",
     "seed",
+    "e2e",
+    "playwright.config.ts",
     "electron.vite.config.ts",
     "vitest.config.ts",
     "vitest.seed.config.ts"
