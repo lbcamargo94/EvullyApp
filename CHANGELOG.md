@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.8.0-alpha.2] - 2026-11-12
+
 ### Testes ponta a ponta (V0.8)
 
 - 11 fluxos com Playwright no app real (`npm run e2e`), também no CI:
