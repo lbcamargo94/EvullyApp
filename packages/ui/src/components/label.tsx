@@ -26,7 +26,9 @@ export function Field({
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={id}>
         {label}
-        {hint && <span className="ml-1.5 font-normal text-text-muted">{hint}</span>}
+        {/* The space keeps screen readers from reading "Nascimentoopcional". */}
+        {hint && ' '}
+        {hint && <span className="ml-1 font-normal text-text-muted">{hint}</span>}
       </Label>
       {children}
       {error && (

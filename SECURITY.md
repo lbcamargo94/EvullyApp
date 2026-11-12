@@ -81,7 +81,9 @@ Fora de escopo na Fase 1:
 - A única exclusão física é "Apagar perfil definitivamente", que exige
   confirmação digitada e cria backup antes (README, §8.3.1).
 - Desenvolvimento usa diretório de dados separado (`Evully-dev`); seed e
-  testes nunca tocam nos dados reais.
+  testes nunca tocam nos dados reais. Os testes ponta a ponta indicam uma
+  pasta vazia por `EVULLY_DATA_DIR`, que o app instalado ignora
+  (`app.isPackaged`); os testes ficam fora do instalador.
 
 ### 2.4 Dados em repouso
 

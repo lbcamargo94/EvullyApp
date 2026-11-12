@@ -6,9 +6,10 @@ import { join } from 'node:path';
  * real data (README §5.4). Must run before the app is ready.
  */
 export function configureDataDirectory(): void {
-  if (!app.isPackaged) {
-    app.setPath('userData', join(app.getPath('appData'), 'Evully-dev'));
-  }
+  if (app.isPackaged) return;
+  // End-to-end tests give each run an empty folder; ignored in the installed app.
+  const e2eDir = process.env['EVULLY_DATA_DIR'];
+  app.setPath('userData', e2eDir ? e2eDir : join(app.getPath('appData'), 'Evully-dev'));
 }
 
 export function databaseFile(): string {

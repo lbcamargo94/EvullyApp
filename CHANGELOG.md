@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Testes ponta a ponta (V0.8)
+
+- 11 fluxos com Playwright no app real (`npm run e2e`), também no CI:
+  perfil e questionário, peso, medidas, importação de CSV, isolamento entre
+  perfis, persistência com backup ao fechar, refeição, treino, cardio,
+  hábito, sono, Estatísticas, exportação JSON, transferência de perfil e o
+  atalho "Pular para o conteúdo".
+- Leitores de tela leem "Nascimento opcional" em vez de "Nascimentoopcional"
+  nos campos opcionais.
+
 ### Arquitetura
 
 - O lint passa a aplicar a fronteira de `application/` e `ports/` dos

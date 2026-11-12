@@ -388,7 +388,8 @@ attachments/   (futuro)
 Em desenvolvimento, o app usa um diretório separado (`Evully-dev`),
 definido antes de abrir o banco. Seed, testes manuais e experimentos
 nunca tocam nos dados reais. Os testes automatizados usam bancos em
-memória ou temporários.
+memória ou temporários; os de ponta a ponta (§18.3) abrem o app numa pasta
+temporária indicada por `EVULLY_DATA_DIR`, ignorada no app instalado.
 
 ### 5.5 Padrões de implementação
 
@@ -2021,7 +2022,10 @@ Electron, sem dependência nova.
 
 ### 18.3 Fluxos críticos (interface)
 
-Automatizados com Playwright no app real:
+Automatizados com Playwright no app real (`npm run e2e`, em
+`apps/desktop/e2e`), um teste por vez, cada um numa pasta de dados vazia.
+As janelas de abrir e salvar arquivo são respondidas pelo teste no
+processo principal. Rodam no CI em todo PR.
 
 ```text
 V0.1   criar perfil → responder ao questionário → aceitar a proposta
@@ -2030,6 +2034,11 @@ V0.1   trocar de perfil → confirmar isolamento dos dados
 V0.1   fechar o app → abrir novamente → confirmar persistência e backup automático
 V0.2   registrar refeição
 V0.3   iniciar treino → salvar série → finalizar treino
+V0.4   registrar cardio → marcar hábito
+V0.5   registrar noite de sono
+V0.6   ver cardio e sono em Estatísticas
+V0.7   exportar JSON → transferir perfil para outra pasta de dados
+V0.8   primeiro Tab → "Pular para o conteúdo"
 ```
 
 ---

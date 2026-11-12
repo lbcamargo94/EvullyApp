@@ -14,7 +14,8 @@
     "dist": "electron-vite build && electron-builder --win --publish never",
     "typecheck": "tsc -p tsconfig.json",
     "test": "cross-env ELECTRON_RUN_AS_NODE=1 electron ../../node_modules/vitest/vitest.mjs run",
-    "seed": "cross-env ELECTRON_RUN_AS_NODE=1 electron ../../node_modules/vitest/vitest.mjs run --config vitest.seed.config.ts"
+    "seed": "cross-env ELECTRON_RUN_AS_NODE=1 electron ../../node_modules/vitest/vitest.mjs run --config vitest.seed.config.ts",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "adm-zip": "^0.6.1",
@@ -32,6 +33,7 @@
     "@evully/tokens": "*",
     "@evully/ui": "*",
     "@fontsource-variable/inter": "^5.2.0",
+    "@playwright/test": "^1.65.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/adm-zip": "^0.5.8",
     "@types/better-sqlite3": "^7.6.13",
