@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.8.0-alpha.3] - 2026-11-14
+
 ### Ajustes do uso real (V0.8)
 
 - Marcar hábito, série concluída, alimento consumido, refeição inteira e
