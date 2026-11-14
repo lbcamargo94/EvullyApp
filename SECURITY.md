@@ -158,6 +158,10 @@ Antes de concluir qualquer versão:
 - [ ] Verificação de licenças aprovada e `THIRD_PARTY_NOTICES` atualizado
       (`npm run notices`; o CI roda `notices:check`).
 - [ ] Build de produção com DevTools desligado e fuses aplicados.
+- [ ] `npm run lint` aprovado, incluindo as fronteiras de `application/` e
+      `ports/` ([ARCHITECTURE.md](ARCHITECTURE.md), §8).
+- [ ] `npm run e2e` aprovado; `EVULLY_DATA_DIR` continua ignorado no app
+      instalado (§2.3).
 
 ## 4. Fases futuras
 
