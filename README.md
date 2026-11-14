@@ -222,7 +222,7 @@ Este é o **único** roadmap do projeto.
 | **V0.5** ✓ 0.5.0 (28/10/2026) | Sono |
 | **V0.6** ✓ 0.6.0 (09/11/2026) | Estatísticas e dashboard completo |
 | **V0.7** ✓ 0.7.0 (10/11/2026) | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
-| V0.8 | UX/polimento: alpha.1 acessibilidade e consistência; alpha.2 testes ponta a ponta (Playwright); alpha.3 ajustes do uso real |
+| V0.8 (em andamento) | UX/polimento: alpha.1 acessibilidade e consistência ✓ (11/11/2026); alpha.2 testes ponta a ponta com Playwright ✓ (14/11/2026); alpha.3 ajustes do uso real (§15.1) |
 | V1.0 | Desktop estável + instalador Windows (a atualização automática foi antecipada; §33) |
 | V1.1 | Analytics Engine determinístico |
 | V1.2 | Recommendation Engine determinístico |
@@ -1910,6 +1910,19 @@ Objetivo: `Evully-Setup.exe`.
 O instalador não terá assinatura digital na Fase 1, então o Windows
 SmartScreen exibirá um aviso na instalação. Isso é aceitável para uso
 doméstico.
+
+Situação: todos os itens acima já estão entregues (instalador desde a
+0.1.0, atualização automática desde a 0.5.0-alpha.3). A V1.0 fecha quando a
+V0.8 estiver estável no uso diário.
+
+### 15.1 V0.8 — UX e polimento
+
+| Entrega | Conteúdo |
+|---|---|
+| 0.8.0-alpha.1 | Contraste WCAG AA nos dois temas, verificado em `npm test`; lint de acessibilidade; "Pular para o conteúdo"; descrição em texto dos gráficos; aviso único de erro de carregamento; estados vazios padronizados ([DESIGN.md](DESIGN.md), §3.1, §6 e §7). |
+| Correção de arquitetura | O lint passa a aplicar a fronteira de `application/` e `ports/` do desktop ([ARCHITECTURE.md](ARCHITECTURE.md), §8). |
+| 0.8.0-alpha.2 | 11 fluxos ponta a ponta com Playwright no app real, também no CI (§18.3). |
+| 0.8.0-alpha.3 | Ajustes do uso real: controles liga/desliga que gravam sozinhos respondem na hora e mantêm o foco ([DESIGN.md](DESIGN.md), §6); outros ajustes conforme o uso. |
 
 ---
 

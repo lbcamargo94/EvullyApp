@@ -122,6 +122,8 @@ web ficam parecidas no código, o que facilita manter as duas.
 | Fonte | Inter embutida | Inter via `expo-font` |
 | Textos e formatação | `app-core` (`pt-BR`, `Intl`) | O mesmo |
 | Erros | `{ code, message }` (IPC e API) | O mesmo |
+| Erros de carregamento | Aviso único no shell (`useQueryErrors` em `app-core`) | O mesmo hook, outro aviso |
+| Controles que gravam sozinhos | `useOptimistic` do React (`useSavedToggle` em `app-web`) | O mesmo padrão |
 
 ## 4. Site (`apps/site`, Fase 2)
 
@@ -229,9 +231,9 @@ web ficam parecidas no código, o que facilita manter as duas.
 | Testes de lógica | Vitest em `packages/app-core` (view models, fluxos, formatação) |
 | Testes de componentes web | Vitest + Testing Library em `packages/app-web` e `packages/ui` |
 | Testes de componentes nativos | Jest (`jest-expo`) + React Native Testing Library |
-| E2E web e desktop | Playwright (README §18.3) |
+| E2E web e desktop | Playwright (README §18.3); no desktop desde a 0.8.0-alpha.2, em todo PR |
 | E2E celular | Maestro em Android e iOS (fluxos críticos) |
-| Acessibilidade | WCAG AA; axe na web; rótulos de acessibilidade nativos no mobile |
+| Acessibilidade | WCAG AA; `eslint-plugin-jsx-a11y` e verificação de contraste dos tokens desde a V0.8; axe na web (avaliar a licença MPL antes); rótulos de acessibilidade nativos no mobile |
 | Desempenho | JavaScript inicial do app web ≤ 250 kB (gzip); Core Web Vitals no site; abertura do app mobile ≤ 2 s |
 | Erros em produção | Monitoramento (ex.: Sentry) com remoção de dados pessoais e de saúde |
 | Métricas de produto | Eventos de uso (ex.: PostHog) sem dados de saúde, com consentimento |

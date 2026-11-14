@@ -109,6 +109,7 @@ packages/app-core/src/
 
 packages/app-web/src/
   features/              telas web por módulo, desenhando o que o app-core entrega
+    shared/              hooks de interface comuns às telas (ex.: useSavedToggle)
   routes/, providers/    React Router, TanStack Query, perfil atual, tema
 ```
 
@@ -258,6 +259,7 @@ licenças e `npm audit`.
 | 11/11/2026 | Acessibilidade verificada por ferramenta: `eslint-plugin-jsx-a11y` (recomendado, sem `no-autofocus`) nos `.tsx` e um script de contraste dos tokens em `npm test`; o plugin roda no ESLint 10 por `overrides` de peer dependency. Erros de carregamento aparecem num aviso único no shell, com "Tentar de novo" (`useQueryErrors`); telas com mensagem própria marcam a consulta com `meta.localError` | Regras de acessibilidade que só dependem de revisão se perdem; o plugin ainda não declara o ESLint 10, mas funciona. Um aviso global cobre as ~90 consultas sem repetir tratamento em cada tela. |
 | 11/11/2026 | A regra de `*/application` e `*/ports` do §8 passou a ser aplicada no lint do desktop; os schemas do arquivo de transferência foram para `packages/contracts`; a exportação é a única exceção, com `import type` dos tipos de linha de `database/schema` | A tabela do §8 dizia que o CI garantia a fronteira, mas não havia regra para os módulos do desktop. A exportação trata linhas de tabela por definição (decisão de 10/11) e os CSVs dependem dos campos tipados; tipos genéricos tirariam essa checagem. |
 | 11/11/2026 | Testes ponta a ponta com Playwright (`_electron`) no app compilado, uma pasta de dados vazia por teste via `EVULLY_DATA_DIR` (só fora do app instalado) e janelas nativas respondidas no processo principal pelo teste; rodam no CI em todo PR | Testam o app real sem tocar nos dados de desenvolvimento nem mudar código de produção para os diálogos; o app instalado continua só com a pasta padrão. Testes de acessibilidade com axe ficaram de fora (licença MPL, barrada pelo `licenses:check`). |
+| 14/11/2026 | Controles liga/desliga que gravam sozinhos usam `useOptimistic` do React 19 (`useSavedToggle`): mostram o novo estado na hora, não ficam desativados durante a gravação e voltam ao estado gravado se ela falhar | O controle desativado piscava e perdia o foco do teclado; o hook do React reverte sozinho ao fim da gravação, sem cache otimista manual em cada mutation. |
 
 Novas decisões arquiteturais são adicionadas a esta tabela com data e
 motivo.
