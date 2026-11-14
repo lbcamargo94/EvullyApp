@@ -4,6 +4,7 @@ import { Input } from '@evully/ui';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { sessionErrorByCode, sessionMessages as m } from './messages.pt-BR';
+import { useSavedToggle } from '../shared/use-saved-toggle';
 
 type SetDto = WorkoutSessionDto['performances'][number]['sets'][number];
 const kg = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2, useGrouping: false });
@@ -63,6 +64,7 @@ export function SetRow({
     }
   };
   const onBlur = () => void save(set.completed);
+  const [completed, toggleCompleted] = useSavedToggle(set.completed, save);
 
   const field = (label: string, value: string, setValue: (v: string) => void, width: string) => (
     <Input
@@ -92,9 +94,8 @@ export function SetRow({
         type="checkbox"
         className="size-7 accent-brand"
         aria-label={m.doneLabel(set.setNumber)}
-        checked={set.completed}
-        disabled={update.isPending}
-        onChange={(e) => void save(e.target.checked)}
+        checked={completed}
+        onChange={(e) => toggleCompleted(e.target.checked)}
       />
       <button
         type="button"

@@ -15,7 +15,7 @@ test('starts a workout, saves a set and finishes it', async ({ evully }) => {
 
   const exercise = page.getByRole('region', { name: 'Abdominal reverso' });
   await exercise.getByRole('textbox', { name: 'Série 1: Reps' }).fill('15');
-  await exercise.getByRole('checkbox', { name: 'Série 1 concluída' }).click();
+  await exercise.getByRole('checkbox', { name: 'Série 1 concluída' }).check();
   await expect(exercise.getByRole('checkbox', { name: 'Série 1 concluída' })).toBeChecked();
 
   await page.getByRole('button', { name: 'Finalizar treino' }).click();

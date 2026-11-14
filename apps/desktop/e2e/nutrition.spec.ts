@@ -27,4 +27,12 @@ test('registers a meal with a food from the catalog', async ({ evully }) => {
   await expect(lunch).toContainText('Arroz branco');
   // 150 g of 130 kcal per 100 g.
   await expect(page.getByRole('region', { name: 'Total do dia' })).toContainText('195 kcal');
+
+  // Saved toggles show the new state at once (DESIGN.md §6).
+  const consumed = lunch.getByRole('checkbox', { name: /Arroz branco/ });
+  await consumed.check();
+  await expect(consumed).toBeFocused();
+  await expect(page.getByRole('region', { name: 'Total do dia' })).toContainText(
+    'Consumido195 kcal',
+  );
 });

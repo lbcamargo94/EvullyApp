@@ -18,8 +18,8 @@ test('registers cardio, a habit and a night of sleep, then sees them in Estatís
   await page.getByRole('button', { name: 'Adicionar exemplos' }).click();
   const day = page.getByRole('tabpanel', { name: 'Dia' });
   await expect(day.getByRole('checkbox').first()).toBeVisible();
-  // The checkbox shows the saved state, so it turns checked when the save returns.
-  await day.getByRole('checkbox').first().click();
+  // check() verifies the box right after the click: it shows the new state at once.
+  await day.getByRole('checkbox').first().check();
   await expect(day.getByRole('checkbox').first()).toBeChecked();
 
   await go(page, 'Sono');

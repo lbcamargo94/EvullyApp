@@ -6,6 +6,12 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Ajustes do uso real (V0.8)
+
+- Marcar hábito, série concluída, alimento consumido, refeição inteira e
+  backup automático responde na hora, sem a caixa piscar, e mantém o foco
+  do teclado; se a gravação falhar, volta ao estado anterior com a mensagem.
+
 ## [0.8.0-alpha.2] - 2026-11-12
 
 ### Testes ponta a ponta (V0.8)

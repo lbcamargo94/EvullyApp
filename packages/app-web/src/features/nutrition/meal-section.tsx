@@ -7,6 +7,7 @@ import { AddFoodLog } from './add-food-log';
 import { FoodLogRow } from './food-log-row';
 import { MealActions } from './meal-actions';
 import { dietMessages as m, foodLogErrorByCode, formatNumber, mealLabels } from './messages.pt-BR';
+import { useSavedToggle } from '../shared/use-saved-toggle';
 
 export interface MealKey {
   mealType: MealType;
@@ -101,21 +102,22 @@ function ConsumeMealButton({
   onError: (text: string) => void;
 }) {
   const setMeal = useSetMealConsumed(profileId);
-  const allConsumed = logs.every((l) => l.consumedAt !== null);
-  const toggle = async () => {
-    try {
-      await setMeal.mutateAsync({ date, ...meal, consumed: !allConsumed });
-    } catch (e) {
-      onError(foodLogErrorByCode[errorCode(e) ?? ''] ?? m.genericError);
-    }
-  };
+  const [allConsumed, toggle] = useSavedToggle(
+    logs.every((l) => l.consumedAt !== null),
+    async (consumed) => {
+      try {
+        await setMeal.mutateAsync({ date, ...meal, consumed });
+      } catch (e) {
+        onError(foodLogErrorByCode[errorCode(e) ?? ''] ?? m.genericError);
+      }
+    },
+  );
   return (
     <Button
       type="button"
       variant={allConsumed ? 'secondary' : 'ghost'}
       aria-pressed={allConsumed}
-      disabled={setMeal.isPending}
-      onClick={() => void toggle()}
+      onClick={() => toggle(!allConsumed)}
     >
       {allConsumed && <Check aria-hidden="true" className="size-4" />}
       {allConsumed ? m.unmarkMeal : m.markMeal}
