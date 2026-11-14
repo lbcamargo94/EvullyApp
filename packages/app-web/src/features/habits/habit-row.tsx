@@ -11,6 +11,7 @@ import {
   minutesToTime,
   timeToMinutes,
 } from './messages.pt-BR';
+import { useSavedToggle } from '../shared/use-saved-toggle';
 
 type Habit = HabitDay['habits'][number];
 
@@ -52,6 +53,7 @@ export function HabitRow({
       setError(habitErrorByCode[errorCode(e) ?? ''] ?? m.genericError);
     }
   };
+  const [done, toggleDone] = useSavedToggle(h.value === 1, (on) => save(on ? 1 : null));
   const commit = () => {
     const value = readValue(h, text);
     if (value === undefined) return setError(m.invalidValue);
@@ -77,9 +79,8 @@ export function HabitRow({
             type="checkbox"
             className="size-7 accent-brand"
             aria-label={h.name}
-            checked={h.value === 1}
-            disabled={log.isPending}
-            onChange={(e) => void save(e.target.checked ? 1 : null)}
+            checked={done}
+            onChange={(e) => toggleDone(e.target.checked)}
           />
         ) : (
           <div className="flex items-center gap-1.5">

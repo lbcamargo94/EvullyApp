@@ -10,6 +10,7 @@ import { Button, Input } from '@evully/ui';
 import { X } from 'lucide-react';
 import { useState, type KeyboardEvent } from 'react';
 import { dietMessages as m, foodLogErrorByCode, formatNumber, unitLabels } from './messages.pt-BR';
+import { useSavedToggle } from '../shared/use-saved-toggle';
 
 const plain = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1, useGrouping: false });
 
@@ -53,6 +54,10 @@ export function FoodLogRow({
     if (e.key === 'Escape') setQuantity(plain.format(log.quantity));
   };
 
+  const [consumed, toggleConsumed] = useSavedToggle(log.consumedAt !== null, (on) =>
+    run(() => consume.mutateAsync({ id: log.id, consumed: on })),
+  );
+
   return (
     <li className="flex flex-col gap-1 border-t border-border py-2">
       <div className="flex flex-wrap items-center gap-3">
@@ -60,11 +65,9 @@ export function FoodLogRow({
           type="checkbox"
           className="size-5 accent-brand"
           aria-label={m.consumedItem(log.foodName)}
-          checked={log.consumedAt !== null}
-          disabled={!canConsume || consume.isPending}
-          onChange={(e) =>
-            void run(() => consume.mutateAsync({ id: log.id, consumed: e.target.checked }))
-          }
+          checked={consumed}
+          disabled={!canConsume}
+          onChange={(e) => toggleConsumed(e.target.checked)}
         />
         <div className="flex min-w-40 flex-1 flex-col">
           <span className="font-medium">

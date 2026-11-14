@@ -8,6 +8,7 @@ import { Button, Card } from '@evully/ui';
 import { useState } from 'react';
 import { settingsMessages as m } from './messages.pt-BR';
 import { RestorePanel } from './restore-panel';
+import { useSavedToggle } from '../shared/use-saved-toggle';
 
 const row = 'flex flex-wrap items-center justify-between gap-3 border-t border-border py-4';
 
@@ -18,6 +19,9 @@ export function BackupSection() {
   const setAutomatic = useSetAutomaticBackup();
   const chooseExtra = useChooseExtraBackupDirectory();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [automatic, toggleAutomatic] = useSavedToggle(status?.automaticEnabled ?? false, (on) =>
+    setAutomatic.mutateAsync(on).catch(() => setFeedback(m.genericError)),
+  );
   if (!available || !status) return null;
 
   const backupNow = async () => {
@@ -67,9 +71,8 @@ export function BackupSection() {
           id="backup-automatic"
           type="checkbox"
           className="size-5.5 accent-brand"
-          checked={status.automaticEnabled}
-          disabled={setAutomatic.isPending}
-          onChange={(e) => setAutomatic.mutate(e.target.checked)}
+          checked={automatic}
+          onChange={(e) => toggleAutomatic(e.target.checked)}
         />
       </div>
 

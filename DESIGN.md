@@ -150,6 +150,11 @@ dados insuficientes**, quando aplicáveis.
   `prefers-reduced-motion`.
 - Foco sempre visível, navegação completa por teclado, rótulos em todos
   os campos e textos alternativos em ícones sem texto.
+- Controles liga/desliga que gravam sozinhos (hábito, série concluída,
+  alimento consumido, refeição, backup automático) mostram o novo estado na
+  hora, não ficam desativados durante a gravação (para não perder o foco) e
+  voltam ao estado gravado se ela falhar, com a mensagem de erro
+  (`useSavedToggle`).
 - "Pular para o conteúdo" é o primeiro item do teclado em todas as telas
   do perfil e leva o foco ao `<main>` (um botão, porque o desktop usa
   `HashRouter`).
