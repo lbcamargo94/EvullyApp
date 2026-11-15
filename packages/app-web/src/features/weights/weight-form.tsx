@@ -33,10 +33,13 @@ function initialValues(entry: WeightEntry | null) {
 export function WeightForm({
   profileId,
   editing,
+  focusOnOpen = false,
   onDone,
 }: {
   profileId: string;
   editing: WeightEntry | null;
+  /** Opened from "Registrar peso" or to edit: the cursor starts in the weight field. */
+  focusOnOpen?: boolean;
   onDone: () => void;
 }) {
   const { data: tags = [] } = useTags(profileId);
@@ -85,6 +88,7 @@ export function WeightForm({
         <Field id="weight" label={m.weight} error={error ?? undefined}>
           <Input
             id="weight"
+            autoFocus={focusOnOpen}
             inputMode="decimal"
             autoComplete="off"
             placeholder="89,8"

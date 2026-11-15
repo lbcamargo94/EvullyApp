@@ -12,6 +12,7 @@ import { MeasurementChart } from './measurement-chart';
 import { MeasurementForm } from './measurement-form';
 import { MeasurementHistory } from './measurement-history';
 import { measurementMessages as m } from './messages.pt-BR';
+import { useFocusRequested } from '../shared/focus-request';
 
 export function MeasurementScreen() {
   const { profileId } = useCurrentProfile();
@@ -19,6 +20,7 @@ export function MeasurementScreen() {
   const { data: sessions = [] } = useMeasurements(profileId);
   const { data: summary } = useMeasurementSummary(profileId);
   const [editing, setEditing] = useState<MeasurementSession | null>(null);
+  const focusRequested = useFocusRequested();
   if (!profileId || !tracking) return null;
   const types = tracking.measurementTypes;
 
@@ -35,6 +37,7 @@ export function MeasurementScreen() {
               profileId={profileId}
               types={types}
               editing={editing}
+              focusOnOpen={focusRequested || editing !== null}
               onDone={() => setEditing(null)}
             />
             {summary && <MeasurementChart summary={summary} />}

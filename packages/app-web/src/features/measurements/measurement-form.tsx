@@ -39,11 +39,14 @@ export function MeasurementForm({
   profileId,
   types,
   editing,
+  focusOnOpen = false,
   onDone,
 }: {
   profileId: string;
   types: MeasurementTypeDto[];
   editing: MeasurementSession | null;
+  /** Opened from "Registrar medidas" or to edit: the cursor starts in the first measurement. */
+  focusOnOpen?: boolean;
   onDone: () => void;
 }) {
   const register = useRegisterMeasurement(profileId);
@@ -106,18 +109,26 @@ export function MeasurementForm({
           />
         </Field>
         <div className="flex flex-col divide-y divide-border">
-          {types.map((type) => (
+          {types.map((type, index) => (
             <label
               key={type.id}
               htmlFor={`m-${type.id}`}
               className="grid grid-cols-[minmax(0,1fr)_120px] items-center gap-3 py-2.5"
             >
               <span className="flex flex-col gap-0.5">
-                <span className="font-semibold">{type.name}</span>
-                <span className="text-[13px] text-text-muted">{type.instructions}</span>
+                <span id={`m-${type.id}-name`} className="font-semibold">
+                  {type.name}
+                </span>
+                <span id={`m-${type.id}-how`} className="text-[13px] text-text-muted">
+                  {type.instructions}
+                </span>
               </span>
+              {/* Name as the label, "how to measure" as the description. */}
               <Input
                 id={`m-${type.id}`}
+                aria-labelledby={`m-${type.id}-name`}
+                aria-describedby={`m-${type.id}-how`}
+                autoFocus={index === 0 && focusOnOpen}
                 inputMode="decimal"
                 autoComplete="off"
                 placeholder={m.cm}

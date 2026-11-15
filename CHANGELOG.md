@@ -6,6 +6,17 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Polimento (V0.8)
+
+- "Registrar peso" e "Registrar medidas" no Dashboard abrem a tela com o
+  cursor no campo: abrir, digitar e apertar Enter. Editar um registro
+  também já coloca o cursor no campo.
+- Ao trocar de tela pelo menu, o foco vai para o conteúdo e o leitor de tela
+  anuncia a tela nova.
+- Campos de medida têm nome curto ("Cintura"); o "como medir" é lido como
+  descrição.
+- DESIGN.md: a confirmação de ações é no próprio formulário (sem toasts).
+
 ## [0.8.0-alpha.3] - 2026-11-14
 
 ### Ajustes do uso real (V0.8)

@@ -13,6 +13,7 @@ import {
 import type { ProjectDto } from '@evully/contracts';
 import { Button, Card, ProgressBar } from '@evully/ui';
 import { Link } from 'react-router';
+import { FOCUS_FORM } from '../shared/focus-request';
 import { MeasurementCards } from '../measurements/measurement-cards';
 import { objectiveLabels } from '../tracking/messages.pt-BR';
 import { WeightSummaryCard } from '../weights/weight-summary-card';
@@ -41,10 +42,14 @@ export function HomeScreen() {
         <h1 className="text-[26px] font-semibold tracking-tight">{m.homeTitle(profile.name)}</h1>
         <div className="flex flex-wrap gap-3">
           <Button asChild variant="secondary">
-            <Link to="/app/measurements">{m.registerMeasurements}</Link>
+            <Link to="/app/measurements" state={FOCUS_FORM}>
+              {m.registerMeasurements}
+            </Link>
           </Button>
           <Button asChild>
-            <Link to="/app/weight">{m.registerWeight}</Link>
+            <Link to="/app/weight" state={FOCUS_FORM}>
+              {m.registerWeight}
+            </Link>
           </Button>
         </div>
       </div>

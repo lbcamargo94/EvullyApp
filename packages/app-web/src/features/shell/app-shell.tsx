@@ -17,9 +17,10 @@ import {
   Scale,
   Settings,
 } from 'lucide-react';
-import { useCallback, useRef } from 'react';
-import { Navigate, NavLink, Outlet, useNavigate } from 'react-router';
+import { useCallback, useEffect, useRef } from 'react';
+import { Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { BackupErrorBanner } from '../settings/backup-error-banner';
+import { isFocusRequest } from '../shared/focus-request';
 import { UpdateBanner } from '../settings/update-banner';
 import { Logo } from './logo';
 import { shellMessages as m } from './messages.pt-BR';
@@ -39,6 +40,15 @@ export function AppShell() {
   const { data: tracking } = useTrackingState(profileId);
   const navigate = useNavigate();
   const mainRef = useRef<HTMLElement>(null);
+  const location = useLocation();
+  const shownPath = useRef(location.pathname);
+  // A new screen (not a tab change) moves focus to its content, so screen
+  // readers announce it; screens opened to type keep the cursor in their field.
+  useEffect(() => {
+    if (shownPath.current === location.pathname) return;
+    shownPath.current = location.pathname;
+    if (!isFocusRequest(location.state)) mainRef.current?.focus();
+  }, [location]);
 
   const lock = useCallback(() => {
     clear();
