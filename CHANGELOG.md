@@ -6,6 +6,21 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-15
+
+Versão estável da V0.8 (UX e polimento). Traz:
+
+- **Acessibilidade:** contraste WCAG AA nos dois temas (verificado em
+  `npm test`), lint de acessibilidade, "Pular para o conteúdo", foco no
+  conteúdo ao trocar de tela, descrição em texto dos gráficos e nomes
+  corretos nos campos para leitores de tela;
+- **Consistência:** aviso único quando dados não carregam, com "Tentar de
+  novo", e estados vazios com o mesmo visual;
+- **Uso diário:** marcar hábito, série, alimento, refeição e backup
+  automático responde na hora; do Dashboard ao peso salvo só com o teclado;
+- **Qualidade:** testes ponta a ponta com Playwright no app real, em todo
+  PR, e as fronteiras de arquitetura do desktop garantidas pelo lint.
+
 ## [0.8.0-alpha.4] - 2026-11-15
 
 ### Polimento (V0.8)
