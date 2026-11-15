@@ -14,9 +14,29 @@ test('registers a weight and a measurement session', async ({ evully }) => {
 
   await go(page, 'Medidas');
   const session = page.getByRole('region', { name: 'Nova sessão de medidas' });
-  await session.getByRole('textbox', { name: /^Cintura/ }).fill('92');
+  await session.getByRole('textbox', { name: 'Cintura', exact: true }).fill('92');
   await session.getByRole('button', { name: 'Salvar medidas' }).click();
   await expect(page.getByRole('region', { name: 'Histórico' })).toContainText('92');
+});
+
+test('from the dashboard to a saved weighing with the keyboard only (README §33.2)', async ({
+  evully,
+}) => {
+  const { page } = evully;
+  await createProfile(page, 'Ana');
+
+  await page.getByRole('link', { name: 'Registrar peso' }).click();
+  await expect(page.getByRole('textbox', { name: 'Peso (kg)' })).toBeFocused();
+  await page.keyboard.type('89,8');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('region', { name: 'Histórico' })).toContainText('89,8 kg');
+
+  await go(page, 'Dashboard', 'Olá, Ana');
+  await page.getByRole('link', { name: 'Registrar medidas' }).click();
+  const waist = page.getByRole('textbox', { name: 'Cintura', exact: true });
+  await expect(waist).toBeFocused();
+  // The "how to measure" hint is the field's description, not part of its name.
+  await expect(waist).toHaveAccessibleDescription(/Parte mais estreita do tronco/);
 });
 
 test('imports weighings from a CSV after the preview', async ({ evully, dataDir }) => {

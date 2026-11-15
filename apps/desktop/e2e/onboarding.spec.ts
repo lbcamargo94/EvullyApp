@@ -1,4 +1,4 @@
-import { createProfile, expect, test } from './fixtures';
+import { createProfile, expect, go, test } from './fixtures';
 
 test('creates a profile, answers the questionnaire and accepts the proposal', async ({
   evully,
@@ -21,4 +21,15 @@ test('the first Tab stop skips to the content (DESIGN.md §6)', async ({ evully 
   await expect(skip).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('main')).toBeFocused();
+});
+
+test('a new screen from the menu takes focus to its content (DESIGN.md §6)', async ({ evully }) => {
+  const { page } = evully;
+  await createProfile(page, 'Ana');
+
+  await go(page, 'Sono');
+  await expect(page.getByRole('main')).toBeFocused();
+  // The next Tab stop is inside the new screen, not back in the menu.
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('main').locator(':focus')).toHaveCount(1);
 });

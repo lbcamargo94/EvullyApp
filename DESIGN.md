@@ -140,7 +140,8 @@ dados insuficientes**, quando aplicáveis.
 
 ## 6. Feedback, movimento e acessibilidade
 
-- **Toasts** (Sonner) para confirmar ações ("Peso registrado").
+- **Confirmação no próprio formulário**, com `role="status"` ("Pesagem
+  registrada."), lida pelo leitor de tela; o app não usa toasts.
 - **Erros de carregamento** num aviso único no topo do conteúdo
   (`QueryErrorBanner`), com "Tentar de novo"; nada é apagado. Uma tela que
   explica o próprio erro marca a consulta com `meta: { localError: true }`.
@@ -155,6 +156,12 @@ dados insuficientes**, quando aplicáveis.
   hora, não ficam desativados durante a gravação (para não perder o foco) e
   voltam ao estado gravado se ela falhar, com a mensagem de erro
   (`useSavedToggle`).
+- Ao abrir outra tela (não uma aba), o foco vai para o conteúdo, para o
+  leitor de tela anunciar a tela nova. "Registrar peso" e "Registrar medidas"
+  no Dashboard abrem a tela com o cursor no primeiro campo (`FOCUS_FORM`),
+  assim como editar um registro: pesar e registrar só com o teclado.
+- Campo com dica longa (como medir) usa a dica como descrição
+  (`aria-describedby`), não como parte do nome.
 - "Pular para o conteúdo" é o primeiro item do teclado em todas as telas
   do perfil e leva o foco ao `<main>` (um botão, porque o desktop usa
   `HashRouter`).

@@ -11,6 +11,7 @@ import { weightMessages as m } from './messages.pt-BR';
 import { WeightChart } from './weight-chart';
 import { WeightForm } from './weight-form';
 import { WeightHistory } from './weight-history';
+import { useFocusRequested } from '../shared/focus-request';
 
 export function WeightScreen() {
   const { profileId } = useCurrentProfile();
@@ -18,6 +19,7 @@ export function WeightScreen() {
   const { data: summary } = useWeightSummary(profileId);
   const { data: project } = useActiveProject(profileId);
   const [editing, setEditing] = useState<WeightEntry | null>(null);
+  const focusRequested = useFocusRequested();
   if (!profileId) return null;
 
   return (
@@ -28,6 +30,7 @@ export function WeightScreen() {
           key={editing?.id ?? 'new'}
           profileId={profileId}
           editing={editing}
+          focusOnOpen={focusRequested || editing !== null}
           onDone={() => setEditing(null)}
         />
         {summary && <WeightChart summary={summary} projectStart={project?.startDate ?? null} />}
