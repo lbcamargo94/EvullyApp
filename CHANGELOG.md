@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [0.8.0-alpha.4] - 2026-11-15
+
 ### Polimento (V0.8)
 
 - "Registrar peso" e "Registrar medidas" no Dashboard abrem a tela com o

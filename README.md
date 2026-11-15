@@ -222,7 +222,7 @@ Este é o **único** roadmap do projeto.
 | **V0.5** ✓ 0.5.0 (28/10/2026) | Sono |
 | **V0.6** ✓ 0.6.0 (09/11/2026) | Estatísticas e dashboard completo |
 | **V0.7** ✓ 0.7.0 (10/11/2026) | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
-| V0.8 (em andamento) | UX/polimento: alpha.1 acessibilidade e consistência ✓ (11/11/2026); alpha.2 testes ponta a ponta com Playwright ✓ (14/11/2026); alpha.3 ajustes do uso real ✓ (14/11/2026); alpha.4 polimento (§15.1) |
+| V0.8 (em andamento) | UX/polimento: alpha.1 acessibilidade e consistência ✓ (11/11/2026); alpha.2 testes ponta a ponta com Playwright ✓ (14/11/2026); alpha.3 ajustes do uso real ✓ (14/11/2026); alpha.4 polimento ✓ (15/11/2026; §15.1) |
 | V1.0 | Desktop estável + instalador Windows (a atualização automática foi antecipada; §33) |
 | V1.1 | Analytics Engine determinístico |
 | V1.2 | Recommendation Engine determinístico |
