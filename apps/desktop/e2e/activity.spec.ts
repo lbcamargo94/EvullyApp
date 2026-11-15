@@ -1,5 +1,13 @@
 import { createProfile, expect, go, test } from './fixtures';
 
+/** `YYYY-MM-DD` in the machine's time zone (the app's), `offset` days from today. */
+function localDate(offset: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 test('registers cardio, a habit and a night of sleep, then sees them in Estatísticas', async ({
   evully,
 }) => {
@@ -24,6 +32,8 @@ test('registers cardio, a habit and a night of sleep, then sees them in Estatís
 
   await go(page, 'Sono');
   const night = page.getByRole('region', { name: 'Registrar noite' });
+  // Last night, so the wake-up time is never in the future (the app refuses it).
+  await night.getByRole('textbox', { name: 'Acordou no dia' }).fill(localDate(-1));
   await night.getByRole('textbox', { name: 'Deitou' }).fill('23:00');
   await night.getByRole('textbox', { name: 'Acordou', exact: true }).fill('07:00');
   await expect(night).toContainText('8h00');
