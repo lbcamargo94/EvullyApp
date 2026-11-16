@@ -1965,7 +1965,10 @@ V0.8 estiver estável no uso diário.
 ### 15.3 V1.1 — Design system
 
 Aprimorar todo o visual antes das próximas funcionalidades, para que as
-telas novas e o app mobile já nasçam no padrão final ([DESIGN.md](DESIGN.md)):
+telas novas e o app mobile já nasçam no padrão final ([DESIGN.md](DESIGN.md)).
+A especificação de implementação aprovada, com as fases 0 a 5, os critérios
+de aceite e as restrições, está em
+[docs/design/DESIGN_IMPLEMENTATION.md](docs/design/DESIGN_IMPLEMENTATION.md):
 
 - **Ilustrações próprias em SVG**, nas cores dos tokens e nos dois temas:
   estados vazios de cada módulo, boas-vindas e questionário, tela de

@@ -16,6 +16,7 @@ mobile (Expo). **Current phase: V1.0 done (1.0.0 released, Phase 1 complete); ne
 | FRONTEND.md | app-core / app-web / ui-native, site, PWA, Expo |
 | BACKEND.md | NestJS modules, auth, API conventions, sync protocol |
 | DESIGN.md | Tokens, components, layout, accessibility |
+| docs/design/DESIGN_IMPLEMENTATION.md | V1.1 visual implementation spec (phases 0–5, acceptance, restrictions); read before any V1.1 design task |
 | SECURITY.md | Threat model, Electron/IPC/data rules, per-version checklist |
 
 **README.md has ~2,300 lines. Never read it whole.** Find the section
