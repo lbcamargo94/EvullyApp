@@ -135,8 +135,10 @@ Fora de escopo na Fase 1:
   - procura versões só ao abrir e no botão "Verificar atualizações";
   - o renderer só pode pedir "verificar" e "instalar"; nenhuma URL ou
     caminho vem dele; os logs registram só versão e a primeira linha do erro.
-- Assinatura de código (Authenticode) avaliada na V1.0. Sem ela, o
-  Windows SmartScreen exibe aviso na instalação.
+- Sem assinatura de código (Authenticode) na Fase 1 (README §33): o
+  Windows SmartScreen avisa na primeira instalação; as atualizações seguintes
+  são instaladas pelo app só com a assinatura Ed25519 válida. Rever antes da
+  Fase 3.
 
 ### 2.9 Repositório
 

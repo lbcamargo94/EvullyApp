@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Aceite da Fase 1 (V1.0)
+
+- Testes ponta a ponta para todos os critérios do README §19: plano de
+  treino próprio, histórico e sugestão de progressão, macros contra as metas,
+  backup manual e restauração (16 fluxos no total).
+- Nos testes, as janelas de abrir e salvar arquivo começam canceladas: nada é
+  gravado fora da pasta temporária de cada teste.
+- Decidido: o instalador segue sem assinatura de código (Authenticode) na
+  Fase 1 (README §33).
+
 ## [0.8.0] - 2026-11-15
 
 Versão estável da V0.8 (UX e polimento). Traz:

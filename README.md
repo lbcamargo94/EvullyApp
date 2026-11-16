@@ -223,7 +223,7 @@ Este é o **único** roadmap do projeto.
 | **V0.6** ✓ 0.6.0 (09/11/2026) | Estatísticas e dashboard completo |
 | **V0.7** ✓ 0.7.0 (10/11/2026) | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
 | **V0.8** ✓ 0.8.0 (15/11/2026) | UX/polimento: acessibilidade e consistência, testes ponta a ponta (Playwright), ajustes do uso real e polimento (§15.1) |
-| V1.0 | Desktop estável + instalador Windows (a atualização automática foi antecipada; §33) |
+| V1.0 (em andamento) | Desktop estável + instalador Windows (a atualização automática foi antecipada; §33): alpha.1 aceite do §19 em testes ponta a ponta; alpha.2 robustez (verificação do banco ao abrir, pasta de logs); rc.1; 1.0.0 (§15.2) |
 | V1.1 | Analytics Engine determinístico |
 | V1.2 | Recommendation Engine determinístico |
 | V1.3 | Notificações locais / Evully Reminders |
@@ -1925,6 +1925,15 @@ V0.8 estiver estável no uso diário.
 | 0.8.0-alpha.3 | Ajustes do uso real: controles liga/desliga que gravam sozinhos respondem na hora e mantêm o foco ([DESIGN.md](DESIGN.md), §6). |
 | 0.8.0-alpha.4 | Polimento: do Dashboard ao peso salvo só com o teclado (risco da §33.2); foco no conteúdo ao trocar de tela; nomes curtos nos campos de medida ([DESIGN.md](DESIGN.md), §6). |
 
+### 15.2 V1.0 — Desktop estável
+
+| Entrega | Conteúdo |
+|---|---|
+| 1.0.0-alpha.1 | Cada critério de aceite do §19 coberto por um teste ponta a ponta; assinatura de código decidida (§33). |
+| 1.0.0-alpha.2 | Robustez: verificação rápida do banco ao abrir, com tela de recuperação que oferece restaurar o backup válido mais recente (nada é apagado sem confirmação); "Abrir pasta de logs" em Configurações › Sobre. |
+| 1.0.0-rc.1 | Versão candidata, só com correções, para uso diário por alguns dias. |
+| 1.0.0 | Versão estável da Fase 1. |
+
 ---
 
 ## 16. UX/UI
@@ -2055,6 +2064,9 @@ V0.7   exportar JSON → transferir perfil para outra pasta de dados
 V0.8   primeiro Tab → "Pular para o conteúdo"
 V0.8   Dashboard → "Registrar peso" → digitar → Enter, só com o teclado
 V0.8   trocar de tela pelo menu → foco no conteúdo
+V1.0   criar plano próprio → 2 treinos → histórico e sugestão de progressão
+V1.0   definir metas → acompanhar macros no dia
+V1.0   backup manual → registrar → restaurar → reabrir sem o registro novo
 ```
 
 ---
@@ -2069,6 +2081,19 @@ executar treinos registrando séries, cargas, repetições e RIR; consultar
 histórico; receber sugestões simples de progressão; registrar cardio,
 hábitos e sono; visualizar estatísticas; fazer backup; restaurar;
 exportar dados; instalar o aplicativo no Windows.
+
+Cada critério tem um teste ponta a ponta em `apps/desktop/e2e` (§18.3):
+
+| Critério | Teste |
+|---|---|
+| Criar perfis, configurar o acompanhamento, criar projetos | `onboarding.spec.ts` |
+| Registrar peso e medidas, importar CSV | `body.spec.ts` |
+| Acompanhar gráficos, visualizar estatísticas, cardio, hábitos e sono | `activity.spec.ts` |
+| Cadastrar alimentos, montar e registrar refeições, acompanhar macros | `nutrition.spec.ts` |
+| Criar planos, executar treinos (séries, cargas, repetições, RIR), histórico, sugestão de progressão | `workout-plan.spec.ts`, `workout.spec.ts` |
+| Fazer backup e restaurar | `backup.spec.ts`, `profiles.spec.ts` (backup ao fechar) |
+| Exportar dados | `data.spec.ts` |
+| Instalar o aplicativo no Windows | Verificação manual do instalador de cada versão |
 
 ---
 
@@ -2549,6 +2574,7 @@ Decisões que serão tomadas quando a versão correspondente começar.
 | Questão | Decisão |
 |---|---|
 | Atualização automática: quando e onde publicar? | Antecipada da V1.0 (0.5.0-alpha.3). `electron-updater` busca as versões no repositório **público só de releases** `lbcamargo94/evully-releases`; o código continua privado. O app procura só ao abrir e no botão "Verificar atualizações" (sem verificação periódica, para não gastar recursos), baixa em segundo plano e instala a versão verificada ao fechar o app ou quando a pessoa clica em "Reiniciar e atualizar", sempre depois do backup de fechamento. Canal em Configurações › Sobre: pré-versões (padrão durante o desenvolvimento) ou só estáveis. Segurança em [SECURITY.md](SECURITY.md), §2.8. |
+| Assinatura de código (Authenticode) do instalador? | Não na Fase 1 (decidido em 16/11/2026): uso doméstico; o aviso do SmartScreen aparece só na primeira instalação e as atualizações já são verificadas com assinatura Ed25519 própria ([SECURITY.md](SECURITY.md), §2.8). Para pessoa física no Brasil, o Azure Artifact Signing não está disponível e um certificado OV custa de ~US$ 130 a 840 por ano, com token físico ou serviço na nuvem, sem tirar o aviso de imediato. Rever antes da Fase 3 (lojas e uso comercial). |
 
 **Decididas em 21/10/2026 (início da V0.2):**
 
@@ -2568,7 +2594,6 @@ recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
 |---|---|
 | Fotos de progresso são criptografadas em disco? | futuro |
 | Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.4 |
-| Assinatura de código (Authenticode) do instalador. | V1.0 |
 | Confirmar Better Auth como solução de autenticação. | Início da Fase 2 |
 | Provedor de hospedagem e de pagamentos. | Início da Fase 2 / Fase 3 |
 | Tipos de medida personalizados por perfil. | futuro |
