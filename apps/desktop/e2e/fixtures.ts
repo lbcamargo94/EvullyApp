@@ -26,6 +26,18 @@ export async function launch(dataDir: string): Promise<Running> {
   }
   env['EVULLY_DATA_DIR'] = dataDir;
   const app = await electron.launch({ args: ['.'], cwd: desktopDir, env });
+  // Native file dialogs are cancelled unless a test answers them, so a run
+  // never writes or reads files outside its data folder.
+  await app.evaluate(({ dialog }) => {
+    dialog.showSaveDialog = (async () => ({
+      canceled: true,
+      filePath: '',
+    })) as typeof dialog.showSaveDialog;
+    dialog.showOpenDialog = (async () => ({
+      canceled: true,
+      filePaths: [],
+    })) as typeof dialog.showOpenDialog;
+  });
   const page = await app.firstWindow();
   await page.waitForLoadState('domcontentloaded');
   return { app, page };

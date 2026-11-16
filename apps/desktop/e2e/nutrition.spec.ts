@@ -36,3 +36,23 @@ test('registers a meal with a food from the catalog', async ({ evully }) => {
     'Consumido195 kcal',
   );
 });
+
+test('tracks macros against the profile targets (README §9.6)', async ({ evully }) => {
+  const { page } = evully;
+  await createProfile(page, 'Ana');
+  await go(page, 'Configurações');
+  await page.getByRole('tab', { name: 'Nutrição' }).click();
+  await page.getByRole('textbox', { name: 'Calorias (kcal)' }).fill('2000');
+  await page.getByRole('textbox', { name: 'Proteína (g)' }).fill('120');
+  await page.getByRole('button', { name: 'Salvar metas' }).click();
+  await expect(page.getByRole('region', { name: 'Metas nutricionais' })).toContainText(
+    'Metas atuais desde',
+  );
+
+  await go(page, 'Dieta');
+  await page.getByRole('button', { name: 'Pular e usar o padrão' }).click();
+  const total = page.getByRole('region', { name: 'Total do dia' });
+  await expect(total).toContainText('0 / 2.000 kcal');
+  await expect(total).toContainText('0 / 120 g');
+  await expect(total).not.toContainText('Sem metas definidas.');
+});
