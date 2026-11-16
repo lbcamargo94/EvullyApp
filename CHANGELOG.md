@@ -6,6 +6,11 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [1.0.0-rc.1] - 2026-11-16
+
+Versão candidata da 1.0.0, sem novidades: a mesma 1.0.0-alpha.2, para uso
+diário antes da versão estável. Daqui até a 1.0.0 entram só correções.
+
 ## [1.0.0-alpha.2] - 2026-11-16
 
 ### Robustez (V1.0)

@@ -223,7 +223,7 @@ Este é o **único** roadmap do projeto.
 | **V0.6** ✓ 0.6.0 (09/11/2026) | Estatísticas e dashboard completo |
 | **V0.7** ✓ 0.7.0 (10/11/2026) | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
 | **V0.8** ✓ 0.8.0 (15/11/2026) | UX/polimento: acessibilidade e consistência, testes ponta a ponta (Playwright), ajustes do uso real e polimento (§15.1) |
-| V1.0 (em andamento) | Desktop estável + instalador Windows (a atualização automática foi antecipada; §33): alpha.1 aceite do §19 em testes ponta a ponta ✓ (16/11/2026); alpha.2 robustez (verificação do banco ao abrir, pasta de logs) ✓ (16/11/2026); rc.1; 1.0.0 (§15.2) |
+| V1.0 (em andamento) | Desktop estável + instalador Windows (a atualização automática foi antecipada; §33): alpha.1 aceite do §19 em testes ponta a ponta ✓ (16/11/2026); alpha.2 robustez (verificação do banco ao abrir, pasta de logs) ✓ (16/11/2026); rc.1 ✓ (16/11/2026, em uso); 1.0.0 (§15.2) |
 | V1.1 | Analytics Engine determinístico |
 | V1.2 | Recommendation Engine determinístico |
 | V1.3 | Notificações locais / Evully Reminders |
