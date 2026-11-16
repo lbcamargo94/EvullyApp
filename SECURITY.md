@@ -96,13 +96,13 @@ Fora de escopo na Fase 1:
 
 - V0.1: dados em `%APPDATA%\Evully`, protegidos pelas permissões da conta
   do Windows, sem criptografia própria.
-- Antes do Evully Health (V1.4) ou de fotos de progresso, decidir sobre
+- Antes do Evully Health (V1.5) ou de fotos de progresso, decidir sobre
   criptografia do banco (ex.: SQLCipher) e dos arquivos de fotos.
 
 ### 2.5 Segredos
 
 - Nenhum segredo no repositório. Arquivos `.env*` são ignorados pelo git.
-- Chaves de API (V1.5) são guardadas com `safeStorage` do Electron e
+- Chaves de API (V1.6) são guardadas com `safeStorage` do Electron e
   nunca chegam ao renderer, ao SQLite em texto puro ou aos logs.
 
 ### 2.6 Logs

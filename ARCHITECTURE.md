@@ -62,7 +62,7 @@ Regras derivadas:
 
 ## 3. Onde cada camada vive
 
-| Camada | Desktop (`apps/desktop`) | API (`apps/api`, Fase 2) | Web (`apps/web`, Fase 2) | Mobile (`apps/mobile`, Fase 3) |
+| Camada | Desktop (`apps/desktop`) | API (`apps/api`, Fase 2) | Web (`apps/web`, Fase 2) | Mobile (`apps/mobile`, V2.1) |
 |---|---|---|---|---|
 | Domínio | `packages/domain` | `packages/domain` | `packages/domain` (cálculos de exibição) | `packages/domain` |
 | Aplicação | `src/modules/*/application`, `ports` | `src/modules/*/application`, `ports` | — (a regra roda na API) | casos de uso locais para os dados offline |
@@ -261,6 +261,8 @@ licenças e `npm audit`.
 | 11/11/2026 | Testes ponta a ponta com Playwright (`_electron`) no app compilado, uma pasta de dados vazia por teste via `EVULLY_DATA_DIR` (só fora do app instalado) e janelas nativas respondidas no processo principal pelo teste; rodam no CI em todo PR | Testam o app real sem tocar nos dados de desenvolvimento nem mudar código de produção para os diálogos; o app instalado continua só com a pasta padrão. Testes de acessibilidade com axe ficaram de fora (licença MPL, barrada pelo `licenses:check`). |
 | 14/11/2026 | Controles liga/desliga que gravam sozinhos usam `useOptimistic` do React 19 (`useSavedToggle`): mostram o novo estado na hora, não ficam desativados durante a gravação e voltam ao estado gravado se ela falhar | O controle desativado piscava e perdia o foco do teclado; o hook do React reverte sozinho ao fim da gravação, sem cache otimista manual em cada mutation. |
 | 16/11/2026 | Banco danificado abre um modo de recuperação (`main/recovery-root.ts`): sem abrir o banco, o processo principal registra todos os canais, mas só informação, logs e os canais de restauração funcionam; a restauração reaproveita `ListRestorableBackups`/`PrepareRestore` sobre uma `RestoreSource` sem banco e a tela reaproveita o mesmo painel | Os casos de uso de restauração dependiam das configurações gravadas no banco (pasta adicional); separar a origem dos backups deixa o mesmo fluxo validado servir aos dois modos, sem duplicar validação nem tela. |
+| 16/11/2026 | Apps Android e iPhone (Expo) antes do app web: V2.0 servidor e sincronização, V2.1 Android na Google Play, V2.2 iPhone, V2.3 PWA e site; substitui "PWA na Fase 2, nativo na Fase 3" (06/10/2026) | O registro diário pelo celular é o maior risco de uso; o app nativo guarda dados no aparelho e funciona sem internet, o que a PWA faz pior no iPhone. Android primeiro pelo custo (taxa única) e pela instalação de testes sem loja. |
+| 16/11/2026 | Nova V1.1 de design system antes das demais V1.x (que passam a V1.2–V1.6), com ilustrações SVG próprias nas cores dos tokens | As telas novas e o mobile reaproveitam os mesmos tokens e peças; SVG próprio evita licenças de terceiros e acompanha os temas claro e escuro. |
 
 Novas decisões arquiteturais são adicionadas a esta tabela com data e
 motivo.

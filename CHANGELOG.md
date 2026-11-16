@@ -6,6 +6,15 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Roadmap
+
+- Nova V1.1: design system (ilustrações SVG próprias, ícones, imagens e
+  acabamento visual); Analytics, Recomendações, Lembretes, Health e Coach AI
+  passam para V1.2 a V1.6 (README §4, §15.3).
+- Decidido: os apps Android e iPhone vêm antes do app web. Depois das V1.1 a
+  V1.6: V2.0 servidor, conta e sincronização; V2.1 Android na Google Play;
+  V2.2 iPhone na App Store; V2.3 app web e site (README §4).
+
 ## [1.0.0] - 2026-11-16
 
 Primeira versão estável do Evully: fim da Fase 1 (desktop). Reúne tudo desde

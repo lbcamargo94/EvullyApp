@@ -76,8 +76,9 @@ e validar o produto por uso real.
 A evolução planejada é:
 
 1. **Desktop local** (Fase 1 — V0.x e V1.x)
-2. **Aplicação Web** (Fase 2 — V2.x)
-3. **Produto comercial / SaaS / PWA / aplicativos** (Fase 3 — V3.x)
+2. **Contas, sincronização e apps** (Fase 2 — V2.x): servidor, apps
+   Android e iPhone, depois app web
+3. **Produto comercial / SaaS** (Fase 3 — V3.x)
 
 A arquitetura da Fase 1 deve ser simples, mas não descartável. Modelos
 de domínio, regras de negócio e componentes devem ser construídos de
@@ -224,15 +225,25 @@ Este é o **único** roadmap do projeto.
 | **V0.7** ✓ 0.7.0 (10/11/2026) | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
 | **V0.8** ✓ 0.8.0 (15/11/2026) | UX/polimento: acessibilidade e consistência, testes ponta a ponta (Playwright), ajustes do uso real e polimento (§15.1) |
 | **V1.0** ✓ 1.0.0 (16/11/2026) | Desktop estável + instalador Windows: aceite do §19 em testes ponta a ponta, recuperação de banco danificado, pasta de logs (§15.2) |
-| V1.1 | Analytics Engine determinístico |
-| V1.2 | Recommendation Engine determinístico |
-| V1.3 | Notificações locais / Evully Reminders |
-| V1.4 | Evully Health (estrutura local/manual) |
-| V1.5 | Evully Coach AI opcional (desenvolvimento/testes) |
-| V2.x | App web + site + PWA + API NestJS + autenticação + PostgreSQL + sincronização |
+| V1.1 | Design system: ilustrações, ícones, imagens e acabamento visual de todas as telas, com tokens prontos para o mobile (§15.3) |
+| V1.2 | Analytics Engine determinístico |
+| V1.3 | Recommendation Engine determinístico |
+| V1.4 | Notificações locais / Evully Reminders |
+| V1.5 | Evully Health (estrutura local/manual) |
+| V1.6 | Evully Coach AI opcional (desenvolvimento/testes) |
+| V2.0 | API NestJS + PostgreSQL + conta e login + sincronização do desktop (todos os módulos da Fase 1) + páginas públicas de termos e privacidade + exclusão de conta |
+| V2.1 | App Android (React Native com Expo) na Google Play: dados locais com sincronização |
+| V2.2 | App iPhone na App Store (o mesmo app) |
+| V2.3 | App web (PWA) + site completo |
 | V2.x | Evully Cloud + IA server-side |
 | V2.x | WhatsApp oficial / push / e-mail |
-| V3.x | SaaS comercial + planos + billing + apps nativos Android/iOS (React Native com Expo) |
+| V3.x | SaaS comercial + planos + billing (assinaturas nas lojas e na web) |
+
+O celular vem antes do app web (decidido em 16/11/2026): o registro diário
+pelo celular é o maior risco de uso (§33.2), e os apps das lojas guardam os
+dados no aparelho e funcionam sem internet. Android primeiro (conta da
+Google Play com taxa única), depois iPhone (conta da Apple anual). As V1.1 a
+V1.6 continuam antes do servidor.
 
 Regras:
 
@@ -310,13 +321,13 @@ EvullyApp/
   apps/
     desktop/            Electron: shell do desktop (V0.1)
     web/                React + Vite: app web / PWA (Fase 2)
-    mobile/             React Native com Expo: apps Android e iOS (Fase 3)
+    mobile/             React Native com Expo: apps Android e iOS (V2.1 e V2.2)
     site/               Next.js: site público (Fase 2)
     api/                API NestJS (Fase 2, §29)
   packages/
     app-core/           lógica das telas sem visual: hooks, view models, textos (V0.1)
     app-web/            telas com shadcn/ui para desktop e web (V0.1)
-    ui-native/          componentes React Native (Fase 3)
+    ui-native/          componentes React Native (V2.1)
     api-client/         cliente HTTP da API (Fase 2)
     domain/             regras de negócio puras em TypeScript (V0.1)
     contracts/          schemas zod e tipos compartilhados (V0.1)
@@ -1950,6 +1961,27 @@ V0.8 estiver estável no uso diário.
 | 1.0.0-rc.1 | Versão candidata, sem novidades. |
 | 1.0.0 | Versão estável da Fase 1 (16/11/2026). |
 
+
+### 15.3 V1.1 — Design system
+
+Aprimorar todo o visual antes das próximas funcionalidades, para que as
+telas novas e o app mobile já nasçam no padrão final ([DESIGN.md](DESIGN.md)):
+
+- **Ilustrações próprias em SVG**, nas cores dos tokens e nos dois temas:
+  estados vazios de cada módulo, boas-vindas e questionário, tela de
+  recuperação e erros. Sem bibliotecas de terceiros (sem licença a conferir).
+- **Ícones** Lucide com uso padronizado (tamanho, traço, ícone de cada
+  módulo) e o **ícone do app** e o logo revisados para o instalador, a barra
+  de tarefas e, depois, as lojas.
+- **Escalas** de tipografia, espaçamento, raio e sombra revisadas e
+  aplicadas em todas as telas; componentes que faltam (ex.: carregando,
+  cabeçalho de tela, cartões de seção) e revisão do tema escuro.
+- **Catálogo** dos componentes e das ilustrações, para conferir o visual
+  sem navegar pelo app.
+- **Tokens exportáveis** para o preset do NativeWind do app mobile (V2.1).
+- Cada peça visual é aprovada antes de entrar; contraste WCAG AA e testes
+  ponta a ponta continuam valendo.
+
 ---
 
 ## 16. UX/UI
@@ -1988,9 +2020,9 @@ Cada item do menu lateral só aparece a partir da versão indicada:
 | Sono | V0.5 |
 | Hoje | V0.6 |
 | Estatísticas | V0.6 |
-| Lembretes | V1.3 |
-| Saúde / Exames | V1.4 |
-| Evully Coach | V1.5 |
+| Lembretes | V1.4 |
+| Saúde / Exames | V1.5 |
+| Evully Coach | V1.6 |
 
 No topo: `Perfil atual: Lucas ▼`.
 
@@ -2011,10 +2043,10 @@ No topo: `Perfil atual: Lucas ▼`.
 | Cardio | `cardio_sessions`, `cardio_targets` | V0.4 |
 | Hábitos | `habit_definitions`, `habit_logs` | V0.4 |
 | Sono | `sleep_logs` | V0.5 |
-| Inteligência | `analytics_snapshots`, `recommendation_events`, `recommendation_decisions` | V1.1–V1.2 |
-| Lembretes | `notification_preferences`, `notification_events` | V1.3 |
-| Saúde | `health_exams`, `health_exam_results`, `health_reference_ranges`, `health_documents` | V1.4 |
-| IA | `ai_conversations`, `ai_messages`, `ai_usage_logs` | V1.5 |
+| Inteligência | `analytics_snapshots`, `recommendation_events`, `recommendation_decisions` | V1.2–V1.3 |
+| Lembretes | `notification_preferences`, `notification_events` | V1.4 |
+| Saúde | `health_exams`, `health_exam_results`, `health_reference_ranges`, `health_documents` | V1.5 |
+| IA | `ai_conversations`, `ai_messages`, `ai_usage_logs` | V1.6 |
 | Contato | `contact_channels`, `consent_records` | V2.x |
 | Controle | tabela de controle de migrations (gerenciada pelo Kysely) | V0.1 |
 
@@ -2133,7 +2165,7 @@ Explicação / proposta
 Usuário aprova ou rejeita
 ```
 
-### 20.1 Analytics Engine (V1.1)
+### 20.1 Analytics Engine (V1.2)
 
 Cálculos testáveis, reproduzíveis e independentes de IA:
 
@@ -2150,7 +2182,7 @@ Cálculos testáveis, reproduzíveis e independentes de IA:
 
 Todo cálculo registra versão/método quando necessário e possui testes.
 
-### 20.2 Recommendation Engine (V1.2)
+### 20.2 Recommendation Engine (V1.3)
 
 Camada determinística que transforma métricas em sinais, por exemplo:
 
@@ -2175,7 +2207,7 @@ acompanhar também o quadril?"). Se aceitas, geram um novo registro em
 
 ## 21. Evully Coach AI
 
-Camada conversacional e interpretativa (V1.5). Usa dados estruturados do
+Camada conversacional e interpretativa (V1.6). Usa dados estruturados do
 Evully para explicar evolução, responder perguntas, propor treino/dieta e
 resumir períodos.
 
@@ -2257,7 +2289,7 @@ limitações. Comparações de tendência devem usar o mesmo método.
 
 ## 24. Evully Health — exames laboratoriais
 
-Módulo separado (V1.4), com proteção reforçada.
+Módulo separado (V1.5), com proteção reforçada.
 
 ### 24.1 Entrada
 
@@ -2304,7 +2336,7 @@ profissional recomendada**. Sem linguagem alarmista.
 
 ## 25. Evully Reminders
 
-Sistema unificado de lembretes (V1.3 local; demais canais na Fase 2).
+Sistema unificado de lembretes (V1.4 local; demais canais na Fase 2).
 
 Canais: notificações do Windows; push web/mobile, e-mail e WhatsApp no
 futuro.
@@ -2364,9 +2396,10 @@ A análise de uma data passada usa a meta vigente naquela data.
 
 ---
 
-## 29. Fase 2 — Aplicação Web
+## 29. Fase 2 — Contas, sincronização e apps
 
-Somente após validação do desktop.
+Somente após validação do desktop. Ordem: servidor (V2.0), Android (V2.1),
+iPhone (V2.2) e app web com o site completo (V2.3); §4.
 
 ### 29.1 Plataformas
 
@@ -2375,13 +2408,15 @@ App web    React + Vite + Tailwind + shadcn/ui, PWA (apps/web), com as
            telas de packages/app-web
 Site       Next.js (apps/site): apresentação, planos, download do
            desktop, ajuda, termos e privacidade
-Celular    o próprio PWA, instalável pelo navegador
+Celular    apps Android e iPhone (React Native com Expo, apps/mobile),
+           antes do app web; o PWA também roda no celular a partir da V2.3
 Backend    API NestJS + PostgreSQL (apps/api)
 ```
 
-O PWA resolve cedo o registro pelo celular (§33.2), sem lojas de
-aplicativos. O planejamento completo do site, do app web e dos apps
-Android/iOS está em [FRONTEND.md](FRONTEND.md).
+Os apps das lojas resolvem o registro pelo celular (§33.2) com dados no
+aparelho e uso sem internet. Na V2.0 o site se resume às páginas de termos e
+privacidade que as lojas exigem. O planejamento completo do site, do app web
+e dos apps Android/iOS está em [FRONTEND.md](FRONTEND.md).
 
 Entram: autenticação, contas, acesso pelo celular, backend/API,
 sincronização, armazenamento remoto, segurança web e importação do
@@ -2416,7 +2451,8 @@ funcionalidades deve complicar a Fase 1.
 
 ### 30.0 Aplicativos para lojas
 
-Apps nativos para Play Store e App Store em **React Native com Expo**
+Antecipados para a Fase 2 (V2.1 Android, V2.2 iPhone; §4); na Fase 3 entram
+as assinaturas pelas lojas. Apps nativos para Play Store e App Store em **React Native com Expo**
 (`apps/mobile`), com telas próprias sobre a mesma lógica compartilhada
 (`packages/app-core`), banco local com sincronização, notificações,
 câmera, biometria, Apple Health e Health Connect. Compilação de iOS na
@@ -2610,14 +2646,14 @@ recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
 | Questão | Versão |
 |---|---|
 | Fotos de progresso são criptografadas em disco? | futuro |
-| Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.4 |
+| Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.5 |
 | Confirmar Better Auth como solução de autenticação. | Início da Fase 2 |
 | Provedor de hospedagem e de pagamentos. | Início da Fase 2 / Fase 3 |
 | Tipos de medida personalizados por perfil. | futuro |
 | Acompanhamento do ciclo menstrual (opcional, ativado no perfil): registrar início do ciclo, mostrar fases no gráfico de peso, comparar o mesmo ponto entre ciclos. Dado sensível: privado, fora dos logs, exportação só com escolha explícita. Sem previsões nem interpretações. | após conversa (V0.1.1 ou V0.4) |
 | Status "pausado" no projeto (gestação, lesão, viagem): congela a contagem de dias e as diferenças, sem incentivar perda de peso no período. | após conversa |
 | Prioridade das fotos de progresso. | após conversa |
-| Registro de bioimpedância antes da V1.1, se houver balança. | após conversa |
+| Registro de bioimpedância antes da V1.2, se houver balança. | após conversa |
 | PIN opcional por perfil (candidato à V0.2). | após conversa |
 
 ### 33.1 Descoberta com o segundo perfil
