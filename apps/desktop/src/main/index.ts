@@ -3,18 +3,21 @@ import log from 'electron-log/main';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { openDatabase } from '../database/connection';
+import { checkDatabase } from '../database/integrity';
 import { hasPendingMigrations, migrateToLatest } from '../database/migrator';
 import { applyPendingRestore } from '../modules/backup/adapters/fs-backup-reader';
 import { systemClock, uuidV7Generator } from '../modules/shared/system-adapters';
 import { ElectronUpdater } from './auto-update';
 import { buildApp } from './composition-root';
 import { readLegalDocuments } from './legal';
+import { openLogFolder } from './logs';
 import { withNativeTheme } from './native-theme';
 import { electronDialogs } from './electron-dialogs';
 import { electronExportFiles } from './electron-export-files';
 import { electronImportFiles } from './electron-import-files';
 import { electronTransferFiles } from './electron-transfer-files';
 import { registerIpcHandlers } from './ipc-router';
+import { buildRecovery } from './recovery-root';
 import {
   backupsDirectory,
   configureDataDirectory,
@@ -67,12 +70,54 @@ function createWindow(): void {
   else void window.loadFile(join(import.meta.dirname, '../renderer/index.html'));
 }
 
+const appInfo = () => ({
+  version: app.getVersion(),
+  environment: app.isPackaged ? ('production' as const) : ('development' as const),
+});
+
+/** Restarts after a restore; the staged database replaces the current one on the next start. */
+const restart = {
+  restart: () =>
+    setImmediate(() => {
+      app.relaunch();
+      app.quit();
+    }),
+};
+
+function backupPaths() {
+  return {
+    defaultDirectory: backupsDirectory(),
+    tempDirectory: scratchDirectory(),
+    pendingRestoreFile: pendingRestoreFile(),
+    dialogs: electronDialogs,
+    restart,
+  };
+}
+
+/** The database cannot be read: offer the backups instead of the app (README §14.2.1). */
+function startRecovery(file: string): void {
+  log.error('database failed the integrity check: recovery mode');
+  const handlers = buildRecovery({
+    databaseFile: file,
+    clock: systemClock,
+    ids: uuidV7Generator,
+    appInfo,
+    legal: readLegalDocuments,
+    openLogs: openLogFolder,
+    backup: backupPaths(),
+  });
+  registerIpcHandlers(handlers, isTrustedSender);
+  createWindow();
+  app.on('window-all-closed', () => app.quit());
+}
+
 async function start(): Promise<void> {
   await app.whenReady();
 
   const file = databaseFile();
   // A confirmed restore replaces the database before it opens (README §14.2).
   if (applyPendingRestore(file, pendingRestoreFile())) log.info('backup restored');
+  if (checkDatabase(file) === 'damaged') return startRecovery(file);
   const existed = existsSync(file);
   const db = openDatabase(file);
 
@@ -94,24 +139,10 @@ async function start(): Promise<void> {
     db,
     clock: systemClock,
     ids: uuidV7Generator,
-    appInfo: () => ({
-      version: app.getVersion(),
-      environment: app.isPackaged ? 'production' : 'development',
-    }),
+    appInfo,
     legal: readLegalDocuments,
-    backup: {
-      defaultDirectory: backupsDirectory(),
-      tempDirectory: scratchDirectory(),
-      pendingRestoreFile: pendingRestoreFile(),
-      dialogs: electronDialogs,
-      restart: {
-        restart: () =>
-          setImmediate(() => {
-            app.relaunch();
-            app.quit();
-          }),
-      },
-    },
+    openLogs: openLogFolder,
+    backup: backupPaths(),
     importFiles: electronImportFiles,
     exportFiles: electronExportFiles,
     transferFiles: electronTransferFiles,

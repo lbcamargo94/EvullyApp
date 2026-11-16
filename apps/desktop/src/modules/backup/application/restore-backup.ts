@@ -6,11 +6,14 @@ import type {
 } from '@evully/contracts';
 import { assertRestorable, NotFoundError } from '@evully/domain';
 import type { IdGenerator } from '../../shared/ports';
-import type { AppRestart, BackupDialogs, BackupReader } from '../ports/backup-ports';
+import type { AppRestart, BackupDialogs, BackupFolder, BackupReader } from '../ports/backup-ports';
 import { CreateBackup, type BackupDeps } from './create-backup';
 
-export interface RestoreDeps {
-  backup: BackupDeps;
+/** Where restorable backups come from; works without the app database (recovery). */
+export interface RestoreSource {
+  folder: BackupFolder;
+  /** The extra backup folder, or null (unknown while the database is damaged). */
+  extraDirectory(): Promise<string | null>;
   reader: BackupReader;
   dialogs: BackupDialogs;
   restart: AppRestart;
@@ -18,6 +21,10 @@ export interface RestoreDeps {
   defaultDirectory: string;
   /** Latest migration this app knows. */
   appSchemaVersion: string;
+}
+
+export interface RestoreDeps extends RestoreSource {
+  backup: BackupDeps;
 }
 
 /** The one backup validated and waiting for confirmation; paths never leave the main process. */
@@ -46,16 +53,16 @@ export class PendingRestore {
   }
 }
 
-async function directories(deps: RestoreDeps): Promise<Record<BackupFolderName, string | null>> {
-  return { default: deps.defaultDirectory, extra: await deps.backup.settings.extraDirectory() };
+async function directories(deps: RestoreSource): Promise<Record<BackupFolderName, string | null>> {
+  return { default: deps.defaultDirectory, extra: await deps.extraDirectory() };
 }
 
 /** Evully backups in the default and the extra folder, newest first (README §14.2). */
 export class ListRestorableBackups {
-  constructor(private readonly deps: RestoreDeps) {}
+  constructor(private readonly deps: RestoreSource) {}
 
   async execute(): Promise<RestorableBackups> {
-    const { folder } = this.deps.backup;
+    const { folder } = this.deps;
     const found: RestorableBackups = [];
     for (const [name, directory] of Object.entries(await directories(this.deps))) {
       if (!directory) continue;
@@ -81,7 +88,7 @@ export class ListRestorableBackups {
  */
 export class PrepareRestore {
   constructor(
-    private readonly deps: RestoreDeps,
+    private readonly deps: RestoreSource,
     private readonly pending: PendingRestore,
   ) {}
 
@@ -118,7 +125,7 @@ export class PrepareRestore {
   /** Only a file listed in one of the backup folders, or one picked in the dialog. */
   private async resolve(input: PrepareRestoreInput): Promise<string | null> {
     if (input.from === 'dialog') return this.deps.dialogs.chooseBackupFile();
-    const { folder } = this.deps.backup;
+    const { folder } = this.deps;
     const directory = (await directories(this.deps))[input.folder];
     const listed = directory ? await folder.list(directory) : [];
     if (!directory || !listed.some((b) => b.fileName === input.fileName && b.kind)) {

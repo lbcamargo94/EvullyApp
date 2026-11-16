@@ -1,5 +1,5 @@
-import { useAppInfo, useLegalDocuments } from '@evully/app-core';
-import { Card } from '@evully/ui';
+import { useAppInfo, useLegalDocuments, useOpenLogs } from '@evully/app-core';
+import { Button, Card } from '@evully/ui';
 import { useState, type ReactNode } from 'react';
 import { shellMessages } from '../shell/messages.pt-BR';
 import { aboutMessages as m } from './messages.pt-BR';
@@ -13,6 +13,7 @@ export function AboutSection() {
   const { data: info } = useAppInfo();
   const [showNotices, setShowNotices] = useState(false);
   const legal = useLegalDocuments();
+  const logs = useOpenLogs();
 
   return (
     <>
@@ -26,6 +27,14 @@ export function AboutSection() {
           </p>
         )}
         <UpdateSection />
+        {logs.available && (
+          <div className="flex flex-wrap items-center gap-3">
+            <Button type="button" variant="ghost" onClick={() => logs.mutate()}>
+              {m.openLogs}
+            </Button>
+            <span className="text-sm text-text-muted">{m.logsHint}</span>
+          </div>
+        )}
       </Section>
 
       <Section id="about-health" title={m.healthTitle}>

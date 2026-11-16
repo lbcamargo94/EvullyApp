@@ -1,6 +1,7 @@
 import type {
   AcceptTrackingInput,
   AppInfo,
+  RecoveryStatus,
   ArchivedProfile,
   AppSettings,
   ApplyMealTemplateInput,
@@ -95,6 +96,12 @@ export interface EvullyClient {
   app: {
     info(): Promise<AppInfo>;
     legal(): Promise<LegalDocuments>;
+    /** Opens the log folder (desktop only). */
+    openLogs?(): Promise<null>;
+  };
+  /** Desktop only: whether the app started in recovery mode (README §14.2.1). */
+  recovery?: {
+    status(): Promise<RecoveryStatus>;
   };
   profiles: {
     list(): Promise<ProfileSummary[]>;

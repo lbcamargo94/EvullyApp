@@ -35,6 +35,7 @@ test('seed the development database', { timeout: 600_000 }, async () => {
       ids: uuidV7Generator,
       appInfo: () => ({ version: '0.0.0-seed', environment: 'development' }),
       legal: () => Promise.resolve({ license: '', thirdPartyNotices: '' }),
+      openLogs: () => Promise.resolve(null),
       backup: {
         defaultDirectory: join(folder, 'backups'),
         tempDirectory: join(folder, 'tmp'),

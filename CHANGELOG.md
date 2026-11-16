@@ -6,6 +6,14 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Robustez (V1.0)
+
+- Se o arquivo de dados estiver danificado (por exemplo depois de uma queda
+  de energia), o Evully abre uma tela de recuperação em vez de falhar:
+  lista os backups válidos e restaura o escolhido. O arquivo danificado é
+  guardado como `evully-danificado-…db` e nunca é apagado.
+- "Abrir pasta de logs" em Configurações › Sobre e na tela de recuperação.
+
 ## [1.0.0-alpha.1] - 2026-11-16
 
 ### Aceite da Fase 1 (V1.0)

@@ -3,6 +3,7 @@ import {
   assertRestorable,
   backupFileName,
   backupsToDelete,
+  damagedDatabaseFileName,
   isAutomaticBackupDue,
   parseLocalDate,
   type StoredBackup,
@@ -88,5 +89,15 @@ describe('assertRestorable (README §14.2)', () => {
     expect(() => assertRestorable({ ...valid, schemaVersion: '0019_progress_photos' })).toThrow(
       expect.objectContaining({ code: 'backup.restore_newer' }),
     );
+  });
+});
+
+describe('damaged database file name (README §14.2.1)', () => {
+  it('keeps the date and time and never reuses a taken name', () => {
+    const today = parseLocalDate('2026-11-16');
+    expect(damagedDatabaseFileName(today, '15:30')).toBe('evully-danificado-2026-11-16-1530.db');
+    expect(
+      damagedDatabaseFileName(today, '15:30', new Set(['evully-danificado-2026-11-16-1530.db'])),
+    ).toBe('evully-danificado-2026-11-16-1530-2.db');
   });
 });

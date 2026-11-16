@@ -91,6 +91,7 @@ export async function createTestApp(
     ids,
     appInfo: () => ({ version: '0.0.0-test', environment: 'development' }),
     legal: () => Promise.resolve({ license: 'LICENSE', thirdPartyNotices: 'NOTICES' }),
+    openLogs: () => Promise.resolve(null),
     backup: {
       defaultDirectory: join(dir, 'backups'),
       tempDirectory: join(dir, 'tmp'),
