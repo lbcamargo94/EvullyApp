@@ -287,9 +287,10 @@ definidos:
 
 | Versão | Entrega |
 |---|---|
-| V2.0 | `accounts`, `auth`, `tracking`, `body`, `sync`, `privacy`, `notifications` (e-mail); app web e site |
-| V2.x | Módulos de nutrição, treino, cardio, hábitos e sono; push; `coach` |
-| V3.0 | `billing` com lojas (RevenueCat) e web; suporte ao app mobile |
+| V2.0 | `accounts`, `auth`, `sync` e `privacy` (com exclusão de conta), mais os módulos de todos os dados da Fase 1 (`tracking`, `body`, nutrição, treino, cardio, hábitos e sono) para a sincronização do desktop; `notifications` (e-mail) |
+| V2.1–V2.2 | Sincronização do app mobile (Android, depois iPhone) |
+| V2.3 | Suporte ao app web e ao site; push; `coach` |
+| V3.0 | `billing` com lojas (RevenueCat) e web |
 | V3.x | `professionals`, `admin`, Row Level Security, recursos avançados |
 
 ## 16. Questões em aberto

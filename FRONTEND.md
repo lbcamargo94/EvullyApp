@@ -14,7 +14,7 @@ Planejamento das interfaces do Evully fora do desktop. Complementa o
 | Desktop | Já planejado | 1 | Electron (`apps/desktop`) |
 | **Site** | Páginas públicas: apresentação, funcionalidades, planos, download do desktop, termos, privacidade, ajuda | 2 | **Next.js** (`apps/site`) |
 | **App web (PWA)** | Área logada no navegador, instalável no celular pela tela inicial | 2 | **React + Vite**, aplicação de página única (`apps/web`) |
-| **Apps Android e iOS** | Apps nativos nas lojas | 3 | **React Native com Expo** (`apps/mobile`) |
+| **Apps Android e iOS** | Apps nativos nas lojas, antes do app web (Android na V2.1, iPhone na V2.2) | 2 | **React Native com Expo** (`apps/mobile`) |
 
 ## 2. Por que essa divisão
 
@@ -55,7 +55,7 @@ packages/
   app-core/     lógica das telas, sem visual (web, desktop e mobile)
   app-web/      telas com shadcn/ui (desktop e web)
   ui/           componentes web: shadcn/ui + componentes Evully
-  ui-native/    componentes nativos: react-native-reusables + NativeWind (Fase 3)
+  ui-native/    componentes nativos: react-native-reusables + NativeWind (V2.1)
   api-client/   cliente HTTP da API (implementa EvullyClient)
   tokens/       design tokens (CSS, JSON e preset Tailwind/NativeWind)
   contracts/    schemas zod e tipos
@@ -169,7 +169,7 @@ web ficam parecidas no código, o que facilita manter as duas.
 - O PWA é o app de celular da Fase 2 e continua disponível depois que os
   apps nativos forem lançados.
 
-## 6. Apps Android e iOS (`apps/mobile`, Fase 3)
+## 6. Apps Android e iOS (`apps/mobile`, V2.1 e V2.2)
 
 ### 6.1 Abordagem
 
@@ -182,13 +182,13 @@ web ficam parecidas no código, o que facilita manter as duas.
   com Kysely, usando o mesmo protocolo de sincronização do desktop
   ([BACKEND.md](BACKEND.md), §7). O app abre e registra sem internet. A decisão final
   entre "local com sincronização" e "online com fila" é confirmada no
-  início da Fase 3.
+  início da V2.1.
 - Convenções de cada sistema: botão voltar do Android, gestos do iOS,
   áreas seguras, teclado e retorno tátil (haptics).
 
 ### 6.2 Recursos nativos
 
-| Recurso | Biblioteca (a confirmar na Fase 3) | Uso no Evully |
+| Recurso | Biblioteca (a confirmar na V2.1) | Uso no Evully |
 |---|---|---|
 | Armazenamento seguro | `expo-secure-store` | Tokens de sessão (Keychain / Keystore) |
 | Notificações locais e push | `expo-notifications` | Lembretes de pesagem, treino e refeição; resumos do servidor |
@@ -244,18 +244,20 @@ web ficam parecidas no código, o que facilita manter as duas.
 | Versão | Entrega de frontend |
 |---|---|
 | V0.1 | `packages/app-core` + `packages/app-web` + `EvullyClient` + shell do desktop |
-| V2.0 | API + `apps/web` (PWA) + `apps/site` + login + sincronização do desktop |
-| V2.x | Offline com fila de gravações, notificações push na web |
-| V3.0 | `apps/mobile` (Expo) + `packages/ui-native` na Play Store e App Store, com dados locais, sincronização e assinaturas nas lojas |
-| V3.x | Apple Health / Health Connect, biometria, fotos, área para profissionais |
+| V2.0 | API + login + sincronização do desktop + páginas de termos e privacidade em `apps/site` |
+| V2.1 | `apps/mobile` (Expo) + `packages/ui-native` no Android, na Google Play, com dados locais e sincronização |
+| V2.2 | O mesmo app no iPhone, na App Store (EAS Build, sem Mac) |
+| V2.3 | `apps/web` (PWA) + site completo |
+| V2.x | Offline com fila de gravações no app web, notificações push |
+| V3.x | Assinaturas nas lojas, Apple Health / Health Connect, biometria, fotos, área para profissionais |
 
 ## 9. Questões em aberto
 
 | Questão | Quando |
 |---|---|
-| Mobile local com sincronização (recomendado) ou online com fila | Início da Fase 3 |
+| Mobile local com sincronização (recomendado) ou online com fila | Início da V2.1 |
 | Bibliotecas de Apple Health / Health Connect e quais dados importar | Fase 3 |
-| Plano do EAS (gratuito ou pago) conforme o volume de builds | Fase 3 |
+| Plano do EAS (gratuito ou pago) conforme o volume de builds | V2.1 |
 | Ferramentas de monitoramento e métricas (Sentry, PostHog ou alternativas) | Início da Fase 2 |
 | Hospedagem do site e do app web | Início da Fase 2 |
 | Disponibilidade dos domínios `evully.com.br` / `evully.app` | Antes da Fase 2 (junto com o registro de marca) |
