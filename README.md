@@ -223,7 +223,7 @@ Este é o **único** roadmap do projeto.
 | **V0.6** ✓ 0.6.0 (09/11/2026) | Estatísticas e dashboard completo |
 | **V0.7** ✓ 0.7.0 (10/11/2026) | Backup completo, restauração, exportação JSON/CSV e transferência de perfil entre computadores |
 | **V0.8** ✓ 0.8.0 (15/11/2026) | UX/polimento: acessibilidade e consistência, testes ponta a ponta (Playwright), ajustes do uso real e polimento (§15.1) |
-| V1.0 (em andamento) | Desktop estável + instalador Windows (a atualização automática foi antecipada; §33): alpha.1 aceite do §19 em testes ponta a ponta ✓ (16/11/2026); alpha.2 robustez (verificação do banco ao abrir, pasta de logs) ✓ (16/11/2026); rc.1 ✓ (16/11/2026, em uso); 1.0.0 (§15.2) |
+| **V1.0** ✓ 1.0.0 (16/11/2026) | Desktop estável + instalador Windows: aceite do §19 em testes ponta a ponta, recuperação de banco danificado, pasta de logs (§15.2) |
 | V1.1 | Analytics Engine determinístico |
 | V1.2 | Recommendation Engine determinístico |
 | V1.3 | Notificações locais / Evully Reminders |
@@ -1947,8 +1947,8 @@ V0.8 estiver estável no uso diário.
 |---|---|
 | 1.0.0-alpha.1 | Cada critério de aceite do §19 coberto por um teste ponta a ponta; assinatura de código decidida (§33). |
 | 1.0.0-alpha.2 | Robustez: verificação rápida do banco ao abrir, com tela de recuperação que oferece restaurar um backup válido (§14.2.1; nada é apagado); "Abrir pasta de logs" em Configurações › Sobre. |
-| 1.0.0-rc.1 | Versão candidata, só com correções, para uso diário por alguns dias. |
-| 1.0.0 | Versão estável da Fase 1. |
+| 1.0.0-rc.1 | Versão candidata, sem novidades. |
+| 1.0.0 | Versão estável da Fase 1 (16/11/2026). |
 
 ---
 
@@ -2099,7 +2099,7 @@ histórico; receber sugestões simples de progressão; registrar cardio,
 hábitos e sono; visualizar estatísticas; fazer backup; restaurar;
 exportar dados; instalar o aplicativo no Windows.
 
-Cada critério tem um teste ponta a ponta em `apps/desktop/e2e` (§18.3):
+**Cumpridos na 1.0.0 (16/11/2026).** Cada critério tem um teste ponta a ponta em `apps/desktop/e2e` (§18.3):
 
 | Critério | Teste |
 |---|---|

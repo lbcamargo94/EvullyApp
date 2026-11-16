@@ -6,6 +6,28 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-16
+
+Primeira versão estável do Evully: fim da Fase 1 (desktop). Reúne tudo desde
+a 0.1.0:
+
+- **Perfis e acompanhamento:** vários perfis no mesmo computador, questionário
+  que monta o acompanhamento de cada um, projetos com prazo;
+- **Corpo:** peso com tendência de 7 dias, medidas, gráficos e importação de
+  CSV;
+- **Nutrição:** catálogo de alimentos da casa, refeições, favoritas, água e
+  metas que você define;
+- **Treino:** biblioteca de exercícios, planos, execução com séries, cargas,
+  repetições e RIR, histórico e sugestão simples de progressão;
+- **Cardio, hábitos e sono**, com metas e indicadores;
+- **Estatísticas** e painel com o resumo dos últimos 14 dias;
+- **Seus dados:** backup manual e automático, restauração, exportação JSON e
+  CSV, transferência de perfil entre computadores e recuperação se o arquivo
+  de dados for danificado;
+- **Atualização automática** assinada, acessibilidade (contraste WCAG AA,
+  teclado e leitores de tela) e todos os critérios de aceite cobertos por
+  testes ponta a ponta.
+
 ## [1.0.0-rc.1] - 2026-11-16
 
 Versão candidata da 1.0.0, sem novidades: a mesma 1.0.0-alpha.2, para uso
