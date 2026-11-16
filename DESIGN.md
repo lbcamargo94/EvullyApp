@@ -5,6 +5,11 @@ plataformas: desktop (Electron), app web (React + Vite, PWA), site
 (Next.js) e apps Android/iOS (React Native com Expo). O planejamento
 dessas interfaces está em [FRONTEND.md](FRONTEND.md). Complementa a especificação no [README](README.md).
 
+
+> A implementação visual da V1.1 segue
+> [docs/design/DESIGN_IMPLEMENTATION.md](docs/design/DESIGN_IMPLEMENTATION.md);
+> este documento continua sendo a fonte dos tokens e das regras.
+
 ## 1. Identidade
 
 | Decisão | Escolha | Motivo |
