@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [1.0.0-alpha.1] - 2026-11-16
+
 ### Aceite da Fase 1 (V1.0)
 
 - Testes ponta a ponta para todos os critérios do README §19: plano de
