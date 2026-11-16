@@ -19,6 +19,21 @@ export function backupFileName(
   return name;
 }
 
+/**
+ * `evully-danificado-YYYY-MM-DD-HHMM.db`: a damaged database kept next to the
+ * restored one; it is never deleted by the app (README §14.2.1).
+ */
+export function damagedDatabaseFileName(
+  date: LocalDate,
+  time: string,
+  taken: ReadonlySet<string> = new Set(),
+): string {
+  const base = `evully-danificado-${date}-${time.replace(':', '')}`;
+  let name = `${base}.db`;
+  for (let n = 2; taken.has(name); n++) name = `${base}-${n}.db`;
+  return name;
+}
+
 /** At most one automatic backup per day, and only when enabled. */
 export function isAutomaticBackupDue(
   enabled: boolean,

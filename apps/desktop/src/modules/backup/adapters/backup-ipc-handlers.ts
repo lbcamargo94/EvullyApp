@@ -26,8 +26,13 @@ type BackupChannels =
   | 'backup:restore';
 
 export function backupIpcHandlers(
-  deps: RestoreDeps & { settings: BackupSettings },
+  input: Omit<RestoreDeps, 'folder' | 'extraDirectory'> & { settings: BackupSettings },
 ): Pick<IpcHandlers, BackupChannels> {
+  const deps: RestoreDeps & { settings: BackupSettings } = {
+    ...input,
+    folder: input.backup.folder,
+    extraDirectory: () => input.backup.settings.extraDirectory(),
+  };
   const status = new GetBackupStatus(deps.settings, deps.defaultDirectory);
   const manual = new CreateManualBackup(deps.backup, deps.dialogs);
   const setAutomatic = new SetAutomaticBackup(deps.settings);

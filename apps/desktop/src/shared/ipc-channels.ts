@@ -99,6 +99,7 @@ import {
   backupResultSchema,
   backupStatusSchema,
   prepareRestoreInputSchema,
+  recoveryStatusSchema,
   restorableBackupsSchema,
   restoreInputSchema,
   exportInputSchema,
@@ -134,6 +135,9 @@ import { z } from 'zod';
 export const ipcChannels = {
   'app:info': { input: z.undefined(), output: appInfoSchema },
   'app:legal': { input: z.undefined(), output: legalDocumentsSchema },
+  /** Opens the log folder in the system file manager (README §8.10); no path from the renderer. */
+  'app:open-logs': { input: z.undefined(), output: z.null() },
+  'recovery:status': { input: z.undefined(), output: recoveryStatusSchema },
   'profiles:list': { input: z.undefined(), output: z.array(profileSummarySchema) },
   'profiles:get': { input: profileIdInputSchema, output: profileSchema },
   'profiles:create': { input: profileInputSchema, output: profileSchema },

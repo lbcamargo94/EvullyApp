@@ -66,3 +66,11 @@ export interface BackupReader {
 export interface AppRestart {
   restart(): void;
 }
+
+/** The damaged app database, kept as a copy before a recovery restore replaces it (README §14.2.1). */
+export interface DamagedDatabase {
+  /** File names already in the data folder, so a copy never overwrites one. */
+  existingNames(): Promise<Set<string>>;
+  /** Copies the database (and its WAL, if any) next to it as `fileName`; never deletes. */
+  keepCopy(fileName: string): Promise<void>;
+}

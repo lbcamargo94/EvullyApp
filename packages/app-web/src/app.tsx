@@ -2,12 +2,14 @@ import {
   CurrentProfileProvider,
   EvullyClientProvider,
   useAppSettings,
+  useRecoveryStatus,
   type EvullyClient,
 } from '@evully/app-core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { lazy, Suspense, useState, type ComponentType, type ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import { ProfileCreateScreen } from './features/profiles/profile-create-screen';
+import { RecoveryScreen } from './features/recovery/recovery-screen';
 import { ProfileEditScreen } from './features/profiles/profile-edit-screen';
 import { ProfileSelectScreen } from './features/profiles/profile-select-screen';
 import { AppShell } from './features/shell/app-shell';
@@ -70,15 +72,24 @@ export function App({
         <QueryClientProvider client={queryClient}>
           <CurrentProfileProvider>
             <Router>
-              <HealthNoticeGate>
-                <AppRoutes />
-              </HealthNoticeGate>
+              <RecoveryGate>
+                <HealthNoticeGate>
+                  <AppRoutes />
+                </HealthNoticeGate>
+              </RecoveryGate>
             </Router>
           </CurrentProfileProvider>
         </QueryClientProvider>
       </EvullyClientProvider>
     </ErrorBoundary>
   );
+}
+
+/** A damaged database replaces the whole app with the recovery screen (README §14.2.1). */
+function RecoveryGate({ children }: { children: ReactNode }) {
+  const { damaged } = useRecoveryStatus();
+  if (damaged === undefined) return null;
+  return damaged ? <RecoveryScreen /> : children;
 }
 
 function HealthNoticeGate({ children }: { children: ReactNode }) {

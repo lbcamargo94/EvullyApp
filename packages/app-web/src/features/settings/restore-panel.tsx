@@ -4,7 +4,7 @@ import {
   useRestorableBackups,
   useRestoreBackup,
 } from '@evully/app-core';
-import type { PrepareRestoreInput, RestorePreview } from '@evully/contracts';
+import type { PrepareRestoreInput, RestorableBackups, RestorePreview } from '@evully/contracts';
 import { Button, ConfirmDialog } from '@evully/ui';
 import { useState } from 'react';
 import { settingsMessages as m } from './messages.pt-BR';
@@ -13,10 +13,13 @@ const SHOWN = 8;
 
 /**
  * "Restaurar backup" (README §14.2): pick a listed backup or a file, see what
- * it holds, confirm the replacement of all profiles; the app restarts to apply it.
+ * it holds, confirm the replacement of all profiles; the app restarts to apply
+ * it. `recovery` is the same panel on the recovery screen (README §14.2.1):
+ * always open, and the damaged file is kept instead of backed up.
  */
-export function RestorePanel() {
-  const [open, setOpen] = useState(false);
+export function RestorePanel({ recovery = false }: { recovery?: boolean }) {
+  const [open, setOpen] = useState(recovery);
+  const warning = recovery ? m.recoveryWarning : m.restoreWarning;
   const [preview, setPreview] = useState<RestorePreview | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { data: backups = [], isLoading } = useRestorableBackups(open);
@@ -43,60 +46,30 @@ export function RestorePanel() {
   };
 
   return (
-    <div className="flex flex-col gap-3 border-t border-border py-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex max-w-xl flex-col gap-0.5">
-          <strong className="font-semibold">{m.restoreTitle}</strong>
-          <span className="text-sm text-text-muted">{m.restoreHint}</span>
-        </div>
-        <Button type="button" variant="secondary" onClick={() => setOpen(!open)}>
-          {open ? m.restoreClose : m.restoreOpen}
-        </Button>
-      </div>
-
-      {open && (
-        <div className="flex flex-col gap-2">
-          {isLoading ? null : backups.length === 0 ? (
-            <p className="text-sm text-text-muted">{m.restoreNone}</p>
-          ) : (
-            <ul className="flex flex-col divide-y divide-border rounded-md border border-border">
-              {backups.slice(0, SHOWN).map((b) => (
-                <li
-                  key={`${b.folder}:${b.fileName}`}
-                  className="flex flex-wrap items-center justify-between gap-2 px-3 py-2"
-                >
-                  <span className="flex flex-col">
-                    <span className="text-sm font-semibold">
-                      {m.lastBackupValue(b.createdAt, m.kinds[b.kind])}
-                    </span>
-                    <span className="text-xs break-all text-text-muted">
-                      {m.restoreFolder[b.folder]} · {b.fileName}
-                    </span>
-                  </span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    disabled={prepare.isPending}
-                    onClick={() =>
-                      void choose({ from: 'list', folder: b.folder, fileName: b.fileName })
-                    }
-                  >
-                    {m.restoreChoose}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          )}
-          <Button
-            type="button"
-            variant="ghost"
-            className="self-start"
-            disabled={prepare.isPending}
-            onClick={() => void choose({ from: 'dialog' })}
-          >
-            {m.restoreBrowse}
+    <div
+      className={
+        recovery ? 'flex flex-col gap-3' : 'flex flex-col gap-3 border-t border-border py-4'
+      }
+    >
+      {!recovery && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex max-w-xl flex-col gap-0.5">
+            <strong className="font-semibold">{m.restoreTitle}</strong>
+            <span className="text-sm text-text-muted">{m.restoreHint}</span>
+          </div>
+          <Button type="button" variant="secondary" onClick={() => setOpen(!open)}>
+            {open ? m.restoreClose : m.restoreOpen}
           </Button>
         </div>
+      )}
+
+      {open && (
+        <BackupList
+          backups={backups}
+          loading={isLoading}
+          busy={prepare.isPending}
+          onChoose={(input) => void choose(input)}
+        />
       )}
 
       {error && (
@@ -109,7 +82,7 @@ export function RestorePanel() {
         open={preview !== null}
         onOpenChange={(next) => !next && !restore.isPending && setPreview(null)}
         title={m.restoreConfirmTitle}
-        description={preview && <RestoreSummary preview={preview} />}
+        description={preview && <RestoreSummary preview={preview} warning={warning} />}
         confirmLabel={restore.isPending ? m.restoreRestarting : m.restoreConfirm}
         cancelLabel={m.restoreCancel}
         destructive
@@ -120,7 +93,63 @@ export function RestorePanel() {
   );
 }
 
-function RestoreSummary({ preview }: { preview: RestorePreview }) {
+function BackupList({
+  backups,
+  loading,
+  busy,
+  onChoose,
+}: {
+  backups: RestorableBackups;
+  loading: boolean;
+  busy: boolean;
+  onChoose: (input: PrepareRestoreInput) => void;
+}) {
+  if (loading) return null;
+  return (
+    <div className="flex flex-col gap-2">
+      {backups.length === 0 ? (
+        <p className="text-sm text-text-muted">{m.restoreNone}</p>
+      ) : (
+        <ul className="flex flex-col divide-y divide-border rounded-md border border-border">
+          {backups.slice(0, SHOWN).map((b) => (
+            <li
+              key={`${b.folder}:${b.fileName}`}
+              className="flex flex-wrap items-center justify-between gap-2 px-3 py-2"
+            >
+              <span className="flex flex-col">
+                <span className="text-sm font-semibold">
+                  {m.lastBackupValue(b.createdAt, m.kinds[b.kind])}
+                </span>
+                <span className="text-xs break-all text-text-muted">
+                  {m.restoreFolder[b.folder]} · {b.fileName}
+                </span>
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={busy}
+                onClick={() => onChoose({ from: 'list', folder: b.folder, fileName: b.fileName })}
+              >
+                {m.restoreChoose}
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <Button
+        type="button"
+        variant="ghost"
+        className="self-start"
+        disabled={busy}
+        onClick={() => onChoose({ from: 'dialog' })}
+      >
+        {m.restoreBrowse}
+      </Button>
+    </div>
+  );
+}
+
+function RestoreSummary({ preview, warning }: { preview: RestorePreview; warning: string }) {
   return (
     <span className="flex flex-col gap-2">
       <span>{m.restoreFrom(preview.fileName, preview.createdAt, preview.appVersion)}</span>
@@ -129,7 +158,7 @@ function RestoreSummary({ preview }: { preview: RestorePreview }) {
           ? m.restoreProfiles(preview.profiles.join(', '))
           : m.restoreNoProfiles}
       </span>
-      <span className="font-semibold text-text">{m.restoreWarning}</span>
+      <span className="font-semibold text-text">{warning}</span>
     </span>
   );
 }

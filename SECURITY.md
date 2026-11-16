@@ -67,6 +67,13 @@ Fora de escopo na Fase 1:
   `evully.db` e `manifest.json`, o que rejeita caminhos absolutos ou `..`
   (zip slip). O banco é extraído para a pasta temporária privada do app e
   aberto só para leitura; a tela nunca envia caminhos (README, §14.2).
+- Banco danificado (1.0.0-alpha.2): verificado com `PRAGMA quick_check`
+  antes de abrir; se falhar, o app sobe só os canais de informação, logs e
+  restauração (os outros respondem `app.recovery_mode`) e guarda uma cópia do
+  arquivo danificado antes de qualquer troca, sem nunca apagá-lo
+  (README, §14.2.1).
+- "Abrir pasta de logs" abre só a pasta do log do app, calculada no processo
+  principal; a tela não envia caminhos.
 - Backups nunca sobrescrevem arquivos sem confirmação.
 - Exportação (V0.7): só o perfil pedido (consultas por `profile_id` ou pelo
   registro pai, com teste de isolamento); o caminho vem do diálogo de salvar

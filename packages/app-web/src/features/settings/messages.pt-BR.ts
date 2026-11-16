@@ -45,6 +45,8 @@ export const settingsMessages = {
   restoreWarning:
     'Os dados atuais de todos os perfis serão substituídos. O Evully faz um backup do estado atual e reinicia para concluir.',
   restoreConfirm: 'Substituir e reiniciar',
+  recoveryWarning:
+    'Os dados deste backup substituem o arquivo danificado. O arquivo danificado é guardado na pasta de dados com o nome evully-danificado-… e nunca é apagado. O Evully reinicia para concluir.',
   restoreRestarting: 'Reiniciando…',
   restoreCancel: 'Cancelar',
   restoreFailed: 'Não foi possível restaurar este backup.',
@@ -200,6 +202,8 @@ export const aboutMessages = {
   noticesHint: 'O Evully usa bibliotecas de código aberto. Veja as licenças de cada uma.',
   showNotices: 'Mostrar avisos de terceiros',
   unavailable: 'Não foi possível carregar este texto.',
+  openLogs: 'Abrir pasta de logs',
+  logsHint: 'Para entender um erro: os logs registram falhas, sem dados pessoais ou de saúde.',
 } as const;
 
 export const updateMessages = {

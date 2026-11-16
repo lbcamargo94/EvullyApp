@@ -29,6 +29,10 @@ export const ipcEvullyClient: EvullyClient = {
   app: {
     info: () => call('app:info', undefined),
     legal: () => call('app:legal', undefined),
+    openLogs: () => call('app:open-logs', undefined),
+  },
+  recovery: {
+    status: () => call('recovery:status', undefined),
   },
   profiles: {
     list: () => call('profiles:list', undefined),

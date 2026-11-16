@@ -1830,6 +1830,22 @@ Implementação (0.7.0-alpha.1):
   `evully.db` (os `-wal`/`-shm` antigos são removidos); um backup de versão
   anterior passa pelas migrations normais, com o backup pré-migração.
 
+#### 14.2.1 Recuperação de banco danificado (1.0.0-alpha.2)
+
+- Ao abrir, depois de aplicar uma restauração pendente e antes de abrir o
+  banco, o app faz `PRAGMA quick_check` no `evully.db` (abrindo como de
+  costume, para que um WAL pendente seja recuperado e não acusado como dano).
+- Se o arquivo não puder ser lido, o app **não abre o banco** e mostra a tela
+  de recuperação no lugar de tudo: explica o que houve, lista os backups
+  válidos da pasta padrão (a pasta adicional fica registrada dentro do banco
+  danificado, então entra por "Procurar outro arquivo…"), valida como no
+  §14.2 e oferece "Abrir pasta de logs". Os demais canais respondem
+  `app.recovery_mode`.
+- Ao confirmar, o app guarda uma **cópia** do arquivo danificado na pasta de
+  dados como `evully-danificado-AAAA-MM-DD-HHMM.db` (com o `-wal`, se houver),
+  porque o backup `pre-restore` exige ler o banco; prepara o backup como em
+  §14.2 e reinicia. O arquivo danificado nunca é apagado pelo app.
+
 ### 14.3 Exportação
 
 Em Configurações › Perfil › **Exportar dados**, sempre do **perfil atual**
@@ -1930,7 +1946,7 @@ V0.8 estiver estável no uso diário.
 | Entrega | Conteúdo |
 |---|---|
 | 1.0.0-alpha.1 | Cada critério de aceite do §19 coberto por um teste ponta a ponta; assinatura de código decidida (§33). |
-| 1.0.0-alpha.2 | Robustez: verificação rápida do banco ao abrir, com tela de recuperação que oferece restaurar o backup válido mais recente (nada é apagado sem confirmação); "Abrir pasta de logs" em Configurações › Sobre. |
+| 1.0.0-alpha.2 | Robustez: verificação rápida do banco ao abrir, com tela de recuperação que oferece restaurar um backup válido (§14.2.1; nada é apagado); "Abrir pasta de logs" em Configurações › Sobre. |
 | 1.0.0-rc.1 | Versão candidata, só com correções, para uso diário por alguns dias. |
 | 1.0.0 | Versão estável da Fase 1. |
 
@@ -2067,6 +2083,7 @@ V0.8   trocar de tela pelo menu → foco no conteúdo
 V1.0   criar plano próprio → 2 treinos → histórico e sugestão de progressão
 V1.0   definir metas → acompanhar macros no dia
 V1.0   backup manual → registrar → restaurar → reabrir sem o registro novo
+V1.0   banco danificado → tela de recuperação → restaurar → reabrir com os dados
 ```
 
 ---

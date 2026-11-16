@@ -76,6 +76,8 @@ interface Dependencies {
   appInfo: () => AppInfo;
   /** LICENSE and THIRD_PARTY_NOTICES, read from the app resources. */
   legal: () => Promise<LegalDocuments>;
+  /** Opens the log folder in the file manager (README §8.10). */
+  openLogs: () => Promise<null>;
   backup: {
     defaultDirectory: string;
     tempDirectory: string;
@@ -97,6 +99,7 @@ export function buildApp({
   ids,
   appInfo,
   legal,
+  openLogs,
   backup,
   importFiles,
   exportFiles,
@@ -133,6 +136,8 @@ export function buildApp({
   const handlers: IpcHandlers = {
     'app:info': appInfo,
     'app:legal': legal,
+    'app:open-logs': openLogs,
+    'recovery:status': () => ({ damaged: false }),
     ...profileIpcHandlers(profiles, clock, ids, () =>
       new CreateBackup(backupDeps).execute({
         kind: 'pre-delete',
