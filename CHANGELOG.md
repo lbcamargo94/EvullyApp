@@ -6,6 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [1.0.0-alpha.2] - 2026-11-16
+
 ### Robustez (V1.0)
 
 - Se o arquivo de dados estiver danificado (por exemplo depois de uma queda
