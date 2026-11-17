@@ -15,7 +15,8 @@
     "typecheck": "tsc -p tsconfig.json",
     "test": "cross-env ELECTRON_RUN_AS_NODE=1 electron ../../node_modules/vitest/vitest.mjs run",
     "seed": "cross-env ELECTRON_RUN_AS_NODE=1 electron ../../node_modules/vitest/vitest.mjs run --config vitest.seed.config.ts",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "icon": "electron scripts/make-icon.mjs"
   },
   "dependencies": {
     "adm-zip": "^0.6.1",

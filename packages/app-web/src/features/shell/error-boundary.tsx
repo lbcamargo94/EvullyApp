@@ -26,7 +26,7 @@ export class ErrorBoundary extends Component<
     return (
       <main className="flex min-h-screen items-center justify-center bg-background px-4 text-text">
         <Card role="alert" className="w-full max-w-md gap-4 p-8">
-          <h1 className="text-xl font-semibold">{m.errorTitle}</h1>
+          <h1 className="text-heading font-semibold">{m.errorTitle}</h1>
           <p className="text-text-muted">{m.errorBody}</p>
           <Button type="button" className="self-start" onClick={() => window.location.reload()}>
             {m.errorReload}

@@ -43,15 +43,13 @@ export function StatCard({
   return (
     <section
       aria-label={label}
-      className="flex flex-col gap-3.5 rounded-lg border border-border bg-surface p-6"
+      className="flex flex-col gap-3.5 rounded-lg border border-border bg-surface p-6 shadow-card"
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[15px] font-semibold">{label}</span>
+        <span className="text-body font-semibold">{label}</span>
         {action}
       </div>
-      <span className="text-[40px] leading-tight font-semibold tracking-tight tabular-nums">
-        {value}
-      </span>
+      <span className="text-display font-semibold tracking-tight tabular-nums">{value}</span>
       {badge && <div className="flex flex-wrap items-center gap-2.5">{badge}</div>}
       {footnote && <span className="text-sm text-text-muted">{footnote}</span>}
     </section>

@@ -12,7 +12,7 @@ export function WorkoutPreferencesSection({ profileId }: { profileId: string }) 
 
   return (
     <Card aria-labelledby="workout-prefs-title">
-      <h2 id="workout-prefs-title" className="text-lg font-semibold">
+      <h2 id="workout-prefs-title" className="text-heading font-semibold">
         {m.settingsTitle}
       </h2>
       {editing ? (

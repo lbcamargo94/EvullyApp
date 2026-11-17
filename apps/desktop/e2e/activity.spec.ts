@@ -8,7 +8,7 @@ function localDate(offset: number): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-test('registers cardio, a habit and a night of sleep, then sees them in Estatísticas', async ({
+test('registers cardio, a habit and a night of sleep, then sees them in Progresso', async ({
   evully,
 }) => {
   const { page } = evully;
@@ -40,7 +40,7 @@ test('registers cardio, a habit and a night of sleep, then sees them in Estatís
   await night.getByRole('button', { name: 'Registrar' }).click();
   await expect(page.getByRole('region', { name: 'Histórico' })).toContainText('8h00');
 
-  await go(page, 'Estatísticas');
+  await go(page, 'Progresso');
   await page
     .getByRole('group', { name: 'Período' })
     .getByRole('button', { name: '30 dias' })

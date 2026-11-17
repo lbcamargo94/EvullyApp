@@ -6,6 +6,23 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Design system (V1.1, fase 1)
+
+- Tipografia, sombras e larguras de layout viraram tokens
+  (`packages/tokens/tokens.json`); as telas usam `text-title`, `text-body`
+  e os demais tamanhos da escala no lugar de tamanhos soltos. Os títulos de
+  tela passam de 26 px para 24 px, como no [DESIGN.md](DESIGN.md), §3.2.
+- Cabeçalho de tela padrão (`ScreenHeader`) com título, descrição e ações.
+- Conteúdo com largura máxima de 1200 px; barra lateral fixa ao rolar, com
+  estados de hover e foco visíveis nos itens do menu.
+- Menu: "Dieta" passa a se chamar **Nutrição** e "Estatísticas",
+  **Progresso**.
+- Nova marca do Evully em SVG: um coração com pulso (bem-estar), uma folha
+  (nutrição) e um halter (treino). O instalador, a janela e a barra de tarefas
+  passam a usar esse ícone no lugar do ícone padrão do Electron.
+- Cartões com sombra suave no tema claro; no escuro, a elevação vem da
+  superfície.
+
 ### Roadmap
 
 - Nova V1.1: design system (ilustrações SVG próprias, ícones, imagens e

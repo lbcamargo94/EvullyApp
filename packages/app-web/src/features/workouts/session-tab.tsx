@@ -42,7 +42,7 @@ function StartSession({ profileId }: { profileId: string }) {
   return (
     <Card aria-labelledby="start-title" className="max-w-3xl gap-4">
       <div className="flex flex-col gap-1">
-        <h2 id="start-title" className="text-lg font-semibold">
+        <h2 id="start-title" className="text-heading font-semibold">
           {m.startTitle}
         </h2>
         <p className="text-sm text-text-muted">{active.length ? m.startHint : m.noPlans}</p>

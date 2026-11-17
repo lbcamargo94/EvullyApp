@@ -28,14 +28,14 @@ export function WeightHistory({
 
   return (
     <Card aria-label={m.historyTitle}>
-      <h2 className="text-lg font-semibold">{m.historyTitle}</h2>
+      <h2 className="text-heading font-semibold">{m.historyTitle}</h2>
       {entries.length === 0 ? (
         <EmptyState>{m.historyEmpty}</EmptyState>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] border-collapse text-left tabular-nums">
             <thead>
-              <tr className="border-b border-border text-[13px] text-text-muted">
+              <tr className="border-b border-border text-caption text-text-muted">
                 <th className="px-3 py-2.5 font-semibold">{m.columns.date}</th>
                 <th className="px-3 py-2.5 font-semibold">{m.columns.time}</th>
                 <th className="px-3 py-2.5 font-semibold">{m.columns.weight}</th>
@@ -48,7 +48,7 @@ export function WeightHistory({
               {entries.map((entry) => {
                 const date = formatLocalDate(entry.measuredOn);
                 return (
-                  <tr key={entry.id} className="border-b border-border/60 text-[15px]">
+                  <tr key={entry.id} className="border-b border-border/60 text-body">
                     <td className="px-3 py-3">{date}</td>
                     <td className="px-3 py-3 text-text-muted">
                       {isoToLocalTime(entry.measuredAt)}

@@ -3,7 +3,7 @@ import { createProfile, expect, go, test } from './fixtures';
 test('registers a meal with a food from the catalog', async ({ evully }) => {
   const { page } = evully;
   await createProfile(page, 'Ana');
-  await go(page, 'Dieta');
+  await go(page, 'Nutrição');
   await page.getByRole('button', { name: 'Pular e usar o padrão' }).click();
 
   await page.getByRole('tab', { name: 'Alimentos' }).click();
@@ -49,7 +49,7 @@ test('tracks macros against the profile targets (README §9.6)', async ({ evully
     'Metas atuais desde',
   );
 
-  await go(page, 'Dieta');
+  await go(page, 'Nutrição');
   await page.getByRole('button', { name: 'Pular e usar o padrão' }).click();
   const total = page.getByRole('region', { name: 'Total do dia' });
   await expect(total).toContainText('0 / 2.000 kcal');

@@ -29,7 +29,7 @@ export function RestTimer({ seconds }: { seconds: number }) {
   }
   return (
     <div className="flex items-center gap-3">
-      <span role="timer" aria-live="polite" className="text-2xl font-semibold tabular-nums">
+      <span role="timer" aria-live="polite" className="text-title font-semibold tabular-nums">
         {left > 0 ? m.resting(label(left)) : m.restDone}
       </span>
       <Button type="button" variant="ghost" onClick={() => setLeft(null)}>

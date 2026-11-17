@@ -6,7 +6,7 @@ import { exerciseErrorByCode, exerciseMessages as m, muscleGroupLabels } from '.
 
 const GROUPS = Object.keys(muscleGroupLabels) as MuscleGroup[];
 const textarea =
-  'min-h-20 w-full rounded-sm border border-border bg-surface px-3 py-2 text-[15px] text-text focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand';
+  'min-h-20 w-full rounded-sm border border-border bg-surface px-3 py-2 text-body text-text focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand';
 
 const EMPTY = {
   name: '',
@@ -87,7 +87,7 @@ export function ExerciseForm({
 
   return (
     <Card aria-label={editing ? m.editTitle : m.formTitle} className="flex-[1_1_340px]">
-      <h2 className="text-lg font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
+      <h2 className="text-heading font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
       <form noValidate onSubmit={(e) => void submit(e)} className="flex flex-col gap-4">
         <Field id="exercise-name" label={m.name}>
           <Input

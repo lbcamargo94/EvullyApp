@@ -60,7 +60,7 @@ export function PlanEditor({
             onCancel={() => setRenaming(false)}
           />
         ) : (
-          <h2 className="flex-1 text-xl font-semibold">{plan.name}</h2>
+          <h2 className="flex-1 text-heading font-semibold">{plan.name}</h2>
         )}
         {!renaming && (
           <Button type="button" variant="ghost" onClick={() => setRenaming(true)}>

@@ -10,11 +10,11 @@ export const formatRate = (value: number) =>
 export const formatWhole = (value: number) => whole.format(value);
 
 export const statsMessages = {
-  title: 'Estatísticas',
+  title: 'Progresso',
   periodLabel: 'Período',
   periods: { days30: '30 dias', days90: '90 dias', project: 'Projeto', all: 'Tudo' },
   emptyAll:
-    'Ainda não há registros para mostrar. Registre peso, medidas, dieta, sono, treino, cardio ou passos e os gráficos aparecem aqui.',
+    'Ainda não há registros para mostrar. Registre peso, medidas, refeições, sono, treino, cardio ou passos e os gráficos aparecem aqui.',
   emptyPeriod: 'Sem registros neste período.',
   chartAlt: (title: string, points: number, values: string[]) =>
     `Gráfico de ${title.toLowerCase()}: ${points} ${points === 1 ? 'ponto' : 'pontos'} no período.${values.map((v) => ` ${v}.`).join('')}`,

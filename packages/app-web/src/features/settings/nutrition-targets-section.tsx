@@ -78,7 +78,7 @@ function TargetsForm({
   return (
     <Card aria-labelledby="targets-title">
       <div className="flex flex-col gap-1">
-        <h2 id="targets-title" className="text-lg font-semibold">
+        <h2 id="targets-title" className="text-heading font-semibold">
           {m.title}
         </h2>
         <p className="text-sm text-text-muted">{m.hint}</p>

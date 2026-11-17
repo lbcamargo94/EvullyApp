@@ -82,7 +82,7 @@ export const mealLabels: Record<Exclude<MealType, 'custom'>, string> = {
 };
 
 export const dietMessages = {
-  title: 'Dieta',
+  title: 'Nutrição',
   tabs: { day: 'Dia', favorites: 'Favoritas', foods: 'Alimentos' },
   previousDay: 'Dia anterior',
   nextDay: 'Próximo dia',
@@ -199,7 +199,7 @@ export const targetMessages = {
 } as const;
 
 export const preferencesMessages = {
-  introTitle: 'Vamos ajustar a Dieta para você',
+  introTitle: 'Vamos ajustar a nutrição para você',
   introBody: 'Três perguntas rápidas. Você pode mudar tudo depois em Configurações › Nutrição.',
   mealsTitle: 'Quais refeições você costuma fazer?',
   mealsHint: 'Só essas aparecem no dia. Refeições com itens continuam aparecendo.',
@@ -216,7 +216,7 @@ export const preferencesMessages = {
   pickOne: 'Escolha pelo menos uma refeição.',
   tooLong: 'Use até 280 caracteres na anotação.',
   genericError: 'Não foi possível salvar. Tente novamente.',
-  settingsTitle: 'Preferências da Dieta',
+  settingsTitle: 'Preferências de nutrição',
   settingsMeals: 'Refeições',
   settingsWater: 'Água',
   settingsRestrictions: 'Restrições',

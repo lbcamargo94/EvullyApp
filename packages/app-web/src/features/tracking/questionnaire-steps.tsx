@@ -7,7 +7,7 @@ import type {
   TrackingAnswers,
   WeightDisplay,
 } from '@evully/contracts';
-import { ChoiceCard, Field, Input } from '@evully/ui';
+import { ChoiceCard, Field, Input, ScreenHeader } from '@evully/ui';
 import type { ReactNode } from 'react';
 import {
   focusAreaLabels,
@@ -19,12 +19,7 @@ import {
 } from './messages.pt-BR';
 
 export function StepHeading({ title, subtitle }: { title: string; subtitle?: string }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <h1 className="text-2xl font-semibold">{title}</h1>
-      {subtitle && <p className="text-text-muted">{subtitle}</p>}
-    </div>
-  );
+  return <ScreenHeader title={title} description={subtitle} />;
 }
 
 function Grid({ label, children }: { label: string; children: ReactNode }) {
@@ -209,7 +204,7 @@ export function SuggestionStep(props: { value: string; onChange: (v: string) => 
           value={props.value}
           placeholder={m.suggestionPlaceholder}
           onChange={(e) => props.onChange(e.target.value)}
-          className="resize-y rounded-sm border border-border bg-surface p-3 text-[15px] text-text placeholder:text-text-muted focus-visible:outline-2 focus-visible:outline-brand"
+          className="resize-y rounded-sm border border-border bg-surface p-3 text-body text-text placeholder:text-text-muted focus-visible:outline-2 focus-visible:outline-brand"
         />
       </Field>
     </>

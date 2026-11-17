@@ -23,7 +23,7 @@ export function ProfileSwitcher({ currentName }: { currentName: string }) {
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={m.switchProfile(currentName)}
-        className="flex min-h-11 items-center gap-2.5 rounded-full border border-border bg-surface py-1.5 pr-3 pl-1.5 text-[15px] font-medium hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-brand"
+        className="flex min-h-11 items-center gap-2.5 rounded-full border border-border bg-surface py-1.5 pr-3 pl-1.5 text-body font-medium hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-brand"
       >
         <Avatar initial={profileInitial(currentName)} />
         {currentName}

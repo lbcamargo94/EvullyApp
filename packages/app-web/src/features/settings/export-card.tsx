@@ -25,7 +25,7 @@ export function ExportCard({ profileId }: { profileId: string }) {
   return (
     <Card aria-labelledby="export-title">
       <div className="flex flex-col gap-1">
-        <h2 id="export-title" className="text-lg font-semibold">
+        <h2 id="export-title" className="text-heading font-semibold">
           {m.title}
         </h2>
         <p className="max-w-xl text-sm text-text-muted">{m.hint}</p>

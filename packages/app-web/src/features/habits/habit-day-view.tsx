@@ -27,7 +27,7 @@ export function HabitDayView({ profileId }: { profileId: string }) {
           <ChevronLeft aria-hidden="true" className="size-5" />
         </Button>
         <h2
-          className="min-w-48 text-center text-lg font-semibold first-letter:uppercase"
+          className="min-w-48 text-center text-heading font-semibold first-letter:uppercase"
           aria-live="polite"
         >
           {label}

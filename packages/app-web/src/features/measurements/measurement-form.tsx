@@ -95,7 +95,7 @@ export function MeasurementForm({
   return (
     <Card aria-label={editing ? m.editTitle : m.formTitle} className="flex-[1_1_360px]">
       <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
+        <h2 className="text-heading font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
         <p className="text-sm text-text-muted">{m.formHint}</p>
       </div>
       <form onSubmit={(e) => void submit(e)} noValidate className="flex flex-col gap-4">
@@ -119,7 +119,7 @@ export function MeasurementForm({
                 <span id={`m-${type.id}-name`} className="font-semibold">
                   {type.name}
                 </span>
-                <span id={`m-${type.id}-how`} className="text-[13px] text-text-muted">
+                <span id={`m-${type.id}-how`} className="text-caption text-text-muted">
                   {type.instructions}
                 </span>
               </span>

@@ -11,7 +11,7 @@ import {
   useWeightSummary,
 } from '@evully/app-core';
 import type { ProjectDto } from '@evully/contracts';
-import { Button, Card, ProgressBar } from '@evully/ui';
+import { Button, Card, ProgressBar, ScreenHeader } from '@evully/ui';
 import { Link } from 'react-router';
 import { FOCUS_FORM } from '../shared/focus-request';
 import { MeasurementCards } from '../measurements/measurement-cards';
@@ -38,21 +38,23 @@ export function HomeScreen() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-[26px] font-semibold tracking-tight">{m.homeTitle(profile.name)}</h1>
-        <div className="flex flex-wrap gap-3">
-          <Button asChild variant="secondary">
-            <Link to="/app/measurements" state={FOCUS_FORM}>
-              {m.registerMeasurements}
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link to="/app/weight" state={FOCUS_FORM}>
-              {m.registerWeight}
-            </Link>
-          </Button>
-        </div>
-      </div>
+      <ScreenHeader
+        title={m.homeTitle(profile.name)}
+        actions={
+          <>
+            <Button asChild variant="secondary">
+              <Link to="/app/measurements" state={FOCUS_FORM}>
+                {m.registerMeasurements}
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link to="/app/weight" state={FOCUS_FORM}>
+                {m.registerWeight}
+              </Link>
+            </Button>
+          </>
+        }
+      />
       {project ? <ProjectCard project={project} /> : <NoProjectCard />}
       <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
         {weight && tracking?.config && (
@@ -72,7 +74,7 @@ function NoProjectCard() {
   return (
     <Card aria-label={m.projectLabel}>
       <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-semibold">{m.noProjectTitle}</h2>
+        <h2 className="text-heading font-semibold">{m.noProjectTitle}</h2>
         <p className="text-sm text-text-muted">{m.noProjectBody}</p>
       </div>
       <Button asChild variant="secondary" className="self-start">
@@ -99,12 +101,12 @@ function ProjectCard({ project }: { project: ProjectDto }) {
     <Card aria-label={m.projectLabel}>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div className="flex flex-col gap-1">
-          <span className="text-[13px] font-semibold tracking-wider text-text-muted uppercase">
+          <span className="text-caption font-semibold tracking-wider text-text-muted uppercase">
             {m.projectKicker(objectiveLabels[project.objective].title)}
           </span>
-          <h2 className="text-[26px] font-semibold tracking-tight">{project.name}</h2>
+          <h2 className="text-title font-semibold tracking-tight">{project.name}</h2>
         </div>
-        <span className="text-[15px] text-text-muted">
+        <span className="text-body text-text-muted">
           {status} · {m.until(formatLocalDate(project.targetDate))}
         </span>
       </div>

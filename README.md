@@ -2016,13 +2016,13 @@ Cada item do menu lateral só aparece a partir da versão indicada:
 | Dashboard | V0.1 |
 | Corpo (Peso, Medidas) | V0.1 |
 | Configurações | V0.1 |
-| Dieta | V0.2 |
+| Nutrição ("Dieta" até a V1.0) | V0.2 |
 | Treinos | V0.3 |
 | Cardio | V0.4 |
 | Hábitos | V0.4 |
 | Sono | V0.5 |
 | Hoje | V0.6 |
-| Estatísticas | V0.6 |
+| Progresso ("Estatísticas" até a V1.0) | V0.6 |
 | Lembretes | V1.4 |
 | Saúde / Exames | V1.5 |
 | Evully Coach | V1.6 |

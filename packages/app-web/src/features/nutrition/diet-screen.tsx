@@ -1,5 +1,5 @@
 import { useCurrentProfile, useNutritionPreferences } from '@evully/app-core';
-import { Card, Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
+import { Card, ScreenHeader, Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
 import { useSearchParams } from 'react-router';
 import { DayView } from './day-view';
 import { FavoritesList } from './favorites-list';
@@ -23,10 +23,10 @@ export function DietScreen() {
   if (prefs.status === 'pending') {
     return (
       <>
-        <h1 className="text-[26px] font-semibold">{m.title}</h1>
+        <ScreenHeader title={m.title} />
         <Card aria-labelledby="nutrition-intro" className="max-w-3xl gap-5 p-8">
           <div className="flex flex-col gap-1">
-            <h2 id="nutrition-intro" className="text-xl font-semibold">
+            <h2 id="nutrition-intro" className="text-heading font-semibold">
               {preferencesMessages.introTitle}
             </h2>
             <p className="text-text-muted">{preferencesMessages.introBody}</p>
@@ -39,7 +39,7 @@ export function DietScreen() {
 
   return (
     <>
-      <h1 className="text-[26px] font-semibold">{m.title}</h1>
+      <ScreenHeader title={m.title} />
       <Tabs
         value={tab}
         onValueChange={(value) => setParams({ tab: value }, { replace: true })}

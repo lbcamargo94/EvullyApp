@@ -83,7 +83,7 @@ export function WeightForm({
 
   return (
     <Card aria-label={editing ? m.editTitle : m.formTitle} className="flex-[1_1_320px]">
-      <h2 className="text-lg font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
+      <h2 className="text-heading font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
       <form onSubmit={(e) => void submit(e)} noValidate className="flex flex-col gap-4">
         <Field id="weight" label={m.weight} error={error ?? undefined}>
           <Input
@@ -96,7 +96,7 @@ export function WeightForm({
             aria-invalid={!!error}
             aria-describedby={error ? 'weight-error' : undefined}
             onChange={(e) => setValues((v) => ({ ...v, weight: e.target.value }))}
-            className="min-h-14 text-2xl font-semibold tabular-nums"
+            className="min-h-14 text-title font-semibold tabular-nums"
           />
         </Field>
         <div className="grid grid-cols-2 gap-3">

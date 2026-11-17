@@ -28,8 +28,9 @@ import { ProfileSwitcher } from './profile-switcher';
 import { QueryErrorBanner } from './query-error-banner';
 import { useInactivity } from './use-inactivity';
 
+// Menu item states (DESIGN.md §5): default, hover, keyboard focus and current page.
 const navItem =
-  'flex items-center gap-3 rounded-md px-3 py-2.5 text-[15px] font-medium text-text-muted hover:bg-surface-muted aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-soft-foreground';
+  'flex min-h-11 items-center gap-3 rounded-md px-3 py-2 text-body font-medium text-text-muted transition-colors hover:bg-surface-muted hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand motion-reduce:transition-none aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-soft-foreground';
 
 /** Layout for screens that belong to a profile. Without one, goes back to selection. */
 export function AppShell() {
@@ -61,7 +62,7 @@ export function AppShell() {
   if (tracking && tracking.questionnaire === null) return <Navigate to="/onboarding" replace />;
 
   return (
-    <div className="flex min-h-screen flex-wrap bg-background text-text">
+    <div className="flex min-h-screen bg-background text-text">
       {/* A button, not `#main-content`: a hash link would change the HashRouter route. */}
       <button
         type="button"
@@ -72,7 +73,7 @@ export function AppShell() {
       </button>
       <nav
         aria-label={m.mainMenu}
-        className="flex flex-[1_1_220px] flex-col gap-7 border-r border-border bg-surface px-4 py-6"
+        className="sticky top-0 flex h-screen w-sidebar shrink-0 flex-col gap-7 overflow-y-auto border-r border-border bg-surface px-4 py-6"
       >
         <div className="px-2">
           <Logo />
@@ -121,7 +122,7 @@ export function AppShell() {
         </div>
         {info && <p className="mt-auto px-3 text-xs text-text-muted">{m.version(info.version)}</p>}
       </nav>
-      <div className="flex min-w-0 flex-[999_1_560px] flex-col gap-6 px-8 py-6">
+      <div className="mx-auto flex w-full max-w-content min-w-0 flex-col gap-6 px-8 py-6">
         <header className="flex flex-wrap items-center justify-between gap-4">
           {profile && <ProfileSwitcher currentName={profile.name} />}
         </header>

@@ -12,7 +12,7 @@ export function NutritionPreferencesSection({ profileId }: { profileId: string }
 
   return (
     <Card aria-labelledby="nutrition-prefs-title">
-      <h2 id="nutrition-prefs-title" className="text-lg font-semibold">
+      <h2 id="nutrition-prefs-title" className="text-heading font-semibold">
         {m.settingsTitle}
       </h2>
       {editing ? (

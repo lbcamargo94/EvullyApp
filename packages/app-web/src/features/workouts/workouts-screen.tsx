@@ -1,5 +1,5 @@
 import { useCurrentProfile, useWorkoutPreferences } from '@evully/app-core';
-import { Card, Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
+import { Card, ScreenHeader, Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
 import { useSearchParams } from 'react-router';
 import { ExerciseLibrary } from './exercise-library';
 import { workoutMessages as m, workoutQuestionnaireMessages } from './messages.pt-BR';
@@ -23,10 +23,10 @@ export function WorkoutsScreen() {
   if (prefs.status === 'pending') {
     return (
       <>
-        <h1 className="text-[26px] font-semibold">{m.title}</h1>
+        <ScreenHeader title={m.title} />
         <Card aria-labelledby="workouts-intro" className="max-w-3xl gap-5 p-8">
           <div className="flex flex-col gap-1">
-            <h2 id="workouts-intro" className="text-xl font-semibold">
+            <h2 id="workouts-intro" className="text-heading font-semibold">
               {workoutQuestionnaireMessages.introTitle}
             </h2>
             <p className="text-text-muted">{workoutQuestionnaireMessages.introBody}</p>
@@ -43,7 +43,7 @@ export function WorkoutsScreen() {
 
   return (
     <>
-      <h1 className="text-[26px] font-semibold">{m.title}</h1>
+      <ScreenHeader title={m.title} />
       <Tabs
         value={tab}
         onValueChange={(value) => setParams({ tab: value }, { replace: true })}

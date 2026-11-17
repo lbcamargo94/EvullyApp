@@ -17,17 +17,17 @@ export function RecoveryScreen() {
         <Logo />
         <div className="flex items-start gap-3">
           <CircleAlert aria-hidden="true" className="mt-1 size-6 shrink-0 text-danger" />
-          <h1 id="recovery-title" className="text-2xl font-semibold">
+          <h1 id="recovery-title" className="text-title font-semibold">
             {m.title}
           </h1>
         </div>
-        <div className="flex flex-col gap-3 text-[15px] leading-relaxed">
+        <div className="flex flex-col gap-3 text-body leading-relaxed">
           {m.body.map((line) => (
             <p key={line}>{line}</p>
           ))}
         </div>
         <section aria-labelledby="recovery-backups" className="flex flex-col gap-3">
-          <h2 id="recovery-backups" className="text-lg font-semibold">
+          <h2 id="recovery-backups" className="text-heading font-semibold">
             {m.backups}
           </h2>
           <RestorePanel recovery />

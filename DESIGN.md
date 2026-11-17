@@ -19,6 +19,7 @@ dessas interfaces está em [FRONTEND.md](FRONTEND.md). Complementa a especifica�
 | Fonte | **Inter**, embutida no app (licença OFL) | Algarismos tabulares, boa leitura em todos os tamanhos, funciona offline. |
 | Tema | **Segue o tema do sistema**; pode ser fixado em claro ou escuro | Uso rápido de manhã e à noite. |
 | Ícones | **Lucide** (licença ISC) | Traço consistente, combina com o shadcn/ui. |
+| Marca | **Coração com pulso, folha e halter**, em quadrado arredondado `brand` (`LogoMark`, SVG próprio) | Retrata bem-estar, nutrição e treino; legível a partir de 16 px; segue o tema. O ícone do app sai de `apps/desktop/build/icon.svg` (`npm run icon -w @evully/desktop`). |
 | Tom de voz | Neutro, encorajador e direto | Ex.: "Tendência de queda de 1,9 kg", nunca "Você engordou". |
 
 Os valores de cor abaixo são o ponto de partida e serão ajustados na
@@ -101,6 +102,10 @@ Regras:
 | `body` | 15 / 22, peso 400 | Texto padrão |
 | `caption` | 13 / 18, peso 400 | Rótulos e textos auxiliares |
 
+- A escala está em `packages/tokens/tokens.json` (`text`) e vira as classes
+  `text-display`, `text-title`, `text-heading`, `text-body` e
+  `text-caption`. Telas não usam tamanhos soltos (`text-[15px]`).
+
 - Números usam `font-variant-numeric: tabular-nums` para alinhar casas
   decimais em listas e tabelas.
 - Formatação sempre com `Intl` em `pt-BR` (`89,8 kg`, `06/12/2026`).
@@ -111,11 +116,16 @@ Regras:
 - Raios: `sm` 6 px (campos), `md` 10 px (botões), `lg` 16 px (cartões).
 - Sombras discretas, apenas para elevar cartões e diálogos; no tema
   escuro a elevação usa `surface` mais claro em vez de sombra.
+- Sombras são tokens por tema (`shadow`: `sm`, `card`, `md`, `lg`); no
+  escuro, `sm` e `card` são `none`.
+- Larguras de layout também são tokens (`layout`): `max-w-content`
+  (1200 px) para o conteúdo e `w-sidebar` (240 px) para a barra lateral.
 
 ## 4. Componentes Evully
 
 | Componente | Função |
 |---|---|
+| `ScreenHeader` | Topo de cada tela: título (o único `<h1>`), descrição curta opcional e ações da tela (`packages/ui`). |
 | `StatCard` | Indicador do painel: rótulo, valor principal, variação e "dados insuficientes". |
 | `TrendIndicator` | Seta + valor com sinal + cor pela direção (`positive`/`caution`/`neutral`). Nunca só cor. |
 | `WeightChart` | Peso do dia, média de 7 dias e marcadores de etiquetas. |

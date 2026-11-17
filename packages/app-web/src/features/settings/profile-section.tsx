@@ -52,7 +52,7 @@ function CurrentProfileCard({ profileId }: { profileId: string }) {
   return (
     <Card aria-labelledby="current-profile-title">
       <div className="flex flex-col gap-1">
-        <h2 id="current-profile-title" className="text-lg font-semibold">
+        <h2 id="current-profile-title" className="text-heading font-semibold">
           {m.currentTitle}
         </h2>
         <p className="text-sm text-text-muted">{m.currentHint(profile.name)}</p>
@@ -101,7 +101,7 @@ function ArchivedProfilesCard() {
 
   return (
     <Card aria-labelledby="archived-title">
-      <h2 id="archived-title" className="text-lg font-semibold">
+      <h2 id="archived-title" className="text-heading font-semibold">
         {m.archivedTitle}
       </h2>
       {archived?.length === 0 && <p className="text-sm text-text-muted">{m.noArchived}</p>}

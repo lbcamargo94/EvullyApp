@@ -43,7 +43,7 @@ export function SessionView({
   return (
     <div className="flex max-w-4xl flex-col gap-4">
       <div className="flex flex-col gap-0.5">
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-heading font-semibold">
           {session.dayName ? `${session.dayName}` : m.freeSession}
         </h2>
         <span className="text-sm text-text-muted">

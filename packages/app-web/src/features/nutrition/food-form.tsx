@@ -106,7 +106,7 @@ export function FoodForm({ editing, onDone }: { editing: FoodDto | null; onDone:
 
   return (
     <Card aria-label={editing ? m.editTitle : m.formTitle} className="flex-[1_1_340px]">
-      <h2 className="text-lg font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
+      <h2 className="text-heading font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
       <form onSubmit={(e) => void submit(e)} noValidate className="flex flex-col gap-4">
         <Field id="food-name" label={m.name}>
           <Input

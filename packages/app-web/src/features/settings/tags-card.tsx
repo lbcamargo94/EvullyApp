@@ -29,7 +29,7 @@ export function TagsCard({ profileId }: { profileId: string }) {
   return (
     <Card aria-labelledby="tags-title">
       <div className="flex flex-col gap-1">
-        <h2 id="tags-title" className="text-lg font-semibold">
+        <h2 id="tags-title" className="text-heading font-semibold">
           {m.tagsTitle}
         </h2>
         <p className="text-sm text-text-muted">{m.tagsHint}</p>

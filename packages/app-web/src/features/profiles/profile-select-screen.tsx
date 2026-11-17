@@ -7,7 +7,7 @@ import { ImportProfileButton } from './import-profile-button';
 import { profileMessages as m } from './messages.pt-BR';
 
 const tile =
-  'flex w-44 flex-col items-center gap-3.5 rounded-lg px-4 pt-7 pb-5 text-[17px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand';
+  'flex w-44 flex-col items-center gap-3.5 rounded-lg px-4 pt-7 pb-5 text-heading focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand';
 
 /** "Quem está usando?" — names and avatars only, never personal data (README §8.1). */
 export function ProfileSelectScreen() {
@@ -26,7 +26,7 @@ export function ProfileSelectScreen() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-12 bg-background px-6 py-12 text-text">
       <Logo size="lg" />
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-[32px] font-semibold tracking-tight">{m.selectTitle}</h1>
+        <h1 className="text-display font-semibold tracking-tight">{m.selectTitle}</h1>
         <p className="text-text-muted">{isError ? m.loadError : m.selectSubtitle}</p>
       </div>
 

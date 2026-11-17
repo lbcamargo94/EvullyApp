@@ -8,7 +8,7 @@ import {
   useSaveImportTemplate,
 } from '@evully/app-core';
 import type { ImportKind, ImportPreview } from '@evully/contracts';
-import { Button, Card } from '@evully/ui';
+import { Button, Card, ScreenHeader } from '@evully/ui';
 import { FileSpreadsheet } from 'lucide-react';
 import { useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
@@ -60,10 +60,7 @@ function ImportFlow({ kind, profileId }: { kind: ImportKind; profileId: string }
       <Link to={backTo[kind]} className="text-sm font-medium text-brand-soft-foreground">
         ← {m.back[kind]}
       </Link>
-      <div className="flex flex-col gap-1.5">
-        <h1 className="text-[26px] font-semibold">{m.title[kind]}</h1>
-        <p className="text-text-muted">{m.intro(profile?.name ?? '')}</p>
-      </div>
+      <ScreenHeader title={m.title[kind]} description={m.intro(profile?.name ?? '')} />
 
       <FileCard
         kind={kind}
@@ -136,7 +133,7 @@ function FileCard({
           </span>
           <div className="flex flex-col">
             <strong>{fileName ?? m.chooseFile}</strong>
-            <span className="text-[13px] text-text-muted">{m.formats}</span>
+            <span className="text-caption text-text-muted">{m.formats}</span>
           </div>
         </div>
         <div className="flex flex-wrap gap-3">
@@ -209,7 +206,7 @@ function Stat({
 }) {
   return (
     <div className="flex flex-[1_1_160px] flex-col gap-1 rounded-md bg-surface p-4">
-      <span className={`self-start rounded-md px-2 text-[28px] font-semibold ${statTones[tone]}`}>
+      <span className={`self-start rounded-md px-2 text-title font-semibold ${statTones[tone]}`}>
         {value}
       </span>
       <span className="text-sm">{label}</span>

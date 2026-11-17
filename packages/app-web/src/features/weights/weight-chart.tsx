@@ -62,7 +62,7 @@ export function WeightChart({
   return (
     <Card aria-label={m.chartTitle} className="min-w-0 flex-[2_1_480px]">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">{m.chartTitle}</h2>
+        <h2 className="text-heading font-semibold">{m.chartTitle}</h2>
         <div
           role="group"
           aria-label={m.periodLabel}
@@ -78,8 +78,8 @@ export function WeightChart({
                 onClick={() => setPeriod(p)}
                 className={
                   period === p
-                    ? 'min-h-8 rounded-sm bg-surface px-3 text-[13px] font-semibold shadow-sm'
-                    : 'min-h-8 rounded-sm px-3 text-[13px] font-semibold text-text-muted'
+                    ? 'min-h-8 rounded-sm bg-surface px-3 text-caption font-semibold shadow-sm'
+                    : 'min-h-8 rounded-sm px-3 text-caption font-semibold text-text-muted'
                 }
               >
                 {m.periods[p]}
@@ -149,7 +149,7 @@ export function WeightChart({
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <figcaption className="flex flex-wrap gap-4 pt-3 text-[13px] text-text-muted">
+          <figcaption className="flex flex-wrap gap-4 pt-3 text-caption text-text-muted">
             <span className="flex items-center gap-1.5">
               <span className="size-2 rounded-full bg-neutral" aria-hidden="true" />
               {m.legendDaily}

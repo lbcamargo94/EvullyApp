@@ -38,7 +38,7 @@ export function SleepIndicatorsCard({
   return (
     <Card aria-labelledby="sleep-indicators-title" className="flex-[1_1_280px] gap-3">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="sleep-indicators-title" className="text-lg font-semibold">
+        <h2 id="sleep-indicators-title" className="text-heading font-semibold">
           {m.indicators}
         </h2>
         {!editingTarget && (
