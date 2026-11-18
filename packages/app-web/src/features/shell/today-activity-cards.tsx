@@ -25,7 +25,7 @@ function CardHeader({
 }) {
   return (
     <div className="flex items-baseline justify-between gap-2">
-      <h2 id={id} className="text-lg font-semibold">
+      <h2 id={id} className="text-heading font-semibold">
         {title}
       </h2>
       <Link to={to} className="text-sm font-semibold text-brand underline-offset-4 hover:underline">

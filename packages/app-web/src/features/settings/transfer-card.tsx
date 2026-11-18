@@ -27,7 +27,7 @@ export function TransferCard({ profileId }: { profileId: string }) {
   return (
     <Card aria-labelledby="transfer-title">
       <div className="flex flex-col gap-1">
-        <h2 id="transfer-title" className="text-lg font-semibold">
+        <h2 id="transfer-title" className="text-heading font-semibold">
           {m.title}
         </h2>
         <p className="max-w-xl text-sm text-text-muted">{m.hint}</p>

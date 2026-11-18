@@ -36,7 +36,7 @@ export function BackupSection() {
 
   return (
     <Card aria-labelledby="backup-title" className="gap-0">
-      <h2 id="backup-title" className="pb-3 text-lg font-semibold">
+      <h2 id="backup-title" className="pb-3 text-heading font-semibold">
         {m.backupTitle}
       </h2>
 

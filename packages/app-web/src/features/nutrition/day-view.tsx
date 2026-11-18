@@ -61,7 +61,7 @@ export function DayView({ profileId }: { profileId: string }) {
         <Button type="button" variant="ghost" aria-label={m.previousDay} onClick={() => go(-1)}>
           <ChevronLeft aria-hidden="true" className="size-5" />
         </Button>
-        <h2 className="min-w-48 text-center text-lg font-semibold" aria-live="polite">
+        <h2 className="min-w-48 text-center text-heading font-semibold" aria-live="polite">
           {m.dayLabel(date, today, addDays(today, -1), addDays(today, 1))}
         </h2>
         <Button

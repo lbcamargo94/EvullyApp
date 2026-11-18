@@ -40,7 +40,7 @@ export function FoodList({ foods, onEdit }: { foods: FoodDto[]; onEdit: (food: F
   return (
     <Card aria-labelledby="food-list-title" className="flex-[2_1_420px]">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="food-list-title" className="text-lg font-semibold">
+        <h2 id="food-list-title" className="text-heading font-semibold">
           {m.listTitle}
         </h2>
         <span className="text-sm text-text-muted">{m.count(foods.length)}</span>

@@ -5,7 +5,7 @@ export function Card({ className, ...props }: ComponentProps<'section'>) {
   return (
     <section
       className={cn(
-        'flex flex-col gap-4 rounded-lg border border-border bg-surface p-6',
+        'flex flex-col gap-4 rounded-lg border border-border bg-surface p-6 shadow-card',
         className,
       )}
       {...props}

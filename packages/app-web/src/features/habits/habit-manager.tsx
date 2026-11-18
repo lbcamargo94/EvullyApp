@@ -27,7 +27,7 @@ export function HabitManager({ profileId }: { profileId: string }) {
       />
       <Card aria-labelledby="habit-list-title" className="flex-[2_1_380px]">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 id="habit-list-title" className="text-lg font-semibold">
+          <h2 id="habit-list-title" className="text-heading font-semibold">
             {m.list}
           </h2>
           <ExamplesButton profileId={profileId} />
@@ -214,7 +214,7 @@ function HabitForm({
 
   return (
     <Card aria-label={editing ? m.editTitle : m.formTitle} className="flex-[1_1_300px]">
-      <h2 className="text-lg font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
+      <h2 className="text-heading font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
       <form noValidate onSubmit={(e) => void submit(e)} className="flex flex-col gap-4">
         <HabitFields v={v} set={set} />
         {message && (

@@ -55,7 +55,7 @@ function PlanList({
               onClick={() => onOpen(p.id)}
               className="flex flex-col items-start gap-1 rounded-lg border border-border bg-surface p-5 text-left hover:border-brand/60 focus-visible:outline-2 focus-visible:outline-brand"
             >
-              <span className="text-lg font-semibold">{p.name}</span>
+              <span className="text-heading font-semibold">{p.name}</span>
               <span className="text-sm text-text-muted">{m.summary(p.days.length, exercises)}</span>
             </button>
           );

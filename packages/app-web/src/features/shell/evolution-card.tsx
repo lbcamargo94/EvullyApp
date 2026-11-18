@@ -115,7 +115,7 @@ export function EvolutionCard({ profileId }: { profileId: string }) {
   return (
     <Card aria-labelledby="evolution-title" className="gap-4">
       <div className="flex flex-col gap-1">
-        <h2 id="evolution-title" className="text-lg font-semibold">
+        <h2 id="evolution-title" className="text-heading font-semibold">
           {m.evolutionTitle}
         </h2>
         <p className="text-sm text-text-muted">{m.evolutionHint}</p>

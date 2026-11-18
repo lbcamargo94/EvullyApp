@@ -27,7 +27,7 @@ export function DayTotals({ day }: { day: NutritionDay }) {
       </div>
       <div className="flex flex-col gap-1.5">
         <span className="text-sm text-text-muted">{m.consumed}</span>
-        <span className="text-[32px] leading-tight font-semibold tabular-nums">
+        <span className="text-display font-semibold tabular-nums">
           {target
             ? m.ofTarget(
                 formatNumber(consumed.caloriesKcal),

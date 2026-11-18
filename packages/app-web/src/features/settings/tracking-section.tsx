@@ -35,7 +35,7 @@ function WeightDisplayCard({ profileId, current }: { profileId: string; current:
   return (
     <Card aria-labelledby="weight-display-title">
       <div className="flex flex-col gap-1">
-        <h2 id="weight-display-title" className="text-lg font-semibold">
+        <h2 id="weight-display-title" className="text-heading font-semibold">
           {m.weightTitle}
         </h2>
         <p className="text-sm text-text-muted">{m.weightHint}</p>
@@ -62,7 +62,7 @@ function RedoCard() {
   return (
     <Card aria-labelledby="redo-title">
       <div className="flex flex-col gap-1">
-        <h2 id="redo-title" className="text-lg font-semibold">
+        <h2 id="redo-title" className="text-heading font-semibold">
           {m.redoTitle}
         </h2>
         <p className="text-sm text-text-muted">{m.redoHint}</p>

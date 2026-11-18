@@ -38,7 +38,7 @@ export function AboutSection() {
       </Section>
 
       <Section id="about-health" title={m.healthTitle}>
-        <div className="flex flex-col gap-3 text-[15px] leading-relaxed">
+        <div className="flex flex-col gap-3 text-body leading-relaxed">
           {shellMessages.healthBody.map((line) => (
             <p key={line}>{line}</p>
           ))}
@@ -70,7 +70,7 @@ export function AboutSection() {
 function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
     <Card aria-labelledby={id}>
-      <h2 id={id} className="text-lg font-semibold">
+      <h2 id={id} className="text-heading font-semibold">
         {title}
       </h2>
       {children}

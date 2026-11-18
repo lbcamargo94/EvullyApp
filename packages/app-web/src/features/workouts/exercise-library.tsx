@@ -32,7 +32,7 @@ export function ExerciseLibrary({ profileId }: { profileId: string }) {
       />
       <Card aria-labelledby="exercise-list-title" className="flex-[2_1_440px]">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="exercise-list-title" className="text-lg font-semibold">
+          <h2 id="exercise-list-title" className="text-heading font-semibold">
             {m.listTitle}
           </h2>
           <span className="text-sm text-text-muted">{m.count(exercises.length)}</span>

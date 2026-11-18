@@ -7,7 +7,7 @@ import {
   useDeleteCardio,
 } from '@evully/app-core';
 import type { CardioOverview, CardioSessionDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, EmptyState } from '@evully/ui';
+import { Button, Card, ConfirmDialog, EmptyState, ScreenHeader } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { CardioForm } from './cardio-form';
@@ -43,7 +43,7 @@ export function CardioScreen() {
 
   return (
     <>
-      <h1 className="text-[26px] font-semibold">{m.title}</h1>
+      <ScreenHeader title={m.title} />
       <div className="flex flex-wrap items-start gap-6">
         <CardioForm
           key={editing?.id ?? 'new'}
@@ -54,7 +54,7 @@ export function CardioScreen() {
         <ThisWeek profileId={profileId} overview={overview} />
       </div>
       <section aria-label={m.history} className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold">{m.history}</h2>
+        <h2 className="text-heading font-semibold">{m.history}</h2>
         {overview.weeks.length === 0 && <EmptyState>{m.empty}</EmptyState>}
         {overview.weeks.map((w) => (
           <WeekCard key={w.summary.weekStart} profileId={profileId} week={w} onEdit={setEditing} />
@@ -70,7 +70,7 @@ function ThisWeek({ profileId, overview }: { profileId: string; overview: Cardio
   return (
     <Card aria-labelledby="cardio-week-title" className="flex-[1_1_280px] gap-3">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="cardio-week-title" className="text-lg font-semibold">
+        <h2 id="cardio-week-title" className="text-heading font-semibold">
           {m.thisWeek}
         </h2>
         {!editingTarget && (
@@ -84,9 +84,7 @@ function ThisWeek({ profileId, overview }: { profileId: string; overview: Cardio
           </Button>
         )}
       </div>
-      <span className="text-[32px] leading-tight font-semibold tabular-nums">
-        {m.minutes(week.minutes)}
-      </span>
+      <span className="text-display font-semibold tabular-nums">{m.minutes(week.minutes)}</span>
       <span className="text-sm text-text-muted">{weekLine(week)}</span>
       {editingTarget ? (
         <CardioTargetForm

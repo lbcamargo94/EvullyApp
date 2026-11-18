@@ -1,5 +1,5 @@
 import { useCurrentProfile } from '@evully/app-core';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
+import { ScreenHeader, Tabs, TabsContent, TabsList, TabsTrigger } from '@evully/ui';
 import { useSearchParams } from 'react-router';
 import { AboutSection } from './about-section';
 import { BackupSection } from './backup-section';
@@ -32,7 +32,7 @@ export function SettingsScreen() {
 
   return (
     <>
-      <h1 className="text-[26px] font-semibold">{m.title}</h1>
+      <ScreenHeader title={m.title} />
       <Tabs
         value={tab}
         onValueChange={(value) => setParams({ tab: value }, { replace: true })}

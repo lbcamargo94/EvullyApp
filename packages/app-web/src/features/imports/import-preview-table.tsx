@@ -28,11 +28,11 @@ export function ImportPreviewTable({ preview }: { preview: ImportPreview }) {
   const total = preview.counts.ready + preview.counts.duplicates + preview.counts.errors;
   return (
     <Card aria-label={m.previewTitle}>
-      <h2 className="text-lg font-semibold">{m.previewTitle}</h2>
+      <h2 className="text-heading font-semibold">{m.previewTitle}</h2>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[600px] border-collapse text-left tabular-nums">
           <thead>
-            <tr className="border-b border-border text-[13px] text-text-muted">
+            <tr className="border-b border-border text-caption text-text-muted">
               <th className="px-3 py-2.5 font-semibold">{m.columns.line}</th>
               <th className="px-3 py-2.5 font-semibold">{m.columns.date}</th>
               {preview.kind === 'weights' && (
@@ -44,7 +44,7 @@ export function ImportPreviewTable({ preview }: { preview: ImportPreview }) {
           </thead>
           <tbody>
             {preview.rows.map((row) => (
-              <tr key={row.line} className="border-b border-border/60 text-[15px]">
+              <tr key={row.line} className="border-b border-border/60 text-body">
                 <td className="px-3 py-3 text-text-muted">{row.line}</td>
                 <td className="px-3 py-3">
                   {row.measuredOn ? formatLocalDate(row.measuredOn) : '—'}

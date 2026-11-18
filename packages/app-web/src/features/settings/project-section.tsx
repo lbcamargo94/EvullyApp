@@ -49,7 +49,7 @@ function CompletedCard({ name }: { name: string }) {
   return (
     <Card role="status" aria-labelledby="completed-title">
       <div className="flex flex-col gap-1">
-        <h2 id="completed-title" className="text-lg font-semibold">
+        <h2 id="completed-title" className="text-heading font-semibold">
           {m.completedTitle(name)}
         </h2>
         <p className="text-sm text-text-muted">{m.completedBody}</p>
@@ -92,7 +92,7 @@ function ActiveProjectCard({
 
   return (
     <Card aria-labelledby="project-title">
-      <h2 id="project-title" className="text-lg font-semibold">
+      <h2 id="project-title" className="text-heading font-semibold">
         {m.activeTitle}
       </h2>
       <ProjectForm
@@ -142,7 +142,7 @@ function NewProjectCard({ profileId }: { profileId: string }) {
   return (
     <Card aria-labelledby="new-project-title">
       <div className="flex flex-col gap-1">
-        <h2 id="new-project-title" className="text-lg font-semibold">
+        <h2 id="new-project-title" className="text-heading font-semibold">
           {m.newTitle}
         </h2>
         <p className="text-sm text-text-muted">{m.newHint}</p>
@@ -160,7 +160,7 @@ function NewProjectCard({ profileId }: { profileId: string }) {
 function PastProjectsCard({ projects }: { projects: ProjectDto[] }) {
   return (
     <Card aria-labelledby="past-projects-title">
-      <h2 id="past-projects-title" className="text-lg font-semibold">
+      <h2 id="past-projects-title" className="text-heading font-semibold">
         {m.pastTitle}
       </h2>
       {projects.length === 0 ? (

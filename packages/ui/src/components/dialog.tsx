@@ -18,13 +18,13 @@ export function DialogContent({ children }: { children: ReactNode }) {
 
 export function DialogTitle({ children }: { children: ReactNode }) {
   return (
-    <DialogPrimitive.Title className="text-lg font-semibold">{children}</DialogPrimitive.Title>
+    <DialogPrimitive.Title className="text-heading font-semibold">{children}</DialogPrimitive.Title>
   );
 }
 
 export function DialogDescription({ children }: { children: ReactNode }) {
   return (
-    <DialogPrimitive.Description className="text-[15px] text-text-muted">
+    <DialogPrimitive.Description className="text-body text-text-muted">
       {children}
     </DialogPrimitive.Description>
   );

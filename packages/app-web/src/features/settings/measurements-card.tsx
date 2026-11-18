@@ -48,7 +48,7 @@ export function MeasurementsCard({
   return (
     <Card aria-labelledby="measures-title">
       <div className="flex flex-col gap-1">
-        <h2 id="measures-title" className="text-lg font-semibold">
+        <h2 id="measures-title" className="text-heading font-semibold">
           {m.measuresTitle}
         </h2>
         <p className="text-sm text-text-muted">{m.measuresHint}</p>

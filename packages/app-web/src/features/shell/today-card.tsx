@@ -139,7 +139,7 @@ export function TodayCard({ profileId }: { profileId: string }) {
 
   return (
     <Card aria-labelledby="today-title" className="gap-4">
-      <h2 id="today-title" className="text-lg font-semibold">
+      <h2 id="today-title" className="text-heading font-semibold">
         {m.todayTitle}
       </h2>
       {rows.length > 0 && (

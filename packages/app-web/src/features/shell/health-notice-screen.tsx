@@ -10,10 +10,10 @@ export function HealthNoticeScreen() {
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-10 text-text">
       <Card className="w-full max-w-lg gap-6 p-8" aria-labelledby="health-title">
         <Logo />
-        <h1 id="health-title" className="text-2xl font-semibold">
+        <h1 id="health-title" className="text-title font-semibold">
           {m.healthTitle}
         </h1>
-        <div className="flex flex-col gap-3 text-[15px] leading-relaxed">
+        <div className="flex flex-col gap-3 text-body leading-relaxed">
           {m.healthBody.map((line) => (
             <p key={line}>{line}</p>
           ))}

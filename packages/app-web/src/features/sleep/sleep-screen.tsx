@@ -8,7 +8,7 @@ import {
   useSleepLogs,
 } from '@evully/app-core';
 import type { SleepLogDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, EmptyState } from '@evully/ui';
+import { Button, Card, ConfirmDialog, EmptyState, ScreenHeader } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import {
@@ -31,7 +31,7 @@ export function SleepScreen() {
 
   return (
     <>
-      <h1 className="text-[26px] font-semibold">{m.title}</h1>
+      <ScreenHeader title={m.title} />
       <div className="flex flex-wrap items-start gap-6">
         <SleepForm
           key={editing?.id ?? 'new'}
@@ -76,7 +76,7 @@ function History({
 
   return (
     <Card aria-labelledby="sleep-history-title" className="gap-2">
-      <h2 id="sleep-history-title" className="text-lg font-semibold">
+      <h2 id="sleep-history-title" className="text-heading font-semibold">
         {m.history}
       </h2>
       {nights.length === 0 && <EmptyState>{m.empty}</EmptyState>}

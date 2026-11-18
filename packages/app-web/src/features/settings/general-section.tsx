@@ -18,7 +18,7 @@ export function GeneralSection() {
   return (
     <Card aria-labelledby="general-title" className="gap-6">
       <section className="flex flex-col gap-3">
-        <h2 id="general-title" className="text-lg font-semibold">
+        <h2 id="general-title" className="text-heading font-semibold">
           {m.themeTitle}
         </h2>
         <div
@@ -41,7 +41,7 @@ export function GeneralSection() {
 
       <section className="flex flex-col gap-3 border-t border-border pt-5">
         <div className="flex flex-col gap-1">
-          <h2 id="inactivity-title" className="text-lg font-semibold">
+          <h2 id="inactivity-title" className="text-heading font-semibold">
             {m.inactivityTitle}
           </h2>
           <p className="text-sm text-text-muted">{m.inactivityHint}</p>

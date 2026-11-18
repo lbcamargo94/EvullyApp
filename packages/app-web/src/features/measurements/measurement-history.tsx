@@ -35,7 +35,7 @@ export function MeasurementHistory({
 
   return (
     <Card aria-label={m.historyTitle}>
-      <h2 className="text-lg font-semibold">{m.historyTitle}</h2>
+      <h2 className="text-heading font-semibold">{m.historyTitle}</h2>
       {sessions.length === 0 ? (
         <EmptyState>{m.historyEmpty}</EmptyState>
       ) : (
@@ -43,7 +43,7 @@ export function MeasurementHistory({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[560px] border-collapse tabular-nums">
               <thead>
-                <tr className="border-b border-border text-[13px] text-text-muted">
+                <tr className="border-b border-border text-caption text-text-muted">
                   <th className="px-3 py-2.5 text-left font-semibold">{m.dateColumn}</th>
                   {types.map((t) => (
                     <th key={t.id} className="px-3 py-2.5 text-right font-semibold">
@@ -60,7 +60,7 @@ export function MeasurementHistory({
                     session.values.map((v) => [v.measurementTypeId, v.valueCm]),
                   );
                   return (
-                    <tr key={session.id} className="border-b border-border/60 text-[15px]">
+                    <tr key={session.id} className="border-b border-border/60 text-body">
                       <td className="px-3 py-3">{date}</td>
                       {types.map((t) => {
                         const value = byType.get(t.id);

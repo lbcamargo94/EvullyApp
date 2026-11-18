@@ -1,5 +1,5 @@
 import { useCurrentProfile, useProfile, useUpdateProfile } from '@evully/app-core';
-import { Card } from '@evully/ui';
+import { Card, ScreenHeader } from '@evully/ui';
 import { useNavigate } from 'react-router';
 import { profileMessages as m } from './messages.pt-BR';
 import { ProfileForm } from './profile-form';
@@ -15,7 +15,7 @@ export function ProfileEditScreen() {
 
   return (
     <Card className="max-w-2xl gap-6">
-      <h1 className="text-2xl font-semibold">{m.editTitle}</h1>
+      <ScreenHeader title={m.editTitle} />
       <ProfileForm
         defaultValues={{ name, birthDate, sex, heightCm }}
         submitLabel={m.save}

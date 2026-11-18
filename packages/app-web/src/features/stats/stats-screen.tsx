@@ -29,6 +29,7 @@ import type {
   SleepLogDto,
   WeightSummary,
 } from '@evully/contracts';
+import { ScreenHeader } from '@evully/ui';
 import { useState } from 'react';
 import { formatDuration } from '../sleep/messages.pt-BR';
 import { CardioChart, StepsChart, WorkoutCharts } from './activity-charts';
@@ -51,30 +52,32 @@ export function StatsScreen() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-[26px] font-semibold">{m.title}</h1>
-        <div
-          role="group"
-          aria-label={m.periodLabel}
-          className="flex gap-1 rounded-md bg-surface-muted p-1"
-        >
-          {STATS_PERIODS.filter((p) => p !== 'project' || projectStart).map((p) => (
-            <button
-              key={p}
-              type="button"
-              aria-pressed={period === p}
-              onClick={() => setChosen(p)}
-              className={
-                period === p
-                  ? 'min-h-8 rounded-sm bg-surface px-3 text-[13px] font-semibold shadow-sm'
-                  : 'min-h-8 rounded-sm px-3 text-[13px] font-semibold text-text-muted'
-              }
-            >
-              {m.periods[p]}
-            </button>
-          ))}
-        </div>
-      </div>
+      <ScreenHeader
+        title={m.title}
+        actions={
+          <div
+            role="group"
+            aria-label={m.periodLabel}
+            className="flex gap-1 rounded-md bg-surface-muted p-1"
+          >
+            {STATS_PERIODS.filter((p) => p !== 'project' || projectStart).map((p) => (
+              <button
+                key={p}
+                type="button"
+                aria-pressed={period === p}
+                onClick={() => setChosen(p)}
+                className={
+                  period === p
+                    ? 'min-h-8 rounded-sm bg-surface px-3 text-caption font-semibold shadow-sm'
+                    : 'min-h-8 rounded-sm px-3 text-caption font-semibold text-text-muted'
+                }
+              >
+                {m.periods[p]}
+              </button>
+            ))}
+          </div>
+        }
+      />
       <StatsCharts profileId={profileId} from={from} today={today} />
     </>
   );

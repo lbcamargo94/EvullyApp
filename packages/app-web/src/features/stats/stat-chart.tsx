@@ -122,7 +122,7 @@ export function StatChart({
     <Card aria-labelledby={id} className="min-w-0 gap-3">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div className="flex flex-col">
-          <h2 id={id} className="text-lg font-semibold">
+          <h2 id={id} className="text-heading font-semibold">
             {title}
           </h2>
           {hint && <p className="text-sm text-text-muted">{hint}</p>}
@@ -176,7 +176,7 @@ export function StatChart({
               </ComposedChart>
             </ResponsiveContainer>
           </div>
-          <figcaption className="flex flex-wrap gap-4 pt-3 text-[13px] text-text-muted">
+          <figcaption className="flex flex-wrap gap-4 pt-3 text-caption text-text-muted">
             {series.map((s) => (
               <span key={s.key} className="flex items-center gap-1.5">
                 <span

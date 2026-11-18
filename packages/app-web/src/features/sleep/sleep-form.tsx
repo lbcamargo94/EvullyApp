@@ -111,7 +111,7 @@ export function SleepForm({
 
   return (
     <Card aria-label={editing ? m.editTitle : m.formTitle} className="flex-[1_1_340px]">
-      <h2 className="text-lg font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
+      <h2 className="text-heading font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
       <form noValidate onSubmit={(e) => void submit(e)} className="flex flex-col gap-4">
         <TimeFields v={v} set={set} />
         <p className="text-sm" aria-live="polite">
