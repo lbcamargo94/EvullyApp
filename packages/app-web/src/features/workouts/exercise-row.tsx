@@ -1,6 +1,6 @@
 import { errorCode, useDeactivateExercise } from '@evully/app-core';
 import type { ExerciseDto } from '@evully/contracts';
-import { Button, ConfirmDialog } from '@evully/ui';
+import { Badge, Button, ConfirmDialog } from '@evully/ui';
 import { ChartLine, ChevronDown, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { ExerciseHistoryPanel } from './exercise-history-panel';
@@ -55,16 +55,13 @@ export function ExerciseRow({
           <span className="font-medium">{e.name}</span>
           {e.equipment && <span className="text-sm text-text-muted">· {e.equipment}</span>}
         </button>
-        <span
-          className={
-            e.isSystem
-              ? 'rounded-full bg-surface-muted px-2 py-0.5 text-xs text-text-muted'
-              : 'rounded-full bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand-soft-foreground'
-          }
+        <Badge
+          tone={e.isSystem ? 'neutral' : 'brand'}
+          size="sm"
           title={e.isSystem ? m.systemHint : undefined}
         >
           {e.isSystem ? m.system : m.own}
-        </span>
+        </Badge>
         <Button
           type="button"
           variant={showHistory ? 'secondary' : 'ghost'}

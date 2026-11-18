@@ -1,5 +1,5 @@
 import type { PrescriptionDto } from '@evully/contracts';
-import { Button, Input, NativeSelect } from '@evully/ui';
+import { Button, Checkbox, Input, NativeSelect } from '@evully/ui';
 import { useState, type FormEvent } from 'react';
 import { prescriptionMessages as m } from './messages.pt-BR';
 
@@ -115,12 +115,7 @@ export function PrescriptionForm({
           {num(reps ? 'maxReps' : 'maxSeconds', `${m.max} ${reps ? m.reps : m.seconds}`)}
         </span>
         <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            className="size-4 accent-brand"
-            checked={v.perSide}
-            onChange={(e) => set({ perSide: e.target.checked })}
-          />
+          <Checkbox checked={v.perSide} onChange={(e) => set({ perSide: e.target.checked })} />
           {m.perSide}
         </label>
       </div>

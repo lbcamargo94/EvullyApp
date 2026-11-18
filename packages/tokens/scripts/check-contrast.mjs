@@ -21,6 +21,10 @@ const pairs = [
   ['positive', 'positive-soft', TEXT],
   ['caution', 'caution-soft', TEXT],
   ['neutral', 'neutral-soft', TEXT],
+  ['danger', 'danger-soft', TEXT],
+  ['text', 'danger-soft', TEXT],
+  ['text', 'caution-soft', TEXT],
+  ['text', 'positive-soft', TEXT],
   // Focus ring and selected outlines.
   ...surfaces.map((bg) => ['brand', bg, UI]),
 ];

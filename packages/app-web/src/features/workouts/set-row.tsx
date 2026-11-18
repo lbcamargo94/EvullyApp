@@ -1,6 +1,6 @@
 import { errorCode, parseDecimal, useSessionMutation } from '@evully/app-core';
 import type { SetValuesDto, WorkoutSessionDto } from '@evully/contracts';
-import { Input } from '@evully/ui';
+import { Checkbox, Input } from '@evully/ui';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { sessionErrorByCode, sessionMessages as m } from './messages.pt-BR';
@@ -90,9 +90,8 @@ export function SetRow({
       {field(m.load, load, setLoad, 'w-24')}
       {field(reps ? m.reps : m.seconds, amount, setAmount, 'w-20')}
       {field(m.rir, rir, setRir, 'w-16')}
-      <input
-        type="checkbox"
-        className="size-7 accent-brand"
+      <Checkbox
+        className="size-7"
         aria-label={m.doneLabel(set.setNumber)}
         checked={completed}
         onChange={(e) => toggleCompleted(e.target.checked)}

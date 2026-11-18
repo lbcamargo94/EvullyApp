@@ -5,9 +5,11 @@ import {
   useRecoveryStatus,
   type EvullyClient,
 } from '@evully/app-core';
+import { TooltipProvider } from '@evully/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { lazy, Suspense, useState, type ComponentType, type ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
+import { CatalogContext } from './features/catalog/catalog-link';
 import { ProfileCreateScreen } from './features/profiles/profile-create-screen';
 import { RecoveryScreen } from './features/recovery/recovery-screen';
 import { ProfileEditScreen } from './features/profiles/profile-edit-screen';
@@ -59,9 +61,12 @@ const MeasurementScreen = lazy(() =>
 export function App({
   client,
   Router,
+  Catalog,
 }: {
   client: EvullyClient;
   Router: ComponentType<{ children: ReactNode }>;
+  /** Development builds pass the component catalog (DESIGN.md §8); releases never do. */
+  Catalog?: ComponentType | undefined;
 }) {
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: { queries: { retry: false } } }),
@@ -71,13 +76,17 @@ export function App({
       <EvullyClientProvider client={client}>
         <QueryClientProvider client={queryClient}>
           <CurrentProfileProvider>
-            <Router>
-              <RecoveryGate>
-                <HealthNoticeGate>
-                  <AppRoutes />
-                </HealthNoticeGate>
-              </RecoveryGate>
-            </Router>
+            <TooltipProvider>
+              <CatalogContext value={Catalog !== undefined}>
+                <Router>
+                  <RecoveryGate>
+                    <HealthNoticeGate>
+                      <AppRoutes Catalog={Catalog} />
+                    </HealthNoticeGate>
+                  </RecoveryGate>
+                </Router>
+              </CatalogContext>
+            </TooltipProvider>
           </CurrentProfileProvider>
         </QueryClientProvider>
       </EvullyClientProvider>
@@ -99,9 +108,19 @@ function HealthNoticeGate({ children }: { children: ReactNode }) {
   return settings.healthNoticeAcceptedAt ? children : <HealthNoticeScreen />;
 }
 
-function AppRoutes() {
+function AppRoutes({ Catalog }: { Catalog?: ComponentType | undefined }) {
   return (
     <Routes>
+      {Catalog && (
+        <Route
+          path="/dev/catalog"
+          element={
+            <Suspense fallback={null}>
+              <Catalog />
+            </Suspense>
+          }
+        />
+      )}
       <Route path="/profiles" element={<ProfileSelectScreen />} />
       <Route path="/profiles/new" element={<ProfileCreateScreen />} />
       <Route path="/onboarding" element={<QuestionnaireScreen />} />

@@ -14,7 +14,7 @@ import {
   type EvolutionSummary,
 } from '@evully/app-core';
 import type { Objective } from '@evully/contracts';
-import { Card, TrendBadge } from '@evully/ui';
+import { Card, TrendIndicator } from '@evully/ui';
 import type { ReactNode } from 'react';
 import { formatDuration } from '../sleep/messages.pt-BR';
 import { formatSignedCm, formatSignedRate, shellMessages as m } from './messages.pt-BR';
@@ -64,7 +64,9 @@ interface Line {
 
 function bodyLines(summary: EvolutionSummary, objective: Objective | null): Line[] {
   const lines: Line[] = [];
-  const badge = (tone: ChangeTone, text: string) => <TrendBadge tone={tone}>{text}</TrendBadge>;
+  const badge = (tone: ChangeTone, text: string) => (
+    <TrendIndicator tone={tone}>{text}</TrendIndicator>
+  );
   if (summary.weightRatePerWeek !== null) {
     const rate = summary.weightRatePerWeek;
     lines.push({

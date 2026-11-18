@@ -2,7 +2,6 @@ import { errorCode, usePlanMutation } from '@evully/app-core';
 import type { PrescriptionDto, WorkoutPlanDto } from '@evully/contracts';
 import { ChevronDown, ChevronUp, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
-import { IconButton } from './icon-button';
 import {
   formatPrescription,
   planErrorByCode,
@@ -10,6 +9,7 @@ import {
   prescriptionMessages,
 } from './messages.pt-BR';
 import { PrescriptionForm } from './prescription-form';
+import { IconButton } from '@evully/ui';
 
 type Item = WorkoutPlanDto['days'][number]['exercises'][number];
 const errorText = (e: unknown) => planErrorByCode[errorCode(e) ?? ''] ?? m.genericError;

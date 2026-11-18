@@ -1,6 +1,6 @@
 import { useMeasurementCatalog, useSetTrackedMeasurements } from '@evully/app-core';
 import type { MeasurementTypeDto } from '@evully/contracts';
-import { Button, Card } from '@evully/ui';
+import { Button, Card, Checkbox } from '@evully/ui';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { measurementNames } from '../tracking/messages.pt-BR';
@@ -125,13 +125,7 @@ function Check({
   const id = `measure-${type.id}`;
   return (
     <label htmlFor={id} className="flex min-h-9 flex-1 items-center gap-3">
-      <input
-        id={id}
-        type="checkbox"
-        className="size-5 accent-brand"
-        checked={checked}
-        onChange={() => onToggle(type.id)}
-      />
+      <Checkbox id={id} checked={checked} onChange={() => onToggle(type.id)} />
       {nameOf(type)}
     </label>
   );

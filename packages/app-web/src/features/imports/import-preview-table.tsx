@@ -1,21 +1,25 @@
 import { formatCm, formatKg, formatLocalDate } from '@evully/app-core';
 import type { ImportPreview, ImportPreviewRow } from '@evully/contracts';
-import { Card } from '@evully/ui';
+import { Badge, Card, Table, TableCell, TableHeader, TableRow } from '@evully/ui';
 import { importErrorByCode, importMessages as m } from './messages.pt-BR';
 
-const badge = 'rounded-full px-2 py-0.5 text-xs font-semibold whitespace-nowrap';
-
 function StatusBadge({ row }: { row: ImportPreviewRow }) {
-  if (row.status === 'ready') {
-    return <span className={`${badge} bg-positive-soft text-positive`}>{m.status.ready}</span>;
-  }
-  if (row.status === 'duplicate') {
-    return <span className={`${badge} bg-neutral-soft text-neutral`}>{m.status.duplicate}</span>;
-  }
+  if (row.status === 'ready')
+    return (
+      <Badge tone="positive" size="sm" className="whitespace-nowrap">
+        {m.status.ready}
+      </Badge>
+    );
+  if (row.status === 'duplicate')
+    return (
+      <Badge tone="neutral" size="sm" className="whitespace-nowrap">
+        {m.status.duplicate}
+      </Badge>
+    );
   return (
-    <span className={`${badge} bg-caution-soft text-caution`}>
+    <Badge tone="caution" size="sm" className="whitespace-nowrap">
       {importErrorByCode[row.code ?? ''] ?? row.code}
-    </span>
+    </Badge>
   );
 }
 
@@ -29,40 +33,34 @@ export function ImportPreviewTable({ preview }: { preview: ImportPreview }) {
   return (
     <Card aria-label={m.previewTitle}>
       <h2 className="text-heading font-semibold">{m.previewTitle}</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[600px] border-collapse text-left tabular-nums">
-          <thead>
-            <tr className="border-b border-border text-caption text-text-muted">
-              <th className="px-3 py-2.5 font-semibold">{m.columns.line}</th>
-              <th className="px-3 py-2.5 font-semibold">{m.columns.date}</th>
+      <Table className="min-w-[600px]">
+        <thead>
+          <tr>
+            <TableHeader>{m.columns.line}</TableHeader>
+            <TableHeader>{m.columns.date}</TableHeader>
+            {preview.kind === 'weights' && <TableHeader>{m.columns.time}</TableHeader>}
+            <TableHeader>{m.columns.value}</TableHeader>
+            <TableHeader>{m.columns.status}</TableHeader>
+          </tr>
+        </thead>
+        <tbody>
+          {preview.rows.map((row) => (
+            <TableRow key={row.line}>
+              <TableCell className="text-text-muted">{row.line}</TableCell>
+              <TableCell>{row.measuredOn ? formatLocalDate(row.measuredOn) : '—'}</TableCell>
               {preview.kind === 'weights' && (
-                <th className="px-3 py-2.5 font-semibold">{m.columns.time}</th>
+                <TableCell className="text-text-muted">
+                  {row.time ?? (row.status === 'error' ? '—' : m.noTime)}
+                </TableCell>
               )}
-              <th className="px-3 py-2.5 font-semibold">{m.columns.value}</th>
-              <th className="px-3 py-2.5 font-semibold">{m.columns.status}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {preview.rows.map((row) => (
-              <tr key={row.line} className="border-b border-border/60 text-body">
-                <td className="px-3 py-3 text-text-muted">{row.line}</td>
-                <td className="px-3 py-3">
-                  {row.measuredOn ? formatLocalDate(row.measuredOn) : '—'}
-                </td>
-                {preview.kind === 'weights' && (
-                  <td className="px-3 py-3 text-text-muted">
-                    {row.time ?? (row.status === 'error' ? '—' : m.noTime)}
-                  </td>
-                )}
-                <td className="px-3 py-3">{row.status === 'error' ? '—' : rowValues(row)}</td>
-                <td className="px-3 py-3">
-                  <StatusBadge row={row} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              <TableCell>{row.status === 'error' ? '—' : rowValues(row)}</TableCell>
+              <TableCell>
+                <StatusBadge row={row} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </tbody>
+      </Table>
       <p className="text-sm text-text-muted">
         {m.shownRows(preview.rows.length, total)} {preview.counts.errors > 0 && m.fixHint}
       </p>

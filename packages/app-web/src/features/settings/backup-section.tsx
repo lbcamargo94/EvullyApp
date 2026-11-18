@@ -4,7 +4,7 @@ import {
   useCreateManualBackup,
   useSetAutomaticBackup,
 } from '@evully/app-core';
-import { Button, Card } from '@evully/ui';
+import { Button, Card, Switch } from '@evully/ui';
 import { useState } from 'react';
 import { settingsMessages as m } from './messages.pt-BR';
 import { RestorePanel } from './restore-panel';
@@ -67,10 +67,8 @@ export function BackupSection() {
             {m.defaultFolder(status.defaultDirectory)}
           </span>
         </label>
-        <input
+        <Switch
           id="backup-automatic"
-          type="checkbox"
-          className="size-5.5 accent-brand"
           checked={automatic}
           onChange={(e) => toggleAutomatic(e.target.checked)}
         />

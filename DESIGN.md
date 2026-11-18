@@ -128,13 +128,30 @@ Regras:
 | `ScreenHeader` | Topo de cada tela: título (o único `<h1>`), descrição curta opcional e ações da tela (`packages/ui`). |
 | `StatCard` | Indicador do painel: rótulo, valor principal, variação e "dados insuficientes". |
 | `TrendIndicator` | Seta + valor com sinal + cor pela direção (`positive`/`caution`/`neutral`). Nunca só cor. |
-| `WeightChart` | Peso do dia, média de 7 dias e marcadores de etiquetas. |
-| `MeasurementChart` | Uma medida ao longo do tempo, com seletor. |
-| `MeasurementField` | Campo em cm com dica "como medir". |
-| `ProfileAvatar` | Avatar e nome; nunca exibe dados pessoais. |
-| `QuestionnaireStep` | Passo do questionário com progresso, voltar e pular. |
+| `WeightChart` | Peso do dia, média de 7 dias e marcadores de etiquetas (`app-web`, `weights/weight-chart.tsx`). |
+| `MeasurementChart` | Uma medida ao longo do tempo, com seletor (`app-web`, `measurements/measurement-chart.tsx`). |
+| `MeasurementField` | Campo em cm com dica "como medir" (hoje dentro de `MeasurementForm`, `app-web`). |
+| `ProfileAvatar` | Avatar e nome; nunca exibe dados pessoais. No código: `Avatar` (`packages/ui`), só com a inicial. |
+| `QuestionnaireStep` | Passo do questionário com progresso, voltar e pular (`app-web`, `tracking/questionnaire-steps.tsx`: `StepHeading` e um componente por passo). |
 | `EmptyState` | Lista, gráfico ou seção vazia: texto explicativo em borda tracejada e ação opcional (`packages/ui`). |
-| `ImportPreview` | Pré-visualização de CSV com linhas válidas, erros e duplicadas. |
+| `ImportPreview` | Pré-visualização de CSV com linhas válidas, erros e duplicadas (`app-web`, `ImportPreviewTable`). |
+
+`StatCard` e `TrendIndicator` ficam em `packages/ui`.
+
+### 4.1 Componentes base (`packages/ui`)
+
+| Componente | Uso |
+|---|---|
+| `Button` | Variantes `primary`, `secondary`, `ghost` e `danger`; `busy` desabilita e mostra um indicador de carregando. |
+| `IconButton` | Botão só com ícone; o rótulo é o nome acessível e aparece como `Tooltip`. |
+| `Input`, `NativeSelect`, `Field` | Campo com rótulo, dica e erro ligados por `id` para leitores de tela. |
+| `Checkbox`, `Switch` | `<input type="checkbox">` nativo estilizado; o `Switch` tem `role="switch"` e serve para ajustes que valem na hora. |
+| `ChoiceCard` | Opção grande do questionário (rádio ou checkbox). |
+| `Badge` | Rótulo curto em `brand`, `positive`, `caution`, `neutral` ou `danger`, tamanhos `sm` e `md`. |
+| `Alert` | Aviso no fluxo da página (sem toast): `info` e `success` com `role="status"`, `caution` e `danger` com `role="alert"`. |
+| `Table`, `TableRow`, `TableHeader`, `TableCell` | Tabela de dados dentro de um `Card`, com rolagem lateral. |
+| `Tabs`, `Dialog`/`ConfirmDialog`, `DropdownMenu`, `Tooltip` | Primitivas Radix com os tokens. |
+| `ProgressBar`, `Skeleton`, `EmptyState` | Progresso, carregando e vazio; `Skeleton` para de piscar com `prefers-reduced-motion`. |
 
 Cada componente define seus estados: **padrão, carregando, vazio, erro e
 dados insuficientes**, quando aplicáveis.
@@ -201,3 +218,14 @@ desenvolvimento ("catálogo"), disponível apenas em modo de
 desenvolvimento, que mostra cada componente em todos os estados e nos
 dois temas. Ela serve para revisão visual e para testes manuais de
 acessibilidade.
+
+- Tela: `packages/app-web/src/features/catalog/catalog-screen.tsx`
+  (export `@evully/app-web/catalog`), rota `/dev/catalog`. Em `npm run dev`
+  aparece o link "Catálogo de componentes (dev)" no rodapé do menu.
+- O renderer do desktop só passa o catálogo ao `App` quando
+  `import.meta.env.DEV` é verdadeiro; no build de produção o import é
+  removido e o catálogo não vai para o instalador.
+- Mostra tokens (cores, tipografia, raios, elevação, ícones), os
+  componentes base da §4.1 e os componentes Evully, com alternância
+  Sistema/Claro/Escuro. Os textos de exemplo são ilustrativos.
+- Componente novo em `packages/ui` entra no catálogo no mesmo PR.

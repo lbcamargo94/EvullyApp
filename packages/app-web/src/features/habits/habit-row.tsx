@@ -1,6 +1,6 @@
 import { addDays, errorCode, parseDecimal, parseLocalDate, useLogHabit } from '@evully/app-core';
 import type { HabitDay } from '@evully/contracts';
-import { Input } from '@evully/ui';
+import { Checkbox, Input } from '@evully/ui';
 import { Check, X } from 'lucide-react';
 import { useState } from 'react';
 import {
@@ -75,9 +75,8 @@ export function HabitRow({
           )}
         </div>
         {h.type === 'boolean' ? (
-          <input
-            type="checkbox"
-            className="size-7 accent-brand"
+          <Checkbox
+            className="size-7"
             aria-label={h.name}
             checked={done}
             onChange={(e) => toggleDone(e.target.checked)}

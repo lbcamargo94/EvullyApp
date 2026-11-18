@@ -1,6 +1,6 @@
 import { changeTone, formatChange, formatKg, formatLocalDate } from '@evully/app-core';
 import type { WeightDisplay, WeightSummary } from '@evully/contracts';
-import { StatCard, TrendBadge } from '@evully/ui';
+import { StatCard, TrendIndicator } from '@evully/ui';
 import { weightMessages as m } from './messages.pt-BR';
 
 /**
@@ -40,9 +40,9 @@ export function WeightSummaryCard({
         change !== null &&
         summary.start && (
           <>
-            <TrendBadge tone={changeTone(change, 'weight', summary.objective)}>
+            <TrendIndicator tone={changeTone(change, 'weight', summary.objective)}>
               {formatChange(change, 'kg')}
-            </TrendBadge>
+            </TrendIndicator>
             <span className="text-sm text-text-muted">
               {m.sinceStart} ({formatKg(summary.start.weightKg)})
             </span>

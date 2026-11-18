@@ -1,6 +1,6 @@
 import { changeTone, formatChange, formatCm } from '@evully/app-core';
 import type { MeasurementSummary } from '@evully/contracts';
-import { StatCard, TrendBadge } from '@evully/ui';
+import { StatCard, TrendIndicator } from '@evully/ui';
 import { measurementMessages as m } from './messages.pt-BR';
 
 /** Dashboard shows up to 3 measurements, first in the profile's order (README §8.5). */
@@ -16,9 +16,9 @@ export function MeasurementCards({ summary }: { summary: MeasurementSummary }) {
       badge={
         item.change !== null && (
           <>
-            <TrendBadge tone={changeTone(item.change, item.bodyRegion, summary.objective)}>
+            <TrendIndicator tone={changeTone(item.change, item.bodyRegion, summary.objective)}>
               {formatChange(item.change, 'cm')}
-            </TrendBadge>
+            </TrendIndicator>
             <span className="text-sm text-text-muted">{m.sinceStart}</span>
           </>
         )

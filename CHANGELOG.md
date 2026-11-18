@@ -6,6 +6,21 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Design system (V1.1, fase 2)
+
+- Novos componentes em `packages/ui`: `Badge`, `Alert`, `Checkbox`,
+  `Switch`, `Table`, `Skeleton`, `Tooltip` e `IconButton` (com tooltip);
+  `Button` ganhou o estado `busy`. `TrendBadge` passa a se chamar
+  `TrendIndicator`, como no DESIGN.md.
+- As telas usam os componentes novos: avisos de atualização, de backup e de
+  erro; tabelas de histórico e da prévia de importação; caixas de seleção
+  de hábitos, refeições, séries e medidas; o backup automático virou um
+  interruptor.
+- Novo tom `danger-soft` nos tokens, com contraste verificado.
+- Catálogo de componentes interno (`/dev/catalog`), só em desenvolvimento,
+  com todos os tokens e componentes nos dois temas.
+- Dependência nova: `@radix-ui/react-tooltip` (MIT).
+
 ### Design system (V1.1, fase 1)
 
 - Tipografia, sombras e larguras de layout viraram tokens

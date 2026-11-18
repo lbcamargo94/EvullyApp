@@ -6,7 +6,7 @@ import {
   useUpdateFoodLogQuantity,
 } from '@evully/app-core';
 import type { FoodLogDto } from '@evully/contracts';
-import { Button, Input } from '@evully/ui';
+import { Button, Checkbox, Input } from '@evully/ui';
 import { X } from 'lucide-react';
 import { useState, type KeyboardEvent } from 'react';
 import { dietMessages as m, foodLogErrorByCode, formatNumber, unitLabels } from './messages.pt-BR';
@@ -61,9 +61,7 @@ export function FoodLogRow({
   return (
     <li className="flex flex-col gap-1 border-t border-border py-2">
       <div className="flex flex-wrap items-center gap-3">
-        <input
-          type="checkbox"
-          className="size-5 accent-brand"
+        <Checkbox
           aria-label={m.consumedItem(log.foodName)}
           checked={consumed}
           disabled={!canConsume}
