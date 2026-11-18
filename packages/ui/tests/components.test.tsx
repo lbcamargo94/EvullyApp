@@ -8,6 +8,7 @@ import {
   IconButton,
   ScreenHeader,
   Skeleton,
+  StatCard,
   Switch,
   Table,
   TableHeader,
@@ -81,5 +82,13 @@ describe('ui components (DESIGN.md §4, §6)', () => {
       </Table>,
     );
     expect(out).toContain('<th scope="col"');
+  });
+
+  it('StatCard shows insufficient data as a muted heading, not at metric size', () => {
+    const out = html(<StatCard label="Peso" value="Dados insuficientes" insufficient />);
+    expect(out).toContain('text-heading');
+    expect(out).toContain('text-text-muted');
+    expect(out).not.toContain('text-display');
+    expect(html(<StatCard label="Peso" value="80 kg" />)).toContain('text-display');
   });
 });

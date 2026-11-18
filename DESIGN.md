@@ -126,7 +126,7 @@ Regras:
 | Componente | Função |
 |---|---|
 | `ScreenHeader` | Topo de cada tela: título (o único `<h1>`), descrição curta opcional e ações da tela (`packages/ui`). |
-| `StatCard` | Indicador do painel: rótulo, valor principal, variação e "dados insuficientes". |
+| `StatCard` | Indicador do painel: rótulo, valor principal, variação e "dados insuficientes" (`insufficient`: em tamanho de título e cor secundária, nunca em tamanho de métrica). |
 | `TrendIndicator` | Seta + valor com sinal + cor pela direção (`positive`/`caution`/`neutral`). Nunca só cor. |
 | `WeightChart` | Peso do dia, média de 7 dias e marcadores de etiquetas (`app-web`, `weights/weight-chart.tsx`). |
 | `MeasurementChart` | Uma medida ao longo do tempo, com seletor (`app-web`, `measurements/measurement-chart.tsx`). |
@@ -170,6 +170,16 @@ dados insuficientes**, quando aplicáveis.
 - Ações principais ficam ao alcance: no celular, o registro de peso é
   acessível com um toque a partir da tela inicial.
 
+### 5.1 Ordem do Dashboard
+
+Cabeçalho (saudação, data de hoje e os atalhos Registrar medidas/peso) →
+indicadores (`StatCard` de peso e até 3 medidas) → gráfico de peso ao
+lado do card "Hoje" (uma coluna em telas estreitas) → "Próximo treino" →
+projeto → "Últimos 14 dias" → hábitos, cardio e sono. Cada bloco só
+aparece para módulos em uso e com dados; enquanto o perfil carrega, um
+`Skeleton` no formato dos indicadores. O gráfico segue a escolha de
+exibição do peso e some quando ela é "ocultar".
+
 ## 6. Feedback, movimento e acessibilidade
 
 - **Confirmação no próprio formulário**, com `role="status"` ("Pesagem
@@ -206,7 +216,9 @@ dados insuficientes**, quando aplicáveis.
 - Recharts, com cores vindas dos tokens nos dois temas.
 - Peso do dia em pontos discretos (`neutral`); média de 7 dias em linha
   contínua (`brand`). A tendência é o elemento de maior destaque.
-- Eixos com formatação `pt-BR`, grade suave e tooltip com data e valor.
+- Eixos com formatação `pt-BR` (até uma casa decimal, para valores
+  próximos não repetirem o mesmo rótulo), grade suave e tooltip com data
+  e valor.
 - Sem gradientes ou efeitos que dificultem a leitura.
 - Todo gráfico tem `role="img"` e uma descrição em texto com a quantidade
   de pontos e o primeiro e o último valor de cada série.

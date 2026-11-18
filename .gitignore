@@ -17,3 +17,6 @@ Thumbs.db
 
 # Local knowledge graph (graphify): cache and absolute local paths
 graphify-out/
+
+# electron-vite temporary bundled config (left behind by an interrupted build)
+*.config.[0-9]*.mjs
