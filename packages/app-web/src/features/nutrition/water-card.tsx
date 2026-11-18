@@ -43,7 +43,7 @@ export function WaterCard({
   return (
     <Card aria-labelledby="water-title" className="gap-3">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 id="water-title" className="text-base font-semibold">
+        <h3 id="water-title" className="text-heading font-semibold">
           {m.waterTitle}
         </h3>
         <span className="font-semibold tabular-nums">
@@ -81,12 +81,12 @@ export function WaterCard({
             onChange={(e) => setOther(e.target.value)}
             className="min-h-10 w-24"
           />
-          <Button type="submit" variant="ghost" disabled={add.isPending}>
+          <Button type="submit" variant="secondary" disabled={add.isPending}>
             {m.waterAdd}
           </Button>
         </form>
       ) : (
-        <p className="text-sm text-text-muted">{m.waterFuture}</p>
+        <p className="text-caption text-text-muted">{m.waterFuture}</p>
       )}
       {day.water.logs.length > 0 && (
         <ul className="flex flex-wrap gap-2">
@@ -96,7 +96,7 @@ export function WaterCard({
             return (
               <li
                 key={w.id}
-                className="flex items-center gap-1 rounded-full bg-surface-muted py-1 pr-1 pl-3 text-sm tabular-nums"
+                className="flex items-center gap-1 rounded-full bg-surface-muted py-1 pr-1 pl-3 text-body tabular-nums"
               >
                 {m.waterEntry(ml, at)}
                 <button
@@ -114,7 +114,7 @@ export function WaterCard({
         </ul>
       )}
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

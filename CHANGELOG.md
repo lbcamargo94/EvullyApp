@@ -6,6 +6,19 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Design system (V1.1, fase 4 — Treinos e Nutrição)
+
+- Treinos e Nutrição usam a escala de tipografia (`caption`, `body`,
+  `heading`) no lugar de `text-sm`, `text-xs` e `text-base`.
+- Treinar ocupa a largura de conteúdo como as outras abas; dias e planos
+  em até 3 colunas.
+- Formulário de exercício com os campos alinhados pela base.
+- Seletor de dia da Nutrição mostra a data por extenso em Hoje, Ontem e
+  Amanhã; "Adicionar" água é um botão secundário.
+- Ícone do Evully na janela também em desenvolvimento (antes, o do
+  Electron).
+- Seed de demonstração responde os questionários de Treinos e Nutrição.
+
 ### Design system (V1.1, fase 3)
 
 - Dashboard reorganizado (DESIGN.md §5.1): data de hoje no cabeçalho,

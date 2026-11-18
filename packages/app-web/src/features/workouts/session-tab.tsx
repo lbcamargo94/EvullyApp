@@ -40,17 +40,19 @@ function StartSession({ profileId }: { profileId: string }) {
   };
 
   return (
-    <Card aria-labelledby="start-title" className="max-w-3xl gap-4">
+    <Card aria-labelledby="start-title" className="gap-4">
       <div className="flex flex-col gap-1">
         <h2 id="start-title" className="text-heading font-semibold">
           {m.startTitle}
         </h2>
-        <p className="text-sm text-text-muted">{active.length ? m.startHint : m.noPlans}</p>
+        <p className="text-caption text-text-muted">{active.length ? m.startHint : m.noPlans}</p>
       </div>
       {active.map((plan) => (
         <section key={plan.id} aria-label={plan.name} className="flex flex-col gap-2">
-          <h3 className="text-sm font-semibold text-text-muted uppercase">{plan.name}</h3>
-          <div className="grid gap-2 sm:grid-cols-2">
+          <h3 className="text-caption font-semibold tracking-wider text-text-muted uppercase">
+            {plan.name}
+          </h3>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {plan.days.map((day) => {
               const isToday = day.weekday === weekday;
               return (
@@ -66,7 +68,7 @@ function StartSession({ profileId }: { profileId: string }) {
                   }
                 >
                   <span className="font-semibold">{day.name}</span>
-                  <span className="text-sm text-text-muted">
+                  <span className="text-caption text-text-muted">
                     {day.weekday !== null && weekdayLabels[day.weekday - 1]}
                     {isToday && ` · ${m.today}`}
                     {` · ${day.exercises.length} ex.`}
@@ -87,7 +89,7 @@ function StartSession({ profileId }: { profileId: string }) {
         {m.free}
       </Button>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

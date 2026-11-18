@@ -73,7 +73,7 @@ function Picker({
   if (foods.length === 0) {
     return (
       <div className="flex flex-wrap items-center gap-3">
-        <p className="text-sm text-text-muted">{m.noFoods}</p>
+        <p className="text-caption text-text-muted">{m.noFoods}</p>
         <Button type="button" variant="ghost" onClick={onClose}>
           {m.cancel}
         </Button>
@@ -97,7 +97,7 @@ function Picker({
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
           />
-          <span className="text-sm text-text-muted">{unitLabels[food.referenceUnit]}</span>
+          <span className="text-caption text-text-muted">{unitLabels[food.referenceUnit]}</span>
           <Button type="submit" className="min-h-9" disabled={add.isPending}>
             {m.add}
           </Button>
@@ -116,7 +116,7 @@ function Picker({
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Escape' && onClose()}
           />
-          {matches.length === 0 && <p className="text-sm text-text-muted">{m.noMatch}</p>}
+          {matches.length === 0 && <p className="text-caption text-text-muted">{m.noMatch}</p>}
           <ul className="flex flex-col">
             {matches.map((f) => (
               <li key={f.id}>
@@ -137,7 +137,7 @@ function Picker({
         </>
       )}
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

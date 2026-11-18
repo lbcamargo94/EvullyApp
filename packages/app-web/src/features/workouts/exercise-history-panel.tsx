@@ -69,9 +69,9 @@ export function ExerciseHistoryPanel({
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string | undefined }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <dt className="text-xs text-text-muted">{label}</dt>
+      <dt className="text-caption text-text-muted">{label}</dt>
       <dd className="font-semibold tabular-nums">{value}</dd>
-      {hint && <dd className="text-xs text-text-muted">{hint}</dd>}
+      {hint && <dd className="text-caption text-text-muted">{hint}</dd>}
     </div>
   );
 }
@@ -91,7 +91,7 @@ function LoadChart({ history }: { history: ExerciseHistoryDto }) {
   if (data.length < 2) return null;
   return (
     <figure className="m-0 flex flex-col gap-1">
-      <figcaption className="text-sm font-semibold">{m.chartTitle}</figcaption>
+      <figcaption className="text-body font-semibold">{m.chartTitle}</figcaption>
       <div role="img" aria-label={loadChartAlt(data)} className="h-48">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
@@ -139,8 +139,8 @@ function LoadChart({ history }: { history: ExerciseHistoryDto }) {
 function SessionList({ history }: { history: ExerciseHistoryDto }) {
   return (
     <div className="flex flex-col gap-1">
-      <h4 className="text-sm font-semibold">{m.sessions}</h4>
-      <ul className="flex flex-col text-sm">
+      <h4 className="text-body font-semibold">{m.sessions}</h4>
+      <ul className="flex flex-col text-body">
         {history.sessions.map((s) => (
           <li
             key={s.sessionId}
@@ -206,8 +206,8 @@ function IncrementForm({
       onSubmit={(e) => void submit(e)}
       className="flex flex-col gap-1 border-t border-border pt-3"
     >
-      <span className="text-sm font-semibold">{m.incrementTitle}</span>
-      <span className="text-xs text-text-muted">{m.incrementHint}</span>
+      <span className="text-body font-semibold">{m.incrementTitle}</span>
+      <span className="text-caption text-text-muted">{m.incrementHint}</span>
       <div className="flex flex-wrap items-center gap-2">
         <Input
           inputMode="decimal"
@@ -217,14 +217,14 @@ function IncrementForm({
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
-        <span className="text-sm text-text-muted">kg</span>
+        <span className="text-caption text-text-muted">kg</span>
         <Button type="submit" variant="secondary" className="min-h-9" disabled={save.isPending}>
           {m.incrementSave}
         </Button>
         {message && (
           <span
             role={message.ok ? 'status' : 'alert'}
-            className={message.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+            className={message.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
           >
             {message.text}
           </span>

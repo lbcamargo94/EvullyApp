@@ -39,10 +39,10 @@ export function MealSection({
   return (
     <Card aria-label={title} className="gap-3">
       <div className="flex flex-wrap items-center gap-2">
-        <h3 className="flex-1 text-base font-semibold">
+        <h3 className="flex-1 text-heading font-semibold">
           {title}
           {logs.length > 0 && (
-            <span className="ml-2 text-sm font-normal text-text-muted tabular-nums">
+            <span className="ml-2 text-caption font-normal text-text-muted tabular-nums">
               {m.kcal(formatNumber(Math.round(kcal)))}
             </span>
           )}
@@ -67,7 +67,7 @@ export function MealSection({
           onMessage={setMessage}
         />
       </div>
-      {logs.length === 0 && <p className="text-sm text-text-muted">{m.emptyMeal}</p>}
+      {logs.length === 0 && <p className="text-caption text-text-muted">{m.emptyMeal}</p>}
       {logs.length > 0 && (
         <ul className="flex flex-col">
           {logs.map((log) => (
@@ -78,7 +78,7 @@ export function MealSection({
       {message && (
         <p
           role={message.ok ? 'status' : 'alert'}
-          className={message.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+          className={message.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
         >
           {message.text}
         </p>

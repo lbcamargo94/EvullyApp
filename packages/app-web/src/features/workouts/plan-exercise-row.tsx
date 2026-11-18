@@ -56,10 +56,10 @@ export function PlanExerciseRow({
           <span className="font-medium">
             {item.exerciseName}
             {!item.exerciseActive && (
-              <span className="ml-2 text-xs font-normal text-text-muted">({m.inactive})</span>
+              <span className="ml-2 text-caption font-normal text-text-muted">({m.inactive})</span>
             )}
           </span>
-          <span className="text-sm text-text-muted tabular-nums">
+          <span className="text-caption text-text-muted tabular-nums">
             {formatPrescription(item.prescription)}
             {item.prescription.notes && ` · ${item.prescription.notes}`}
           </span>
@@ -104,7 +104,7 @@ export function PlanExerciseRow({
         />
       )}
       {!editing && error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

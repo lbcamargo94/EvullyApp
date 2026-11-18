@@ -53,7 +53,7 @@ export function ExerciseRow({
             className={open ? 'size-4 rotate-180 text-text-muted' : 'size-4 text-text-muted'}
           />
           <span className="font-medium">{e.name}</span>
-          {e.equipment && <span className="text-sm text-text-muted">· {e.equipment}</span>}
+          {e.equipment && <span className="text-caption text-text-muted">· {e.equipment}</span>}
         </button>
         <Badge
           tone={e.isSystem ? 'neutral' : 'brand'}
@@ -98,7 +98,7 @@ export function ExerciseRow({
       {open && <Details exercise={e} />}
       {showHistory && <ExerciseHistoryPanel profileId={profileId} exerciseId={e.id} />}
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}
@@ -119,7 +119,7 @@ export function ExerciseRow({
 
 function Details({ exercise: e }: { exercise: ExerciseDto }) {
   return (
-    <div className="ml-6 flex flex-col gap-2 rounded-md bg-surface-muted p-3 text-sm">
+    <div className="ml-6 flex flex-col gap-2 rounded-md bg-surface-muted p-3 text-body">
       {e.secondaryMuscles.length > 0 && (
         <p>
           <span className="text-text-muted">{m.secondary}: </span>

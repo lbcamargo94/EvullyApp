@@ -30,9 +30,9 @@ export function FavoritesList({ profileId }: { profileId: string }) {
       {templates.map((t) => (
         <Card key={t.id} aria-label={t.name} className="gap-2">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-base font-semibold">
+            <h3 className="text-heading font-semibold">
               {t.name}
-              <span className="ml-2 text-sm font-normal text-text-muted tabular-nums">
+              <span className="ml-2 text-caption font-normal text-text-muted tabular-nums">
                 {m.kcalApprox(formatNumber(Math.round(t.caloriesKcal)))}
               </span>
             </h3>
@@ -46,7 +46,7 @@ export function FavoritesList({ profileId }: { profileId: string }) {
               <Trash2 aria-hidden="true" className="size-4" />
             </Button>
           </div>
-          <p className="text-sm text-text-muted">
+          <p className="text-caption text-text-muted">
             {t.items
               .map((i) => `${i.foodName} ${formatNumber(i.quantity)} ${unitLabels[i.unit]}`)
               .join(' · ')}
@@ -54,7 +54,7 @@ export function FavoritesList({ profileId }: { profileId: string }) {
         </Card>
       ))}
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

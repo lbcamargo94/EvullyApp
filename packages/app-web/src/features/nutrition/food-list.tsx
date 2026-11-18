@@ -43,7 +43,7 @@ export function FoodList({ foods, onEdit }: { foods: FoodDto[]; onEdit: (food: F
         <h2 id="food-list-title" className="text-heading font-semibold">
           {m.listTitle}
         </h2>
-        <span className="text-sm text-text-muted">{m.count(foods.length)}</span>
+        <span className="text-caption text-text-muted">{m.count(foods.length)}</span>
       </div>
       <Input
         type="search"
@@ -54,7 +54,7 @@ export function FoodList({ foods, onEdit }: { foods: FoodDto[]; onEdit: (food: F
       />
       {foods.length === 0 && <EmptyState>{m.empty}</EmptyState>}
       {foods.length > 0 && shown.length === 0 && (
-        <p className="text-sm text-text-muted">{m.noResults}</p>
+        <p className="text-caption text-text-muted">{m.noResults}</p>
       )}
       <ul className="flex flex-col">
         {shown.map((f) => (
@@ -64,7 +64,7 @@ export function FoodList({ foods, onEdit }: { foods: FoodDto[]; onEdit: (food: F
                 {f.name}
                 {f.brand && <span className="font-normal text-text-muted"> · {f.brand}</span>}
               </span>
-              <span className="text-sm text-text-muted tabular-nums">{describe(f)}</span>
+              <span className="text-caption text-text-muted tabular-nums">{describe(f)}</span>
             </div>
             <Button
               type="button"
@@ -88,7 +88,7 @@ export function FoodList({ foods, onEdit }: { foods: FoodDto[]; onEdit: (food: F
         ))}
       </ul>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

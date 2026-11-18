@@ -43,8 +43,10 @@ function PlanList({
 }) {
   return (
     <section aria-label={title} className="flex flex-col gap-3">
-      <h2 className="text-sm font-semibold text-text-muted uppercase">{title}</h2>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <h2 className="text-caption font-semibold tracking-wider text-text-muted uppercase">
+        {title}
+      </h2>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {plans.map((p) => {
           const exercises = p.days.reduce((total, d) => total + d.exercises.length, 0);
           return (
@@ -53,10 +55,12 @@ function PlanList({
               type="button"
               aria-label={m.open(p.name)}
               onClick={() => onOpen(p.id)}
-              className="flex flex-col items-start gap-1 rounded-lg border border-border bg-surface p-5 text-left hover:border-brand/60 focus-visible:outline-2 focus-visible:outline-brand"
+              className="flex flex-col items-start gap-1 rounded-lg border border-border bg-surface p-5 text-left shadow-card hover:border-brand/60 focus-visible:outline-2 focus-visible:outline-brand"
             >
               <span className="text-heading font-semibold">{p.name}</span>
-              <span className="text-sm text-text-muted">{m.summary(p.days.length, exercises)}</span>
+              <span className="text-caption text-text-muted">
+                {m.summary(p.days.length, exercises)}
+              </span>
             </button>
           );
         })}
@@ -81,7 +85,7 @@ function NewPlan({ profileId, onCreated }: { profileId: string; onCreated: (id: 
   };
   return (
     <Card aria-label={m.newPlan} className="flex-[1_1_300px] gap-3">
-      <h2 className="text-base font-semibold">{m.newPlan}</h2>
+      <h2 className="text-heading font-semibold">{m.newPlan}</h2>
       <form onSubmit={(e) => void submit(e)} className="flex gap-2">
         <Input
           aria-label={m.planName}
@@ -95,7 +99,7 @@ function NewPlan({ profileId, onCreated }: { profileId: string; onCreated: (id: 
         </Button>
       </form>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}
@@ -125,7 +129,7 @@ function ImportTemplate({
   };
   return (
     <Card aria-label={m.importTemplate} className="flex-[1_1_300px] gap-3">
-      <h2 className="text-base font-semibold">{m.importTemplate}</h2>
+      <h2 className="text-heading font-semibold">{m.importTemplate}</h2>
       <form onSubmit={(e) => void submit(e)} className="flex gap-2">
         <NativeSelect
           aria-label={m.importTemplate}
@@ -142,9 +146,9 @@ function ImportTemplate({
           {m.importAction}
         </Button>
       </form>
-      <p className="text-sm text-text-muted">{m.importHint}</p>
+      <p className="text-caption text-text-muted">{m.importHint}</p>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

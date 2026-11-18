@@ -59,10 +59,10 @@ export function DayEditor({
         />
       ) : (
         <div className="flex flex-wrap items-center gap-1">
-          <h3 className="flex-1 text-base font-semibold">
+          <h3 className="flex-1 text-heading font-semibold">
             {day.name}
             {day.weekday !== null && (
-              <span className="ml-2 text-sm font-normal text-text-muted">
+              <span className="ml-2 text-caption font-normal text-text-muted">
                 {weekdayLabels[day.weekday - 1]}
               </span>
             )}
@@ -89,7 +89,9 @@ export function DayEditor({
           </IconButton>
         </div>
       )}
-      {day.exercises.length === 0 && <p className="text-sm text-text-muted">{m.noExercises}</p>}
+      {day.exercises.length === 0 && (
+        <p className="text-caption text-text-muted">{m.noExercises}</p>
+      )}
       {day.exercises.length > 0 && (
         <ul className="flex flex-col">
           {day.exercises.map((item, index) => (
@@ -104,7 +106,7 @@ export function DayEditor({
         </ul>
       )}
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

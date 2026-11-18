@@ -64,7 +64,7 @@ export function NutritionQuestionnaire({
     <form noValidate onSubmit={submit} className="flex flex-col gap-6">
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-1 font-semibold">{m.mealsTitle}</legend>
-        <p className="text-sm text-text-muted">{m.mealsHint}</p>
+        <p className="text-caption text-text-muted">{m.mealsHint}</p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {MEALS.map((meal) => (
             <ChoiceCard
@@ -93,11 +93,11 @@ export function NutritionQuestionnaire({
           onChange={(e) => setRestrictions(e.target.value)}
         />
       </Field>
-      <p id="restrictions-hint" className="-mt-4 text-sm text-text-muted">
+      <p id="restrictions-hint" className="-mt-4 text-caption text-text-muted">
         {m.restrictionsHint}
       </p>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

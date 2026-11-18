@@ -35,7 +35,7 @@ export function ExerciseLibrary({ profileId }: { profileId: string }) {
           <h2 id="exercise-list-title" className="text-heading font-semibold">
             {m.listTitle}
           </h2>
-          <span className="text-sm text-text-muted">{m.count(exercises.length)}</span>
+          <span className="text-caption text-text-muted">{m.count(exercises.length)}</span>
         </div>
         <div className="grid gap-3 sm:grid-cols-[1fr_14rem]">
           <Input
@@ -58,10 +58,10 @@ export function ExerciseLibrary({ profileId }: { profileId: string }) {
             ))}
           </NativeSelect>
         </div>
-        {shown.length === 0 && <p className="text-sm text-text-muted">{m.noResults}</p>}
+        {shown.length === 0 && <p className="text-caption text-text-muted">{m.noResults}</p>}
         {groups.map((g) => (
           <section key={g} aria-label={muscleGroupLabels[g]} className="flex flex-col">
-            <h3 className="pt-2 pb-1 text-sm font-semibold text-text-muted uppercase">
+            <h3 className="pt-2 pb-1 text-caption font-semibold tracking-wider text-text-muted uppercase">
               {muscleGroupLabels[g]}
             </h3>
             <ul className="flex flex-col">
