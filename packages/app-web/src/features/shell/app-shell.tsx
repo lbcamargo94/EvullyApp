@@ -18,7 +18,8 @@ import {
   Settings,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef } from 'react';
-import { Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
+import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
+import { useCatalogAvailable } from '../catalog/catalog-link';
 import { BackupErrorBanner } from '../settings/backup-error-banner';
 import { isFocusRequest } from '../shared/focus-request';
 import { UpdateBanner } from '../settings/update-banner';
@@ -40,6 +41,7 @@ export function AppShell() {
   const { data: info } = useAppInfo();
   const { data: tracking } = useTrackingState(profileId);
   const navigate = useNavigate();
+  const catalog = useCatalogAvailable();
   const mainRef = useRef<HTMLElement>(null);
   const location = useLocation();
   const shownPath = useRef(location.pathname);
@@ -120,7 +122,17 @@ export function AppShell() {
             {m.settings}
           </NavLink>
         </div>
-        {info && <p className="mt-auto px-3 text-xs text-text-muted">{m.version(info.version)}</p>}
+        <div className="mt-auto flex flex-col gap-1 px-3">
+          {catalog && (
+            <Link
+              to="/dev/catalog"
+              className="text-xs text-brand underline-offset-2 hover:underline"
+            >
+              {m.catalog}
+            </Link>
+          )}
+          {info && <p className="text-xs text-text-muted">{m.version(info.version)}</p>}
+        </div>
       </nav>
       <div className="mx-auto flex w-full max-w-content min-w-0 flex-col gap-6 px-8 py-6">
         <header className="flex flex-wrap items-center justify-between gap-4">

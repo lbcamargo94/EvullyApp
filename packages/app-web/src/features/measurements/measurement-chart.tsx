@@ -1,6 +1,6 @@
 import { changeTone, formatChange, formatCm, formatLocalDate } from '@evully/app-core';
 import type { MeasurementSummary } from '@evully/contracts';
-import { Card, EmptyState, NativeSelect, TrendBadge } from '@evully/ui';
+import { Card, EmptyState, NativeSelect, TrendIndicator } from '@evully/ui';
 import { useState } from 'react';
 import {
   CartesianGrid,
@@ -110,9 +110,9 @@ export function MeasurementChart({ summary }: { summary: MeasurementSummary }) {
         {item.change !== null && (
           <span className="flex items-center gap-2">
             {m.change}
-            <TrendBadge tone={changeTone(item.change, item.bodyRegion, summary.objective)}>
+            <TrendIndicator tone={changeTone(item.change, item.bodyRegion, summary.objective)}>
               {formatChange(item.change, 'cm')}
-            </TrendBadge>
+            </TrendIndicator>
           </span>
         )}
       </div>

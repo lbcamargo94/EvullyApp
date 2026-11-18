@@ -1,11 +1,10 @@
 import { errorCode, usePlanMutation } from '@evully/app-core';
 import type { WorkoutPlanDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, Input, NativeSelect } from '@evully/ui';
+import { Button, Card, ConfirmDialog, IconButton, Input, NativeSelect } from '@evully/ui';
 import { ChevronDown, ChevronUp, Pencil, Trash2 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { AddPlanExercise } from './add-plan-exercise';
 import { planErrorByCode, planMessages as m, weekdayLabels } from './messages.pt-BR';
-import { IconButton } from './icon-button';
 import { PlanExerciseRow } from './plan-exercise-row';
 
 type Day = WorkoutPlanDto['days'][number];

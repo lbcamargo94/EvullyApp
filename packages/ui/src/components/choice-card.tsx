@@ -32,7 +32,7 @@ export function ChoiceCard({
       )}
       {...props}
     >
-      <span className="text-base font-semibold text-text">{title}</span>
+      <span className="text-body font-semibold text-text">{title}</span>
       {description && <span className="text-sm text-text-muted">{description}</span>}
     </button>
   );
