@@ -13,6 +13,7 @@ export function MeasurementCards({ summary }: { summary: MeasurementSummary }) {
       key={item.id}
       label={item.name}
       value={item.current ? formatCm(item.current.valueCm) : m.insufficient}
+      insufficient={!item.current}
       badge={
         item.change !== null && (
           <>

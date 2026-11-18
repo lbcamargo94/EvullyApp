@@ -6,6 +6,18 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Design system (V1.1, fase 3)
+
+- Dashboard reorganizado (DESIGN.md §5.1): data de hoje no cabeçalho,
+  indicadores, gráfico de peso ao lado do card "Hoje", card próprio
+  "Próximo treino", projeto, últimos 14 dias e hábitos, cardio e sono.
+- "Dados insuficientes" aparece em tamanho de título e cor secundária,
+  não mais em tamanho de métrica.
+- Esqueleto de carregamento no formato dos indicadores.
+- Eixo do gráfico de peso com até uma casa decimal, sem rótulos repetidos.
+- `cn` conhece a escala de tipografia do Evully: `text-heading` e afins
+  não anulam mais a cor do texto ao combinar classes.
+
 ### Design system (V1.1, fase 2)
 
 - Novos componentes em `packages/ui`: `Badge`, `Alert`, `Checkbox`,

@@ -21,6 +21,7 @@ export function WeightSummaryCard({
       <StatCard
         label={display === 'trend' ? m.trend : m.current}
         value={m.insufficient}
+        insufficient
         footnote={m.noWeighingsHint}
       />
     );
@@ -36,6 +37,7 @@ export function WeightSummaryCard({
     <StatCard
       label={label}
       value={main === null ? m.insufficient : formatKg(main)}
+      insufficient={main === null}
       badge={
         change !== null &&
         summary.start && (

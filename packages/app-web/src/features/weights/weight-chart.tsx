@@ -17,6 +17,9 @@ type Period = keyof typeof m.periods;
 type Point = WeightSummary['series'][number];
 
 const shortDate = (date: string) => formatLocalDate(date).slice(0, 5);
+const axisFormat = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
+/** One decimal at most, so close weights do not repeat the same tick label. */
+const axisKg = (value: number) => axisFormat.format(value);
 
 /** Plain dot for each day; ringed in the caution color when the day has a tag. */
 function renderDailyDot(props: object) {
@@ -114,11 +117,11 @@ export function WeightChart({
                 />
                 <YAxis
                   domain={['dataMin - 0.5', 'dataMax + 0.5']}
-                  tickFormatter={(v: number) => Math.round(v).toString()}
+                  tickFormatter={axisKg}
                   stroke="var(--color-text-muted)"
                   fontSize={12}
                   tickLine={false}
-                  width={36}
+                  width={40}
                 />
                 <Tooltip
                   formatter={(value, name) => [formatKg(Number(value)), String(name)]}

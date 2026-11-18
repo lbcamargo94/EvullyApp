@@ -11,35 +11,35 @@ import {
   useWeightSummary,
 } from '@evully/app-core';
 import type { ProjectDto } from '@evully/contracts';
-import { Button, Card, ProgressBar, ScreenHeader } from '@evully/ui';
+import { Button, Card, ProgressBar, ScreenHeader, Skeleton } from '@evully/ui';
 import { Link } from 'react-router';
 import { FOCUS_FORM } from '../shared/focus-request';
 import { MeasurementCards } from '../measurements/measurement-cards';
 import { objectiveLabels } from '../tracking/messages.pt-BR';
+import { WeightChart } from '../weights/weight-chart';
 import { WeightSummaryCard } from '../weights/weight-summary-card';
 import { EvolutionCard } from './evolution-card';
-import { shellMessages as m } from './messages.pt-BR';
+import { formatLongDate, shellMessages as m } from './messages.pt-BR';
+import { NextWorkoutCard } from './next-workout-card';
 import { TodayActivityCards } from './today-activity-cards';
 import { TodayCard } from './today-card';
 
 /**
- * Dashboard (README §8.5): project progress, weight as chosen, up to 3 measurements,
- * today's nutrition, habits, cardio and sleep for the modules in use, and the
- * evolution of the last 14 days (README §13.3).
+ * Dashboard (README §8.5, DESIGN.md §7.1): indicators, the weight chart and
+ * today's numbers, the next workout, the project, the last 14 days and the
+ * weekly modules. Each block only for modules in use and with data.
  */
 export function HomeScreen() {
   const { profileId } = useCurrentProfile();
   const { data: profile } = useProfile(profileId);
   const { data: project } = useActiveProject(profileId);
-  const { data: tracking } = useTrackingState(profileId);
-  const { data: weight } = useWeightSummary(profileId);
-  const { data: measurements } = useMeasurementSummary(profileId);
-  if (!profile) return null;
+  if (!profile || !profileId) return <DashboardSkeleton />;
 
   return (
     <>
       <ScreenHeader
         title={m.homeTitle(profile.name)}
+        description={m.homeToday(formatLongDate(localToday()))}
         actions={
           <>
             <Button asChild variant="secondary">
@@ -55,17 +55,58 @@ export function HomeScreen() {
           </>
         }
       />
+      <BodyOverview profileId={profileId} projectStart={project?.startDate ?? null} />
+      <NextWorkoutCard profileId={profileId} />
       {project ? <ProjectCard project={project} /> : <NoProjectCard />}
-      <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
-        {weight && tracking?.config && (
-          <WeightSummaryCard summary={weight} display={tracking.config.weightDisplay} />
-        )}
+      <EvolutionCard profileId={profileId} />
+      <TodayActivityCards profileId={profileId} />
+    </>
+  );
+}
+
+/**
+ * Weight and measurement indicators, then the weight chart beside today's
+ * numbers (one column when narrow). The chart follows the weight display choice.
+ */
+function BodyOverview({
+  profileId,
+  projectStart,
+}: {
+  profileId: string;
+  projectStart: string | null;
+}) {
+  const { data: tracking } = useTrackingState(profileId);
+  const { data: weight } = useWeightSummary(profileId);
+  const { data: measurements } = useMeasurementSummary(profileId);
+  const display = tracking?.config?.weightDisplay;
+  const showChart = weight && display && display !== 'hidden' && weight.series.length > 0;
+
+  return (
+    <>
+      <div className="grid gap-5 empty:hidden sm:grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
+        {weight && display && <WeightSummaryCard summary={weight} display={display} />}
         {measurements && <MeasurementCards summary={measurements} />}
       </div>
-      {profileId && <TodayCard profileId={profileId} />}
-      {profileId && <EvolutionCard profileId={profileId} />}
-      {profileId && <TodayActivityCards profileId={profileId} />}
+      <div className="flex flex-wrap items-start gap-5 empty:hidden">
+        {showChart && <WeightChart summary={weight} projectStart={projectStart} />}
+        <TodayCard profileId={profileId} />
+      </div>
     </>
+  );
+}
+
+/** Placeholder in the shape of the header and indicators while the profile loads. */
+function DashboardSkeleton() {
+  return (
+    <div role="status" aria-label={m.loading} className="flex flex-col gap-5">
+      <Skeleton className="h-9 w-64" />
+      <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
+        <Skeleton className="h-40" />
+        <Skeleton className="h-40" />
+        <Skeleton className="h-40" />
+      </div>
+      <Skeleton className="h-72" />
+    </div>
   );
 }
 

@@ -23,7 +23,9 @@ test('starts a workout, saves a set and finishes it', async ({ evully }) => {
   await expect(page.getByRole('region', { name: 'Iniciar treino' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Finalizar treino' })).toBeHidden();
 
-  // The dashboard's "Hoje" card knows today's workout is done.
+  // The dashboard's "Próximo treino" card knows today's workout is done.
   await go(page, 'Dashboard', 'Olá, Ana');
-  await expect(page.getByRole('region', { name: 'Hoje' })).toContainText('Treino concluído hoje.');
+  await expect(page.getByRole('region', { name: 'Próximo treino' })).toContainText(
+    'Treino concluído hoje.',
+  );
 });

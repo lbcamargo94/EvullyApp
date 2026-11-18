@@ -50,6 +50,8 @@ export const shellMessages = {
   errorBody: 'Seus dados estão salvos. Recarregue para continuar de onde parou.',
   errorReload: 'Recarregar',
   homeTitle: (name: string) => `Olá, ${name}`,
+  homeToday: (date: string) => `Hoje é ${date}`,
+  loading: 'Carregando o painel',
   registerWeight: 'Registrar peso',
   noProjectTitle: 'Sem projeto ativo',
   noProjectBody:
@@ -68,7 +70,7 @@ export const shellMessages = {
   until: (date: string) => `até ${date}`,
   projectProgress: 'Dias do projeto',
   todayTitle: 'Hoje',
-  workoutTitle: 'Treino',
+  workoutTitle: 'Próximo treino',
   workoutPlan: (plan: string, exercises: number) =>
     `${plan} · ${exercises === 1 ? '1 exercício' : `${exercises} exercícios`}`,
   workoutInProgress: (day: string) => `${day} · em andamento`,
@@ -112,3 +114,11 @@ export const shellMessages = {
   proteinPerDay: (grams: number) => `${grams} g/dia`,
   performance: { up: 'subindo', stable: 'estável', down: 'caindo' },
 } as const;
+
+const longDate = new Intl.DateTimeFormat('pt-BR', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+});
+/** `2026-11-18` → "quarta-feira, 18 de novembro". */
+export const formatLongDate = (date: string) => longDate.format(new Date(`${date}T12:00:00`));
