@@ -20,7 +20,7 @@ function Question({ title, children }: { title: string; children: React.ReactNod
   return (
     <fieldset className="flex flex-col gap-2">
       <legend className="mb-1 font-semibold">
-        {title} <span className="text-sm font-normal text-text-muted">{m.optional}</span>
+        {title} <span className="text-caption font-normal text-text-muted">{m.optional}</span>
       </legend>
       {children}
     </fieldset>
@@ -119,7 +119,7 @@ export function WorkoutQuestionnaire({
         </div>
       </Question>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

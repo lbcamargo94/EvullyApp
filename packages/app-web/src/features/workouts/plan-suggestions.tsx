@@ -27,10 +27,10 @@ export function PlanSuggestions({ profileId }: { profileId: string }) {
   return (
     <Card aria-labelledby="suggestions-title" className="gap-3">
       <div className="flex flex-col gap-1">
-        <h2 id="suggestions-title" className="text-base font-semibold">
+        <h2 id="suggestions-title" className="text-heading font-semibold">
           {m.suggestionsTitle}
         </h2>
-        <p className="text-sm text-text-muted">{m.suggestionsHint}</p>
+        <p className="text-caption text-text-muted">{m.suggestionsHint}</p>
       </div>
       <ul className="flex flex-col">
         {templates.map((s) => (
@@ -40,7 +40,7 @@ export function PlanSuggestions({ profileId }: { profileId: string }) {
           >
             <div className="flex flex-1 flex-col">
               <span className="font-semibold">{planMessages.templates[s.template]}</span>
-              <span className="text-sm text-text-muted">{m.reasons[s.reason]}</span>
+              <span className="text-caption text-text-muted">{m.reasons[s.reason]}</span>
             </div>
             <Button
               type="button"
@@ -53,11 +53,11 @@ export function PlanSuggestions({ profileId }: { profileId: string }) {
           </li>
         ))}
       </ul>
-      {buildOwnPlan && <p className="text-sm text-text-muted">{m.buildOwn}</p>}
+      {buildOwnPlan && <p className="text-caption text-text-muted">{m.buildOwn}</p>}
       {message && (
         <p
           role={message.ok ? 'status' : 'alert'}
-          className={message.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+          className={message.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
         >
           {message.text}
         </p>

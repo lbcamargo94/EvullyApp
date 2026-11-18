@@ -105,6 +105,10 @@ Regras:
 - A escala está em `packages/tokens/tokens.json` (`text`) e vira as classes
   `text-display`, `text-title`, `text-heading`, `text-body` e
   `text-caption`. Telas não usam tamanhos soltos (`text-[15px]`).
+- Ao migrar telas (V1.1, fase 4): texto auxiliar em cor secundária (dica,
+  metadado, rótulo) usa `caption`; texto de conteúdo, botões e links usam
+  `body`; títulos de cartão usam `heading`. Rótulos em caixa alta levam
+  `tracking-wider`.
 
 - Números usam `font-variant-numeric: tabular-nums` para alinhar casas
   decimais em listas e tabelas.

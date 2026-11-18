@@ -86,7 +86,7 @@ export function SetRow({
           : 'flex flex-wrap items-center gap-2 rounded-md px-2 py-1.5'
       }
     >
-      <span className="w-16 text-sm font-semibold">{m.set(set.setNumber)}</span>
+      <span className="w-16 text-body font-semibold">{m.set(set.setNumber)}</span>
       {field(m.load, load, setLoad, 'w-24')}
       {field(reps ? m.reps : m.seconds, amount, setAmount, 'w-20')}
       {field(m.rir, rir, setRir, 'w-16')}

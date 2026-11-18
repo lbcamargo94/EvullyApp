@@ -97,7 +97,7 @@ export function PrescriptionForm({
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-3 rounded-md bg-surface-muted p-3">
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-body">
         <label className="flex items-center gap-2">
           {m.sets} {num('sets', m.sets)}
         </label>
@@ -119,7 +119,7 @@ export function PrescriptionForm({
           {m.perSide}
         </label>
       </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-body">
         <span className="flex items-center gap-1">
           {m.rir} {num('minRir', `${m.min} ${m.rir}`)}–{num('maxRir', `${m.max} ${m.rir}`)}
         </span>
@@ -137,7 +137,7 @@ export function PrescriptionForm({
         />
       </div>
       {(local ?? error) && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {local ?? error}
         </p>
       )}

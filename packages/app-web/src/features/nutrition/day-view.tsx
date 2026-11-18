@@ -8,6 +8,7 @@ import {
 import type { FoodLogDto } from '@evully/contracts';
 import { Button, Card, Input } from '@evully/ui';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { formatLongDate } from '../shell/messages.pt-BR';
 import { useState, type FormEvent } from 'react';
 import { DayTotals } from './day-totals';
 import { WaterCard } from './water-card';
@@ -61,9 +62,14 @@ export function DayView({ profileId }: { profileId: string }) {
         <Button type="button" variant="ghost" aria-label={m.previousDay} onClick={() => go(-1)}>
           <ChevronLeft aria-hidden="true" className="size-5" />
         </Button>
-        <h2 className="min-w-48 text-center text-heading font-semibold" aria-live="polite">
-          {m.dayLabel(date, today, addDays(today, -1), addDays(today, 1))}
-        </h2>
+        <div className="flex min-w-56 flex-col items-center" aria-live="polite">
+          <h2 className="text-heading font-semibold">
+            {m.dayLabel(date, today, addDays(today, -1), addDays(today, 1))}
+          </h2>
+          {(date === today || date === addDays(today, -1) || date === addDays(today, 1)) && (
+            <span className="text-caption text-text-muted">{formatLongDate(date)}</span>
+          )}
+        </div>
         <Button
           type="button"
           variant="ghost"
@@ -79,7 +85,7 @@ export function DayView({ profileId }: { profileId: string }) {
           </Button>
         )}
       </div>
-      {isFuture && <p className="text-sm text-text-muted">{m.planningHint}</p>}
+      {isFuture && <p className="text-caption text-text-muted">{m.planningHint}</p>}
       {day && <DayTotals day={day} />}
       {day && prefs?.trackWater && <WaterCard profileId={profileId} day={day} canLog={!isFuture} />}
       {day &&

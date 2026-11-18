@@ -410,6 +410,23 @@ async function setTargets(ctx: Context, date: LocalDate, phase: 'first' | 'secon
 }
 
 /** Builds the demo profile ending on `today`. Refuses when one already exists. */
+/** Workouts and Nutrition open on their content, not on the first-visit questionnaire. */
+async function answerQuestionnaires(ctx: Context): Promise<void> {
+  await ctx.handlers['workout-preferences:answer']({
+    profileId: ctx.profileId,
+    experience: 'intermediate',
+    daysPerWeek: 5,
+    location: 'gym',
+    equipment: ['barbell', 'dumbbells', 'machines', 'cables', 'bench'],
+  });
+  await ctx.handlers['nutrition-preferences:answer']({
+    profileId: ctx.profileId,
+    meals: ['breakfast', 'morning_snack', 'lunch', 'pre_workout', 'dinner', 'supper'],
+    trackWater: true,
+    restrictions: null,
+  });
+}
+
 export async function seedDemo(
   handlers: IpcHandlers,
   clock: SeedClock,
@@ -445,6 +462,7 @@ export async function seedDemo(
     },
   };
   await setTargets(ctx, first, 'first');
+  await answerQuestionnaires(ctx);
 
   for (let day = 0; day <= DAYS; day++) {
     const date = addDaysToLocalDate(first, day);

@@ -46,7 +46,7 @@ export function SessionView({
         <h2 className="text-heading font-semibold">
           {session.dayName ? `${session.dayName}` : m.freeSession}
         </h2>
-        <span className="text-sm text-text-muted">
+        <span className="text-caption text-text-muted">
           {session.planName && `${session.planName} · `}
           {m.startedAt(session.startedAt)}
         </span>
@@ -82,7 +82,7 @@ export function SessionView({
           onChange={(e) => setNotes(e.target.value)}
         />
         {error && (
-          <p role="alert" className="text-sm text-danger">
+          <p role="alert" className="text-body text-danger">
             {error}
           </p>
         )}

@@ -18,15 +18,15 @@ export function DayTotals({ day }: { day: NutritionDay }) {
   return (
     <Card aria-labelledby="day-totals-title" className="gap-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 id="day-totals-title" className="text-base font-semibold">
+        <h3 id="day-totals-title" className="text-heading font-semibold">
           {m.totalsTitle}
         </h3>
-        <span className="text-sm text-text-muted tabular-nums">
+        <span className="text-caption text-text-muted tabular-nums">
           {m.planned}: {m.kcal(formatNumber(planned.caloriesKcal))}
         </span>
       </div>
       <div className="flex flex-col gap-1.5">
-        <span className="text-sm text-text-muted">{m.consumed}</span>
+        <span className="text-caption text-text-muted">{m.consumed}</span>
         <span className="text-display font-semibold tabular-nums">
           {target
             ? m.ofTarget(
@@ -57,7 +57,7 @@ export function DayTotals({ day }: { day: NutritionDay }) {
       </div>
       {!target && (
         <div className="flex flex-wrap items-center gap-3">
-          <p className="text-sm text-text-muted">{m.noTarget}</p>
+          <p className="text-caption text-text-muted">{m.noTarget}</p>
           <Button asChild variant="secondary">
             <Link to="/app/settings?tab=nutrition">{m.setTargets}</Link>
           </Button>
@@ -80,7 +80,7 @@ function Macro({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-sm text-text-muted">{label}</span>
+      <span className="text-caption text-text-muted">{label}</span>
       <span className="font-semibold tabular-nums">
         {target === null
           ? `${formatNumber(value)} ${unit}`

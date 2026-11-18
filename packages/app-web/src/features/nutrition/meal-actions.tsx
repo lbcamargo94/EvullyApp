@@ -164,7 +164,7 @@ function CopyPanel({ profileId, date, meal, onDone, onClose }: PanelProps) {
 
   return (
     <form onSubmit={(e) => void submit(e)} className={panelClass} aria-label={m.copyTitle}>
-      <label className="flex flex-col gap-1 text-sm font-medium">
+      <label className="flex flex-col gap-1 text-body font-medium">
         {m.copyDate}
         <Input
           type="date"
@@ -174,7 +174,7 @@ function CopyPanel({ profileId, date, meal, onDone, onClose }: PanelProps) {
           className="min-h-9"
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm font-medium">
+      <label className="flex flex-col gap-1 text-body font-medium">
         {m.copyMeal}
         <NativeSelect
           value={target.meal}
@@ -272,7 +272,7 @@ function ApplyPanel({ profileId, date, meal, onDone, onClose }: PanelProps) {
               className="flex w-full justify-between gap-3 rounded-sm px-2 py-1.5 text-left hover:bg-surface focus-visible:outline-2 focus-visible:outline-brand"
             >
               <span>{t.name}</span>
-              <span className="text-sm text-text-muted tabular-nums">
+              <span className="text-caption text-text-muted tabular-nums">
                 {m.kcalApprox(formatNumber(Math.round(t.caloriesKcal)))}
               </span>
             </button>

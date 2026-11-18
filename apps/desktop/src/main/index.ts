@@ -36,8 +36,15 @@ const rendererUrl = process.env['ELECTRON_RENDERER_URL'];
 const isTrustedSender = (url: string) =>
   rendererUrl ? url.startsWith(rendererUrl) : url.startsWith('file://');
 
+/**
+ * The packaged app takes its icon from the executable (electron-builder,
+ * build/icon.ico); in development the window would show Electron's default.
+ */
+const devIcon = app.isPackaged ? undefined : join(app.getAppPath(), 'build', 'icon.ico');
+
 function createWindow(): void {
   const window = new BrowserWindow({
+    ...(devIcon && existsSync(devIcon) ? { icon: devIcon } : {}),
     width: 1280,
     height: 800,
     minWidth: 1024,

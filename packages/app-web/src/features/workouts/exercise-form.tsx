@@ -112,7 +112,7 @@ export function ExerciseForm({
           </NativeSelect>
         </Field>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-2 text-sm font-medium">
+          <legend className="mb-2 text-body font-medium">
             {m.secondaryGroups} <span className="font-normal text-text-muted">{m.optional}</span>
           </legend>
           <div className="flex flex-wrap gap-2">
@@ -126,8 +126,8 @@ export function ExerciseForm({
                   onClick={() => toggleSecondary(g)}
                   className={
                     on
-                      ? 'min-h-9 rounded-full border-2 border-brand bg-brand-soft px-3 text-sm font-semibold text-brand-soft-foreground'
-                      : 'min-h-9 rounded-full border border-border bg-surface px-3 text-sm hover:border-brand/60'
+                      ? 'min-h-9 rounded-full border-2 border-brand bg-brand-soft px-3 text-body font-semibold text-brand-soft-foreground'
+                      : 'min-h-9 rounded-full border border-border bg-surface px-3 text-body hover:border-brand/60'
                   }
                 >
                   {muscleGroupLabels[g]}
@@ -136,7 +136,7 @@ export function ExerciseForm({
             })}
           </div>
         </fieldset>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 items-end gap-3">
           <Field id="exercise-equipment" label={m.equipmentLabel} hint={m.optional}>
             <Input
               id="exercise-equipment"
@@ -156,7 +156,7 @@ export function ExerciseForm({
             />
           </Field>
         </div>
-        <p id="exercise-increment-hint" className="-mt-2 text-sm text-text-muted">
+        <p id="exercise-increment-hint" className="-mt-2 text-caption text-text-muted">
           {m.incrementHint}
         </p>
         <Field id="exercise-instructions" label={m.instructions} hint={m.optional}>
@@ -180,7 +180,7 @@ export function ExerciseForm({
         {message && (
           <p
             role={message.ok ? 'status' : 'alert'}
-            className={message.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+            className={message.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
           >
             {message.text}
           </p>

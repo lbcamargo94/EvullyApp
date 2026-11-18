@@ -34,7 +34,7 @@ export function ExercisePicker({
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={(e) => e.key === 'Escape' && onCancel()}
       />
-      {matches.length === 0 && <p className="text-sm text-text-muted">{m.noMatch}</p>}
+      {matches.length === 0 && <p className="text-caption text-text-muted">{m.noMatch}</p>}
       <ul className="flex flex-col">
         {matches.map((e) => (
           <li key={e.id}>
@@ -44,7 +44,9 @@ export function ExercisePicker({
               className="flex w-full justify-between gap-3 rounded-sm px-2 py-1.5 text-left hover:bg-surface focus-visible:outline-2 focus-visible:outline-brand"
             >
               <span>{e.name}</span>
-              <span className="text-sm text-text-muted">{muscleGroupLabels[e.muscleGroup]}</span>
+              <span className="text-caption text-text-muted">
+                {muscleGroupLabels[e.muscleGroup]}
+              </span>
             </button>
           </li>
         ))}

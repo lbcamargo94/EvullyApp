@@ -126,7 +126,7 @@ export function FoodForm({ editing, onDone }: { editing: FoodDto | null; onDone:
           />
         </Field>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-2 text-sm font-medium">{m.per}</legend>
+          <legend className="mb-2 text-body font-medium">{m.per}</legend>
           <div className="grid grid-cols-2 gap-3">
             <Field id="food-amount" label={m.amount}>
               <Input
@@ -179,7 +179,7 @@ export function FoodForm({ editing, onDone }: { editing: FoodDto | null; onDone:
           />
         </Field>
         {error && (
-          <p role="alert" className="text-sm text-danger">
+          <p role="alert" className="text-body text-danger">
             {error}
           </p>
         )}
@@ -194,7 +194,7 @@ export function FoodForm({ editing, onDone }: { editing: FoodDto | null; onDone:
           )}
         </div>
         {status && (
-          <p role="status" className="text-sm text-text-muted">
+          <p role="status" className="text-caption text-text-muted">
             {status}
           </p>
         )}

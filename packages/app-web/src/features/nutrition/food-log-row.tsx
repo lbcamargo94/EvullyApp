@@ -72,7 +72,7 @@ export function FoodLogRow({
             {log.foodName}
             {log.brand && <span className="font-normal text-text-muted"> · {log.brand}</span>}
           </span>
-          <span className="text-sm text-text-muted tabular-nums">
+          <span className="text-caption text-text-muted tabular-nums">
             {m.kcal(formatNumber(n.caloriesKcal))} ·{' '}
             {m.macros(
               formatNumber(n.proteinG),
@@ -91,7 +91,7 @@ export function FoodLogRow({
             onBlur={saveQuantity}
             onKeyDown={onKeyDown}
           />
-          <span className="w-12 text-sm text-text-muted">{unitLabels[log.unit]}</span>
+          <span className="w-12 text-caption text-text-muted">{unitLabels[log.unit]}</span>
         </div>
         <Button
           type="button"
@@ -105,7 +105,7 @@ export function FoodLogRow({
         </Button>
       </div>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

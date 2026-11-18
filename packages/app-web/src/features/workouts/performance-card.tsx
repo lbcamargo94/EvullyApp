@@ -48,7 +48,7 @@ export function PerformanceCard({
       <div className="flex flex-wrap items-start gap-2">
         <div className="flex flex-1 flex-col gap-1">
           <h3 className="text-heading font-semibold uppercase">{p.exerciseName}</h3>
-          <dl className="grid grid-cols-[8rem_1fr] gap-x-3 gap-y-0.5 text-sm">
+          <dl className="grid grid-cols-[8rem_1fr] gap-x-3 gap-y-0.5 text-body">
             {p.prescription && (
               <>
                 <dt className="text-text-muted">{m.target}</dt>
@@ -85,7 +85,7 @@ export function PerformanceCard({
       {p.suggestion && (
         <p
           role="note"
-          className="rounded-md bg-brand-soft px-3 py-2 text-sm text-brand-soft-foreground"
+          className="rounded-md bg-brand-soft px-3 py-2 text-body text-brand-soft-foreground"
         >
           {m.suggestion(
             p.suggestion.incrementKg === null ? null : formatKgValue(p.suggestion.incrementKg),
@@ -111,7 +111,7 @@ export function PerformanceCard({
         ))}
       </ul>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}
