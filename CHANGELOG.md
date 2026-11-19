@@ -6,6 +6,24 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-19
+
+V1.1, design system: o mesmo Evully com um visual novo e consistente em
+todas as telas, nos temas claro e escuro.
+
+- **Visual:** novo logo, ícone do app, tipografia, sombras, cabeçalho de tela
+  e menu revistos; Dashboard reorganizado com gráfico de peso, card "Hoje" e
+  "Próximo treino";
+- **Componentes:** avisos, selos, tabelas, caixas de seleção, interruptores,
+  dicas nos botões de ícone, carregando e "Mostrar mais" nos históricos
+  longos;
+- **Ilustrações** próprias nos estados vazios, na criação de perfil, no
+  questionário, na recuperação e na tela de erro;
+- **Acessibilidade:** foco visível em todas as abas e diálogos que devolvem
+  o foco ao fechar, conferidos por testes em todas as telas e nos dois temas;
+- **Correção:** a verificação da assinatura das atualizações fecha o
+  instalador antes de seguir.
+
 ### Design system (V1.1 — ilustrações)
 
 - Ilustrações próprias no estilo "selo da marca"
