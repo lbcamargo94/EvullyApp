@@ -1,6 +1,6 @@
 import { useMeasurementCatalog, useSetTrackedMeasurements } from '@evully/app-core';
 import type { MeasurementTypeDto } from '@evully/contracts';
-import { Button, Card, Checkbox } from '@evully/ui';
+import { Button, Card, Checkbox, Icon } from '@evully/ui';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { measurementNames } from '../tracking/messages.pt-BR';
@@ -67,7 +67,7 @@ export function MeasurementsCard({
               disabled={index === 0}
               onClick={() => reorder(index, -1)}
             >
-              <ChevronUp aria-hidden="true" className="size-4" />
+              <Icon icon={ChevronUp} />
             </Button>
             <Button
               type="button"
@@ -77,7 +77,7 @@ export function MeasurementsCard({
               disabled={index === chosen.length - 1}
               onClick={() => reorder(index, 1)}
             >
-              <ChevronDown aria-hidden="true" className="size-4" />
+              <Icon icon={ChevronDown} />
             </Button>
           </div>
         ))}

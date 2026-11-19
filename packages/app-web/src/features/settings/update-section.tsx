@@ -6,7 +6,7 @@ import {
   useUpdateStatus,
 } from '@evully/app-core';
 import type { UpdateChannel, UpdateStatus } from '@evully/contracts';
-import { Button, Field, NativeSelect, ProgressBar } from '@evully/ui';
+import { Button, Field, Icon, NativeSelect, ProgressBar } from '@evully/ui';
 import { Download } from 'lucide-react';
 import { updateMessages as m } from './messages.pt-BR';
 
@@ -86,7 +86,7 @@ export function InstallButton() {
   const install = useInstallUpdate();
   return (
     <Button type="button" disabled={install.isPending} onClick={() => install.mutate()}>
-      <Download aria-hidden="true" className="size-4" />
+      <Icon icon={Download} />
       {install.isPending ? m.installing : m.install}
     </Button>
   );

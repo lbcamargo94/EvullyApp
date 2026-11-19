@@ -1,6 +1,7 @@
 import { CircleAlert, CircleCheck, Info, TriangleAlert, type LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '../lib/utils';
+import { Icon } from './icon';
 
 export type AlertTone = 'info' | 'success' | 'caution' | 'danger';
 
@@ -31,7 +32,7 @@ export function Alert({
   className?: string;
 }) {
   const t = tones[tone];
-  const Icon = icon ?? t.Icon;
+  const glyph = icon ?? t.Icon;
   return (
     <div
       role={tone === 'danger' || tone === 'caution' ? 'alert' : 'status'}
@@ -41,7 +42,7 @@ export function Alert({
         className,
       )}
     >
-      <Icon aria-hidden="true" className={cn('size-5 shrink-0', t.icon)} />
+      <Icon icon={glyph} size="md" className={t.icon} />
       <div className="flex min-w-0 flex-1 flex-col">
         <strong className="font-semibold">{title}</strong>
         {children && <span className="text-body">{children}</span>}

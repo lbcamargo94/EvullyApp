@@ -1,6 +1,6 @@
 import { errorCode, useSetMealConsumed } from '@evully/app-core';
 import type { FoodLogDto, MealType } from '@evully/contracts';
-import { Button, Card } from '@evully/ui';
+import { Button, Card, Icon } from '@evully/ui';
 import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { AddFoodLog } from './add-food-log';
@@ -119,7 +119,7 @@ function ConsumeMealButton({
       aria-pressed={allConsumed}
       onClick={() => toggle(!allConsumed)}
     >
-      {allConsumed && <Check aria-hidden="true" className="size-4" />}
+      {allConsumed && <Icon icon={Check} />}
       {allConsumed ? m.unmarkMeal : m.markMeal}
     </Button>
   );

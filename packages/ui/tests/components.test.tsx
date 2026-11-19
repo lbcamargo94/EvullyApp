@@ -1,3 +1,4 @@
+import { Moon } from 'lucide-react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import {
@@ -5,6 +6,7 @@ import {
   Badge,
   Button,
   Checkbox,
+  Icon,
   IconButton,
   ScreenHeader,
   ShowMoreButton,
@@ -114,5 +116,16 @@ describe('ui components (DESIGN.md §4, §6)', () => {
     expect(out.match(/<li>/g)).toHaveLength(2);
     expect(out).toContain('Mais 3');
     expect(html(<List items={[1, 2]} />)).not.toContain('<button');
+  });
+
+  it('Icon is decorative by default, announced with a label, in one of three sizes', () => {
+    const plain = html(<Icon icon={Moon} />);
+    expect(plain).toContain('aria-hidden="true"');
+    expect(plain).toContain('size-4');
+    expect(plain).toContain('stroke-width="2"');
+    const named = html(<Icon icon={Moon} size="lg" label="Sono" />);
+    expect(named).toContain('role="img"');
+    expect(named).toContain('aria-label="Sono"');
+    expect(named).toContain('size-6');
   });
 });

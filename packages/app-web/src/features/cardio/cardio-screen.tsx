@@ -12,6 +12,7 @@ import {
   Card,
   ConfirmDialog,
   EmptyState,
+  Icon,
   IconButton,
   ScreenHeader,
   ShowMoreButton,
@@ -197,10 +198,10 @@ function WeekCard({
               </span>
             </span>
             <IconButton label={m.edit(labelOf(s))} onClick={() => onEdit(s)}>
-              <Pencil aria-hidden="true" className="size-4" />
+              <Icon icon={Pencil} />
             </IconButton>
             <IconButton label={m.remove(labelOf(s))} onClick={() => setPending(s)}>
-              <Trash2 aria-hidden="true" className="size-4" />
+              <Icon icon={Trash2} />
             </IconButton>
           </li>
         ))}

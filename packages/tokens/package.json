@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     "./tokens.css": "./tokens.css",
-    "./tokens.json": "./tokens.json"
+    "./tokens.json": "./tokens.json",
+    "./nativewind-preset": "./nativewind-preset.cjs"
   },
   "scripts": {
     "build": "node scripts/build.mjs",

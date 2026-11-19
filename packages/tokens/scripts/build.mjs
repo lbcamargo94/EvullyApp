@@ -1,6 +1,8 @@
-// Generates tokens.css from tokens.json (the single source of design tokens).
-// Usage: node scripts/build.mjs [--check]  (--check fails if tokens.css is stale)
+// Generates tokens.css (web) and nativewind-preset.cjs (mobile, V2.1) from
+// tokens.json, the single source of design tokens.
+// Usage: node scripts/build.mjs [--check]  (--check fails if an output is stale)
 import { readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -58,12 +60,59 @@ ${text.join('\n')}
 }
 `;
 
-const target = join(dir, 'tokens.css');
+// NativeWind preset: the same names as the web classes (bg-surface,
+// text-heading, rounded-lg, shadow-card). Colors and shadows point at
+// --evully-* variables; the app applies `themes.light` or `themes.dark` with
+// NativeWind's vars() at its root, so both themes share one set of classes.
+const themes = Object.fromEntries(
+  ['light', 'dark'].map((mode) => [
+    mode,
+    Object.fromEntries(themed.map(([name, v]) => [name, v[mode]])),
+  ]),
+);
+const preset = {
+  theme: {
+    extend: {
+      colors: Object.fromEntries(colors.map(([name]) => [name, `var(--evully-${name})`])),
+      borderRadius: tokens.radius,
+      boxShadow: Object.fromEntries(
+        shadows.map(([name]) => [name, `var(--evully-shadow-${name})`]),
+      ),
+      fontSize: Object.fromEntries(
+        Object.entries(tokens.text).map(([name, t]) => [
+          name,
+          [t.size, { lineHeight: t.lineHeight, fontWeight: t.weight }],
+        ]),
+      ),
+      fontFamily: { sans: tokens.font.sans.split(',').map((f) => f.trim().replaceAll("'", '')) },
+    },
+  },
+};
+const native = `/* Generated from tokens.json by scripts/build.mjs. Do not edit. */
+/** NativeWind preset with the Evully tokens (DESIGN.md §3); \`themes\` feeds vars(). */
+module.exports = ${JSON.stringify(preset, null, 2)};
+module.exports.themes = ${JSON.stringify(themes, null, 2)};
+`;
+
+const outputs = [
+  [join(dir, 'tokens.css'), css],
+  [join(dir, 'nativewind-preset.cjs'), native],
+];
 if (process.argv.includes('--check')) {
-  if (readFileSync(target, 'utf8') !== css) {
-    console.error('tokens.css is out of date: run npm run build -w @evully/tokens');
-    process.exit(1);
+  for (const [target, content] of outputs) {
+    if (readFileSync(target, 'utf8') !== content) {
+      console.error(`${target} is out of date: run npm run build -w @evully/tokens`);
+      process.exit(1);
+    }
+  }
+  // The preset must load and carry every token in both themes.
+  const loaded = createRequire(import.meta.url)('../nativewind-preset.cjs');
+  for (const [name] of themed) {
+    if (!loaded.themes.light[name] || !loaded.themes.dark[name]) {
+      console.error(`nativewind-preset.cjs: ${name} is missing a theme value`);
+      process.exit(1);
+    }
   }
 } else {
-  writeFileSync(target, css);
+  for (const [target, content] of outputs) writeFileSync(target, content);
 }

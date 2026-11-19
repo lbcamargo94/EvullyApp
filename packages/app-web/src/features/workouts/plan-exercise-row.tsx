@@ -9,7 +9,7 @@ import {
   prescriptionMessages,
 } from './messages.pt-BR';
 import { PrescriptionForm } from './prescription-form';
-import { IconButton } from '@evully/ui';
+import { Icon, IconButton } from '@evully/ui';
 
 type Item = WorkoutPlanDto['days'][number]['exercises'][number];
 const errorText = (e: unknown) => planErrorByCode[errorCode(e) ?? ''] ?? m.genericError;
@@ -69,23 +69,23 @@ export function PlanExerciseRow({
           disabled={isFirst}
           onClick={() => void run(() => move.mutateAsync('up'))}
         >
-          <ChevronUp aria-hidden="true" className="size-4" />
+          <Icon icon={ChevronUp} />
         </IconButton>
         <IconButton
           label={m.moveDown(item.exerciseName)}
           disabled={isLast}
           onClick={() => void run(() => move.mutateAsync('down'))}
         >
-          <ChevronDown aria-hidden="true" className="size-4" />
+          <Icon icon={ChevronDown} />
         </IconButton>
         <IconButton label={m.editPrescription(item.exerciseName)} onClick={() => setEditing(true)}>
-          <Pencil aria-hidden="true" className="size-4" />
+          <Icon icon={Pencil} />
         </IconButton>
         <IconButton
           label={m.removeExercise(item.exerciseName)}
           onClick={() => void run(() => remove.mutateAsync(undefined))}
         >
-          <X aria-hidden="true" className="size-4" />
+          <Icon icon={X} />
         </IconButton>
       </div>
       {editing && (

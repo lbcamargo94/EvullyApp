@@ -1,6 +1,6 @@
 import { errorCode, parseDecimal, useSessionMutation } from '@evully/app-core';
 import type { SetValuesDto, WorkoutSessionDto } from '@evully/contracts';
-import { Checkbox, Input } from '@evully/ui';
+import { Checkbox, Icon, Input } from '@evully/ui';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { sessionErrorByCode, sessionMessages as m } from './messages.pt-BR';
@@ -109,7 +109,7 @@ export function SetRow({
         }
         className="ml-auto rounded-sm p-1.5 text-text-muted hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-brand"
       >
-        <X aria-hidden="true" className="size-4" />
+        <Icon icon={X} />
       </button>
     </li>
   );

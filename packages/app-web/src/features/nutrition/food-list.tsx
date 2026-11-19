@@ -1,6 +1,6 @@
 import { errorCode, foodSearchKey, useRemoveFood } from '@evully/app-core';
 import type { FoodDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, EmptyState, Input } from '@evully/ui';
+import { Button, Card, ConfirmDialog, EmptyState, Icon, Input } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { foodErrorByCode, foodMessages as m, formatNumber, unitLabels } from './messages.pt-BR';
@@ -73,7 +73,7 @@ export function FoodList({ foods, onEdit }: { foods: FoodDto[]; onEdit: (food: F
               aria-label={m.edit(f.name)}
               onClick={() => onEdit(f)}
             >
-              <Pencil aria-hidden="true" className="size-4" />
+              <Icon icon={Pencil} />
             </Button>
             <Button
               type="button"
@@ -82,7 +82,7 @@ export function FoodList({ foods, onEdit }: { foods: FoodDto[]; onEdit: (food: F
               aria-label={m.remove(f.name)}
               onClick={() => setPending(f)}
             >
-              <Trash2 aria-hidden="true" className="size-4" />
+              <Icon icon={Trash2} />
             </Button>
           </li>
         ))}

@@ -1,6 +1,6 @@
 import { errorCode, useMealTemplates, useRemoveMealTemplate } from '@evully/app-core';
 import type { MealTemplateDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, EmptyState } from '@evully/ui';
+import { Button, Card, ConfirmDialog, EmptyState, Icon } from '@evully/ui';
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { dietMessages as m, foodLogErrorByCode, formatNumber, unitLabels } from './messages.pt-BR';
@@ -43,7 +43,7 @@ export function FavoritesList({ profileId }: { profileId: string }) {
               aria-label={m.removeFavorite(t.name)}
               onClick={() => setPending(t)}
             >
-              <Trash2 aria-hidden="true" className="size-4" />
+              <Icon icon={Trash2} />
             </Button>
           </div>
           <p className="text-caption text-text-muted">

@@ -9,7 +9,7 @@ import {
   useWorkoutStats,
 } from '@evully/app-core';
 import type { WorkoutPlanDto, WorkoutSessionDto } from '@evully/contracts';
-import { Button, Card } from '@evully/ui';
+import { Button, Card, Icon } from '@evully/ui';
 import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
@@ -96,7 +96,7 @@ function WorkoutContent({ profileId, workout }: { profileId: string; workout: To
             </span>
             {finished.includes(day.id) ? (
               <span className="flex items-center gap-1 text-body font-semibold">
-                <Check aria-hidden="true" className="size-4 text-brand" />
+                <Icon icon={Check} className="text-brand" />
                 {m.workoutDone}
               </span>
             ) : (

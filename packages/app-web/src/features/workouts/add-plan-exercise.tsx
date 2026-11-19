@@ -1,6 +1,6 @@
 import { errorCode, usePlanMutation } from '@evully/app-core';
 import type { ExerciseDto, PrescriptionDto } from '@evully/contracts';
-import { Button } from '@evully/ui';
+import { Button, Icon } from '@evully/ui';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { ExercisePicker } from './exercise-picker';
@@ -27,7 +27,7 @@ export function AddPlanExercise({ profileId, dayId }: { profileId: string; dayId
   if (!open) {
     return (
       <Button type="button" variant="ghost" className="self-start" onClick={() => setOpen(true)}>
-        <Plus aria-hidden="true" className="size-4" />
+        <Icon icon={Plus} />
         {m.addExercise}
       </Button>
     );

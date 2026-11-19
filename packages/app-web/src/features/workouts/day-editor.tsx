@@ -1,6 +1,6 @@
 import { errorCode, usePlanMutation } from '@evully/app-core';
 import type { WorkoutPlanDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, IconButton, Input, NativeSelect } from '@evully/ui';
+import { Button, Card, ConfirmDialog, Icon, IconButton, Input, NativeSelect } from '@evully/ui';
 import { ChevronDown, ChevronUp, Pencil, Trash2 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { AddPlanExercise } from './add-plan-exercise';
@@ -72,20 +72,20 @@ export function DayEditor({
             disabled={isFirst}
             onClick={() => void run(() => move.mutateAsync('up'))}
           >
-            <ChevronUp aria-hidden="true" className="size-4" />
+            <Icon icon={ChevronUp} />
           </IconButton>
           <IconButton
             label={m.moveDown(day.name)}
             disabled={isLast}
             onClick={() => void run(() => move.mutateAsync('down'))}
           >
-            <ChevronDown aria-hidden="true" className="size-4" />
+            <Icon icon={ChevronDown} />
           </IconButton>
           <IconButton label={m.editDay(day.name)} onClick={() => setEditing(true)}>
-            <Pencil aria-hidden="true" className="size-4" />
+            <Icon icon={Pencil} />
           </IconButton>
           <IconButton label={m.removeDay(day.name)} onClick={() => setConfirming(true)}>
-            <Trash2 aria-hidden="true" className="size-4" />
+            <Icon icon={Trash2} />
           </IconButton>
         </div>
       )}

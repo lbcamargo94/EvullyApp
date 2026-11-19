@@ -14,6 +14,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  Icon,
   Input,
   NativeSelect,
 } from '@evully/ui';
@@ -71,7 +72,7 @@ export function MealActions({
               className="min-h-9 px-2"
               aria-label={m.mealActions(title)}
             >
-              <Ellipsis aria-hidden="true" className="size-5" />
+              <Icon icon={Ellipsis} size="md" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

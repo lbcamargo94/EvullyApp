@@ -1,6 +1,6 @@
 import { errorCode, usePlanMutation } from '@evully/app-core';
 import type { WorkoutPlanDto } from '@evully/contracts';
-import { Button, Card, Input } from '@evully/ui';
+import { Button, Card, Icon, Input } from '@evully/ui';
 import { ArrowLeft, Plus } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { DayEditor, DayForm } from './day-editor';
@@ -46,7 +46,7 @@ export function PlanEditor({
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-3">
         <Button type="button" variant="ghost" onClick={onBack}>
-          <ArrowLeft aria-hidden="true" className="size-4" />
+          <Icon icon={ArrowLeft} />
           {m.back}
         </Button>
         {renaming ? (
@@ -116,7 +116,7 @@ export function PlanEditor({
           className="self-start"
           onClick={() => setAdding(true)}
         >
-          <Plus aria-hidden="true" className="size-4" />
+          <Icon icon={Plus} />
           {m.addDay}
         </Button>
       )}

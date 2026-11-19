@@ -7,6 +7,7 @@ export * from './components/checkbox';
 export * from './components/choice-card';
 export * from './components/dialog';
 export * from './components/dropdown-menu';
+export * from './components/icon';
 export * from './components/icon-button';
 export * from './components/empty-state';
 export * from './components/input';

@@ -1,5 +1,5 @@
 import { profileInitial, useCurrentProfile, useProfiles } from '@evully/app-core';
-import { Avatar } from '@evully/ui';
+import { Avatar, Icon } from '@evully/ui';
 import { Lock, Plus } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router';
 import { Logo } from '../shell/logo';
@@ -48,7 +48,7 @@ export function ProfileSelectScreen() {
           className={`${tile} border border-dashed border-text-muted/40 font-medium text-text-muted hover:border-brand hover:text-text`}
         >
           <span className="inline-flex size-22 items-center justify-center rounded-full border border-dashed border-text-muted/40">
-            <Plus aria-hidden="true" className="size-8" />
+            <Icon icon={Plus} size="lg" />
           </span>
           {m.addProfile}
         </button>
@@ -57,7 +57,7 @@ export function ProfileSelectScreen() {
       <ImportProfileButton variant="ghost" onImported={() => undefined} />
 
       <p className="flex items-center gap-2 text-caption text-text-muted">
-        <Lock aria-hidden="true" className="size-4" />
+        <Icon icon={Lock} />
         {m.localDataNote}
       </p>
     </main>

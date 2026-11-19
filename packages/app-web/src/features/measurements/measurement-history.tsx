@@ -4,6 +4,7 @@ import {
   Card,
   ConfirmDialog,
   EmptyState,
+  Icon,
   IconButton,
   ShowMoreButton,
   Table,
@@ -82,10 +83,10 @@ export function MeasurementHistory({
                     })}
                     <TableCell className="text-right whitespace-nowrap">
                       <IconButton label={m.edit(date)} onClick={() => onEdit(session)}>
-                        <Pencil aria-hidden="true" className="size-4.5" />
+                        <Icon icon={Pencil} />
                       </IconButton>
                       <IconButton label={m.remove(date)} onClick={() => setPending(session)}>
-                        <Trash2 aria-hidden="true" className="size-4.5" />
+                        <Icon icon={Trash2} />
                       </IconButton>
                     </TableCell>
                   </TableRow>
