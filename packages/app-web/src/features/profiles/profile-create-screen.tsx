@@ -1,5 +1,5 @@
 import { useCreateProfile, useCurrentProfile, useProfiles } from '@evully/app-core';
-import { Card, ScreenHeader } from '@evully/ui';
+import { Card, ScreenHeader, WelcomeIllustration } from '@evully/ui';
 import { useNavigate } from 'react-router';
 import { Logo } from '../shell/logo';
 import { ImportProfileButton } from './import-profile-button';
@@ -18,6 +18,7 @@ export function ProfileCreateScreen() {
       <div className="flex w-full max-w-2xl flex-col gap-5">
         <Logo />
         <Card className="gap-6 p-8">
+          <WelcomeIllustration className="-my-2 w-40" />
           <ScreenHeader title={m.createTitle} description={m.createSubtitle} />
           <ProfileForm
             defaultValues={emptyProfile}

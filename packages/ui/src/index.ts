@@ -21,3 +21,5 @@ export * from './components/tabs';
 export * from './components/tooltip';
 export * from './components/trend-indicator';
 export * from './lib/utils';
+export * from './illustrations/brand-tile';
+export * from './illustrations/module-illustrations';

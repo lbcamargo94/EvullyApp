@@ -6,6 +6,7 @@ import {
   EmptyState,
   Icon,
   IconButton,
+  MeasurementsIllustration,
   ShowMoreButton,
   Table,
   TableCell,
@@ -51,7 +52,9 @@ export function MeasurementHistory({
     <Card aria-label={m.historyTitle}>
       <h2 className="text-heading font-semibold">{m.historyTitle}</h2>
       {sessions.length === 0 ? (
-        <EmptyState>{m.historyEmpty}</EmptyState>
+        <EmptyState title={m.historyEmptyTitle} illustration={<MeasurementsIllustration />}>
+          {m.historyEmpty}
+        </EmptyState>
       ) : (
         <>
           <Table className="min-w-[560px]">

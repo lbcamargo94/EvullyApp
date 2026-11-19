@@ -1,6 +1,5 @@
 import { useOpenLogs } from '@evully/app-core';
-import { Button, Card, Icon } from '@evully/ui';
-import { CircleAlert } from 'lucide-react';
+import { Button, Card, RecoveryIllustration } from '@evully/ui';
 import { RestorePanel } from '../settings/restore-panel';
 import { Logo } from '../shell/logo';
 import { recoveryMessages as m } from './messages.pt-BR';
@@ -15,12 +14,10 @@ export function RecoveryScreen() {
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-10 text-text">
       <Card className="w-full max-w-2xl gap-6 p-8" aria-labelledby="recovery-title">
         <Logo />
-        <div className="flex items-start gap-3">
-          <Icon icon={CircleAlert} size="lg" className="mt-1 text-danger" />
-          <h1 id="recovery-title" className="text-title font-semibold">
-            {m.title}
-          </h1>
-        </div>
+        <RecoveryIllustration className="-my-2 w-40" />
+        <h1 id="recovery-title" className="text-title font-semibold">
+          {m.title}
+        </h1>
         <div className="flex flex-col gap-3 text-body leading-relaxed">
           {m.body.map((line) => (
             <p key={line}>{line}</p>

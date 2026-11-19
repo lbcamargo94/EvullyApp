@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
   useShowMore,
+  WeightIllustration,
 } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -45,7 +46,9 @@ export function WeightHistory({
     <Card aria-label={m.historyTitle}>
       <h2 className="text-heading font-semibold">{m.historyTitle}</h2>
       {entries.length === 0 ? (
-        <EmptyState>{m.historyEmpty}</EmptyState>
+        <EmptyState title={m.historyEmptyTitle} illustration={<WeightIllustration />}>
+          {m.historyEmpty}
+        </EmptyState>
       ) : (
         <Table className="min-w-[560px]">
           <thead>

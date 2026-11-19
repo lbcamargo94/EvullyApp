@@ -20,7 +20,7 @@ test('switching profiles keeps each one’s data apart', async ({ evully }) => {
   await createProfile(page, 'Lucas');
   await go(page, 'Peso');
   const history = page.getByRole('region', { name: 'Histórico' });
-  await expect(history).toContainText('Nenhuma pesagem ainda.');
+  await expect(history).toContainText('Nenhuma pesagem ainda');
   await registerWeight(page, '89,8');
 
   await switchTo(page, 'Ana');

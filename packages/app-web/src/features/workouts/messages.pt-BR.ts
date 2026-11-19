@@ -98,7 +98,8 @@ export function formatPrescription(p: PrescriptionDto): string {
 }
 
 export const planMessages = {
-  empty: 'Nenhum plano ainda. Crie um ou importe um plano-modelo.',
+  emptyTitle: 'Nenhum plano de treino',
+  empty: 'Crie um plano ou importe um plano-modelo para começar.',
   newPlan: 'Novo plano',
   planName: 'Nome do plano',
   create: 'Criar',

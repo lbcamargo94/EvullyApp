@@ -7,7 +7,7 @@ import {
   useSkipTracking,
 } from '@evully/app-core';
 import type { ProfileDto, ProjectDto } from '@evully/contracts';
-import { Button, Card, ProgressBar } from '@evully/ui';
+import { Button, Card, GoalIllustration, ProgressBar } from '@evully/ui';
 import { useState } from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router';
 import { Logo } from '../shell/logo';
@@ -90,6 +90,7 @@ function Questionnaire({
         <ProgressBar value={q.index + 1} max={STEPS.length} label={m.progress} />
 
         <Card className="gap-6 p-8">
+          {q.index === 0 && <GoalIllustration className="-my-2 w-40" />}
           <StepBody q={q} sex={profile.sex} />
           {saveError && (
             <p role="alert" className="text-body text-danger">
