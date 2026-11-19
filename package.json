@@ -14,7 +14,7 @@
     "dev": "npm run dev -w @evully/desktop",
     "build": "npm run build -w @evully/desktop",
     "dist": "npm run dist -w @evully/desktop",
-    "lint": "eslint .",
+    "lint": "eslint . && node scripts/check-colors.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "e2e": "npm run build && npm run e2e -w @evully/desktop",

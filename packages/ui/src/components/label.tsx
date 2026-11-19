@@ -4,7 +4,7 @@ import { cn } from '../lib/utils';
 
 export function Label({ className, ...props }: ComponentProps<typeof LabelPrimitive.Root>) {
   return (
-    <LabelPrimitive.Root className={cn('text-sm font-medium text-text', className)} {...props} />
+    <LabelPrimitive.Root className={cn('text-body font-medium text-text', className)} {...props} />
   );
 }
 
@@ -32,7 +32,7 @@ export function Field({
       </Label>
       {children}
       {error && (
-        <p id={`${id}-error`} role="alert" className="text-sm text-danger">
+        <p id={`${id}-error`} role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

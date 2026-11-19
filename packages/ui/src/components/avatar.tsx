@@ -1,6 +1,6 @@
 import { cn } from '../lib/utils';
 
-const sizes = { sm: 'size-8 text-sm', lg: 'size-22 text-display' } as const;
+const sizes = { sm: 'size-8 text-body', lg: 'size-22 text-display' } as const;
 
 /** Initial-letter avatar. Never shows personal data (README §8.1). */
 export function Avatar({

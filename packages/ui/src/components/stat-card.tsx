@@ -41,7 +41,7 @@ export function StatCard({
         {value}
       </span>
       {badge && <div className="flex flex-wrap items-center gap-2.5">{badge}</div>}
-      {footnote && <span className="text-sm text-text-muted">{footnote}</span>}
+      {footnote && <span className="text-caption text-text-muted">{footnote}</span>}
     </section>
   );
 }

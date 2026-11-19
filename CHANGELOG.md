@@ -6,6 +6,21 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Design system (V1.1, fase 5 — validação)
+
+- Relatório em `docs/design/V1.1_VALIDATION.md`.
+- Novo teste ponta a ponta (`design.spec.ts`): todas as telas e abas em
+  1024 e 1920 px, nos dois temas, sem rolagem lateral, com nome acessível
+  em todo controle e anel de foco em toda parada do Tab; diálogo devolve
+  o foco ao fechar.
+- `npm run lint` também falha com cores fora dos tokens
+  (`scripts/check-colors.mjs`).
+- Painel das abas com anel de foco; a lista de abas não vira mais uma
+  parada invisível do Tab depois de um clique.
+- Diálogos devolvem o foco ao elemento que os abriu.
+- Novo token `overlay` para o fundo dos diálogos.
+- Componentes de `packages/ui` na escala de tipografia.
+
 ### Design system (V1.1, fase 4 — demais telas)
 
 - Históricos de Peso, Medidas e Sono mostram os 30 registros mais
