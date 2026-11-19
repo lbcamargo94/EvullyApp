@@ -1,6 +1,6 @@
 import { errorCode, usePlanMutation, useWorkoutPlans } from '@evully/app-core';
 import type { PlanTemplateCode, WorkoutPlanDto } from '@evully/contracts';
-import { Button, Card, EmptyState, Input, NativeSelect } from '@evully/ui';
+import { Button, Card, EmptyState, Input, NativeSelect, WorkoutsIllustration } from '@evully/ui';
 import { useState, type FormEvent } from 'react';
 import { planErrorByCode, planMessages as m } from './messages.pt-BR';
 import { PlanEditor } from './plan-editor';
@@ -25,7 +25,11 @@ export function PlansTab({ profileId }: { profileId: string }) {
         <NewPlan profileId={profileId} onCreated={setOpenId} />
         <ImportTemplate profileId={profileId} onImported={setOpenId} />
       </div>
-      {plans.length === 0 && <EmptyState>{m.empty}</EmptyState>}
+      {plans.length === 0 && (
+        <EmptyState title={m.emptyTitle} illustration={<WorkoutsIllustration />}>
+          {m.empty}
+        </EmptyState>
+      )}
       {active.length > 0 && <PlanList title={m.active} plans={active} onOpen={setOpenId} />}
       {archived.length > 0 && <PlanList title={m.archived} plans={archived} onOpen={setOpenId} />}
     </div>

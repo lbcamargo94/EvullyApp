@@ -165,6 +165,7 @@ Regras:
 | `Tabs`, `Dialog`/`ConfirmDialog`, `DropdownMenu`, `Tooltip` | Primitivas Radix com os tokens. |
 | `ProgressBar`, `Skeleton`, `EmptyState` | Progresso, carregando e vazio; `Skeleton` para de piscar com `prefers-reduced-motion`. |
 | `Icon` | Ícone Lucide no tamanho e traço do Evully (§4.2). |
+| `BrandTile` e ilustrações | Ilustrações no estilo do ícone do app (§4.3); `EmptyState` aceita `illustration` e `title`. |
 | `useShowMore`, `ShowMoreButton` | Históricos longos: os mais recentes primeiro (30 registros; no Cardio, 8 semanas) e "Mostrar mais" para os próximos. |
 
 Cada componente define seus estados: **padrão, carregando, vazio, erro e
@@ -203,6 +204,38 @@ dados insuficientes**, quando aplicáveis.
 
 - O `npm run lint` falha com ícone Lucide desenhado direto, sem `Icon`
   (`scripts/check-icons.mjs`).
+
+### 4.3 Ilustrações
+
+- **Estilo "selo da marca"**, o mesmo desenho do ícone do app: um bloco
+  arredondado na cor `brand`, levemente inclinado, sobre um bloco
+  `brand-soft` virado para o outro lado, com pequenos brilhos. O símbolo
+  do módulo fica em `brand-foreground`; onde duas formas se cruzam, um
+  contorno `brand` as separa (como o halter do logo).
+- Componentes SVG em `packages/ui/src/illustrations/`: o `BrandTile` faz o
+  bloco e cada ilustração desenha só o seu símbolo numa área de 88 × 88.
+  Só tokens, então seguem o tema; sempre decorativas (`aria-hidden`).
+- Onde aparecem:
+
+  | Ilustração | Tela |
+  |---|---|
+  | `SleepIllustration` | Sono, histórico vazio |
+  | `WorkoutsIllustration` | Treinos › Planos, sem planos |
+  | `WeightIllustration` | Peso, histórico vazio |
+  | `MeasurementsIllustration` | Medidas, histórico vazio |
+  | `FavoritesIllustration` | Nutrição › Favoritas, sem favoritas |
+  | `FoodsIllustration` | Nutrição › Alimentos, sem alimentos |
+  | `CardioIllustration` | Cardio, histórico vazio |
+  | `HabitsIllustration` | Hábitos › Dia, sem hábitos |
+  | `WelcomeIllustration` | Criação de perfil |
+  | `GoalIllustration` | Primeiro passo do questionário |
+  | `RecoveryIllustration` | Tela de recuperação do banco |
+  | `ErrorIllustration` | Tela de erro inesperado |
+
+- Com ilustração, o `EmptyState` também recebe `title`. Gráficos sem dados
+  e listas dentro de outros cartões (histórico de um exercício) ficam com a
+  linha simples, sem ilustração, para a tela não ficar pesada.
+- Peça nova passa por aprovação antes de entrar (README §15.3).
 
 ## 5. Layout e plataformas
 

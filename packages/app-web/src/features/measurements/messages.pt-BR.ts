@@ -29,7 +29,8 @@ export const measurementMessages = {
   change: 'Variação',
 
   historyTitle: 'Histórico',
-  historyEmpty: 'Nenhuma medida registrada ainda.',
+  historyEmptyTitle: 'Nenhuma medida registrada',
+  historyEmpty: 'Registre a primeira sessão de medidas para acompanhar a evolução.',
   historyHint: 'Valores em cm. "—" indica medida não registrada na sessão.',
   dateColumn: 'Data',
   actionsColumn: 'Ações',

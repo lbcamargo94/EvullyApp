@@ -6,6 +6,17 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Design system (V1.1 — ilustrações)
+
+- Ilustrações próprias no estilo "selo da marca"
+  ([DESIGN.md](DESIGN.md), §4.3), em `packages/ui/src/illustrations/`:
+  estados vazios de Sono,
+  Treinos, Peso, Medidas, Favoritas, Alimentos, Cardio e Hábitos, criação
+  de perfil, primeiro passo do questionário, recuperação e erro; todas no
+  catálogo.
+- `EmptyState` aceita `illustration` e `title`; os textos dos estados
+  vazios explicam o primeiro registro.
+
 ### Correções
 
 - A verificação da assinatura das atualizações só termina depois de

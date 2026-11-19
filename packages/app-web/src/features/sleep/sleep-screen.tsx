@@ -16,6 +16,7 @@ import {
   IconButton,
   ScreenHeader,
   ShowMoreButton,
+  SleepIllustration,
   useShowMore,
 } from '@evully/ui';
 import { sharedMessages } from '../shared/messages.pt-BR';
@@ -93,7 +94,11 @@ function History({
       <h2 id="sleep-history-title" className="text-heading font-semibold">
         {m.history}
       </h2>
-      {nights.length === 0 && <EmptyState>{m.empty}</EmptyState>}
+      {nights.length === 0 && (
+        <EmptyState title={m.emptyTitle} illustration={<SleepIllustration />}>
+          {m.empty}
+        </EmptyState>
+      )}
       <ul className="flex flex-col">
         {visible.map((n) => (
           <li key={n.id} className="flex flex-wrap items-center gap-2 border-t border-border py-2">

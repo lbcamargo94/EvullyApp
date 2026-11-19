@@ -10,6 +10,7 @@ import type { CardioOverview, CardioSessionDto } from '@evully/contracts';
 import {
   Button,
   Card,
+  CardioIllustration,
   ConfirmDialog,
   EmptyState,
   Icon,
@@ -66,7 +67,11 @@ export function CardioScreen() {
       </div>
       <section aria-label={m.history} className="flex flex-col gap-4">
         <h2 className="text-heading font-semibold">{m.history}</h2>
-        {overview.weeks.length === 0 && <EmptyState>{m.empty}</EmptyState>}
+        {overview.weeks.length === 0 && (
+          <EmptyState title={m.emptyTitle} illustration={<CardioIllustration />}>
+            {m.empty}
+          </EmptyState>
+        )}
         <WeekList profileId={profileId} weeks={overview.weeks} onEdit={setEditing} />
       </section>
     </>

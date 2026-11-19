@@ -4,18 +4,27 @@ import {
   Badge,
   Button,
   Card,
+  CardioIllustration,
   Checkbox,
   ChoiceCard,
   ConfirmDialog,
   EmptyState,
+  ErrorIllustration,
+  FavoritesIllustration,
   Field,
+  FoodsIllustration,
+  GoalIllustration,
+  HabitsIllustration,
   Icon,
   IconButton,
   Input,
+  MeasurementsIllustration,
   NativeSelect,
   ProgressBar,
+  RecoveryIllustration,
   ScreenHeader,
   Skeleton,
+  SleepIllustration,
   StatCard,
   Switch,
   Table,
@@ -27,6 +36,9 @@ import {
   TabsList,
   TabsTrigger,
   TrendIndicator,
+  WeightIllustration,
+  WelcomeIllustration,
+  WorkoutsIllustration,
 } from '@evully/ui';
 import {
   Activity,
@@ -156,6 +168,7 @@ export function CatalogScreen() {
       <DataSection />
       <OverlaysSection />
       <EvullySection />
+      <IllustrationsSection />
     </main>
   );
 }
@@ -489,6 +502,45 @@ function EvullySection() {
           <LogoMark className="size-4" />
           <LogoMark className="size-8" />
           <LogoMark className="size-16" />
+        </Row>
+      </Card>
+    </Section>
+  );
+}
+
+/** Illustrations, style "Selo da marca" (DESIGN.md §4.3), with fictional texts. */
+function IllustrationsSection() {
+  const scenes = [
+    { name: 'Sono', art: <SleepIllustration /> },
+    { name: 'Treinos', art: <WorkoutsIllustration /> },
+    { name: 'Peso', art: <WeightIllustration /> },
+    { name: 'Medidas', art: <MeasurementsIllustration /> },
+    { name: 'Favoritas', art: <FavoritesIllustration /> },
+    { name: 'Alimentos', art: <FoodsIllustration /> },
+    { name: 'Cardio', art: <CardioIllustration /> },
+    { name: 'Hábitos', art: <HabitsIllustration /> },
+    { name: 'Boas-vindas', art: <WelcomeIllustration /> },
+    { name: 'Questionário', art: <GoalIllustration /> },
+    { name: 'Recuperação', art: <RecoveryIllustration /> },
+    { name: 'Erro', art: <ErrorIllustration /> },
+  ];
+  return (
+    <Section title="Ilustrações">
+      <Card>
+        <Row label="Estado vazio com ilustração">
+          <div className="w-80">
+            <EmptyState title="Nenhuma noite registrada" illustration={<SleepIllustration />}>
+              Texto explicativo do primeiro registro.
+            </EmptyState>
+          </div>
+        </Row>
+        <Row label="Todas (selo da marca)">
+          {scenes.map((s) => (
+            <figure key={s.name} className="m-0 flex w-40 flex-col items-center gap-1 text-caption">
+              <div className="w-40 [&>svg]:h-auto [&>svg]:w-full">{s.art}</div>
+              <figcaption>{s.name}</figcaption>
+            </figure>
+          ))}
         </Row>
       </Card>
     </Section>

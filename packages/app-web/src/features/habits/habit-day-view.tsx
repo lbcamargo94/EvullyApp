@@ -1,5 +1,5 @@
 import { addDays, localToday, parseLocalDate, useHabitDay } from '@evully/app-core';
-import { Button, Card, EmptyState, Icon } from '@evully/ui';
+import { Button, Card, EmptyState, HabitsIllustration, Icon } from '@evully/ui';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatLongDate } from '../shell/messages.pt-BR';
 import { useState } from 'react';
@@ -49,9 +49,14 @@ export function HabitDayView({ profileId }: { profileId: string }) {
         )}
       </div>
       {day && day.habits.length === 0 && (
-        <Card className="gap-3">
-          <EmptyState>{m.empty}</EmptyState>
-          <ExamplesButton profileId={profileId} />
+        <Card>
+          <EmptyState
+            title={m.emptyTitle}
+            illustration={<HabitsIllustration />}
+            action={<ExamplesButton profileId={profileId} />}
+          >
+            {m.empty}
+          </EmptyState>
         </Card>
       )}
       {day && day.habits.length > 0 && (

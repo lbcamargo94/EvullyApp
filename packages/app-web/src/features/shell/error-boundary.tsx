@@ -1,4 +1,4 @@
-import { Button, Card } from '@evully/ui';
+import { Button, Card, ErrorIllustration } from '@evully/ui';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { shellMessages as m } from './messages.pt-BR';
 
@@ -26,6 +26,7 @@ export class ErrorBoundary extends Component<
     return (
       <main className="flex min-h-screen items-center justify-center bg-background px-4 text-text">
         <Card role="alert" className="w-full max-w-md gap-4 p-8">
+          <ErrorIllustration className="-my-2 w-40" />
           <h1 className="text-heading font-semibold">{m.errorTitle}</h1>
           <p className="text-text-muted">{m.errorBody}</p>
           <Button type="button" className="self-start" onClick={() => window.location.reload()}>

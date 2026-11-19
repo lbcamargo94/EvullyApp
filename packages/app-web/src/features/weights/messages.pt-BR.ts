@@ -41,7 +41,8 @@ export const weightMessages = {
   insufficientHint: 'A tendência aparece com pesagens em pelo menos 3 dos últimos 7 dias.',
 
   historyTitle: 'Histórico',
-  historyEmpty: 'Nenhuma pesagem ainda.',
+  historyEmptyTitle: 'Nenhuma pesagem ainda',
+  historyEmpty: 'Registre a primeira pesagem para acompanhar a tendência do seu peso.',
   columns: {
     date: 'Data',
     time: 'Hora',
