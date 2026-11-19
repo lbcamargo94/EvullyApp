@@ -16,12 +16,16 @@ const keys = () => {
   };
 };
 
+// Not `.exe`: on Windows runners the antivirus can hold a fresh executable
+// and fail the next write with EPERM. The check does not depend on the name.
+const INSTALLER = 'installer.bin';
+
 describe('update signatures (SECURITY.md §2.8)', () => {
   const dir = mkdtempSync(join(tmpdir(), 'evully-update-'));
-  afterEach(() => rmSync(join(dir, 'setup.exe'), { force: true }));
+  afterEach(() => rmSync(join(dir, INSTALLER), { force: true }));
 
   const installer = (content: string) => {
-    const file = join(dir, 'setup.exe');
+    const file = join(dir, INSTALLER);
     writeFileSync(file, content);
     return file;
   };
