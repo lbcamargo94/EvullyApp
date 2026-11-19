@@ -2,7 +2,7 @@
 
 Local-first fitness app (Electron + React + TS + SQLite), multi-profile,
 growing to web (NestJS API + React SPA/PWA + Next.js site) and native
-mobile (Expo). **Current phase: V1.1 (Design system) implemented (spec phases 0–5, icons, NativeWind preset, illustrations in style "Selo da marca"); release 1.1.0 not cut yet.**
+mobile (Expo). **Current phase: V1.1 done (1.1.0 built and signed; publishing to evully-releases needs the user's approval); next is V1.2 (Analytics Engine), not started.**
 
 ## Language
 - Talk to the user in **Portuguese (pt-BR)**. UI text in pt-BR.
