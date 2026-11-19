@@ -57,7 +57,7 @@ function ImportFlow({ kind, profileId }: { kind: ImportKind; profileId: string }
 
   return (
     <div className="flex max-w-4xl flex-col gap-5">
-      <Link to={backTo[kind]} className="text-sm font-medium text-brand-soft-foreground">
+      <Link to={backTo[kind]} className="text-body font-medium text-brand-soft-foreground">
         ← {m.back[kind]}
       </Link>
       <ScreenHeader title={m.title[kind]} description={m.intro(profile?.name ?? '')} />
@@ -74,7 +74,7 @@ function ImportFlow({ kind, profileId }: { kind: ImportKind; profileId: string }
       />
 
       {(fileError ?? message) && (
-        <p role="alert" className="text-sm text-text">
+        <p role="alert" className="text-body text-text">
           {fileError ?? message}
         </p>
       )}
@@ -174,7 +174,7 @@ function PreviewResult({
         <Stat tone="caution" value={counts.errors} label={m.errors(counts.errors)} />
       </div>
       {preview.newMeasurementTypes.length > 0 && (
-        <p className="text-sm">{m.newTypes(preview.newMeasurementTypes.join(', '))}</p>
+        <p className="text-body">{m.newTypes(preview.newMeasurementTypes.join(', '))}</p>
       )}
       <ImportPreviewTable preview={preview} />
       <div className="flex flex-wrap justify-end gap-3">
@@ -209,7 +209,7 @@ function Stat({
       <span className={`self-start rounded-md px-2 text-title font-semibold ${statTones[tone]}`}>
         {value}
       </span>
-      <span className="text-sm">{label}</span>
+      <span className="text-body">{label}</span>
     </div>
   );
 }

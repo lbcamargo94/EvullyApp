@@ -51,11 +51,11 @@ export function MeasurementsCard({
         <h2 id="measures-title" className="text-heading font-semibold">
           {m.measuresTitle}
         </h2>
-        <p className="text-sm text-text-muted">{m.measuresHint}</p>
+        <p className="text-caption text-text-muted">{m.measuresHint}</p>
       </div>
 
       <fieldset className="flex flex-col gap-1">
-        <legend className="pb-1 text-sm font-semibold">{m.tracked}</legend>
+        <legend className="pb-1 text-body font-semibold">{m.tracked}</legend>
         {chosen.map((t, index) => (
           <div key={t.id} className="flex items-center gap-2 border-t border-border py-1.5">
             <Check type={t} checked onToggle={toggle} />
@@ -85,7 +85,7 @@ export function MeasurementsCard({
 
       {others.length > 0 && (
         <fieldset className="flex flex-col gap-1">
-          <legend className="pb-1 text-sm font-semibold">{m.available}</legend>
+          <legend className="pb-1 text-body font-semibold">{m.available}</legend>
           {others.map((t) => (
             <div key={t.id} className="flex items-center border-t border-border py-1.5">
               <Check type={t} checked={false} onToggle={toggle} />
@@ -95,7 +95,7 @@ export function MeasurementsCard({
       )}
 
       {selected.length === 0 && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {m.pickOne}
         </p>
       )}

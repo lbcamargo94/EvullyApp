@@ -114,7 +114,7 @@ export function SleepForm({
       <h2 className="text-heading font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
       <form noValidate onSubmit={(e) => void submit(e)} className="flex flex-col gap-4">
         <TimeFields v={v} set={set} />
-        <p className="text-sm" aria-live="polite">
+        <p className="text-body" aria-live="polite">
           <span className="text-text-muted">{m.total}: </span>
           <span className="font-semibold tabular-nums">
             {total === null ? '—' : formatDuration(total)}
@@ -148,7 +148,7 @@ export function SleepForm({
           <div className="flex flex-wrap items-center gap-2">
             <p
               role={message.ok ? 'status' : 'alert'}
-              className={message.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+              className={message.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
             >
               {message.text}
             </p>
@@ -210,7 +210,7 @@ function TimeFields({ v, set }: { v: Values; set: (patch: Partial<Values>) => vo
           </Field>
         ))}
       </div>
-      <p className="text-xs text-text-muted">{m.sleepTimeHint}</p>
+      <p className="text-caption text-text-muted">{m.sleepTimeHint}</p>
     </div>
   );
 }

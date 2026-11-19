@@ -34,7 +34,7 @@ export function MeasurementChart({ summary }: { summary: MeasurementSummary }) {
     <Card aria-label={m.chartTitle} className="min-w-0 flex-[2_1_440px]">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-heading font-semibold">{m.chartTitle}</h2>
-        <label className="flex items-center gap-2 text-sm text-text-muted">
+        <label className="flex items-center gap-2 text-caption text-text-muted">
           {m.chooseMeasure}
           <NativeSelect
             value={item.id}
@@ -95,7 +95,7 @@ export function MeasurementChart({ summary }: { summary: MeasurementSummary }) {
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-6 text-sm text-text-muted tabular-nums">
+      <div className="flex flex-wrap items-center gap-6 text-caption text-text-muted tabular-nums">
         {item.current && (
           <span>
             {m.current} <strong className="text-text">{formatCm(item.current.valueCm)}</strong>

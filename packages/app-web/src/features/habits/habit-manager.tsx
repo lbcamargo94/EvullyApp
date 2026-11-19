@@ -87,7 +87,7 @@ function HabitItem({
     <li className="flex flex-wrap items-center gap-1 border-t border-border py-2">
       <span className="flex-1">
         <span className="font-medium">{h.name}</span>
-        <span className="text-sm text-text-muted">
+        <span className="text-caption text-text-muted">
           {' · '}
           {habitTypeLabels[h.type]}
           {h.targetValue !== null &&
@@ -220,7 +220,7 @@ function HabitForm({
         {message && (
           <p
             role={message.ok ? 'status' : 'alert'}
-            className={message.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+            className={message.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
           >
             {message.text}
           </p>

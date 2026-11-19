@@ -21,7 +21,7 @@ export function ImportHeader({ title, kind }: { title: string; kind: ImportKind 
         }
       />
       {notice && (
-        <p role="status" className="text-sm text-positive">
+        <p role="status" className="text-body text-positive">
           {notice}
         </p>
       )}

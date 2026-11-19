@@ -30,7 +30,7 @@ export function TransferCard({ profileId }: { profileId: string }) {
         <h2 id="transfer-title" className="text-heading font-semibold">
           {m.title}
         </h2>
-        <p className="max-w-xl text-sm text-text-muted">{m.hint}</p>
+        <p className="max-w-xl text-caption text-text-muted">{m.hint}</p>
       </div>
       <div className="flex flex-wrap items-start gap-3">
         <Button
@@ -52,7 +52,9 @@ export function TransferCard({ profileId }: { profileId: string }) {
       {feedback && (
         <p
           role={feedback.ok ? 'status' : 'alert'}
-          className={feedback.ok ? 'text-sm break-all text-text-muted' : 'text-sm text-danger'}
+          className={
+            feedback.ok ? 'text-caption break-all text-text-muted' : 'text-body text-danger'
+          }
         >
           {feedback.text}
         </p>

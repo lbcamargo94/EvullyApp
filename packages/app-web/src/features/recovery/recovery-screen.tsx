@@ -31,14 +31,14 @@ export function RecoveryScreen() {
             {m.backups}
           </h2>
           <RestorePanel recovery />
-          <p className="text-sm text-text-muted">{m.noExtraFolder}</p>
+          <p className="text-caption text-text-muted">{m.noExtraFolder}</p>
         </section>
         {logs.available && (
           <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">
             <Button type="button" variant="ghost" onClick={() => logs.mutate()}>
               {m.openLogs}
             </Button>
-            <span className="text-sm text-text-muted">{m.logsHint}</span>
+            <span className="text-caption text-text-muted">{m.logsHint}</span>
           </div>
         )}
       </Card>

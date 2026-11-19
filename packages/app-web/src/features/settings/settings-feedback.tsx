@@ -25,7 +25,7 @@ export function useSaveFeedback() {
   const node = feedback && (
     <p
       role={feedback.ok ? 'status' : 'alert'}
-      className={feedback.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+      className={feedback.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
     >
       {feedback.text}
     </p>

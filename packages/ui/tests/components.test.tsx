@@ -7,6 +7,7 @@ import {
   Checkbox,
   IconButton,
   ScreenHeader,
+  ShowMoreButton,
   Skeleton,
   StatCard,
   Switch,
@@ -14,6 +15,7 @@ import {
   TableHeader,
   TooltipProvider,
   TrendIndicator,
+  useShowMore,
 } from '../src';
 
 const html = (node: React.ReactElement) => renderToStaticMarkup(node);
@@ -90,5 +92,27 @@ describe('ui components (DESIGN.md §4, §6)', () => {
     expect(out).toContain('text-text-muted');
     expect(out).not.toContain('text-display');
     expect(html(<StatCard label="Peso" value="80 kg" />)).toContain('text-display');
+  });
+
+  it('useShowMore shows the first step and counts the rest; the button hides when nothing is left', () => {
+    function List({ items }: { items: number[] }) {
+      const { visible, hidden, showMore } = useShowMore(items, 2);
+      return (
+        <>
+          <ul>
+            {visible.map((i) => (
+              <li key={i}>{i}</li>
+            ))}
+          </ul>
+          <ShowMoreButton hidden={hidden} onClick={showMore}>
+            Mais {hidden}
+          </ShowMoreButton>
+        </>
+      );
+    }
+    const out = html(<List items={[1, 2, 3, 4, 5]} />);
+    expect(out.match(/<li>/g)).toHaveLength(2);
+    expect(out).toContain('Mais 3');
+    expect(html(<List items={[1, 2]} />)).not.toContain('<button');
   });
 });

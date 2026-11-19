@@ -96,7 +96,7 @@ export function MeasurementForm({
     <Card aria-label={editing ? m.editTitle : m.formTitle} className="flex-[1_1_360px]">
       <div className="flex flex-col gap-1">
         <h2 className="text-heading font-semibold">{editing ? m.editTitle : m.formTitle}</h2>
-        <p className="text-sm text-text-muted">{m.formHint}</p>
+        <p className="text-caption text-text-muted">{m.formHint}</p>
       </div>
       <form onSubmit={(e) => void submit(e)} noValidate className="flex flex-col gap-4">
         <Field id="measurement-date" label={m.date}>
@@ -150,7 +150,7 @@ export function MeasurementForm({
           />
         </Field>
         {error && (
-          <p role="alert" className="text-sm text-danger">
+          <p role="alert" className="text-body text-danger">
             {error}
           </p>
         )}
@@ -164,7 +164,7 @@ export function MeasurementForm({
             </Button>
           )}
         </div>
-        <p role="status" className="text-sm text-text-muted">
+        <p role="status" className="text-caption text-text-muted">
           {status ?? m.onlyTracked}
         </p>
       </form>

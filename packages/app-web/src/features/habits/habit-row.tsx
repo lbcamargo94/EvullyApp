@@ -66,7 +66,7 @@ export function HabitRow({
         <div className="flex min-w-40 flex-1 flex-col">
           <span className="font-semibold">{h.name}</span>
           {h.targetValue !== null && (
-            <span className="text-sm text-text-muted">
+            <span className="text-caption text-text-muted">
               {m.target(
                 formatNumber(h.targetValue),
                 h.type === 'duration' ? m.minutesUnit : h.unit,
@@ -93,7 +93,7 @@ export function HabitRow({
               onBlur={commit}
               onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
             />
-            <span className="w-14 text-sm text-text-muted">
+            <span className="w-14 text-caption text-text-muted">
               {h.type === 'duration' ? m.minutesUnit : h.type === 'quantity' ? (h.unit ?? '') : ''}
             </span>
             {h.value !== null && (
@@ -115,7 +115,7 @@ export function HabitRow({
         <Last7 date={date} days={h.last7} />
       </div>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}
@@ -141,7 +141,9 @@ function Last7({ date, days }: { date: string; days: boolean[] }) {
           );
         })}
       </ol>
-      <span className="w-16 text-xs text-text-muted tabular-nums">{m.done7(count)}</span>
+      <span className="min-w-16 text-caption whitespace-nowrap text-text-muted tabular-nums">
+        {m.done7(count)}
+      </span>
     </div>
   );
 }

@@ -7,7 +7,17 @@ import {
   useDeleteCardio,
 } from '@evully/app-core';
 import type { CardioOverview, CardioSessionDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, EmptyState, ScreenHeader } from '@evully/ui';
+import {
+  Button,
+  Card,
+  ConfirmDialog,
+  EmptyState,
+  IconButton,
+  ScreenHeader,
+  ShowMoreButton,
+  useShowMore,
+} from '@evully/ui';
+import { sharedMessages } from '../shared/messages.pt-BR';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { CardioForm } from './cardio-form';
@@ -56,10 +66,33 @@ export function CardioScreen() {
       <section aria-label={m.history} className="flex flex-col gap-4">
         <h2 className="text-heading font-semibold">{m.history}</h2>
         {overview.weeks.length === 0 && <EmptyState>{m.empty}</EmptyState>}
-        {overview.weeks.map((w) => (
-          <WeekCard key={w.summary.weekStart} profileId={profileId} week={w} onEdit={setEditing} />
-        ))}
+        <WeekList profileId={profileId} weeks={overview.weeks} onEdit={setEditing} />
       </section>
+    </>
+  );
+}
+
+/** Weeks shown at first and added per "Mostrar mais". */
+const STEP = 8;
+
+function WeekList({
+  profileId,
+  weeks,
+  onEdit,
+}: {
+  profileId: string;
+  weeks: CardioOverview['weeks'];
+  onEdit: (session: CardioSessionDto) => void;
+}) {
+  const { visible, hidden, showMore } = useShowMore(weeks, STEP);
+  return (
+    <>
+      {visible.map((w) => (
+        <WeekCard key={w.summary.weekStart} profileId={profileId} week={w} onEdit={onEdit} />
+      ))}
+      <ShowMoreButton hidden={hidden} onClick={showMore}>
+        {sharedMessages.showMore(Math.min(hidden, STEP))}
+      </ShowMoreButton>
     </>
   );
 }
@@ -85,7 +118,7 @@ function ThisWeek({ profileId, overview }: { profileId: string; overview: Cardio
         )}
       </div>
       <span className="text-display font-semibold tabular-nums">{m.minutes(week.minutes)}</span>
-      <span className="text-sm text-text-muted">{weekLine(week)}</span>
+      <span className="text-caption text-text-muted">{weekLine(week)}</span>
       {editingTarget ? (
         <CardioTargetForm
           profileId={profileId}
@@ -96,7 +129,7 @@ function ThisWeek({ profileId, overview }: { profileId: string; overview: Cardio
         target && <CardioTargetProgress week={week} target={target} />
       )}
       {week.byActivity.length > 0 && (
-        <ul className="flex flex-col gap-1 text-sm">
+        <ul className="flex flex-col gap-1 text-body">
           {week.byActivity.map((a) => (
             <li
               key={`${a.activityType}:${a.activityName ?? ''}`}
@@ -141,16 +174,18 @@ function WeekCard({
   return (
     <Card aria-label={title} className="gap-2">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="text-base font-semibold">{title}</h3>
-        <span className="text-sm text-text-muted tabular-nums">{weekLine(week.summary)}</span>
+        <h3 className="text-heading font-semibold">{title}</h3>
+        <span className="text-caption text-text-muted tabular-nums">{weekLine(week.summary)}</span>
       </div>
       <ul className="flex flex-col">
         {week.sessions.map((s) => (
           <li key={s.id} className="flex flex-wrap items-center gap-2 border-t border-border py-2">
-            <span className="w-24 text-sm text-text-muted">{formatWeekday(s.sessionDate)}</span>
+            <span className="w-24 text-caption text-text-muted">
+              {formatWeekday(s.sessionDate)}
+            </span>
             <span className="flex-1">
               <span className="font-medium">{labelOf(s)}</span>
-              <span className="text-sm text-text-muted tabular-nums">
+              <span className="text-caption text-text-muted tabular-nums">
                 {' · '}
                 {[
                   m.minutes(s.durationMinutes),
@@ -161,29 +196,17 @@ function WeekCard({
                   .join(' · ')}
               </span>
             </span>
-            <Button
-              type="button"
-              variant="ghost"
-              className="min-h-9 px-2"
-              aria-label={m.edit(labelOf(s))}
-              onClick={() => onEdit(s)}
-            >
+            <IconButton label={m.edit(labelOf(s))} onClick={() => onEdit(s)}>
               <Pencil aria-hidden="true" className="size-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              className="min-h-9 px-2"
-              aria-label={m.remove(labelOf(s))}
-              onClick={() => setPending(s)}
-            >
+            </IconButton>
+            <IconButton label={m.remove(labelOf(s))} onClick={() => setPending(s)}>
               <Trash2 aria-hidden="true" className="size-4" />
-            </Button>
+            </IconButton>
           </li>
         ))}
       </ul>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

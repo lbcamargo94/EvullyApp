@@ -28,7 +28,10 @@ function CardHeader({
       <h2 id={id} className="text-heading font-semibold">
         {title}
       </h2>
-      <Link to={to} className="text-sm font-semibold text-brand underline-offset-4 hover:underline">
+      <Link
+        to={to}
+        className="text-body font-semibold text-brand underline-offset-4 hover:underline"
+      >
         {link}
       </Link>
     </div>
@@ -50,7 +53,7 @@ function TodayHabitsCard({ profileId }: { profileId: string }) {
         link={m.openHabits}
       />
       <span className="font-semibold tabular-nums">{m.habitsDone(done, day.habits.length)}</span>
-      <ul className="flex flex-col gap-1 text-sm">
+      <ul className="flex flex-col gap-1 text-body">
         {day.habits.map((h) => (
           <li key={h.id} className="flex items-center gap-2">
             {h.done ? (
@@ -99,7 +102,7 @@ function SleepCard({ profileId }: { profileId: string }) {
   return (
     <Card aria-labelledby="sleep-card-title" className="gap-3">
       <CardHeader id="sleep-card-title" title={m.sleepTitle} to="/app/sleep" link={m.openSleep} />
-      <dl className="flex flex-col gap-2 text-sm">
+      <dl className="flex flex-col gap-2 text-body">
         <div className="flex justify-between gap-3">
           <dt className="text-text-muted">{m.lastNight(formatWeekday(last.sleepDate))}</dt>
           <dd className="font-semibold tabular-nums">{formatDuration(last.durationMinutes)}</dd>

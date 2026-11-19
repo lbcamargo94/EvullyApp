@@ -94,7 +94,7 @@ export function ProfileForm({
       </div>
 
       {errors.root && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {errors.root.message}
         </p>
       )}

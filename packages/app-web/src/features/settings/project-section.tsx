@@ -52,7 +52,7 @@ function CompletedCard({ name }: { name: string }) {
         <h2 id="completed-title" className="text-heading font-semibold">
           {m.completedTitle(name)}
         </h2>
-        <p className="text-sm text-text-muted">{m.completedBody}</p>
+        <p className="text-caption text-text-muted">{m.completedBody}</p>
       </div>
       <Button
         type="button"
@@ -111,7 +111,7 @@ function ActiveProjectCard({
           {m.complete}
         </Button>
         {error && (
-          <p role="alert" className="text-sm text-danger">
+          <p role="alert" className="text-body text-danger">
             {error}
           </p>
         )}
@@ -145,7 +145,7 @@ function NewProjectCard({ profileId }: { profileId: string }) {
         <h2 id="new-project-title" className="text-heading font-semibold">
           {m.newTitle}
         </h2>
-        <p className="text-sm text-text-muted">{m.newHint}</p>
+        <p className="text-caption text-text-muted">{m.newHint}</p>
       </div>
       <ProjectForm
         initial={initial}
@@ -164,7 +164,7 @@ function PastProjectsCard({ projects }: { projects: ProjectDto[] }) {
         {m.pastTitle}
       </h2>
       {projects.length === 0 ? (
-        <p className="text-sm text-text-muted">{m.noPast}</p>
+        <p className="text-caption text-text-muted">{m.noPast}</p>
       ) : (
         <ul className="flex flex-col">
           {projects.map((p) => (
@@ -174,12 +174,12 @@ function PastProjectsCard({ projects }: { projects: ProjectDto[] }) {
             >
               <div className="flex flex-col gap-0.5">
                 <strong className="font-semibold">{p.name}</strong>
-                <span className="text-sm text-text-muted">
+                <span className="text-caption text-text-muted">
                   {objectiveLabels[p.objective].title} ·{' '}
                   {m.period(formatLocalDate(p.startDate), formatLocalDate(p.targetDate))}
                 </span>
               </div>
-              <span className="text-sm text-text-muted">{m.status[p.status]}</span>
+              <span className="text-caption text-text-muted">{m.status[p.status]}</span>
             </li>
           ))}
         </ul>

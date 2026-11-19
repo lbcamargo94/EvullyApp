@@ -55,7 +55,7 @@ function CurrentProfileCard({ profileId }: { profileId: string }) {
         <h2 id="current-profile-title" className="text-heading font-semibold">
           {m.currentTitle}
         </h2>
-        <p className="text-sm text-text-muted">{m.currentHint(profile.name)}</p>
+        <p className="text-caption text-text-muted">{m.currentHint(profile.name)}</p>
       </div>
       <div className="flex flex-wrap gap-3">
         <Button asChild variant="secondary">
@@ -66,7 +66,7 @@ function CurrentProfileCard({ profileId }: { profileId: string }) {
         </Button>
       </div>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}
@@ -104,7 +104,7 @@ function ArchivedProfilesCard() {
       <h2 id="archived-title" className="text-heading font-semibold">
         {m.archivedTitle}
       </h2>
-      {archived?.length === 0 && <p className="text-sm text-text-muted">{m.noArchived}</p>}
+      {archived?.length === 0 && <p className="text-caption text-text-muted">{m.noArchived}</p>}
       <ul className="flex flex-col">
         {archived?.map((p) => (
           <li
@@ -113,7 +113,7 @@ function ArchivedProfilesCard() {
           >
             <div className="flex flex-col gap-0.5">
               <strong className="font-semibold">{p.name}</strong>
-              <span className="text-sm text-text-muted">
+              <span className="text-caption text-text-muted">
                 {m.archivedOn(dateFormat.format(new Date(p.archivedAt)))}
               </span>
             </div>
@@ -142,7 +142,7 @@ function ArchivedProfilesCard() {
       {feedback && (
         <p
           role={feedback.ok ? 'status' : 'alert'}
-          className={feedback.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+          className={feedback.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
         >
           {feedback.text}
         </p>

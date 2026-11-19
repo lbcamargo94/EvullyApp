@@ -1,6 +1,7 @@
 import { addDays, localToday, parseLocalDate, useHabitDay } from '@evully/app-core';
 import { Button, Card, EmptyState } from '@evully/ui';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { formatLongDate } from '../shell/messages.pt-BR';
 import { useState } from 'react';
 import { HabitRow } from './habit-row';
 import { ExamplesButton } from './habit-manager';
@@ -21,17 +22,17 @@ export function HabitDayView({ profileId }: { profileId: string }) {
   const label = date === today ? m.today : dateLabel.format(new Date(`${date}T12:00:00`));
 
   return (
-    <div className="flex max-w-3xl flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
         <Button type="button" variant="ghost" aria-label={m.previousDay} onClick={() => go(-1)}>
           <ChevronLeft aria-hidden="true" className="size-5" />
         </Button>
-        <h2
-          className="min-w-48 text-center text-heading font-semibold first-letter:uppercase"
-          aria-live="polite"
-        >
-          {label}
-        </h2>
+        <div className="flex min-w-56 flex-col items-center" aria-live="polite">
+          <h2 className="text-heading font-semibold first-letter:uppercase">{label}</h2>
+          {date === today && (
+            <span className="text-caption text-text-muted">{formatLongDate(date)}</span>
+          )}
+        </div>
         <Button
           type="button"
           variant="ghost"

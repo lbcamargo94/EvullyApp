@@ -93,7 +93,7 @@ export function ProjectStep(props: {
         </Field>
       </div>
       {props.totalDays !== null && props.totalDays > 0 && (
-        <p className="text-sm text-text-muted">{m.projectDays(props.totalDays)}</p>
+        <p className="text-caption text-text-muted">{m.projectDays(props.totalDays)}</p>
       )}
     </>
   );
@@ -175,8 +175,8 @@ export function InterestsStep(props: {
                       onClick={() => props.onChange({ ...props.value, [key]: option })}
                       className={
                         checked
-                          ? 'min-h-9 rounded-full border-2 border-brand bg-brand-soft px-3.5 text-sm font-semibold text-brand-soft-foreground'
-                          : 'min-h-9 rounded-full border border-border bg-surface px-3.5 text-sm text-text hover:border-brand/60'
+                          ? 'min-h-9 rounded-full border-2 border-brand bg-brand-soft px-3.5 text-body font-semibold text-brand-soft-foreground'
+                          : 'min-h-9 rounded-full border border-border bg-surface px-3.5 text-body text-text hover:border-brand/60'
                       }
                     >
                       {label}
@@ -244,7 +244,7 @@ export function SummaryStep(props: {
           </div>
         ))}
       </dl>
-      <p className="text-sm text-text-muted">{m.summaryFooter}</p>
+      <p className="text-caption text-text-muted">{m.summaryFooter}</p>
     </>
   );
 }

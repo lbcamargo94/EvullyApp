@@ -62,9 +62,9 @@ export function SleepIndicatorsCard({
       <dl className="flex flex-col gap-2">
         {rows.map(([label, value, hint]) => (
           <div key={label} className="flex flex-wrap items-baseline justify-between gap-x-3">
-            <dt className="text-sm text-text-muted">
+            <dt className="text-caption text-text-muted">
               {label}
-              {hint && <span className="ml-1.5 text-xs">({hint})</span>}
+              {hint && <span className="ml-1.5 text-caption">({hint})</span>}
             </dt>
             <dd className="font-semibold tabular-nums">{value}</dd>
           </div>

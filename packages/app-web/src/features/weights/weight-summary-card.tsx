@@ -45,7 +45,7 @@ export function WeightSummaryCard({
             <TrendIndicator tone={changeTone(change, 'weight', summary.objective)}>
               {formatChange(change, 'kg')}
             </TrendIndicator>
-            <span className="text-sm text-text-muted">
+            <span className="text-caption text-text-muted">
               {m.sinceStart} ({formatKg(summary.start.weightKg)})
             </span>
           </>

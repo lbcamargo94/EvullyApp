@@ -108,7 +108,7 @@ export function TodayCard({ profileId }: { profileId: string }) {
       <dl className="grid gap-3 sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))]">
         {rows.map((r) => (
           <div key={`${r.to}:${r.label}`} className="flex flex-col gap-1">
-            <dt className="text-sm text-text-muted">
+            <dt className="text-caption text-text-muted">
               <Link to={r.to} className="underline-offset-4 hover:text-text hover:underline">
                 {r.label}
               </Link>

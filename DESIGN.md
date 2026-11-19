@@ -156,6 +156,7 @@ Regras:
 | `Table`, `TableRow`, `TableHeader`, `TableCell` | Tabela de dados dentro de um `Card`, com rolagem lateral. |
 | `Tabs`, `Dialog`/`ConfirmDialog`, `DropdownMenu`, `Tooltip` | Primitivas Radix com os tokens. |
 | `ProgressBar`, `Skeleton`, `EmptyState` | Progresso, carregando e vazio; `Skeleton` para de piscar com `prefers-reduced-motion`. |
+| `useShowMore`, `ShowMoreButton` | Históricos longos: os mais recentes primeiro (30 registros; no Cardio, 8 semanas) e "Mostrar mais" para os próximos. |
 
 Cada componente define seus estados: **padrão, carregando, vazio, erro e
 dados insuficientes**, quando aplicáveis.

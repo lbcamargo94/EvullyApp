@@ -81,8 +81,8 @@ function TargetsForm({
         <h2 id="targets-title" className="text-heading font-semibold">
           {m.title}
         </h2>
-        <p className="text-sm text-text-muted">{m.hint}</p>
-        <p className="text-sm text-text-muted">
+        <p className="text-caption text-text-muted">{m.hint}</p>
+        <p className="text-caption text-text-muted">
           {target ? m.since(formatLocalDate(target.effectiveFrom)) : m.none}
         </p>
       </div>
@@ -112,7 +112,7 @@ function TargetsForm({
           {message && (
             <p
               role={message.ok ? 'status' : 'alert'}
-              className={message.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+              className={message.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
             >
               {message.text}
             </p>

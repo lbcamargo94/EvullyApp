@@ -61,7 +61,7 @@ export function ImportPreviewTable({ preview }: { preview: ImportPreview }) {
           ))}
         </tbody>
       </Table>
-      <p className="text-sm text-text-muted">
+      <p className="text-caption text-text-muted">
         {m.shownRows(preview.rows.length, total)} {preview.counts.errors > 0 && m.fixHint}
       </p>
     </Card>

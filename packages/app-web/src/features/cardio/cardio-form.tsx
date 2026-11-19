@@ -183,13 +183,13 @@ export function CardioForm({
           </Field>
         </div>
         <details className="flex flex-col gap-3" open={editing !== null}>
-          <summary className="cursor-pointer text-sm font-semibold">{m.more}</summary>
+          <summary className="cursor-pointer text-body font-semibold">{m.more}</summary>
           <Details v={v} set={set} />
         </details>
         {message && (
           <p
             role={message.ok ? 'status' : 'alert'}
-            className={message.ok ? 'text-sm text-text-muted' : 'text-sm text-danger'}
+            className={message.ok ? 'text-caption text-text-muted' : 'text-body text-danger'}
           >
             {message.text}
           </p>
@@ -252,7 +252,7 @@ function Details({ v, set }: { v: Values; set: (patch: Partial<Values>) => void 
           />
         </Field>
       </div>
-      <p className="text-xs text-text-muted">{m.stepsHint}</p>
+      <p className="text-caption text-text-muted">{m.stepsHint}</p>
       <Field id="cardio-notes" label={m.notes} hint={m.optional}>
         <Input
           id="cardio-notes"

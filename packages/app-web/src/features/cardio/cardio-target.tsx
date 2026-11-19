@@ -17,7 +17,7 @@ export function CardioTargetProgress({ week, target }: { week: Week; target: Car
       {rows.map(([label, value, goal]) =>
         goal === null ? null : (
           <div key={label} className="flex flex-col gap-1">
-            <div className="flex justify-between gap-3 text-sm">
+            <div className="flex justify-between gap-3 text-body">
               <dt className="text-text-muted">{label}</dt>
               <dd className="font-semibold tabular-nums">{m.ofTarget(value, goal)}</dd>
             </div>
@@ -70,7 +70,7 @@ export function CardioTargetForm({
 
   return (
     <form noValidate onSubmit={(e) => void submit(e)} className="flex flex-col gap-3">
-      <p className="text-sm text-text-muted">{m.targetHint}</p>
+      <p className="text-caption text-text-muted">{m.targetHint}</p>
       <div className="grid gap-3 sm:grid-cols-2">
         <Field id="cardio-target-sessions" label={m.targetSessions} hint={m.optional}>
           <Input
@@ -100,7 +100,7 @@ export function CardioTargetForm({
         </Button>
       </div>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

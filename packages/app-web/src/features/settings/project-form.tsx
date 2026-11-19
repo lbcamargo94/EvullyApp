@@ -83,7 +83,7 @@ export function ProjectForm({
         />
       </Field>
       <div className="flex flex-col gap-2">
-        <span id="settings-project-objective" className="text-sm font-semibold">
+        <span id="settings-project-objective" className="text-body font-semibold">
           {m.objective}
         </span>
         <div
@@ -123,10 +123,10 @@ export function ProjectForm({
         </Field>
       </div>
       {days !== null && days > 0 && (
-        <p className="text-sm text-text-muted">{t.projectDays(days)}</p>
+        <p className="text-caption text-text-muted">{t.projectDays(days)}</p>
       )}
       {errors.form && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {errors.form}
         </p>
       )}
@@ -135,7 +135,7 @@ export function ProjectForm({
           {busy ? m.saving : submitLabel}
         </Button>
         {saved && (
-          <p role="status" className="text-sm text-text-muted">
+          <p role="status" className="text-caption text-text-muted">
             {settingsMessages.saved}
           </p>
         )}

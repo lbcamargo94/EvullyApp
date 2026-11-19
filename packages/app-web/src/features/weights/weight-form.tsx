@@ -119,7 +119,7 @@ export function WeightForm({
           </Field>
         </div>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-2 text-sm font-medium">
+          <legend className="mb-2 text-body font-medium">
             {m.tags} <span className="font-normal text-text-muted">{m.optional}</span>
           </legend>
           <div className="flex flex-wrap gap-2">
@@ -133,8 +133,8 @@ export function WeightForm({
                   onClick={() => toggleTag(tag.id)}
                   className={
                     on
-                      ? 'min-h-9 rounded-full border-2 border-brand bg-brand-soft px-3.5 text-sm font-semibold text-brand-soft-foreground'
-                      : 'min-h-9 rounded-full border border-border bg-surface px-3.5 text-sm hover:border-brand/60'
+                      ? 'min-h-9 rounded-full border-2 border-brand bg-brand-soft px-3.5 text-body font-semibold text-brand-soft-foreground'
+                      : 'min-h-9 rounded-full border border-border bg-surface px-3.5 text-body hover:border-brand/60'
                   }
                 >
                   {tag.name}
@@ -165,7 +165,7 @@ export function WeightForm({
             </Button>
           )}
         </div>
-        <p role="status" className="text-sm text-text-muted">
+        <p role="status" className="text-caption text-text-muted">
           {status ?? m.latestOfDay}
         </p>
       </form>

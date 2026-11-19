@@ -41,7 +41,7 @@ export function UpdateSection() {
 
   return (
     <div className="flex flex-col gap-3">
-      <p role="status" className="text-sm text-text-muted">
+      <p role="status" className="text-caption text-text-muted">
         {statusText(status)}
         {status.checkedAt && status.state === 'up_to_date' && (
           <> · {m.checkedAt(status.checkedAt)}</>
@@ -77,7 +77,7 @@ export function UpdateSection() {
           </NativeSelect>
         </Field>
       </div>
-      <p className="text-xs text-text-muted">{m.hint}</p>
+      <p className="text-caption text-text-muted">{m.hint}</p>
     </div>
   );
 }

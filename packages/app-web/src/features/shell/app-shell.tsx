@@ -126,12 +126,12 @@ export function AppShell() {
           {catalog && (
             <Link
               to="/dev/catalog"
-              className="text-xs text-brand underline-offset-2 hover:underline"
+              className="text-caption text-brand underline-offset-2 hover:underline"
             >
               {m.catalog}
             </Link>
           )}
-          {info && <p className="text-xs text-text-muted">{m.version(info.version)}</p>}
+          {info && <p className="text-caption text-text-muted">{m.version(info.version)}</p>}
         </div>
       </nav>
       <div className="mx-auto flex w-full max-w-content min-w-0 flex-col gap-6 px-8 py-6">
