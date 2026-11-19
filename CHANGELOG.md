@@ -6,6 +6,13 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Correções
+
+- A verificação da assinatura das atualizações só termina depois de
+  fechar o instalador; antes, no Windows, o arquivo ainda aberto podia
+  impedir apagar, regravar ou executar o instalador logo em seguida (era a
+  causa das falhas intermitentes do teste no CI).
+
 ### Design system (V1.1 — ícones e tokens para o mobile)
 
 - Componente `Icon` ([DESIGN.md](DESIGN.md), §4.2): três tamanhos (16, 20 e 24 px) e

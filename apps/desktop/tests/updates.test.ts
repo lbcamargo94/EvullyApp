@@ -16,8 +16,8 @@ const keys = () => {
   };
 };
 
-// Not `.exe`: on Windows runners the antivirus can hold a fresh executable
-// and fail the next write with EPERM. The check does not depend on the name.
+// The tests rewrite and delete this file right after hashing it: on Windows
+// that fails with EPERM unless hashing waits for the file to close.
 const INSTALLER = 'installer.bin';
 
 describe('update signatures (SECURITY.md §2.8)', () => {

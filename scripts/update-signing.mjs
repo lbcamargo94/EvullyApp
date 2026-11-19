@@ -19,13 +19,20 @@ export const keyFile = () =>
 export const signatureMessage = (version, sha512Hex) =>
   Buffer.from(`evully-update:v1:${version}:${sha512Hex}`, 'utf8');
 
+/** Resolves after the file is closed (an open handle blocks Windows writes). */
 export function sha512Of(file) {
   return new Promise((resolve, reject) => {
     const hash = createHash('sha512');
+    let digest = null;
     createReadStream(file)
       .on('data', (chunk) => hash.update(chunk))
       .on('error', reject)
-      .on('end', () => resolve(hash.digest('hex')));
+      .on('end', () => {
+        digest = hash.digest('hex');
+      })
+      .on('close', () => {
+        if (digest !== null) resolve(digest);
+      });
   });
 }
 
