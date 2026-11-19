@@ -75,6 +75,8 @@ Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 | `neutral` | Variação neutra ou estável | `#606682` | `#A1A1A1` |
 | `positive-soft`, `caution-soft`, `neutral-soft` | Fundo dos selos de variação | `#E3F1EA`, `#FBEFD9`, `#E8E8FA` | `#14281D`, `#2E2410`, `#262626` |
 | `danger` | Somente ações destrutivas (apagar perfil) | `#B63D37` | `#F07A74` |
+| `danger-soft` | Fundo de selos e avisos de erro, hover do botão destrutivo | `#FBE9E8` | `#2E1514` |
+| `overlay` | Fundo escurecido atrás dos diálogos | `#161A2E66` | `#000000A6` |
 | `focus-ring` | Anel de foco | `brand` | `brand` |
 
 O **tema claro usa o índigo da marca em tom bem claro** no fundo e nas

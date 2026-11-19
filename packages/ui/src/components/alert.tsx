@@ -44,7 +44,7 @@ export function Alert({
       <Icon aria-hidden="true" className={cn('size-5 shrink-0', t.icon)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <strong className="font-semibold">{title}</strong>
-        {children && <span className="text-sm">{children}</span>}
+        {children && <span className="text-body">{children}</span>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>

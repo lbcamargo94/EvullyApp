@@ -2,7 +2,7 @@
 
 Local-first fitness app (Electron + React + TS + SQLite), multi-profile,
 growing to web (NestJS API + React SPA/PWA + Next.js site) and native
-mobile (Expo). **Current phase: V1.0 done (1.0.0 released, Phase 1 complete); next is V1.1 (Design system), not started.**
+mobile (Expo). **Current phase: V1.1 (Design system) in progress: DESIGN_IMPLEMENTATION phases 0–5 done; still open from README §15.3: SVG illustrations, icon standardization, exportable tokens for NativeWind.**
 
 ## Language
 - Talk to the user in **Portuguese (pt-BR)**. UI text in pt-BR.
@@ -17,6 +17,7 @@ mobile (Expo). **Current phase: V1.0 done (1.0.0 released, Phase 1 complete); ne
 | BACKEND.md | NestJS modules, auth, API conventions, sync protocol |
 | DESIGN.md | Tokens, components, layout, accessibility |
 | docs/design/DESIGN_IMPLEMENTATION.md | V1.1 visual implementation spec (phases 0–5, acceptance, restrictions); read before any V1.1 design task |
+| docs/design/V1.1_VALIDATION.md | Phase 5 validation report: checks, fixes, acceptance criteria, what is not applicable on desktop |
 | SECURITY.md | Threat model, Electron/IPC/data rules, per-version checklist |
 
 **README.md has ~2,300 lines. Never read it whole.** Find the section
@@ -60,7 +61,7 @@ Same for any doc over ~300 lines.
 |---|---|
 | Run app (dev, data in `%APPDATA%\Evully-dev`) | `npm run dev` |
 | Demo profile with ~4 months of data in the dev DB (app closed; extend `apps/desktop/seed/demo-seed.ts` with each feature) | `npm run seed` |
-| Lint (incl. architecture boundaries) | `npm run lint` |
+| Lint (incl. architecture boundaries and token-only colors) | `npm run lint` |
 | Typecheck | `npm run typecheck` |
 | Tests (desktop tests run under Electron) | `npm test` |
 | End-to-end flows (builds first, Playwright on the real app) | `npm run e2e` |

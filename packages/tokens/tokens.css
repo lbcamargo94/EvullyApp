@@ -19,6 +19,7 @@
   --evully-neutral-soft: #E8E8FA;
   --evully-danger: #B63D37;
   --evully-danger-soft: #FBE9E8;
+  --evully-overlay: #161A2E66;
   --evully-shadow-sm: 0 1px 2px rgb(22 26 46 / 0.08);
   --evully-shadow-card: 0 1px 2px rgb(22 26 46 / 0.05);
   --evully-shadow-md: 0 4px 12px rgb(22 26 46 / 0.10);
@@ -46,6 +47,7 @@
     --evully-neutral-soft: #262626;
     --evully-danger: #F07A74;
     --evully-danger-soft: #2E1514;
+    --evully-overlay: #000000A6;
     --evully-shadow-sm: none;
     --evully-shadow-card: none;
     --evully-shadow-md: 0 4px 12px rgb(0 0 0 / 0.40);
@@ -73,6 +75,7 @@
   --evully-neutral-soft: #262626;
   --evully-danger: #F07A74;
   --evully-danger-soft: #2E1514;
+  --evully-overlay: #000000A6;
   --evully-shadow-sm: none;
   --evully-shadow-card: none;
   --evully-shadow-md: 0 4px 12px rgb(0 0 0 / 0.40);
@@ -98,6 +101,7 @@
   --color-neutral-soft: var(--evully-neutral-soft);
   --color-danger: var(--evully-danger);
   --color-danger-soft: var(--evully-danger-soft);
+  --color-overlay: var(--evully-overlay);
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;

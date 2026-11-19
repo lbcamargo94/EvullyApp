@@ -45,7 +45,10 @@ export function DropdownMenuLabel({
 }: ComponentProps<typeof DropdownMenuPrimitive.Label>) {
   return (
     <DropdownMenuPrimitive.Label
-      className={cn('px-3 py-2 text-xs font-semibold text-text-muted uppercase', className)}
+      className={cn(
+        'px-3 py-2 text-caption font-semibold tracking-wider text-text-muted uppercase',
+        className,
+      )}
       {...props}
     />
   );
