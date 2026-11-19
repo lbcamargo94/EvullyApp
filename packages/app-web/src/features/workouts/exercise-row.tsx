@@ -1,6 +1,6 @@
 import { errorCode, useDeactivateExercise } from '@evully/app-core';
 import type { ExerciseDto } from '@evully/contracts';
-import { Badge, Button, ConfirmDialog } from '@evully/ui';
+import { Badge, Button, ConfirmDialog, Icon } from '@evully/ui';
 import { ChartLine, ChevronDown, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { ExerciseHistoryPanel } from './exercise-history-panel';
@@ -48,9 +48,9 @@ export function ExerciseRow({
           onClick={() => setOpen((v) => !v)}
           className="flex flex-1 items-center gap-2 rounded-sm text-left focus-visible:outline-2 focus-visible:outline-brand"
         >
-          <ChevronDown
-            aria-hidden="true"
-            className={open ? 'size-4 rotate-180 text-text-muted' : 'size-4 text-text-muted'}
+          <Icon
+            icon={ChevronDown}
+            className={open ? 'rotate-180 text-text-muted' : 'text-text-muted'}
           />
           <span className="font-medium">{e.name}</span>
           {e.equipment && <span className="text-caption text-text-muted">· {e.equipment}</span>}
@@ -70,7 +70,7 @@ export function ExerciseRow({
           aria-pressed={showHistory}
           onClick={() => setShowHistory((v) => !v)}
         >
-          <ChartLine aria-hidden="true" className="size-4" />
+          <Icon icon={ChartLine} />
         </Button>
         {!e.isSystem && (
           <>
@@ -81,7 +81,7 @@ export function ExerciseRow({
               aria-label={m.edit(e.name)}
               onClick={() => onEdit(e)}
             >
-              <Pencil aria-hidden="true" className="size-4" />
+              <Icon icon={Pencil} />
             </Button>
             <Button
               type="button"
@@ -90,7 +90,7 @@ export function ExerciseRow({
               aria-label={m.remove(e.name)}
               onClick={() => setConfirming(true)}
             >
-              <Trash2 aria-hidden="true" className="size-4" />
+              <Icon icon={Trash2} />
             </Button>
           </>
         )}

@@ -40,15 +40,21 @@ Componentes Evully   StatCard, TrendIndicator, MeasurementField, WeightChart,
 Telas                packages/app-web (desktop e web), apps/mobile, apps/site
 ```
 
-- `packages/tokens`: tokens em `tokens.json` (fonte única; `tokens.css` é
-  gerado por `npm run build -w @evully/tokens` e verificado nos testes), exportados como
-  variáveis CSS para o `@theme` do Tailwind 4 e como preset para o
-  NativeWind no React Native.
+- `packages/tokens`: tokens em `tokens.json` (fonte única). O
+  `npm run build -w @evully/tokens` gera `tokens.css` (variáveis CSS para o
+  `@theme` do Tailwind 4) e `nativewind-preset.cjs` (preset do NativeWind,
+  `@evully/tokens/nativewind-preset`), e os testes conferem que os dois
+  estão em dia.
+  - O preset usa os mesmos nomes de classe da web (`bg-surface`,
+    `text-heading`, `rounded-lg`, `shadow-card`).
+  - Os valores dos dois temas ficam em `themes.light` e `themes.dark`; o
+    app mobile aplica um deles com `vars()` na raiz.
 - `packages/ui`: componentes base (gerados pelo CLI do shadcn/ui) e
   componentes Evully.
 - **Tokens são a única fonte de cor, fonte, espaçamento e raio.** Nenhum
   componente ou tela usa cor literal (`#…`, `text-indigo-600`); usa o
-  token semântico (`text-brand`, `bg-surface`).
+  token semântico (`text-brand`, `bg-surface`). O `npm run lint` falha com
+  cor fora dos tokens (`scripts/check-colors.mjs`).
 - O tema escuro redefine apenas os tokens semânticos.
 - Por padrão o tema segue o sistema (`prefers-color-scheme`). A escolha em
   Configurações — Geral fixa claro ou escuro com `data-theme` no `<html>`;
@@ -158,10 +164,45 @@ Regras:
 | `Table`, `TableRow`, `TableHeader`, `TableCell` | Tabela de dados dentro de um `Card`, com rolagem lateral. |
 | `Tabs`, `Dialog`/`ConfirmDialog`, `DropdownMenu`, `Tooltip` | Primitivas Radix com os tokens. |
 | `ProgressBar`, `Skeleton`, `EmptyState` | Progresso, carregando e vazio; `Skeleton` para de piscar com `prefers-reduced-motion`. |
+| `Icon` | Ícone Lucide no tamanho e traço do Evully (§4.2). |
 | `useShowMore`, `ShowMoreButton` | Históricos longos: os mais recentes primeiro (30 registros; no Cardio, 8 semanas) e "Mostrar mais" para os próximos. |
 
 Cada componente define seus estados: **padrão, carregando, vazio, erro e
 dados insuficientes**, quando aplicáveis.
+
+### 4.2 Ícones
+
+- **Lucide**, sempre pelo componente `Icon` de `packages/ui`, com traço de
+  2 px e um de três tamanhos:
+
+  | Tamanho | px | Uso |
+  |---|---|---|
+  | `sm` (padrão) | 16 | Dentro de botões, linhas e selos |
+  | `md` | 20 | Menu, setas de navegação, avisos |
+  | `lg` | 24 | Destaque (erro de tela, adicionar perfil) |
+
+- Um ícone sozinho é decorativo (`aria-hidden`): o nome vem do botão ou do
+  texto ao lado. Ícone que carrega informação recebe `label` e vira
+  `role="img"`.
+- **Um ícone por módulo**, definido em `MODULES`
+  (`app-web/src/features/shell/modules.ts`), usado no menu e onde o
+  módulo aparecer:
+
+  | Módulo | Ícone |
+  |---|---|
+  | Dashboard | `LayoutDashboard` |
+  | Peso | `Scale` |
+  | Medidas | `Ruler` |
+  | Nutrição | `Apple` |
+  | Treinos | `Dumbbell` |
+  | Cardio | `Activity` |
+  | Hábitos | `ListChecks` |
+  | Sono | `Moon` |
+  | Progresso | `ChartLine` |
+  | Configurações | `Settings` |
+
+- O `npm run lint` falha com ícone Lucide desenhado direto, sem `Icon`
+  (`scripts/check-icons.mjs`).
 
 ## 5. Layout e plataformas
 

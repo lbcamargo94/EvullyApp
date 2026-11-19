@@ -1,6 +1,6 @@
 import { errorCode, useSessionMutation } from '@evully/app-core';
 import type { WorkoutSessionDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, Input } from '@evully/ui';
+import { Button, Card, ConfirmDialog, Icon, Input } from '@evully/ui';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { ExercisePicker } from './exercise-picker';
@@ -69,7 +69,7 @@ export function SessionView({
           className="self-start"
           onClick={() => setPicking(true)}
         >
-          <Plus aria-hidden="true" className="size-4" />
+          <Icon icon={Plus} />
           {m.addExercise}
         </Button>
       )}

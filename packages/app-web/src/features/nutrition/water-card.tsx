@@ -1,6 +1,6 @@
 import { errorCode, parseDecimal, useAddWater, useRemoveWater } from '@evully/app-core';
 import type { NutritionDay } from '@evully/contracts';
-import { Button, Card, Input, ProgressBar } from '@evully/ui';
+import { Button, Card, Icon, Input, ProgressBar } from '@evully/ui';
 import { X } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { dietMessages as m, foodLogErrorByCode, formatNumber } from './messages.pt-BR';
@@ -106,7 +106,7 @@ export function WaterCard({
                   onClick={() => void run(() => remove.mutateAsync(w.id))}
                   className="rounded-full p-1 hover:bg-surface focus-visible:outline-2 focus-visible:outline-brand"
                 >
-                  <X aria-hidden="true" className="size-3.5" />
+                  <Icon icon={X} />
                 </button>
               </li>
             );

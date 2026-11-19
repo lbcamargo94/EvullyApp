@@ -6,6 +6,23 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Correções
+
+- A verificação da assinatura das atualizações só termina depois de
+  fechar o instalador; antes, no Windows, o arquivo ainda aberto podia
+  impedir apagar, regravar ou executar o instalador logo em seguida (era a
+  causa das falhas intermitentes do teste no CI).
+
+### Design system (V1.1 — ícones e tokens para o mobile)
+
+- Componente `Icon` ([DESIGN.md](DESIGN.md), §4.2): três tamanhos (16, 20 e 24 px) e
+  traço de 2 px; todos os ícones das telas passam por ele, e o
+  `npm run lint` falha com ícone desenhado direto.
+- Um ícone fixo por módulo em `MODULES`, que também monta o menu.
+- O build dos tokens gera o preset do NativeWind
+  (`@evully/tokens/nativewind-preset`) com cores e sombras dos dois temas,
+  tipografia, raios e fonte, para o app mobile (V2.1).
+
 ### Design system (V1.1, fase 5 — validação)
 
 - Relatório em `docs/design/V1.1_VALIDATION.md`.

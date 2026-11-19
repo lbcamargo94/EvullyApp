@@ -9,13 +9,23 @@ export const updateSignatureMessage = (version: string, sha512Hex: string) =>
 
 export const isUpdateVersion = (version: string) => VERSION.test(version);
 
+/**
+ * Resolves only after the file is closed: on Windows a handle still open
+ * after 'end' makes the next delete, rewrite or run of the installer fail.
+ */
 function sha512Of(file: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const hash = createHash('sha512');
+    let digest: string | null = null;
     createReadStream(file)
       .on('data', (chunk) => hash.update(chunk))
       .on('error', reject)
-      .on('end', () => resolve(hash.digest('hex')));
+      .on('end', () => {
+        digest = hash.digest('hex');
+      })
+      .on('close', () => {
+        if (digest !== null) resolve(digest);
+      });
   });
 }
 

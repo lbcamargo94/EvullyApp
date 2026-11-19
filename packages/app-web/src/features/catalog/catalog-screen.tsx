@@ -9,6 +9,7 @@ import {
   ConfirmDialog,
   EmptyState,
   Field,
+  Icon,
   IconButton,
   Input,
   NativeSelect,
@@ -223,9 +224,9 @@ function TokensSection() {
           ))}
         </Row>
         <Row label="Ícones (Lucide, 20 px)">
-          {ICONS.map(([name, Icon]) => (
+          {ICONS.map(([name, Glyph]) => (
             <span key={name} className="flex w-24 flex-col items-center gap-1.5 text-caption">
-              <Icon aria-hidden="true" className="size-5" />
+              <Icon icon={Glyph} size="md" />
               {name}
             </span>
           ))}
@@ -243,7 +244,7 @@ function ButtonsSection() {
           <Row key={variant} label={variant}>
             <Button variant={variant}>Salvar</Button>
             <Button variant={variant}>
-              <Plus aria-hidden="true" className="size-4" />
+              <Icon icon={Plus} />
               Com ícone
             </Button>
             <Button variant={variant} busy>
@@ -256,13 +257,13 @@ function ButtonsSection() {
         ))}
         <Row label="Só ícone (com tooltip)">
           <IconButton label="Editar" onClick={() => undefined}>
-            <Pencil aria-hidden="true" className="size-4.5" />
+            <Icon icon={Pencil} />
           </IconButton>
           <IconButton label="Excluir" onClick={() => undefined}>
-            <Trash2 aria-hidden="true" className="size-4.5" />
+            <Icon icon={Trash2} />
           </IconButton>
           <IconButton label="Desabilitado" disabled onClick={() => undefined}>
-            <Trash2 aria-hidden="true" className="size-4.5" />
+            <Icon icon={Trash2} />
           </IconButton>
         </Row>
       </Card>

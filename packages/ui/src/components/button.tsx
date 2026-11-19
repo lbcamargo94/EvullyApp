@@ -1,3 +1,4 @@
+import { Icon } from './icon';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { LoaderCircle } from 'lucide-react';
@@ -50,12 +51,7 @@ export function Button({
       aria-busy={busy || undefined}
       {...props}
     >
-      {busy && (
-        <LoaderCircle
-          aria-hidden="true"
-          className="size-4 animate-spin motion-reduce:animate-none"
-        />
-      )}
+      {busy && <Icon icon={LoaderCircle} className="animate-spin motion-reduce:animate-none" />}
       {children}
     </button>
   );

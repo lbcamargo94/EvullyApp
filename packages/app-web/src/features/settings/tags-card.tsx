@@ -1,6 +1,6 @@
 import { useRemoveTag, useRenameTag, useTags } from '@evully/app-core';
 import type { Tag } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, Input } from '@evully/ui';
+import { Button, Card, ConfirmDialog, Icon, Input } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState, type KeyboardEvent } from 'react';
 import { weightErrorByCode } from '../weights/messages.pt-BR';
@@ -104,7 +104,7 @@ function TagRow({
           aria-label={m.rename(tag.name)}
           onClick={() => setName(tag.name)}
         >
-          <Pencil aria-hidden="true" className="size-4" />
+          <Icon icon={Pencil} />
         </Button>
         <Button
           type="button"
@@ -113,7 +113,7 @@ function TagRow({
           aria-label={m.remove(tag.name)}
           onClick={() => onRemove(tag)}
         >
-          <Trash2 aria-hidden="true" className="size-4" />
+          <Icon icon={Trash2} />
         </Button>
       </li>
     );

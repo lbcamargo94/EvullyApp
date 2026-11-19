@@ -1,6 +1,6 @@
 import { errorCode, parseDecimal, useHabitMutation, useHabits } from '@evully/app-core';
 import type { HabitDto, HabitType } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, Field, Input, NativeSelect } from '@evully/ui';
+import { Button, Card, ConfirmDialog, Field, Icon, Input, NativeSelect } from '@evully/ui';
 import { ChevronDown, ChevronUp, Pencil, Trash2 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import {
@@ -102,7 +102,7 @@ function HabitItem({
         disabled={isFirst}
         onClick={() => move.mutate('up')}
       >
-        <ChevronUp aria-hidden="true" className="size-4" />
+        <Icon icon={ChevronUp} />
       </Button>
       <Button
         type="button"
@@ -112,7 +112,7 @@ function HabitItem({
         disabled={isLast}
         onClick={() => move.mutate('down')}
       >
-        <ChevronDown aria-hidden="true" className="size-4" />
+        <Icon icon={ChevronDown} />
       </Button>
       <Button
         type="button"
@@ -121,7 +121,7 @@ function HabitItem({
         aria-label={m.edit(h.name)}
         onClick={() => onEdit(h)}
       >
-        <Pencil aria-hidden="true" className="size-4" />
+        <Icon icon={Pencil} />
       </Button>
       <Button
         type="button"
@@ -130,7 +130,7 @@ function HabitItem({
         aria-label={m.remove(h.name)}
         onClick={() => setConfirming(true)}
       >
-        <Trash2 aria-hidden="true" className="size-4" />
+        <Icon icon={Trash2} />
       </Button>
       <ConfirmDialog
         open={confirming}

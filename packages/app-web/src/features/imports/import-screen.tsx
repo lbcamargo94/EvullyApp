@@ -8,7 +8,7 @@ import {
   useSaveImportTemplate,
 } from '@evully/app-core';
 import type { ImportKind, ImportPreview } from '@evully/contracts';
-import { Button, Card, ScreenHeader } from '@evully/ui';
+import { Button, Card, Icon, ScreenHeader } from '@evully/ui';
 import { FileSpreadsheet } from 'lucide-react';
 import { useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
@@ -129,7 +129,7 @@ function FileCard({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <span className="inline-flex size-10 items-center justify-center rounded-md bg-brand-soft text-brand-soft-foreground">
-            <FileSpreadsheet aria-hidden="true" className="size-5" />
+            <Icon icon={FileSpreadsheet} size="md" />
           </span>
           <div className="flex flex-col">
             <strong>{fileName ?? m.chooseFile}</strong>

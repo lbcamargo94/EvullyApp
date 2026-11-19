@@ -1,6 +1,6 @@
 import { errorCode, useSessionMutation } from '@evully/app-core';
 import type { WorkoutSessionDto } from '@evully/contracts';
-import { Button, Card } from '@evully/ui';
+import { Button, Card, Icon } from '@evully/ui';
 import { Plus, Repeat, X } from 'lucide-react';
 import { useState } from 'react';
 import { ExercisePicker } from './exercise-picker';
@@ -70,7 +70,7 @@ export function PerformanceCard({
           aria-label={m.swap}
           onClick={() => setSwapping(true)}
         >
-          <Repeat aria-hidden="true" className="size-4" />
+          <Icon icon={Repeat} />
         </Button>
         <Button
           type="button"
@@ -79,7 +79,7 @@ export function PerformanceCard({
           aria-label={m.removeExercise(p.exerciseName)}
           onClick={() => void run(() => remove.mutateAsync(undefined))}
         >
-          <X aria-hidden="true" className="size-4" />
+          <Icon icon={X} />
         </Button>
       </div>
       {p.suggestion && (
@@ -121,7 +121,7 @@ export function PerformanceCard({
           variant="ghost"
           onClick={() => void run(() => addSet.mutateAsync(undefined))}
         >
-          <Plus aria-hidden="true" className="size-4" />
+          <Icon icon={Plus} />
           {m.addSet}
         </Button>
         <RestTimer

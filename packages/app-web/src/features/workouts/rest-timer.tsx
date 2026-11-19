@@ -1,4 +1,4 @@
-import { Button } from '@evully/ui';
+import { Button, Icon } from '@evully/ui';
 import { Timer } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { sessionMessages as m } from './messages.pt-BR';
@@ -22,7 +22,7 @@ export function RestTimer({ seconds }: { seconds: number }) {
   if (left === null) {
     return (
       <Button type="button" variant="secondary" onClick={() => setLeft(seconds)}>
-        <Timer aria-hidden="true" className="size-4" />
+        <Icon icon={Timer} />
         {m.rest(label(seconds))}
       </Button>
     );

@@ -5,18 +5,7 @@ import {
   useProfile,
   useTrackingState,
 } from '@evully/app-core';
-import {
-  Activity,
-  Apple,
-  ChartLine,
-  Dumbbell,
-  LayoutDashboard,
-  ListChecks,
-  Moon,
-  Ruler,
-  Scale,
-  Settings,
-} from 'lucide-react';
+import { Icon } from '@evully/ui';
 import { useCallback, useEffect, useRef } from 'react';
 import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { useCatalogAvailable } from '../catalog/catalog-link';
@@ -24,6 +13,7 @@ import { BackupErrorBanner } from '../settings/backup-error-banner';
 import { isFocusRequest } from '../shared/focus-request';
 import { UpdateBanner } from '../settings/update-banner';
 import { Logo } from './logo';
+import { MODULES } from './modules';
 import { shellMessages as m } from './messages.pt-BR';
 import { ProfileSwitcher } from './profile-switcher';
 import { QueryErrorBanner } from './query-error-banner';
@@ -81,46 +71,12 @@ export function AppShell() {
           <Logo />
         </div>
         <div className="flex flex-col gap-1">
-          <NavLink to="/app" end className={navItem}>
-            <LayoutDashboard aria-hidden="true" className="size-5" />
-            {m.dashboard}
-          </NavLink>
-          <NavLink to="/app/weight" className={navItem}>
-            <Scale aria-hidden="true" className="size-5" />
-            {m.weight}
-          </NavLink>
-          <NavLink to="/app/measurements" className={navItem}>
-            <Ruler aria-hidden="true" className="size-5" />
-            {m.measurements}
-          </NavLink>
-          <NavLink to="/app/diet" className={navItem}>
-            <Apple aria-hidden="true" className="size-5" />
-            {m.diet}
-          </NavLink>
-          <NavLink to="/app/workouts" className={navItem}>
-            <Dumbbell aria-hidden="true" className="size-5" />
-            {m.workouts}
-          </NavLink>
-          <NavLink to="/app/cardio" className={navItem}>
-            <Activity aria-hidden="true" className="size-5" />
-            {m.cardio}
-          </NavLink>
-          <NavLink to="/app/habits" className={navItem}>
-            <ListChecks aria-hidden="true" className="size-5" />
-            {m.habits}
-          </NavLink>
-          <NavLink to="/app/sleep" className={navItem}>
-            <Moon aria-hidden="true" className="size-5" />
-            {m.sleep}
-          </NavLink>
-          <NavLink to="/app/stats" className={navItem}>
-            <ChartLine aria-hidden="true" className="size-5" />
-            {m.stats}
-          </NavLink>
-          <NavLink to="/app/settings" className={navItem}>
-            <Settings aria-hidden="true" className="size-5" />
-            {m.settings}
-          </NavLink>
+          {MODULES.map((mod) => (
+            <NavLink key={mod.key} to={mod.to} end={mod.to === '/app'} className={navItem}>
+              <Icon icon={mod.icon} size="md" />
+              {mod.label}
+            </NavLink>
+          ))}
         </div>
         <div className="mt-auto flex flex-col gap-1 px-3">
           {catalog && (

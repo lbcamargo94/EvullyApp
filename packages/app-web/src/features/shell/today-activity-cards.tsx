@@ -5,7 +5,7 @@ import {
   useHabitDay,
   useSleepLogs,
 } from '@evully/app-core';
-import { Card } from '@evully/ui';
+import { Card, Icon } from '@evully/ui';
 import { Check, Circle } from 'lucide-react';
 import { Link } from 'react-router';
 import { CardioTargetProgress } from '../cardio/cardio-target';
@@ -57,9 +57,9 @@ function TodayHabitsCard({ profileId }: { profileId: string }) {
         {day.habits.map((h) => (
           <li key={h.id} className="flex items-center gap-2">
             {h.done ? (
-              <Check aria-hidden="true" className="size-4 text-brand" />
+              <Icon icon={Check} className="text-brand" />
             ) : (
-              <Circle aria-hidden="true" className="size-4 text-text-muted" />
+              <Icon icon={Circle} className="text-text-muted" />
             )}
             <span className={h.done ? undefined : 'text-text-muted'}>{h.name}</span>
             <span className="sr-only">{h.done ? m.habitDone : m.habitPending}</span>

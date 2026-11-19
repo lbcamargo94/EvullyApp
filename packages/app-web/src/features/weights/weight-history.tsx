@@ -5,6 +5,7 @@ import {
   Card,
   ConfirmDialog,
   EmptyState,
+  Icon,
   IconButton,
   ShowMoreButton,
   Table,
@@ -79,10 +80,10 @@ export function WeightHistory({
                   <TableCell className="text-text-muted">{entry.notes ?? '—'}</TableCell>
                   <TableCell className="text-right whitespace-nowrap">
                     <IconButton label={m.edit(date)} onClick={() => onEdit(entry)}>
-                      <Pencil aria-hidden="true" className="size-4.5" />
+                      <Icon icon={Pencil} />
                     </IconButton>
                     <IconButton label={m.remove(date)} onClick={() => setPending(entry)}>
-                      <Trash2 aria-hidden="true" className="size-4.5" />
+                      <Icon icon={Trash2} />
                     </IconButton>
                   </TableCell>
                 </TableRow>

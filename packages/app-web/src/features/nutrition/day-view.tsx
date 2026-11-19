@@ -6,7 +6,7 @@ import {
   visibleMeals,
 } from '@evully/app-core';
 import type { FoodLogDto } from '@evully/contracts';
-import { Button, Card, Input } from '@evully/ui';
+import { Button, Card, Icon, Input } from '@evully/ui';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { formatLongDate } from '../shell/messages.pt-BR';
 import { useState, type FormEvent } from 'react';
@@ -60,7 +60,7 @@ export function DayView({ profileId }: { profileId: string }) {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-2">
         <Button type="button" variant="ghost" aria-label={m.previousDay} onClick={() => go(-1)}>
-          <ChevronLeft aria-hidden="true" className="size-5" />
+          <Icon icon={ChevronLeft} size="md" />
         </Button>
         <div className="flex min-w-56 flex-col items-center" aria-live="polite">
           <h2 className="text-heading font-semibold">
@@ -77,7 +77,7 @@ export function DayView({ profileId }: { profileId: string }) {
           disabled={date >= lastDay}
           onClick={() => go(1)}
         >
-          <ChevronRight aria-hidden="true" className="size-5" />
+          <Icon icon={ChevronRight} size="md" />
         </Button>
         {date !== today && (
           <Button type="button" variant="secondary" onClick={() => setDate(today)}>
@@ -112,7 +112,7 @@ function NewMeal({ onCreate }: { onCreate: (name: string) => void }) {
   if (name === null) {
     return (
       <Button type="button" variant="secondary" className="self-start" onClick={() => setName('')}>
-        <Plus aria-hidden="true" className="size-4" />
+        <Icon icon={Plus} />
         {m.newMeal}
       </Button>
     );

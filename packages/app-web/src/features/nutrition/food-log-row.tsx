@@ -6,7 +6,7 @@ import {
   useUpdateFoodLogQuantity,
 } from '@evully/app-core';
 import type { FoodLogDto } from '@evully/contracts';
-import { Button, Checkbox, Input } from '@evully/ui';
+import { Button, Checkbox, Icon, Input } from '@evully/ui';
 import { X } from 'lucide-react';
 import { useState, type KeyboardEvent } from 'react';
 import { dietMessages as m, foodLogErrorByCode, formatNumber, unitLabels } from './messages.pt-BR';
@@ -101,7 +101,7 @@ export function FoodLogRow({
           disabled={remove.isPending}
           onClick={() => void run(() => remove.mutateAsync(log.id))}
         >
-          <X aria-hidden="true" className="size-4" />
+          <Icon icon={X} />
         </Button>
       </div>
       {error && (

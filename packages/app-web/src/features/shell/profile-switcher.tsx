@@ -7,6 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Icon,
 } from '@evully/ui';
 import { ChevronDown, Pencil, Users } from 'lucide-react';
 import { useNavigate } from 'react-router';
@@ -27,7 +28,7 @@ export function ProfileSwitcher({ currentName }: { currentName: string }) {
       >
         <Avatar initial={profileInitial(currentName)} />
         {currentName}
-        <ChevronDown aria-hidden="true" className="size-4" />
+        <Icon icon={ChevronDown} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         {others.length > 0 && (
@@ -43,11 +44,11 @@ export function ProfileSwitcher({ currentName }: { currentName: string }) {
           </>
         )}
         <DropdownMenuItem onSelect={() => void navigate('/app/profile')}>
-          <Pencil aria-hidden="true" className="size-4" />
+          <Icon icon={Pencil} />
           {m.editProfile}
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={() => void navigate('/profiles')}>
-          <Users aria-hidden="true" className="size-4" />
+          <Icon icon={Users} />
           {m.allProfiles}
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -12,6 +12,7 @@ import {
   Card,
   ConfirmDialog,
   EmptyState,
+  Icon,
   IconButton,
   ScreenHeader,
   ShowMoreButton,
@@ -112,10 +113,10 @@ function History({
               </span>
             </span>
             <IconButton label={m.edit(formatDayMonth(n.sleepDate))} onClick={() => onEdit(n)}>
-              <Pencil aria-hidden="true" className="size-4" />
+              <Icon icon={Pencil} />
             </IconButton>
             <IconButton label={m.remove(formatDayMonth(n.sleepDate))} onClick={() => setPending(n)}>
-              <Trash2 aria-hidden="true" className="size-4" />
+              <Icon icon={Trash2} />
             </IconButton>
           </li>
         ))}

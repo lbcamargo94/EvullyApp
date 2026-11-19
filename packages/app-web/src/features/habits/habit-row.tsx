@@ -1,6 +1,6 @@
 import { addDays, errorCode, parseDecimal, parseLocalDate, useLogHabit } from '@evully/app-core';
 import type { HabitDay } from '@evully/contracts';
-import { Checkbox, Input } from '@evully/ui';
+import { Checkbox, Icon, Input } from '@evully/ui';
 import { Check, X } from 'lucide-react';
 import { useState } from 'react';
 import {
@@ -106,12 +106,12 @@ export function HabitRow({
                 }}
                 className="rounded-sm p-1.5 text-text-muted hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-brand"
               >
-                <X aria-hidden="true" className="size-4" />
+                <Icon icon={X} />
               </button>
             )}
           </div>
         )}
-        {h.done && <Check aria-label={m.done} className="size-5 text-brand" />}
+        {h.done && <Icon icon={Check} size="md" label={m.done} className="text-brand" />}
         <Last7 date={date} days={h.last7} />
       </div>
       {error && (

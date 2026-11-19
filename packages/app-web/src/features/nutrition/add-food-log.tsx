@@ -1,6 +1,6 @@
 import { errorCode, foodSearchKey, parseDecimal, useAddFoodLog, useFoods } from '@evully/app-core';
 import type { FoodDto } from '@evully/contracts';
-import { Button, Input } from '@evully/ui';
+import { Button, Icon, Input } from '@evully/ui';
 import { Plus } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import type { MealKey } from './meal-section';
@@ -23,7 +23,7 @@ export function AddFoodLog({
   if (!open) {
     return (
       <Button type="button" variant="ghost" className="self-start" onClick={() => setOpen(true)}>
-        <Plus aria-hidden="true" className="size-4" />
+        <Icon icon={Plus} />
         {m.addFood}
       </Button>
     );

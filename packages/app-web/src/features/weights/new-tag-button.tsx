@@ -1,6 +1,6 @@
 import { errorCode, useCreateTag } from '@evully/app-core';
 import type { Tag } from '@evully/contracts';
-import { Button, Input } from '@evully/ui';
+import { Button, Icon, Input } from '@evully/ui';
 import { Plus } from 'lucide-react';
 import { useState, type KeyboardEvent } from 'react';
 import { weightErrorByCode, weightMessages as m } from './messages.pt-BR';
@@ -51,7 +51,7 @@ export function NewTagButton({
         onClick={() => setOpen(true)}
         className="inline-flex min-h-9 items-center gap-1 rounded-full border border-dashed border-text-muted/50 px-3.5 text-caption text-text-muted hover:border-brand hover:text-text"
       >
-        <Plus aria-hidden="true" className="size-4" />
+        <Icon icon={Plus} />
         {m.newTag}
       </button>
     );
