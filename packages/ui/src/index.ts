@@ -12,6 +12,7 @@ export * from './components/empty-state';
 export * from './components/input';
 export * from './components/label';
 export * from './components/screen-header';
+export * from './components/show-more';
 export * from './components/skeleton';
 export * from './components/stat-card';
 export * from './components/table';

@@ -7,6 +7,7 @@ import {
   type LocalDate,
 } from '@evully/app-core';
 import type { CardioSessionDto, HabitDto, HabitHistory, WorkoutStats } from '@evully/contracts';
+import { NativeSelect } from '@evully/ui';
 import { useState } from 'react';
 import { formatWhole, statsMessages as m } from './messages.pt-BR';
 import { StatChart, type From } from './stat-chart';
@@ -76,19 +77,19 @@ function LoadChart({ sessions }: { sessions: Parameters<typeof exerciseLoads>[0]
       hint={m.loadHint}
       action={
         exercise && (
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-body">
             <span className="text-text-muted">{m.exerciseLabel}</span>
-            <select
+            <NativeSelect
               value={exercise.exerciseId}
               onChange={(e) => setSelected(e.target.value)}
-              className="min-h-9 max-w-48 rounded-md border border-border bg-surface px-2 text-text"
+              className="min-h-9 w-auto max-w-48 px-2"
             >
               {exercises.map((e) => (
                 <option key={e.exerciseId} value={e.exerciseId}>
                   {e.name}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
         )
       }

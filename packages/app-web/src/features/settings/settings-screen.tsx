@@ -36,7 +36,7 @@ export function SettingsScreen() {
       <Tabs
         value={tab}
         onValueChange={(value) => setParams({ tab: value }, { replace: true })}
-        className="flex max-w-3xl flex-col gap-6"
+        className="flex flex-col gap-6"
       >
         <TabsList aria-label={m.title}>
           {TABS.map((t) => (

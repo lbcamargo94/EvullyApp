@@ -28,7 +28,7 @@ export function ExportCard({ profileId }: { profileId: string }) {
         <h2 id="export-title" className="text-heading font-semibold">
           {m.title}
         </h2>
-        <p className="max-w-xl text-sm text-text-muted">{m.hint}</p>
+        <p className="max-w-xl text-caption text-text-muted">{m.hint}</p>
       </div>
       <div className="flex flex-col gap-3">
         <ExportOption
@@ -47,7 +47,9 @@ export function ExportCard({ profileId }: { profileId: string }) {
       {feedback && (
         <p
           role={feedback.ok ? 'status' : 'alert'}
-          className={feedback.ok ? 'text-sm break-all text-text-muted' : 'text-sm text-danger'}
+          className={
+            feedback.ok ? 'text-caption break-all text-text-muted' : 'text-body text-danger'
+          }
         >
           {feedback.text}
         </p>
@@ -64,7 +66,7 @@ function ExportOption(props: {
 }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
-      <span className="max-w-xl text-sm text-text-muted">{props.description}</span>
+      <span className="max-w-xl text-caption text-text-muted">{props.description}</span>
       <Button type="button" variant="secondary" disabled={props.disabled} onClick={props.onClick}>
         {props.label}
       </Button>

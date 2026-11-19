@@ -6,6 +6,18 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+### Design system (V1.1, fase 4 — demais telas)
+
+- Históricos de Peso, Medidas e Sono mostram os 30 registros mais
+  recentes e o Cardio as 8 últimas semanas, com "Mostrar mais"
+  (`useShowMore` e `ShowMoreButton` em `packages/ui`); os dados não mudam.
+- Hábitos e Configurações usam a largura de conteúdo; o dia dos Hábitos
+  mostra a data por extenso em Hoje.
+- Botões só de ícone de Sono e Cardio com tooltip (`IconButton`); os
+  seletores de Progresso usam `NativeSelect`.
+- Peso, Medidas, Progresso, Cardio, Sono, Hábitos, Perfis, Configurações,
+  importação e o shell usam a escala de tipografia.
+
 ### Design system (V1.1, fase 4 — Treinos e Nutrição)
 
 - Treinos e Nutrição usam a escala de tipografia (`caption`, `body`,

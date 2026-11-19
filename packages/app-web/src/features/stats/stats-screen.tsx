@@ -29,7 +29,7 @@ import type {
   SleepLogDto,
   WeightSummary,
 } from '@evully/contracts';
-import { ScreenHeader } from '@evully/ui';
+import { NativeSelect, ScreenHeader } from '@evully/ui';
 import { useState } from 'react';
 import { formatDuration } from '../sleep/messages.pt-BR';
 import { CardioChart, StepsChart, WorkoutCharts } from './activity-charts';
@@ -210,19 +210,19 @@ function MeasurementChart({ items, from }: { items: MeasurementSummary['items'];
       id="stats-measurements"
       title={m.measurementsTitle}
       action={
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 text-body">
           <span className="text-text-muted">{m.measurementLabel}</span>
-          <select
+          <NativeSelect
             value={item.id}
             onChange={(e) => setSelected(e.target.value)}
-            className="min-h-9 rounded-md border border-border bg-surface px-2 text-text"
+            className="min-h-9 w-auto px-2"
           >
             {items.map((i) => (
               <option key={i.id} value={i.id}>
                 {i.name}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
       }
       data={inPeriod(item.series, from).map((p) => ({ date: p.date, value: p.valueCm }))}

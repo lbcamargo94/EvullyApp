@@ -38,7 +38,7 @@ function WeightDisplayCard({ profileId, current }: { profileId: string; current:
         <h2 id="weight-display-title" className="text-heading font-semibold">
           {m.weightTitle}
         </h2>
-        <p className="text-sm text-text-muted">{m.weightHint}</p>
+        <p className="text-caption text-text-muted">{m.weightHint}</p>
       </div>
       <div role="radiogroup" aria-labelledby="weight-display-title" className="grid gap-3">
         {WEIGHT_DISPLAYS.map((value) => (
@@ -65,7 +65,7 @@ function RedoCard() {
         <h2 id="redo-title" className="text-heading font-semibold">
           {m.redoTitle}
         </h2>
-        <p className="text-sm text-text-muted">{m.redoHint}</p>
+        <p className="text-caption text-text-muted">{m.redoHint}</p>
       </div>
       <Button
         type="button"

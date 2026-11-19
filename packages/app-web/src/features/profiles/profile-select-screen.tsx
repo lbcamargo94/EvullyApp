@@ -56,7 +56,7 @@ export function ProfileSelectScreen() {
 
       <ImportProfileButton variant="ghost" onImported={() => undefined} />
 
-      <p className="flex items-center gap-2 text-sm text-text-muted">
+      <p className="flex items-center gap-2 text-caption text-text-muted">
         <Lock aria-hidden="true" className="size-4" />
         {m.localDataNote}
       </p>

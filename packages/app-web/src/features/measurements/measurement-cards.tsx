@@ -20,7 +20,7 @@ export function MeasurementCards({ summary }: { summary: MeasurementSummary }) {
             <TrendIndicator tone={changeTone(item.change, item.bodyRegion, summary.objective)}>
               {formatChange(item.change, 'cm')}
             </TrendIndicator>
-            <span className="text-sm text-text-muted">{m.sinceStart}</span>
+            <span className="text-caption text-text-muted">{m.sinceStart}</span>
           </>
         )
       }

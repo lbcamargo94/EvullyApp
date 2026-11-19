@@ -8,7 +8,16 @@ import {
   useSleepLogs,
 } from '@evully/app-core';
 import type { SleepLogDto } from '@evully/contracts';
-import { Button, Card, ConfirmDialog, EmptyState, ScreenHeader } from '@evully/ui';
+import {
+  Card,
+  ConfirmDialog,
+  EmptyState,
+  IconButton,
+  ScreenHeader,
+  ShowMoreButton,
+  useShowMore,
+} from '@evully/ui';
+import { sharedMessages } from '../shared/messages.pt-BR';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import {
@@ -19,6 +28,9 @@ import {
   sleepErrorByCode,
   sleepMessages as m,
 } from './messages.pt-BR';
+
+/** Nights shown at first and added per "Mostrar mais". */
+const STEP = 30;
 import { SleepForm } from './sleep-form';
 import { SleepIndicatorsCard } from './sleep-indicators';
 
@@ -61,6 +73,7 @@ function History({
 }) {
   const remove = useDeleteSleep(profileId);
   const [pending, setPending] = useState<SleepLogDto | null>(null);
+  const { visible, hidden, showMore } = useShowMore(nights, STEP);
   const [error, setError] = useState<string | null>(null);
 
   const confirm = async () => {
@@ -81,14 +94,14 @@ function History({
       </h2>
       {nights.length === 0 && <EmptyState>{m.empty}</EmptyState>}
       <ul className="flex flex-col">
-        {nights.map((n) => (
+        {visible.map((n) => (
           <li key={n.id} className="flex flex-wrap items-center gap-2 border-t border-border py-2">
-            <span className="w-24 text-sm text-text-muted">{formatWeekday(n.sleepDate)}</span>
+            <span className="w-24 text-caption text-text-muted">{formatWeekday(n.sleepDate)}</span>
             <span className="flex-1">
               <span className="font-semibold tabular-nums">
                 {formatDuration(n.durationMinutes)}
               </span>
-              <span className="text-sm text-text-muted tabular-nums">
+              <span className="text-caption text-text-muted tabular-nums">
                 {' · '}
                 {[
                   m.span(isoToLocalTime(n.sleepTime ?? n.bedTime), isoToLocalTime(n.wakeTime)),
@@ -98,29 +111,20 @@ function History({
                   .join(' · ')}
               </span>
             </span>
-            <Button
-              type="button"
-              variant="ghost"
-              className="min-h-9 px-2"
-              aria-label={m.edit(formatDayMonth(n.sleepDate))}
-              onClick={() => onEdit(n)}
-            >
+            <IconButton label={m.edit(formatDayMonth(n.sleepDate))} onClick={() => onEdit(n)}>
               <Pencil aria-hidden="true" className="size-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              className="min-h-9 px-2"
-              aria-label={m.remove(formatDayMonth(n.sleepDate))}
-              onClick={() => setPending(n)}
-            >
+            </IconButton>
+            <IconButton label={m.remove(formatDayMonth(n.sleepDate))} onClick={() => setPending(n)}>
               <Trash2 aria-hidden="true" className="size-4" />
-            </Button>
+            </IconButton>
           </li>
         ))}
       </ul>
+      <ShowMoreButton hidden={hidden} onClick={showMore}>
+        {sharedMessages.showMore(Math.min(hidden, STEP))}
+      </ShowMoreButton>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

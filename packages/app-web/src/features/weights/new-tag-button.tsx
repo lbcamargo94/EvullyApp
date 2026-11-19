@@ -49,7 +49,7 @@ export function NewTagButton({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex min-h-9 items-center gap-1 rounded-full border border-dashed border-text-muted/50 px-3.5 text-sm text-text-muted hover:border-brand hover:text-text"
+        className="inline-flex min-h-9 items-center gap-1 rounded-full border border-dashed border-text-muted/50 px-3.5 text-caption text-text-muted hover:border-brand hover:text-text"
       >
         <Plus aria-hidden="true" className="size-4" />
         {m.newTag}
@@ -84,7 +84,7 @@ export function NewTagButton({
         </Button>
       </div>
       {error && (
-        <p id="new-tag-error" role="alert" className="text-sm text-danger">
+        <p id="new-tag-error" role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

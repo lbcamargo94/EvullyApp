@@ -55,7 +55,7 @@ export function RestorePanel({ recovery = false }: { recovery?: boolean }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex max-w-xl flex-col gap-0.5">
             <strong className="font-semibold">{m.restoreTitle}</strong>
-            <span className="text-sm text-text-muted">{m.restoreHint}</span>
+            <span className="text-caption text-text-muted">{m.restoreHint}</span>
           </div>
           <Button type="button" variant="secondary" onClick={() => setOpen(!open)}>
             {open ? m.restoreClose : m.restoreOpen}
@@ -73,7 +73,7 @@ export function RestorePanel({ recovery = false }: { recovery?: boolean }) {
       )}
 
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}
@@ -108,7 +108,7 @@ function BackupList({
   return (
     <div className="flex flex-col gap-2">
       {backups.length === 0 ? (
-        <p className="text-sm text-text-muted">{m.restoreNone}</p>
+        <p className="text-caption text-text-muted">{m.restoreNone}</p>
       ) : (
         <ul className="flex flex-col divide-y divide-border rounded-md border border-border">
           {backups.slice(0, SHOWN).map((b) => (
@@ -117,10 +117,10 @@ function BackupList({
               className="flex flex-wrap items-center justify-between gap-2 px-3 py-2"
             >
               <span className="flex flex-col">
-                <span className="text-sm font-semibold">
+                <span className="text-body font-semibold">
                   {m.lastBackupValue(b.createdAt, m.kinds[b.kind])}
                 </span>
-                <span className="text-xs break-all text-text-muted">
+                <span className="text-caption break-all text-text-muted">
                   {m.restoreFolder[b.folder]} · {b.fileName}
                 </span>
               </span>

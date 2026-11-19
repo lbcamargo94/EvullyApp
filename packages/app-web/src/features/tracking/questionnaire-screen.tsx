@@ -83,7 +83,7 @@ function Questionnaire({
       <div className="flex w-full max-w-2xl flex-col gap-5">
         <div className="flex items-center justify-between gap-3">
           <Logo />
-          <span className="text-sm text-text-muted">
+          <span className="text-caption text-text-muted">
             {isSummary ? m.summaryStep : m.step(q.index + 2, LAST_NUMBERED_STEP)}
           </span>
         </div>
@@ -92,7 +92,7 @@ function Questionnaire({
         <Card className="gap-6 p-8">
           <StepBody q={q} sex={profile.sex} />
           {saveError && (
-            <p role="alert" className="text-sm text-danger">
+            <p role="alert" className="text-body text-danger">
               {saveError}
             </p>
           )}
@@ -103,7 +103,7 @@ function Questionnaire({
           type="button"
           onClick={() => void skipAll()}
           disabled={busy}
-          className="self-center text-sm text-text-muted underline-offset-4 hover:text-text hover:underline"
+          className="self-center text-caption text-text-muted underline-offset-4 hover:text-text hover:underline"
         >
           {redo ? m.cancelRedo : m.skipAll}
         </button>

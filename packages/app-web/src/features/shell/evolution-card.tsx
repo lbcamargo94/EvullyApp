@@ -120,12 +120,12 @@ export function EvolutionCard({ profileId }: { profileId: string }) {
         <h2 id="evolution-title" className="text-heading font-semibold">
           {m.evolutionTitle}
         </h2>
-        <p className="text-sm text-text-muted">{m.evolutionHint}</p>
+        <p className="text-caption text-text-muted">{m.evolutionHint}</p>
       </div>
       <dl className="grid gap-3 sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))]">
         {lines.map((line) => (
           <div key={line.label} className="flex flex-col items-start gap-1">
-            <dt className="text-sm text-text-muted">{line.label}</dt>
+            <dt className="text-caption text-text-muted">{line.label}</dt>
             <dd className="font-semibold tabular-nums">{line.value}</dd>
           </div>
         ))}

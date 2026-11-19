@@ -5,14 +5,20 @@ import {
   ConfirmDialog,
   EmptyState,
   IconButton,
+  ShowMoreButton,
   Table,
   TableCell,
   TableHeader,
   TableRow,
+  useShowMore,
 } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { sharedMessages } from '../shared/messages.pt-BR';
 import { measurementMessages as m } from './messages.pt-BR';
+
+/** Sessions shown at first and added per "Mostrar mais". */
+const STEP = 30;
 
 const decimal = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 1,
@@ -32,6 +38,7 @@ export function MeasurementHistory({
 }) {
   const remove = useDeleteMeasurement(profileId);
   const [pending, setPending] = useState<MeasurementSession | null>(null);
+  const { visible, hidden, showMore } = useShowMore(sessions, STEP);
 
   const confirmDelete = async () => {
     if (!pending) return;
@@ -59,7 +66,7 @@ export function MeasurementHistory({
               </tr>
             </thead>
             <tbody>
-              {sessions.map((session) => {
+              {visible.map((session) => {
                 const date = formatLocalDate(session.measuredOn);
                 const byType = new Map(session.values.map((v) => [v.measurementTypeId, v.valueCm]));
                 return (
@@ -86,7 +93,10 @@ export function MeasurementHistory({
               })}
             </tbody>
           </Table>
-          <p className="text-sm text-text-muted">{m.historyHint}</p>
+          <ShowMoreButton hidden={hidden} onClick={showMore}>
+            {sharedMessages.showMore(Math.min(hidden, STEP))}
+          </ShowMoreButton>
+          <p className="text-caption text-text-muted">{m.historyHint}</p>
         </>
       )}
       <ConfirmDialog

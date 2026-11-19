@@ -82,7 +82,7 @@ function WorkoutContent({ profileId, workout }: { profileId: string; workout: To
           </Button>
         </div>
       ) : planned.length === 0 ? (
-        <span className="text-sm">
+        <span className="text-body">
           {finished.length > 0 ? m.workoutDoneToday : m.noWorkoutToday}
         </span>
       ) : (
@@ -90,12 +90,12 @@ function WorkoutContent({ profileId, workout }: { profileId: string; workout: To
           <div key={day.id} className="flex flex-wrap items-center justify-between gap-3">
             <span className="flex flex-col">
               <span className="font-semibold">{day.name}</span>
-              <span className="text-sm text-text-muted">
+              <span className="text-caption text-text-muted">
                 {m.workoutPlan(plan, day.exercises.length)}
               </span>
             </span>
             {finished.includes(day.id) ? (
-              <span className="flex items-center gap-1 text-sm font-semibold">
+              <span className="flex items-center gap-1 text-body font-semibold">
                 <Check aria-hidden="true" className="size-4 text-brand" />
                 {m.workoutDone}
               </span>
@@ -108,7 +108,7 @@ function WorkoutContent({ profileId, workout }: { profileId: string; workout: To
         ))
       )}
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

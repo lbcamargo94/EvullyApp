@@ -125,7 +125,7 @@ export function StatChart({
           <h2 id={id} className="text-heading font-semibold">
             {title}
           </h2>
-          {hint && <p className="text-sm text-text-muted">{hint}</p>}
+          {hint && <p className="text-caption text-text-muted">{hint}</p>}
         </div>
         {action}
       </div>

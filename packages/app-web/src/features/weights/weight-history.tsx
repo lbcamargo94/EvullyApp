@@ -6,14 +6,20 @@ import {
   ConfirmDialog,
   EmptyState,
   IconButton,
+  ShowMoreButton,
   Table,
   TableCell,
   TableHeader,
   TableRow,
+  useShowMore,
 } from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { sharedMessages } from '../shared/messages.pt-BR';
 import { weightMessages as m } from './messages.pt-BR';
+
+/** Weighings shown at first and added per "Mostrar mais". */
+const STEP = 30;
 
 export function WeightHistory({
   profileId,
@@ -26,6 +32,7 @@ export function WeightHistory({
 }) {
   const remove = useDeleteWeight(profileId);
   const [pending, setPending] = useState<WeightEntry | null>(null);
+  const { visible, hidden, showMore } = useShowMore(entries, STEP);
 
   const confirmDelete = async () => {
     if (!pending) return;
@@ -51,7 +58,7 @@ export function WeightHistory({
             </tr>
           </thead>
           <tbody>
-            {entries.map((entry) => {
+            {visible.map((entry) => {
               const date = formatLocalDate(entry.measuredOn);
               return (
                 <TableRow key={entry.id}>
@@ -84,6 +91,9 @@ export function WeightHistory({
           </tbody>
         </Table>
       )}
+      <ShowMoreButton hidden={hidden} onClick={showMore}>
+        {sharedMessages.showMore(Math.min(hidden, STEP))}
+      </ShowMoreButton>
       <ConfirmDialog
         open={pending !== null}
         onOpenChange={(open) => !open && setPending(null)}

@@ -43,7 +43,7 @@ export function BackupSection() {
       <div className={row}>
         <div className="flex flex-col gap-0.5">
           <strong className="font-semibold">{m.lastBackup}</strong>
-          <span className="text-sm text-text-muted">
+          <span className="text-caption text-text-muted">
             {status.lastBackup
               ? m.lastBackupValue(status.lastBackup.at, m.kinds[status.lastBackup.kind])
               : m.never}
@@ -54,7 +54,7 @@ export function BackupSection() {
         </Button>
       </div>
       {feedback && (
-        <p role="status" className="pb-3 text-sm text-text-muted">
+        <p role="status" className="pb-3 text-caption text-text-muted">
           {feedback}
         </p>
       )}
@@ -62,8 +62,8 @@ export function BackupSection() {
       <div className={row}>
         <label htmlFor="backup-automatic" className="flex flex-col gap-0.5">
           <strong className="font-semibold">{m.automatic}</strong>
-          <span className="text-sm text-text-muted">{m.automaticHint}</span>
-          <span className="text-sm break-all text-text-muted">
+          <span className="text-caption text-text-muted">{m.automaticHint}</span>
+          <span className="text-caption break-all text-text-muted">
             {m.defaultFolder(status.defaultDirectory)}
           </span>
         </label>
@@ -77,8 +77,8 @@ export function BackupSection() {
       <div className={row}>
         <div className="flex max-w-xl flex-col gap-0.5">
           <strong className="font-semibold">{m.extraFolder}</strong>
-          <span className="text-sm break-all">{status.extraDirectory ?? m.noExtraFolder}</span>
-          <span className="text-sm text-text-muted">{m.extraFolderHint}</span>
+          <span className="text-body break-all">{status.extraDirectory ?? m.noExtraFolder}</span>
+          <span className="text-caption text-text-muted">{m.extraFolderHint}</span>
         </div>
         <div className="flex gap-2">
           <Button

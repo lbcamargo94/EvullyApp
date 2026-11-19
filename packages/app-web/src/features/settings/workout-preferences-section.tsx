@@ -24,7 +24,7 @@ export function WorkoutPreferencesSection({ profileId }: { profileId: string }) 
         />
       ) : (
         <>
-          <dl className="grid gap-3 text-sm sm:grid-cols-[10rem_1fr]">
+          <dl className="grid gap-3 text-body sm:grid-cols-[10rem_1fr]">
             <dt className="text-text-muted">{m.settingsExperience}</dt>
             <dd>{prefs.experience ? m.experience[prefs.experience] : m.notAnswered}</dd>
             <dt className="text-text-muted">{m.settingsDays}</dt>

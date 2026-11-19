@@ -48,7 +48,7 @@ export function SleepTargetForm({
 
   return (
     <form noValidate onSubmit={(e) => void submit(e)} className="flex flex-col gap-3">
-      <p className="text-sm text-text-muted">{m.targetHint}</p>
+      <p className="text-caption text-text-muted">{m.targetHint}</p>
       <div className="grid grid-cols-2 gap-3">
         <Field id="sleep-target-hours" label={m.targetHours}>
           <Input
@@ -78,7 +78,7 @@ export function SleepTargetForm({
         </Button>
       </div>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

@@ -6,7 +6,7 @@ import { aboutMessages as m } from './messages.pt-BR';
 import { UpdateSection } from './update-section';
 
 const textBox =
-  'max-h-72 overflow-auto rounded-md border border-border bg-surface-muted p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap';
+  'max-h-72 overflow-auto rounded-md border border-border bg-surface-muted p-4 font-mono text-caption leading-relaxed whitespace-pre-wrap';
 
 /** Settings › Sobre (README §8.4): version, health notice, license and notices. */
 export function AboutSection() {
@@ -32,7 +32,7 @@ export function AboutSection() {
             <Button type="button" variant="ghost" onClick={() => logs.mutate()}>
               {m.openLogs}
             </Button>
-            <span className="text-sm text-text-muted">{m.logsHint}</span>
+            <span className="text-caption text-text-muted">{m.logsHint}</span>
           </div>
         )}
       </Section>
@@ -50,14 +50,14 @@ export function AboutSection() {
       </Section>
 
       <Section id="about-notices" title={m.noticesTitle}>
-        <p className="text-sm text-text-muted">{m.noticesHint}</p>
+        <p className="text-caption text-text-muted">{m.noticesHint}</p>
         {showNotices ? (
           <LegalText text={legal.data?.thirdPartyNotices} failed={legal.isError} />
         ) : (
           <button
             type="button"
             onClick={() => setShowNotices(true)}
-            className="self-start text-sm font-semibold text-brand underline-offset-4 hover:underline"
+            className="self-start text-body font-semibold text-brand underline-offset-4 hover:underline"
           >
             {m.showNotices}
           </button>
@@ -79,7 +79,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 }
 
 function LegalText({ text, failed }: { text: string | undefined; failed: boolean }) {
-  if (failed || text === '') return <p className="text-sm text-text-muted">{m.unavailable}</p>;
+  if (failed || text === '') return <p className="text-caption text-text-muted">{m.unavailable}</p>;
   if (text === undefined) return null;
   return (
     // A scrollable box must take focus so keyboard users can scroll it (WCAG 2.1.1).

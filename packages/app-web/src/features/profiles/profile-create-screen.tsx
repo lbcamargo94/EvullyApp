@@ -31,7 +31,7 @@ export function ProfileCreateScreen() {
           />
         </Card>
         {!hasProfiles && (
-          <div className="flex flex-wrap items-center gap-3 text-sm text-text-muted">
+          <div className="flex flex-wrap items-center gap-3 text-caption text-text-muted">
             <span>{transferMessages.otherComputer}</span>
             <ImportProfileButton
               variant="ghost"

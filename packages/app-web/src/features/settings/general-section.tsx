@@ -44,7 +44,7 @@ export function GeneralSection() {
           <h2 id="inactivity-title" className="text-heading font-semibold">
             {m.inactivityTitle}
           </h2>
-          <p className="text-sm text-text-muted">{m.inactivityHint}</p>
+          <p className="text-caption text-text-muted">{m.inactivityHint}</p>
         </div>
         <div
           role="radiogroup"

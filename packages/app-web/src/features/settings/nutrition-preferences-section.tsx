@@ -24,7 +24,7 @@ export function NutritionPreferencesSection({ profileId }: { profileId: string }
         />
       ) : (
         <>
-          <dl className="grid gap-3 text-sm sm:grid-cols-[10rem_1fr]">
+          <dl className="grid gap-3 text-body sm:grid-cols-[10rem_1fr]">
             <dt className="text-text-muted">{m.settingsMeals}</dt>
             <dd>{prefs.meals.map((meal) => mealLabels[meal]).join(', ')}</dd>
             <dt className="text-text-muted">{m.settingsWater}</dt>

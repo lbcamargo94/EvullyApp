@@ -32,16 +32,16 @@ export function TagsCard({ profileId }: { profileId: string }) {
         <h2 id="tags-title" className="text-heading font-semibold">
           {m.tagsTitle}
         </h2>
-        <p className="text-sm text-text-muted">{m.tagsHint}</p>
+        <p className="text-caption text-text-muted">{m.tagsHint}</p>
       </div>
       <ul className="flex flex-col">
-        {tags?.length === 0 && <li className="text-sm text-text-muted">{m.noTags}</li>}
+        {tags?.length === 0 && <li className="text-caption text-text-muted">{m.noTags}</li>}
         {tags?.map((tag) => (
           <TagRow key={tag.id} profileId={profileId} tag={tag} onRemove={setPending} />
         ))}
       </ul>
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-body text-danger">
           {error}
         </p>
       )}
@@ -146,7 +146,7 @@ function TagRow({
         </Button>
       </div>
       {error && (
-        <p id={errorId} role="alert" className="text-sm text-danger">
+        <p id={errorId} role="alert" className="text-body text-danger">
           {error}
         </p>
       )}

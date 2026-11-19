@@ -116,7 +116,7 @@ function NoProjectCard() {
     <Card aria-label={m.projectLabel}>
       <div className="flex flex-col gap-1">
         <h2 className="text-heading font-semibold">{m.noProjectTitle}</h2>
-        <p className="text-sm text-text-muted">{m.noProjectBody}</p>
+        <p className="text-caption text-text-muted">{m.noProjectBody}</p>
       </div>
       <Button asChild variant="secondary" className="self-start">
         <Link to="/app/settings?tab=project">{m.createProject}</Link>
@@ -153,7 +153,7 @@ function ProjectCard({ project }: { project: ProjectDto }) {
       </div>
       {timeline.status === 'ended' && (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-text-muted">{m.projectEndedHint}</p>
+          <p className="text-caption text-text-muted">{m.projectEndedHint}</p>
           <Button asChild variant="secondary">
             <Link to="/app/settings?tab=project">{m.completeProject}</Link>
           </Button>
