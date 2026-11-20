@@ -17,6 +17,15 @@ test('registers a weight and a measurement session', async ({ evully }) => {
   await session.getByRole('textbox', { name: 'Cintura', exact: true }).fill('92');
   await session.getByRole('button', { name: 'Salvar medidas' }).click();
   await expect(page.getByRole('region', { name: 'Histórico' })).toContainText('92');
+
+  // README §20.1: this period against the one before, with no estimate.
+  await go(page, 'Progresso');
+  const comparison = page.getByRole('region', { name: 'Comparar períodos' });
+  await expect(comparison).toContainText('1 de 30');
+  await expect(comparison).toContainText('92,0 cm');
+  await comparison.getByRole('button', { name: '7 dias' }).click();
+  await expect(comparison.getByRole('columnheader', { name: 'Últimos 7 dias' })).toBeVisible();
+  await expect(comparison).toContainText('1 de 7');
 });
 
 test('from the dashboard to a saved weighing with the keyboard only (README §33.2)', async ({

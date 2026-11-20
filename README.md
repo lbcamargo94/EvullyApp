@@ -226,7 +226,7 @@ Este é o **único** roadmap do projeto.
 | **V0.8** ✓ 0.8.0 (15/11/2026) | UX/polimento: acessibilidade e consistência, testes ponta a ponta (Playwright), ajustes do uso real e polimento (§15.1) |
 | **V1.0** ✓ 1.0.0 (16/11/2026) | Desktop estável + instalador Windows: aceite do §19 em testes ponta a ponta, recuperação de banco danificado, pasta de logs (§15.2) |
 | **V1.1** ✓ 1.1.0 (19/11/2026) | Design system: ilustrações, ícones, imagens e acabamento visual de todas as telas, com tokens prontos para o mobile (§15.3) |
-| V1.2 | Analytics Engine determinístico |
+| V1.2 (em andamento) | Analytics Engine determinístico: janelas de 7 a 60 dias e "este período × anterior", calculados na hora (§20.1) |
 | V1.3 | Recommendation Engine determinístico |
 | V1.4 | Notificações locais / Evully Reminders |
 | V1.5 | Evully Health (estrutura local/manual) |
@@ -2046,7 +2046,7 @@ No topo: `Perfil atual: Lucas ▼`.
 | Cardio | `cardio_sessions`, `cardio_targets` | V0.4 |
 | Hábitos | `habit_definitions`, `habit_logs` | V0.4 |
 | Sono | `sleep_logs` | V0.5 |
-| Inteligência | `analytics_snapshots`, `recommendation_events`, `recommendation_decisions` | V1.2–V1.3 |
+| Inteligência | `analytics_snapshots`, `recommendation_events`, `recommendation_decisions` | V1.3 (a V1.2 calcula na hora, sem tabela; ARCHITECTURE §9) |
 | Lembretes | `notification_preferences`, `notification_events` | V1.4 |
 | Saúde | `health_exams`, `health_exam_results`, `health_reference_ranges`, `health_documents` | V1.5 |
 | IA | `ai_conversations`, `ai_messages`, `ai_usage_logs` | V1.6 |
@@ -2184,6 +2184,27 @@ Cálculos testáveis, reproduzíveis e independentes de IA:
 - tendências de exames laboratoriais estruturados.
 
 Todo cálculo registra versão/método quando necessário e possui testes.
+
+**Escopo da V1.2** (decidido em 19/11/2026):
+
+- **Calculado na hora**, a partir dos registros, sem tabela nova; cada
+  resultado traz o método e a versão do cálculo
+  ([ARCHITECTURE.md](ARCHITECTURE.md), §9).
+- **Janelas de 7, 15, 30 e 60 dias**, com a comparação "este período ×
+  anterior" em Progresso.
+- **PRs só medidos**: maior carga e mais repetições com a mesma carga; sem
+  1RM estimado.
+- **Fora da V1.2:**
+  - TMB, gasto energético e percentual de gordura; voltam com o registro
+    de composição corporal com método (§23), por decisão própria;
+  - exames laboratoriais, que dependem do Evully Health (V1.5).
+- **Entregas:**
+  - 1.2.0-alpha.1: motor de janelas, peso e medidas;
+  - 1.2.0-alpha.2: treino (PRs, volume e frequência por grupo muscular,
+    aderência ao plano);
+  - 1.2.0-alpha.3: nutrição e rotina (médias, aderência às metas, peso ×
+    ingestão, sono, cardio, passos e hábitos);
+  - 1.2.0.
 
 ### 20.2 Recommendation Engine (V1.3)
 

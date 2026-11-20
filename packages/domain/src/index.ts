@@ -32,3 +32,5 @@ export * from './habits/habit';
 export * from './sleep/sleep';
 export * from './stats/evolution';
 export * from './stats/series';
+export * from './analytics/windows';
+export * from './analytics/body';

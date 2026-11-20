@@ -1,6 +1,6 @@
 import { addDays, formatKg, formatLocalDate, localToday } from '@evully/app-core';
 import type { WeightSummary } from '@evully/contracts';
-import { Card, EmptyState } from '@evully/ui';
+import { Card, EmptyState, SegmentedControl } from '@evully/ui';
 import { useState } from 'react';
 import {
   CartesianGrid,
@@ -66,29 +66,14 @@ export function WeightChart({
     <Card aria-label={m.chartTitle} className="min-w-0 flex-[2_1_480px]">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-heading font-semibold">{m.chartTitle}</h2>
-        <div
-          role="group"
-          aria-label={m.periodLabel}
-          className="flex gap-1 rounded-md bg-surface-muted p-1"
-        >
-          {(Object.keys(m.periods) as Period[])
+        <SegmentedControl
+          label={m.periodLabel}
+          options={(Object.keys(m.periods) as Period[])
             .filter((p) => p !== 'project' || projectStart)
-            .map((p) => (
-              <button
-                key={p}
-                type="button"
-                aria-pressed={period === p}
-                onClick={() => setPeriod(p)}
-                className={
-                  period === p
-                    ? 'min-h-8 rounded-sm bg-surface px-3 text-caption font-semibold shadow-sm'
-                    : 'min-h-8 rounded-sm px-3 text-caption font-semibold text-text-muted'
-                }
-              >
-                {m.periods[p]}
-              </button>
-            ))}
-        </div>
+            .map((p) => ({ value: p, label: m.periods[p] }))}
+          value={period}
+          onChange={setPeriod}
+        />
       </div>
 
       {data.length === 0 || !first || !last ? (

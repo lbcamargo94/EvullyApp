@@ -9,6 +9,7 @@ import {
   Icon,
   IconButton,
   ScreenHeader,
+  SegmentedControl,
   ShowMoreButton,
   Skeleton,
   StatCard,
@@ -127,5 +128,23 @@ describe('ui components (DESIGN.md §4, §6)', () => {
     expect(named).toContain('role="img"');
     expect(named).toContain('aria-label="Sono"');
     expect(named).toContain('size-6');
+  });
+
+  it('SegmentedControl is a named group of toggle buttons with one pressed', () => {
+    const out = html(
+      <SegmentedControl
+        label="Período"
+        options={[
+          { value: 'a', label: '7 dias' },
+          { value: 'b', label: '30 dias' },
+        ]}
+        value="b"
+        onChange={() => {}}
+      />,
+    );
+    expect(out).toContain('role="group"');
+    expect(out).toContain('aria-label="Período"');
+    expect(out.match(/aria-pressed="true"/g)).toHaveLength(1);
+    expect(out).toMatch(/aria-pressed="true"[^>]*>30 dias/);
   });
 });
