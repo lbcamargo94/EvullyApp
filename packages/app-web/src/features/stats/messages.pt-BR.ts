@@ -54,3 +54,22 @@ export const statsMessages = {
   steps: 'Passos do dia',
   stepsUnit: 'passos',
 } as const;
+
+export const comparisonMessages = {
+  title: 'Comparar períodos',
+  windowLabel: 'Tamanho do período',
+  window: (days: number) => `${days} dias`,
+  indicator: 'Indicador',
+  current: (days: number) => `Últimos ${days} dias`,
+  previous: (days: number) => `${days} dias anteriores`,
+  weighedDays: 'Dias com pesagem',
+  daysOf: (count: number, days: number) => `${count} de ${days}`,
+  averageWeight: 'Peso médio',
+  trendWeight: 'Média móvel no fim',
+  trendChange: 'Variação da média móvel',
+  ratePerWeek: 'Ritmo',
+  perWeek: ' por semana',
+  missingLabel: 'Sem registros suficientes no período',
+  method:
+    '— = sem registros suficientes no período. Peso médio e média móvel (7 dias) precisam de pesagem em pelo menos 3 dias. Medidas: último valor do período e a diferença para o último valor antes dele. Cálculo v1, feito na hora a partir dos seus registros.',
+} as const;

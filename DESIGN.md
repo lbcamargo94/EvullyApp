@@ -162,6 +162,7 @@ Regras:
 | `Badge` | Rótulo curto em `brand`, `positive`, `caution`, `neutral` ou `danger`, tamanhos `sm` e `md`. |
 | `Alert` | Aviso no fluxo da página (sem toast): `info` e `success` com `role="status"`, `caution` e `danger` com `role="alert"`. |
 | `Table`, `TableRow`, `TableHeader`, `TableCell` | Tabela de dados dentro de um `Card`, com rolagem lateral. |
+| `SegmentedControl` | Escolha curta e exclusiva, como o período: grupo nomeado de botões com `aria-pressed`. Usado em Progresso e no gráfico de peso. |
 | `Tabs`, `Dialog`/`ConfirmDialog`, `DropdownMenu`, `Tooltip` | Primitivas Radix com os tokens. |
 | `ProgressBar`, `Skeleton`, `EmptyState` | Progresso, carregando e vazio; `Skeleton` para de piscar com `prefers-reduced-motion`. |
 | `Icon` | Ícone Lucide no tamanho e traço do Evully (§4.2). |

@@ -29,11 +29,12 @@ import type {
   SleepLogDto,
   WeightSummary,
 } from '@evully/contracts';
-import { NativeSelect, ScreenHeader } from '@evully/ui';
+import { NativeSelect, ScreenHeader, SegmentedControl } from '@evully/ui';
 import { useState } from 'react';
 import { formatDuration } from '../sleep/messages.pt-BR';
 import { CardioChart, StepsChart, WorkoutCharts } from './activity-charts';
 import { formatRate, formatWhole, statsMessages as m } from './messages.pt-BR';
+import { PeriodComparison } from './period-comparison';
 import { StatChart, type From } from './stat-chart';
 
 const kg = formatKg;
@@ -55,27 +56,15 @@ export function StatsScreen() {
       <ScreenHeader
         title={m.title}
         actions={
-          <div
-            role="group"
-            aria-label={m.periodLabel}
-            className="flex gap-1 rounded-md bg-surface-muted p-1"
-          >
-            {STATS_PERIODS.filter((p) => p !== 'project' || projectStart).map((p) => (
-              <button
-                key={p}
-                type="button"
-                aria-pressed={period === p}
-                onClick={() => setChosen(p)}
-                className={
-                  period === p
-                    ? 'min-h-8 rounded-sm bg-surface px-3 text-caption font-semibold shadow-sm'
-                    : 'min-h-8 rounded-sm px-3 text-caption font-semibold text-text-muted'
-                }
-              >
-                {m.periods[p]}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl
+            label={m.periodLabel}
+            options={STATS_PERIODS.filter((p) => p !== 'project' || projectStart).map((p) => ({
+              value: p,
+              label: m.periods[p],
+            }))}
+            value={period}
+            onChange={setChosen}
+          />
         }
       />
       <StatsCharts profileId={profileId} from={from} today={today} />
@@ -89,6 +78,7 @@ function useBodyData(profileId: string) {
   return {
     weighed: weight?.series.length ? weight : null,
     measured: measurements?.items.filter((i) => i.series.length > 0) ?? [],
+    objective: weight?.objective ?? measurements?.objective ?? null,
   };
 }
 
@@ -141,19 +131,27 @@ function StatsCharts({
   if (!any && !data.weighed) return <p className="text-text-muted">{m.emptyAll}</p>;
 
   return (
-    <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(420px,1fr))]">
-      {data.weighed && <WeightCharts summary={data.weighed} from={from} />}
-      <MeasurementChart items={data.measured} from={from} />
-      <NutritionCharts history={data.nutrition} from={from} />
-      <SleepChart profileId={profileId} nights={data.nights} from={from} />
-      <WorkoutCharts stats={data.workouts} from={from} today={today} />
-      <CardioChart
-        sessions={data.cardioSessions}
-        target={data.cardioTarget}
-        from={from}
+    <div className="flex flex-col gap-5">
+      <PeriodComparison
+        weight={data.weighed}
+        measurements={data.measured}
+        objective={data.objective}
         today={today}
       />
-      <StepsChart habit={data.stepsHabit} history={data.steps} from={from} />
+      <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(420px,1fr))]">
+        {data.weighed && <WeightCharts summary={data.weighed} from={from} />}
+        <MeasurementChart items={data.measured} from={from} />
+        <NutritionCharts history={data.nutrition} from={from} />
+        <SleepChart profileId={profileId} nights={data.nights} from={from} />
+        <WorkoutCharts stats={data.workouts} from={from} today={today} />
+        <CardioChart
+          sessions={data.cardioSessions}
+          target={data.cardioTarget}
+          from={from}
+          today={today}
+        />
+        <StepsChart habit={data.stepsHabit} history={data.steps} from={from} />
+      </div>
     </div>
   );
 }

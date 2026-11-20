@@ -6,6 +6,21 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+V1.2, Analytics Engine (1.2.0-alpha.1: janelas, peso e medidas).
+
+- **Comparar períodos** no topo de Progresso: os últimos 7, 15, 30 ou 60
+  dias contra o mesmo número de dias antes deles. Mostra dias com pesagem,
+  peso médio, média móvel, a variação e o ritmo por semana, e cada medida com
+  o último valor e a variação, nas cores da direção do objetivo;
+- os números são calculados na hora a partir dos registros, com método e
+  versão do cálculo, sem tabela nova; sem registros suficientes, aparece "—"
+  em vez de zero;
+- novo componente `SegmentedControl` para escolhas curtas, como o período,
+  também usado no seletor de período de Progresso e do gráfico de peso;
+- roadmap: TMB, gasto energético e percentual de gordura ficam fora da V1.2;
+  PRs só medidos, sem 1RM estimado; a tabela `analytics_snapshots` passa
+  para a V1.3.
+
 ## [1.1.0] - 2026-11-19
 
 V1.1, design system: o mesmo Evully com um visual novo e consistente em
