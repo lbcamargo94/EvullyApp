@@ -2194,6 +2194,16 @@ Todo cálculo registra versão/método quando necessário e possui testes.
   anterior" em Progresso.
 - **PRs só medidos**: maior carga e mais repetições com a mesma carga; sem
   1RM estimado.
+- **Treino** (decidido em 20/11/2026), só séries concluídas:
+  - **recorde**: carga maior que todas as anteriores do exercício, ou mais
+    repetições com uma carga já usada; o primeiro treino de um exercício
+    não conta como recorde;
+  - **por grupo muscular**: séries, volume (Σ carga × repetições) e treinos
+    em que o grupo apareceu; cada exercício conta só para o grupo
+    principal, sem fração para os secundários;
+  - **aderência ao plano**: treinos finalizados contra os dias da semana
+    dos planos ativos, contados a partir da criação de cada plano, porque
+    o app não guarda o histórico de planos.
 - **Fora da V1.2:**
   - TMB, gasto energético e percentual de gordura; voltam com o registro
     de composição corporal com método (§23), por decisão própria;

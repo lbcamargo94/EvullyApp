@@ -275,6 +275,8 @@ describe('workout plans (README §10.2, §10.3)', () => {
     });
     await handlers['exercises:deactivate']({ profileId: lucas.id, id: own.id });
     const [listed] = await handlers['workout-plans:list']({ profileId: lucas.id });
+    // Plan adherence (README §20.1) counts from the day the plan was created.
+    expect(listed?.createdAt).toBe('2026-10-26T12:00:00.000Z');
     expect(listed?.days[0]?.exercises[0]).toMatchObject({
       exerciseName: 'Remada T',
       exerciseActive: false,

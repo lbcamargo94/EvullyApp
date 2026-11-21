@@ -21,6 +21,17 @@ V1.2, Analytics Engine (1.2.0-alpha.1: janelas, peso e medidas).
   PRs só medidos, sem 1RM estimado; a tabela `analytics_snapshots` passa
   para a V1.3.
 
+1.2.0-alpha.2: treino.
+
+- **Comparar períodos** ganhou treinos, aderência ao plano, séries
+  concluídas e volume;
+- novo card **"Treino nos últimos N dias"** em Progresso, no mesmo
+  período: recordes medidos (carga maior ou mais repetições com uma carga
+  já usada, com a marca anterior) e séries, volume e treinos por grupo
+  muscular, contra o período anterior;
+- as estatísticas de treino passam a trazer o grupo muscular e as séries
+  concluídas de cada exercício, e os planos trazem a data de criação.
+
 ## [1.1.0] - 2026-11-19
 
 V1.1, design system: o mesmo Evully com um visual novo e consistente em

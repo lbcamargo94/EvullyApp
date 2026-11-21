@@ -102,6 +102,7 @@ export class KyselyWorkoutPlanRepository implements WorkoutPlanRepository {
       profileId: p.profile_id,
       name: p.name,
       status: p.status,
+      createdAt: p.created_at,
       days: daysOf(p.id),
     }));
   }

@@ -101,6 +101,8 @@ export const workoutPlanSchema = z.object({
   id: z.string(),
   name: z.string(),
   status: z.enum(['active', 'archived']),
+  /** ISO instant the plan was created; plan adherence counts from its local date. */
+  createdAt: z.string(),
   days: z.array(
     z.object({
       id: z.string(),
@@ -195,8 +197,13 @@ export const workoutStatsSchema = z.array(
       z.object({
         exerciseId: z.string(),
         name: z.string(),
+        muscleGroup: muscleGroupSchema,
         topWeightKg: z.number().nullable(),
         volumeKg: z.number(),
+        /** Completed sets, with or without a load. */
+        completedSets: z.number(),
+        /** Completed sets with a load, in set order (PRs, README §20.1). */
+        loadedSets: z.array(z.object({ weightKg: z.number(), repetitions: z.number().nullable() })),
       }),
     ),
   }),

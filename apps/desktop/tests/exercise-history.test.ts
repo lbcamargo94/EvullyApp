@@ -164,13 +164,22 @@ describe('exercise history and progression (README §10.5, §10.6)', () => {
     expect(stats).toHaveLength(1);
     expect(stats[0]).toMatchObject({ startedAt: '2026-10-27T18:00:00.000Z', dayId: push.id });
     expect(stats[0]?.exercises.find((e) => e.exerciseId === benchId)).toMatchObject({
+      muscleGroup: 'chest',
       topWeightKg: 100,
       volumeKg: 1220,
+      // Analytics (README §20.1): only completed sets, in set order.
+      completedSets: 2,
+      loadedSets: [
+        { weightKg: 90, repetitions: 8 },
+        { weightKg: 100, repetitions: 5 },
+      ],
     });
     // Exercises with no completed set stay with no load and no volume.
     expect(stats[0]?.exercises.find((e) => e.exerciseId !== benchId)).toMatchObject({
       topWeightKg: null,
       volumeKg: 0,
+      completedSets: 0,
+      loadedSets: [],
     });
     expect(await handlers['workout-stats:get']({ profileId: ana.id })).toEqual([]);
   });
