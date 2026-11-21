@@ -6,42 +6,33 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
-V1.2, Analytics Engine (1.2.0-alpha.1: janelas, peso e medidas).
+## [1.2.0] - 2026-11-21
+
+V1.2, Analytics Engine: Progresso compara este período com o anterior em
+todos os módulos, com números calculados só a partir dos seus registros.
 
 - **Comparar períodos** no topo de Progresso: os últimos 7, 15, 30 ou 60
-  dias contra o mesmo número de dias antes deles. Mostra dias com pesagem,
-  peso médio, média móvel, a variação e o ritmo por semana, e cada medida com
-  o último valor e a variação, nas cores da direção do objetivo;
-- os números são calculados na hora a partir dos registros, com método e
-  versão do cálculo, sem tabela nova; sem registros suficientes, aparece "—"
-  em vez de zero;
-- novo componente `SegmentedControl` para escolhas curtas, como o período,
-  também usado no seletor de período de Progresso e do gráfico de peso;
-- roadmap: TMB, gasto energético e percentual de gordura ficam fora da V1.2;
-  PRs só medidos, sem 1RM estimado; a tabela `analytics_snapshots` passa
-  para a V1.3.
-
-1.2.0-alpha.2: treino.
-
-- **Comparar períodos** ganhou treinos, aderência ao plano, séries
-  concluídas e volume;
-- novo card **"Treino nos últimos N dias"** em Progresso, no mesmo
-  período: recordes medidos (carga maior ou mais repetições com uma carga
-  já usada, com a marca anterior) e séries, volume e treinos por grupo
-  muscular, contra o período anterior;
-- as estatísticas de treino passam a trazer o grupo muscular e as séries
-  concluídas de cada exercício, e os planos trazem a data de criação.
-
-1.2.0-alpha.3: nutrição e rotina.
-
-- **Comparar períodos** ganhou seções (Corpo, Treino, Alimentação, Sono e
-  atividade) e as linhas de dias com alimentação registrada, calorias,
-  proteína, carboidratos e gorduras por dia (com % da meta), peso ×
-  calorias, sono por noite, cardio, cardio por semana e passos por dia;
-- novo card **"Hábitos nos últimos N dias"**: dias cumpridos de cada
-  hábito, contra o período anterior;
-- o histórico de nutrição passa a trazer carboidratos, gorduras e as metas
-  deles.
+  dias contra o mesmo número de dias antes deles, em seções:
+  - **Corpo:** dias com pesagem, peso médio, média móvel, a variação e o
+    ritmo por semana, e cada medida com o último valor e a variação, nas
+    cores da direção do objetivo;
+  - **Treino:** treinos, aderência ao plano, séries concluídas e volume;
+  - **Alimentação:** calorias, proteína, carboidratos e gorduras por dia,
+    com o % da meta, e peso × calorias lado a lado;
+  - **Sono e atividade:** sono por noite, cardio, cardio por semana e
+    passos por dia;
+- **Treino nos últimos N dias:** recordes medidos (carga maior ou mais
+  repetições com uma carga já usada, com a marca anterior) e séries, volume
+  e treinos por grupo muscular;
+- **Hábitos nos últimos N dias:** dias cumpridos de cada hábito;
+- **Sem estimativas:** sem 1RM, TMB ou percentual de gordura; sem registros
+  suficientes aparece "—", nunca zero. Cada cálculo tem método e versão e é
+  feito na hora, sem tabela nova;
+- novo componente `SegmentedControl`, também usado no seletor de período
+  de Progresso e do gráfico de peso;
+- os dados de treino e de nutrição que chegam às telas ganharam grupo
+  muscular, séries concluídas, carboidratos, gorduras e as metas deles, e os
+  planos trazem a data de criação; sem mudança no banco.
 
 ## [1.1.0] - 2026-11-19
 
