@@ -16,7 +16,9 @@ import {
   useSleepLogs,
   useSleepTarget,
   useWeightSummary,
+  useWorkoutPlans,
   useWorkoutStats,
+  localDateOf,
   weeklyAverages,
   weeklyRates,
   STATS_PERIODS,
@@ -28,6 +30,7 @@ import type {
   NutritionHistory,
   SleepLogDto,
   WeightSummary,
+  WorkoutStats,
 } from '@evully/contracts';
 import { NativeSelect, ScreenHeader, SegmentedControl } from '@evully/ui';
 import { useState } from 'react';
@@ -35,6 +38,7 @@ import { formatDuration } from '../sleep/messages.pt-BR';
 import { CardioChart, StepsChart, WorkoutCharts } from './activity-charts';
 import { formatRate, formatWhole, statsMessages as m } from './messages.pt-BR';
 import { PeriodComparison } from './period-comparison';
+import type { TrainingData } from './training-comparison';
 import { StatChart, type From } from './stat-chart';
 
 const kg = formatKg;
@@ -103,9 +107,24 @@ function useStatsData(profileId: string) {
   return {
     ...useBodyData(profileId),
     ...useActivityData(profileId),
+    training: useTrainingData(profileId, workouts),
     nutrition,
     nights,
     workouts,
+  };
+}
+
+/** Finished workouts by local date, and the weekdays of the active plans since their creation. */
+function useTrainingData(profileId: string, workouts: WorkoutStats): TrainingData {
+  const { data: plans = [] } = useWorkoutPlans(profileId);
+  return {
+    sessions: workouts.map((w) => ({ date: localDateOf(w.startedAt), exercises: w.exercises })),
+    plans: plans
+      .filter((p) => p.status === 'active')
+      .map((p) => ({
+        weekdays: p.days.flatMap((d) => (d.weekday === null ? [] : [d.weekday])),
+        since: localDateOf(p.createdAt),
+      })),
   };
 }
 
@@ -135,6 +154,7 @@ function StatsCharts({
       <PeriodComparison
         weight={data.weighed}
         measurements={data.measured}
+        training={data.training}
         objective={data.objective}
         today={today}
       />

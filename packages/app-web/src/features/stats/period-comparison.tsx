@@ -10,17 +10,11 @@ import {
   type LocalDate,
 } from '@evully/app-core';
 import type { MeasurementSummary, Objective, WeightSummary } from '@evully/contracts';
-import {
-  Card,
-  SegmentedControl,
-  Table,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TrendIndicator,
-} from '@evully/ui';
-import { useState, type ReactNode } from 'react';
+import { Card, SegmentedControl, Table, TableHeader, TrendIndicator } from '@evully/ui';
+import { useState } from 'react';
+import { Missing, Row } from './comparison-table';
 import { comparisonMessages as m } from './messages.pt-BR';
+import { TrainingDetail, TrainingRows, type TrainingData } from './training-comparison';
 
 type Indicator = Parameters<typeof changeTone>[1];
 
@@ -46,34 +40,6 @@ function Change({
     <TrendIndicator tone={changeTone(value, indicator, objective)}>
       {text === 'Estável' ? text : `${text}${suffix}`}
     </TrendIndicator>
-  );
-}
-
-function Missing() {
-  return (
-    <span className="text-text-muted" aria-label={m.missingLabel}>
-      —
-    </span>
-  );
-}
-
-function Row({
-  label,
-  current,
-  previous,
-}: {
-  label: string;
-  current: ReactNode;
-  previous: ReactNode;
-}) {
-  return (
-    <TableRow>
-      <th scope="row" className="px-3 py-3 font-normal">
-        {label}
-      </th>
-      <TableCell>{current}</TableCell>
-      <TableCell>{previous}</TableCell>
-    </TableRow>
   );
 }
 
@@ -173,52 +139,60 @@ function MeasurementRows({
 }
 
 /**
- * "Este período × anterior" (README §20.1): weight and measurements of the
- * last 7, 15, 30 or 60 days against the same number of days before them.
- * Plain numbers from the records, colored by the objective's direction.
+ * "Este período × anterior" (README §20.1): weight, measurements and
+ * training of the last 7, 15, 30 or 60 days against the same number of days
+ * before them. Plain numbers from the records, colored by the objective's
+ * direction; the training card below follows the same period.
  */
 export function PeriodComparison({
   weight,
   measurements,
+  training,
   objective,
   today,
 }: {
   weight: WeightSummary | null;
   measurements: MeasurementSummary['items'];
+  training: TrainingData;
   objective: Objective | null;
   today: LocalDate;
 }) {
   const [days, setDays] = useState<AnalyticsWindow>(DEFAULT_WINDOW);
-  if (!weight && measurements.length === 0) return null;
+  const trained = training.sessions.length > 0;
+  if (!weight && measurements.length === 0 && !trained) return null;
   return (
-    <Card aria-labelledby="period-comparison-title">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="period-comparison-title" className="text-heading font-semibold">
-          {m.title}
-        </h2>
-        <SegmentedControl
-          label={m.windowLabel}
-          options={ANALYTICS_WINDOWS.map((d) => ({ value: String(d), label: m.window(d) }))}
-          value={String(days)}
-          onChange={(value) => setDays(Number(value) as AnalyticsWindow)}
-        />
-      </div>
-      <Table>
-        <thead>
-          <tr>
-            <TableHeader>{m.indicator}</TableHeader>
-            <TableHeader>{m.current(days)}</TableHeader>
-            <TableHeader>{m.previous(days)}</TableHeader>
-          </tr>
-        </thead>
-        <tbody>
-          {weight && (
-            <WeightRows summary={weight} days={days} today={today} objective={objective} />
-          )}
-          <MeasurementRows items={measurements} days={days} today={today} objective={objective} />
-        </tbody>
-      </Table>
-      <p className="text-caption text-text-muted">{m.method}</p>
-    </Card>
+    <>
+      <Card aria-labelledby="period-comparison-title">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="period-comparison-title" className="text-heading font-semibold">
+            {m.title}
+          </h2>
+          <SegmentedControl
+            label={m.windowLabel}
+            options={ANALYTICS_WINDOWS.map((d) => ({ value: String(d), label: m.window(d) }))}
+            value={String(days)}
+            onChange={(value) => setDays(Number(value) as AnalyticsWindow)}
+          />
+        </div>
+        <Table>
+          <thead>
+            <tr>
+              <TableHeader>{m.indicator}</TableHeader>
+              <TableHeader>{m.current(days)}</TableHeader>
+              <TableHeader>{m.previous(days)}</TableHeader>
+            </tr>
+          </thead>
+          <tbody>
+            {weight && (
+              <WeightRows summary={weight} days={days} today={today} objective={objective} />
+            )}
+            <MeasurementRows items={measurements} days={days} today={today} objective={objective} />
+            {trained && <TrainingRows data={training} days={days} today={today} />}
+          </tbody>
+        </Table>
+        <p className="text-caption text-text-muted">{m.method}</p>
+      </Card>
+      {trained && <TrainingDetail data={training} days={days} today={today} />}
+    </>
   );
 }

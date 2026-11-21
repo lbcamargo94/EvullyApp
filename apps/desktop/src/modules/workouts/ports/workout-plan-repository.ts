@@ -25,6 +25,8 @@ export interface WorkoutPlanRecord {
   profileId: string;
   name: string;
   status: 'active' | 'archived';
+  /** ISO instant the plan was created. */
+  createdAt: string;
   days: WorkoutDayRecord[];
 }
 

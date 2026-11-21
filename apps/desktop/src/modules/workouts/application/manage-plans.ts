@@ -28,6 +28,7 @@ const toDto = (p: WorkoutPlanRecord): WorkoutPlanDto => ({
   id: p.id,
   name: p.name,
   status: p.status,
+  createdAt: p.createdAt,
   days: p.days.map((d) => ({
     id: d.id,
     name: d.name,

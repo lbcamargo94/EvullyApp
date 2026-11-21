@@ -70,6 +70,27 @@ export const comparisonMessages = {
   ratePerWeek: 'Ritmo',
   perWeek: ' por semana',
   missingLabel: 'Sem registros suficientes no período',
+  workouts: 'Treinos',
+  adherenceLabel: 'Aderência ao plano',
+  adherence: (done: number, planned: number) =>
+    `${done} de ${planned} ${planned === 1 ? 'dia previsto' : 'dias previstos'}`,
+  sets: 'Séries concluídas',
+  volume: 'Volume',
+  trainingTitle: (days: number) => `Treino nos últimos ${days} dias`,
+  recordsTitle: 'Recordes',
+  recordsEmpty: 'Nenhum recorde neste período.',
+  recordValue: (weightKg: number, repetitions: number | null) =>
+    `${weightKg.toLocaleString('pt-BR')} kg${repetitions === null ? '' : ` × ${repetitions}`}`,
+  recordKind: { load: 'Carga', reps: 'Repetições' },
+  recordBeforeLoad: (kg: number) => `antes: ${kg.toLocaleString('pt-BR')} kg`,
+  recordBeforeReps: (reps: number) =>
+    `antes: ${reps} ${reps === 1 ? 'repetição' : 'repetições'} com essa carga`,
+  groupsTitle: 'Por grupo muscular',
+  groupsEmpty: 'Nenhuma série concluída neste período.',
+  group: 'Grupo',
+  setsBefore: 'Séries no período anterior',
+  trainingMethod:
+    'Só séries concluídas e valores registrados, sem 1RM estimado. Cada exercício conta para o seu grupo principal. Recorde: carga maior que todas as anteriores do exercício, ou mais repetições com uma carga já usada. Aderência: treinos finalizados contra os dias da semana dos planos ativos, desde a criação de cada plano. Cálculo v1.',
   method:
     '— = sem registros suficientes no período. Peso médio e média móvel (7 dias) precisam de pesagem em pelo menos 3 dias. Medidas: último valor do período e a diferença para o último valor antes dele. Cálculo v1, feito na hora a partir dos seus registros.',
 } as const;

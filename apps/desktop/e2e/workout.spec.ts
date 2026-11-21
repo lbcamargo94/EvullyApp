@@ -28,4 +28,10 @@ test('starts a workout, saves a set and finishes it', async ({ evully }) => {
   await expect(page.getByRole('region', { name: 'Próximo treino' })).toContainText(
     'Treino concluído hoje.',
   );
+
+  // README §20.1: the set counts for its muscle group; one workout is no record yet.
+  await go(page, 'Progresso');
+  const training = page.getByRole('region', { name: 'Treino nos últimos 30 dias' });
+  await expect(training).toContainText('Nenhum recorde neste período.');
+  await expect(training.getByRole('row', { name: /^Abdômen\/core 1 / })).toBeVisible();
 });

@@ -77,19 +77,32 @@ export class GetWorkoutStats {
   async execute({ profileId }: { profileId: string }): Promise<WorkoutStats> {
     const { profiles, sessions, exercises } = this.deps;
     await new GetProfile(profiles).execute({ id: profileId });
-    const names = new Map((await exercises.listAll(profileId)).map((e) => [e.id, e.name]));
+    const known = new Map((await exercises.listAll(profileId)).map((e) => [e.id, e]));
     return (await sessions.finishedSessions(profileId)).map((session) => ({
       startedAt: session.startedAt,
       dayId: session.workoutDayId,
       exercises: session.exercises.flatMap(({ exerciseId, sets }) => {
-        const name = names.get(exerciseId);
-        if (name === undefined) return [];
+        const exercise = known.get(exerciseId);
+        if (!exercise) return [];
         const { topWeightKg, volumeKg } = sessionStats({
           sessionId: session.id,
           startedAt: session.startedAt,
           sets,
         });
-        return [{ exerciseId, name, topWeightKg, volumeKg }];
+        const completed = sets.filter((s) => s.completed);
+        return [
+          {
+            exerciseId,
+            name: exercise.name,
+            muscleGroup: exercise.muscleGroup,
+            topWeightKg,
+            volumeKg,
+            completedSets: completed.length,
+            loadedSets: completed.flatMap((s) =>
+              s.weightKg === null ? [] : [{ weightKg: s.weightKg, repetitions: s.repetitions }],
+            ),
+          },
+        ];
       }),
     }));
   }

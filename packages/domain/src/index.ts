@@ -34,3 +34,4 @@ export * from './stats/evolution';
 export * from './stats/series';
 export * from './analytics/windows';
 export * from './analytics/body';
+export * from './analytics/training';
