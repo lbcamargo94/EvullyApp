@@ -12,8 +12,9 @@ import {
 import type { MeasurementSummary, Objective, WeightSummary } from '@evully/contracts';
 import { Card, SegmentedControl, Table, TableHeader, TrendIndicator } from '@evully/ui';
 import { useState } from 'react';
-import { Missing, Row } from './comparison-table';
+import { Missing, Row, SectionRow } from './comparison-table';
 import { comparisonMessages as m } from './messages.pt-BR';
+import { HabitsDetail, RoutineRows, type RoutineData } from './routine-comparison';
 import { TrainingDetail, TrainingRows, type TrainingData } from './training-comparison';
 
 type Indicator = Parameters<typeof changeTone>[1];
@@ -139,27 +140,37 @@ function MeasurementRows({
 }
 
 /**
- * "Este período × anterior" (README §20.1): weight, measurements and
- * training of the last 7, 15, 30 or 60 days against the same number of days
- * before them. Plain numbers from the records, colored by the objective's
- * direction; the training card below follows the same period.
+ * "Este período × anterior" (README §20.1): weight, measurements, training,
+ * nutrition, sleep, cardio and steps of the last 7, 15, 30 or 60 days against
+ * the same number of days before them. Plain numbers from the records,
+ * colored by the objective's direction; the training and habits cards below
+ * follow the same period.
  */
 export function PeriodComparison({
   weight,
   measurements,
   training,
+  routine,
   objective,
   today,
 }: {
   weight: WeightSummary | null;
   measurements: MeasurementSummary['items'];
   training: TrainingData;
+  routine: RoutineData;
   objective: Objective | null;
   today: LocalDate;
 }) {
   const [days, setDays] = useState<AnalyticsWindow>(DEFAULT_WINDOW);
   const trained = training.sessions.length > 0;
-  if (!weight && measurements.length === 0 && !trained) return null;
+  const routineRecorded = [
+    routine.nutrition,
+    routine.nights,
+    routine.cardio,
+    routine.steps,
+    routine.habits,
+  ].some((records) => records.length > 0);
+  if (!weight && measurements.length === 0 && !trained && !routineRecorded) return null;
   return (
     <>
       <Card aria-labelledby="period-comparison-title">
@@ -183,16 +194,24 @@ export function PeriodComparison({
             </tr>
           </thead>
           <tbody>
+            {(weight || measurements.length > 0) && <SectionRow>{m.sections.body}</SectionRow>}
             {weight && (
               <WeightRows summary={weight} days={days} today={today} objective={objective} />
             )}
             <MeasurementRows items={measurements} days={days} today={today} objective={objective} />
-            {trained && <TrainingRows data={training} days={days} today={today} />}
+            {trained && (
+              <>
+                <SectionRow>{m.sections.training}</SectionRow>
+                <TrainingRows data={training} days={days} today={today} />
+              </>
+            )}
+            <RoutineRows data={routine} days={days} today={today} />
           </tbody>
         </Table>
         <p className="text-caption text-text-muted">{m.method}</p>
       </Card>
       {trained && <TrainingDetail data={training} days={days} today={today} />}
+      <HabitsDetail data={routine} days={days} today={today} />
     </>
   );
 }

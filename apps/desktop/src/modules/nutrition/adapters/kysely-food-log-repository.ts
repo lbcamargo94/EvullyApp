@@ -139,6 +139,8 @@ export class KyselyFoodLogRepository implements FoodLogRepository {
         'log_date',
         eb.fn.sum<number>('calories_kcal').as('calories'),
         eb.fn.sum<number>('protein_g').as('protein'),
+        eb.fn.sum<number>('carbohydrate_g').as('carbohydrate'),
+        eb.fn.sum<number>('fat_g').as('fat'),
       ])
       .where('profile_id', '=', profileId)
       .where('deleted_at', 'is', null)
@@ -150,6 +152,8 @@ export class KyselyFoodLogRepository implements FoodLogRepository {
       date: r.log_date as LocalDate,
       caloriesKcal: Number(r.calories),
       proteinG: Number(r.protein),
+      carbohydrateG: Number(r.carbohydrate),
+      fatG: Number(r.fat),
     }));
   }
 

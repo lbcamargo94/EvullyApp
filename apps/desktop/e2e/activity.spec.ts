@@ -42,9 +42,21 @@ test('registers cardio, a habit and a night of sleep, then sees them in Progress
 
   await go(page, 'Progresso');
   await page
-    .getByRole('group', { name: 'Período' })
+    .getByRole('group', { name: 'Período', exact: true })
     .getByRole('button', { name: '30 dias' })
     .click();
   await expect(page.getByRole('img', { name: /sono/i })).toBeVisible();
   await expect(page.getByRole('img', { name: /cardio/i })).toBeVisible();
+
+  // README §20.1: the same records in "Comparar períodos" and the habits card.
+  const comparison = page.getByRole('region', { name: 'Comparar períodos' });
+  await expect(comparison.getByRole('row', { name: /^Sono por noite/ })).toContainText(
+    '8h00 (1 noite)',
+  );
+  await expect(comparison.getByRole('row', { name: /^Cardio \d/ })).toContainText(
+    '1 sessão · 30 min',
+  );
+  await expect(page.getByRole('region', { name: 'Hábitos nos últimos 30 dias' })).toContainText(
+    '1 de 30 dias',
+  );
 });

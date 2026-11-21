@@ -31,3 +31,18 @@ export function Row({
     </TableRow>
   );
 }
+
+/** Heading row of a group of indicators (body, training, food, routine). */
+export function SectionRow({ children }: { children: ReactNode }) {
+  return (
+    <tr>
+      <th
+        colSpan={3}
+        scope="colgroup"
+        className="px-3 pt-5 pb-2 text-left text-caption font-semibold tracking-wider text-text-muted uppercase"
+      >
+        {children}
+      </th>
+    </tr>
+  );
+}

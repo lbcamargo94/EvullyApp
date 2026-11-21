@@ -1,5 +1,5 @@
-import type { HabitDay, HabitInput, UpdateHabitInput } from '@evully/contracts';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { HabitDay, HabitHistory, HabitInput, UpdateHabitInput } from '@evully/contracts';
+import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { EvullyClient } from '../../client';
 import { useEvullyClient } from '../../client-context';
 
@@ -30,6 +30,25 @@ export function useHabitHistory(profileId: string | null, habitId: string | null
     queryKey: ['habits', profileId ?? '', 'history', habitId ?? ''] as const,
     queryFn: () => client.habits.history(profileId ?? '', habitId ?? ''),
     enabled: profileId !== null && habitId !== null,
+  });
+}
+
+/**
+ * The history of several habits at once, in the order of `habitIds`; each
+ * shares the cache of `useHabitHistory`. Missing histories come back empty.
+ */
+export function useHabitHistories(
+  profileId: string | null,
+  habitIds: readonly string[],
+): HabitHistory[] {
+  const client = useEvullyClient();
+  return useQueries({
+    queries: habitIds.map((habitId) => ({
+      queryKey: ['habits', profileId ?? '', 'history', habitId] as const,
+      queryFn: () => client.habits.history(profileId ?? '', habitId),
+      enabled: profileId !== null,
+    })),
+    combine: (results) => results.map((r) => r.data ?? []),
   });
 }
 
