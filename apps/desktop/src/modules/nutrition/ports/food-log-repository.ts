@@ -27,6 +27,8 @@ export interface DailyConsumed {
   date: LocalDate;
   caloriesKcal: number;
   proteinG: number;
+  carbohydrateG: number;
+  fatG: number;
 }
 
 /** Every query is scoped by profile (README §6.1). */

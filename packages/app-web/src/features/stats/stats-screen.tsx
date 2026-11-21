@@ -10,6 +10,7 @@ import {
   useCardioOverview,
   useCurrentProfile,
   useHabitHistory,
+  useHabitHistories,
   useHabits,
   useMeasurementSummary,
   useNutritionHistory,
@@ -38,6 +39,7 @@ import { formatDuration } from '../sleep/messages.pt-BR';
 import { CardioChart, StepsChart, WorkoutCharts } from './activity-charts';
 import { formatRate, formatWhole, statsMessages as m } from './messages.pt-BR';
 import { PeriodComparison } from './period-comparison';
+import type { RoutineData } from './routine-comparison';
 import type { TrainingData } from './training-comparison';
 import { StatChart, type From } from './stat-chart';
 
@@ -114,6 +116,32 @@ function useStatsData(profileId: string) {
   };
 }
 
+/** The records "Comparar períodos" reads for nutrition, sleep, cardio, steps and habits. */
+function useRoutineData(profileId: string, data: ReturnType<typeof useStatsData>): RoutineData {
+  const { data: sleepTarget = null } = useSleepTarget(profileId);
+  const { data: habits = [] } = useHabits(profileId);
+  const others = habits.filter((h) => h.id !== data.stepsHabit?.id);
+  const histories = useHabitHistories(
+    profileId,
+    others.map((h) => h.id),
+  );
+  return {
+    weights: (data.weighed?.series ?? []).map((p) => ({ date: p.date, value: p.weightKg })),
+    nutrition: data.nutrition,
+    nights: data.nights.map((n) => ({ date: n.sleepDate, value: n.durationMinutes })),
+    sleepTargetMinutes: sleepTarget?.minutesPerNight ?? null,
+    cardio: data.cardioSessions.map((s) => ({
+      date: s.sessionDate,
+      minutes: s.durationMinutes,
+      distanceKm: s.distanceKm,
+    })),
+    cardioTargetMinutes: data.cardioTarget,
+    steps: data.steps,
+    stepsTarget: data.stepsHabit?.targetValue ?? null,
+    habits: others.map((h, i) => ({ ...h, history: histories[i] ?? [] })),
+  };
+}
+
 /** Finished workouts by local date, and the weekdays of the active plans since their creation. */
 function useTrainingData(profileId: string, workouts: WorkoutStats): TrainingData {
   const { data: plans = [] } = useWorkoutPlans(profileId);
@@ -139,6 +167,7 @@ function StatsCharts({
   today: LocalDate;
 }) {
   const data = useStatsData(profileId);
+  const routine = useRoutineData(profileId, data);
   const any = [
     data.measured,
     data.nutrition,
@@ -155,6 +184,7 @@ function StatsCharts({
         weight={data.weighed}
         measurements={data.measured}
         training={data.training}
+        routine={routine}
         objective={data.objective}
         today={today}
       />

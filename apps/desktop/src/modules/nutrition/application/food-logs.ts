@@ -113,7 +113,7 @@ export class GetNutritionDay {
 
 const round1 = (value: number) => Math.round(value * 10) / 10;
 
-/** Consumed calories and protein per day with the target of each day (README §13.2). */
+/** Consumed calories and macros per day with the target of each day (README §13.2, §20.1). */
 export class GetNutritionHistory {
   constructor(private readonly deps: FoodLogDeps) {}
 
@@ -126,8 +126,12 @@ export class GetNutritionHistory {
         date: d.date,
         caloriesKcal: round1(d.caloriesKcal),
         proteinG: round1(d.proteinG),
+        carbohydrateG: round1(d.carbohydrateG),
+        fatG: round1(d.fatG),
         targetCaloriesKcal: target?.caloriesKcal ?? null,
         targetProteinG: target?.proteinG ?? null,
+        targetCarbohydrateG: target?.carbohydrateG ?? null,
+        targetFatG: target?.fatG ?? null,
       };
     });
   }

@@ -2204,6 +2204,19 @@ Todo cálculo registra versão/método quando necessário e possui testes.
   - **aderência ao plano**: treinos finalizados contra os dias da semana
     dos planos ativos, contados a partir da criação de cada plano, porque
     o app não guarda o histórico de planos.
+- **Nutrição e rotina** (decidido em 21/11/2026):
+  - **médias** só dos dias com registro, sempre com quantos dias foram;
+  - **meta**: a média como percentual da meta (soma consumida sobre a soma
+    das metas de cada dia); sem contar "dias dentro da meta", porque as
+    metas são valor único (§9.6) e a direção da meta de calorias depende
+    do objetivo. Sono usa a meta atual;
+  - **passos e hábitos**: dias em que a meta foi atingida, pela regra dos
+    hábitos (§11.2);
+  - **cardio**: sessões, minutos e distância, e minutos por semana contra
+    a meta semanal;
+  - **peso × ingestão**: a variação da média móvel ao lado da média de
+    calorias do mesmo período, sem correlação nem causa;
+  - água fica fora da V1.2.
 - **Fora da V1.2:**
   - TMB, gasto energético e percentual de gordura; voltam com o registro
     de composição corporal com método (§23), por decisão própria;

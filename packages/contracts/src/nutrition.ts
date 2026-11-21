@@ -151,8 +151,13 @@ export const nutritionHistorySchema = z.array(
     date: localDate,
     caloriesKcal: z.number(),
     proteinG: z.number(),
+    carbohydrateG: z.number(),
+    fatG: z.number(),
     targetCaloriesKcal: z.number().nullable(),
     targetProteinG: z.number().nullable(),
+    /** Optional targets (README §9.6). */
+    targetCarbohydrateG: z.number().nullable(),
+    targetFatG: z.number().nullable(),
   }),
 );
 

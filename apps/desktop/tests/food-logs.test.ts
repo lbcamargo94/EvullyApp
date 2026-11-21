@@ -214,7 +214,7 @@ describe('food logs (README §9.4, §9.5)', () => {
       profileId: lucas.id,
       caloriesKcal: 2400,
       proteinG: 190,
-      carbohydrateG: null,
+      carbohydrateG: 250,
       fatG: null,
       waterMl: null,
     });
@@ -224,15 +224,23 @@ describe('food logs (README §9.4, §9.5)', () => {
         date: '2026-10-21',
         caloriesKcal: 192,
         proteinG: 3.8,
+        carbohydrateG: 42.2,
+        fatG: 0.3,
         targetCaloriesKcal: null,
         targetProteinG: null,
+        targetCarbohydrateG: null,
+        targetFatG: null,
       },
       {
         date: '2026-10-22',
         caloriesKcal: 330,
         proteinG: 62,
+        carbohydrateG: 0,
+        fatG: 7.2,
         targetCaloriesKcal: 2400,
         targetProteinG: 190,
+        targetCarbohydrateG: 250,
+        targetFatG: null,
       },
     ]);
     expect(await handlers['nutrition:history']({ profileId: ana.id })).toEqual([]);

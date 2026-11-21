@@ -32,6 +32,17 @@ V1.2, Analytics Engine (1.2.0-alpha.1: janelas, peso e medidas).
 - as estatísticas de treino passam a trazer o grupo muscular e as séries
   concluídas de cada exercício, e os planos trazem a data de criação.
 
+1.2.0-alpha.3: nutrição e rotina.
+
+- **Comparar períodos** ganhou seções (Corpo, Treino, Alimentação, Sono e
+  atividade) e as linhas de dias com alimentação registrada, calorias,
+  proteína, carboidratos e gorduras por dia (com % da meta), peso ×
+  calorias, sono por noite, cardio, cardio por semana e passos por dia;
+- novo card **"Hábitos nos últimos N dias"**: dias cumpridos de cada
+  hábito, contra o período anterior;
+- o histórico de nutrição passa a trazer carboidratos, gorduras e as metas
+  deles.
+
 ## [1.1.0] - 2026-11-19
 
 V1.1, design system: o mesmo Evully com um visual novo e consistente em

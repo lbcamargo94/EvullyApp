@@ -70,6 +70,36 @@ export const comparisonMessages = {
   ratePerWeek: 'Ritmo',
   perWeek: ' por semana',
   missingLabel: 'Sem registros suficientes no período',
+  sections: {
+    body: 'Corpo',
+    training: 'Treino',
+    food: 'Alimentação',
+    routine: 'Sono e atividade',
+  },
+  ofTarget: (amount: string, percent: number) => `${amount} · ${percent}% da meta`,
+  nutritionDays: 'Dias com alimentação registrada',
+  caloriesAverage: 'Calorias por dia',
+  proteinAverage: 'Proteína por dia',
+  carbohydrateAverage: 'Carboidratos por dia',
+  fatAverage: 'Gorduras por dia',
+  weightIntake: 'Peso × calorias',
+  weightIntakeValue: (change: string, kcal: string) => `${change} com ${kcal} kcal/dia`,
+  sleepAverage: 'Sono por noite',
+  nightsAverage: (duration: string, nights: number) =>
+    `${duration} (${nights} ${nights === 1 ? 'noite' : 'noites'})`,
+  cardioLabel: 'Cardio',
+  cardioTotal: (sessions: number, minutes: number, km: string | null) =>
+    `${sessions} ${sessions === 1 ? 'sessão' : 'sessões'} · ${minutes} min${km ? ` · ${km} km` : ''}`,
+  cardioPerWeek: 'Cardio por semana',
+  stepsAverage: 'Passos por dia',
+  stepsUnit: 'passos',
+  stepsAtTarget: (amount: string, atTarget: number, days: number) =>
+    `${amount} · meta em ${atTarget} de ${days} ${days === 1 ? 'dia' : 'dias'}`,
+  habitsTitle: (days: number) => `Hábitos nos últimos ${days} dias`,
+  habit: 'Hábito',
+  daysDone: (done: number, days: number) => `${done} de ${days} dias`,
+  habitsMethod:
+    'Um dia conta quando o hábito foi cumprido: marcado, ou com o valor na meta quando o hábito tem meta. Cálculo v1.',
   workouts: 'Treinos',
   adherenceLabel: 'Aderência ao plano',
   adherence: (done: number, planned: number) =>
@@ -92,5 +122,5 @@ export const comparisonMessages = {
   trainingMethod:
     'Só séries concluídas e valores registrados, sem 1RM estimado. Cada exercício conta para o seu grupo principal. Recorde: carga maior que todas as anteriores do exercício, ou mais repetições com uma carga já usada. Aderência: treinos finalizados contra os dias da semana dos planos ativos, desde a criação de cada plano. Cálculo v1.',
   method:
-    '— = sem registros suficientes no período. Peso médio e média móvel (7 dias) precisam de pesagem em pelo menos 3 dias. Medidas: último valor do período e a diferença para o último valor antes dele. Cálculo v1, feito na hora a partir dos seus registros.',
+    '— = sem registros suficientes no período. Peso médio e média móvel (7 dias) precisam de pesagem em pelo menos 3 dias. Medidas: último valor do período e a diferença para o último valor antes dele. Nutrição, sono e passos: média dos dias com registro; a % da meta compara a soma consumida com a soma das metas de cada dia (sono: com a meta atual). Cardio por semana: minutos do período divididos pelas semanas. Peso × calorias mostra os dois números lado a lado, sem relação de causa. Cálculo v1, feito na hora a partir dos seus registros.',
 } as const;
