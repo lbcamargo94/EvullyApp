@@ -176,6 +176,13 @@ export const ipcEvullyClient: EvullyClient = {
     remove: (profileId, id) => call('cardio:delete', { profileId, id }),
     setTarget: (input) => call('cardio-target:set', input),
   },
+  recommendations: {
+    list: (profileId) => call('recommendations:list', { profileId }),
+    decide: (input) => call('recommendations:decide', input),
+    settings: (profileId) => call('recommendation-settings:get', { profileId }),
+    setSettings: (profileId, settings) =>
+      call('recommendation-settings:set', { profileId, ...settings }),
+  },
   sleep: {
     list: (profileId) => call('sleep:list', { profileId }),
     register: (input) => call('sleep:register', input),

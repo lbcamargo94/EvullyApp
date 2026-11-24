@@ -354,6 +354,33 @@ export interface SleepTargetsTable {
   created_at: string;
 }
 
+export interface RecommendationEventsTable {
+  id: string;
+  profile_id: string;
+  rule_id: string;
+  rule_version: number;
+  subject_key: string;
+  level: 'info' | 'attention';
+  /** JSON text, validated by the rule's schema (packages/contracts). */
+  evidence: string;
+  detected_on: string;
+  status: 'open' | 'snoozed' | 'dismissed' | 'accepted' | 'resolved';
+  status_on: string;
+  snoozed_until: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface RecommendationDecisionsTable {
+  id: string;
+  profile_id: string;
+  event_id: string;
+  decision: 'dismissed' | 'snoozed' | 'accepted';
+  decided_at: string;
+  created_at: string;
+}
+
 export interface HabitDefinitionsTable {
   id: string;
   profile_id: string;
@@ -460,4 +487,6 @@ export interface DatabaseSchema {
   habit_logs: HabitLogsTable;
   sleep_logs: SleepLogsTable;
   sleep_targets: SleepTargetsTable;
+  recommendation_events: RecommendationEventsTable;
+  recommendation_decisions: RecommendationDecisionsTable;
 }

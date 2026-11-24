@@ -227,7 +227,7 @@ Este é o **único** roadmap do projeto.
 | **V1.0** ✓ 1.0.0 (16/11/2026) | Desktop estável + instalador Windows: aceite do §19 em testes ponta a ponta, recuperação de banco danificado, pasta de logs (§15.2) |
 | **V1.1** ✓ 1.1.0 (19/11/2026) | Design system: ilustrações, ícones, imagens e acabamento visual de todas as telas, com tokens prontos para o mobile (§15.3) |
 | **V1.2** ✓ 1.2.0 (21/11/2026) | Analytics Engine determinístico: janelas de 7 a 60 dias e "este período × anterior" em todos os módulos, calculados na hora (§20.1) |
-| V1.3 | Recommendation Engine determinístico |
+| V1.3 (em andamento) | Recommendation Engine determinístico: sinais com regra e versão, tela Sinais e decisão do usuário (§20.2) |
 | V1.4 | Notificações locais / Evully Reminders |
 | V1.5 | Evully Health (estrutura local/manual) |
 | V1.6 | Evully Coach AI opcional (desenvolvimento/testes) |
@@ -2046,7 +2046,7 @@ No topo: `Perfil atual: Lucas ▼`.
 | Cardio | `cardio_sessions`, `cardio_targets` | V0.4 |
 | Hábitos | `habit_definitions`, `habit_logs` | V0.4 |
 | Sono | `sleep_logs` | V0.5 |
-| Inteligência | `analytics_snapshots`, `recommendation_events`, `recommendation_decisions` | V1.3 (a V1.2 calcula na hora, sem tabela; ARCHITECTURE §9) |
+| Inteligência | `recommendation_events`, `recommendation_decisions` | V1.3 (os dados de origem ficam no próprio sinal, sem `analytics_snapshots`; ARCHITECTURE §9) |
 | Lembretes | `notification_preferences`, `notification_events` | V1.4 |
 | Saúde | `health_exams`, `health_exam_results`, `health_reference_ranges`, `health_documents` | V1.5 |
 | IA | `ai_conversations`, `ai_messages`, `ai_usage_logs` | V1.6 |
@@ -2249,6 +2249,32 @@ Recomendações também podem sugerir mudanças na configuração de
 acompanhamento (ex.: "sua cintura está estável há 3 semanas; quer
 acompanhar também o quadril?"). Se aceitas, geram um novo registro em
 `tracking_configs`.
+
+**Escopo da V1.3** (decidido em 24/11/2026):
+
+- **Sinais** avaliados na hora pelas funções da V1.2, cada um de uma regra
+  com versão. O sinal guarda os números que o originaram num campo
+  validado do próprio registro (sem `analytics_snapshots`), a data, o
+  status e a decisão: aceitar, dispensar ou adiar. Um sinal dispensado não
+  volta durante um prazo; um sinal aberto não se repete.
+- **Limites fixos e versionados**, explicados na tela; mudar um limite cria
+  uma nova versão da regra. Cada regra pode ser desligada em
+  Configurações.
+- **Onde aparecem:** tela **Sinais**, com os abertos e o histórico de
+  decisões, e um card no Dashboard com os mais recentes.
+- **Ritmo fora da faixa:** usa uma faixa opcional de kg/semana no projeto,
+  preenchida pelo usuário, sem valor padrão; sem faixa, a regra não roda.
+- **Linguagem:** neutra e informativa (§2.6); nada muda nos dados sem o
+  usuário aceitar.
+- **Fora da V1.3:** exames (V1.5) e "volume muito diferente do alvo"
+  (não há alvo de volume por grupo).
+- **Entregas:**
+  - 1.3.0-alpha.1: motor, tabelas, tela Sinais e card; regras de registro
+    ausente e de progressão dupla;
+  - 1.3.0-alpha.2: peso estável, ritmo fora da faixa, queda de volume e
+    baixa aderência ao plano;
+  - 1.3.0-alpha.3: sugestões de acompanhamento (`tracking_configs`);
+  - 1.3.0.
 
 ---
 

@@ -6,6 +6,30 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+V1.3, Recommendation Engine (1.3.0-alpha.1: o motor, a tela Sinais e as
+primeiras regras).
+
+- **Sinais**, nova tela no menu: avisos calculados a partir dos registros,
+  cada um com "Por que estou vendo isso?" (os números, a regra e a versão),
+  um atalho para registrar e as opções "Lembrar em 7 dias" e "Dispensar";
+  o histórico mostra o que foi dispensado, adiado ou resolvido;
+- primeiras regras: **pesagem ausente** (7 dias), **medidas ausentes** (21
+  dias, para quem acompanha medidas) e **progressão dupla** (exercício dos
+  planos ativos que atingiu o critério para aumentar a carga, só com carga);
+- um sinal aberto não se repete, um adiado volta na data, um dispensado
+  fica quieto por 14 dias e o que deixou de valer fica como resolvido;
+  nenhum sinal muda os seus dados;
+- card **Sinais** no Dashboard com até 3 sinais abertos, e a aba **Sinais**
+  em Configurações para ligar ou desligar cada regra;
+- banco: tabelas `recommendation_events` e `recommendation_decisions`
+  (migration 0019), incluídas no backup, na exportação e na transferência
+  de perfil.
+
+- roadmap da V1.3: sinais com regra e versão, os números de origem no
+  próprio sinal (sem `analytics_snapshots`), limites fixos e versionados,
+  tela Sinais e card no Dashboard, faixa de ritmo opcional no projeto;
+  exames ficam para a V1.5.
+
 ## [1.2.0] - 2026-11-21
 
 V1.2, Analytics Engine: Progresso compara este período com o anterior em

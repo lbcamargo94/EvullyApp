@@ -18,6 +18,7 @@ import * as m0015 from './migrations/0015_habits';
 import * as m0016 from './migrations/0016_cardio_targets';
 import * as m0017 from './migrations/0017_sleep_logs';
 import * as m0018 from './migrations/0018_sleep_targets';
+import * as m0019 from './migrations/0019_recommendations';
 
 // Migrations are imported statically so they are bundled into the app.
 // Never edit a published migration; add a new one (README §6.4).
@@ -40,6 +41,7 @@ const migrations: Record<string, Migration> = {
   '0016_cardio_targets': m0016,
   '0017_sleep_logs': m0017,
   '0018_sleep_targets': m0018,
+  '0019_recommendations': m0019,
 };
 
 /** Latest migration of this app: a backup with a newer one cannot be restored (README §14.2). */

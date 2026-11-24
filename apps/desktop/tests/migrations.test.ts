@@ -39,6 +39,7 @@ describe('database', () => {
       '0016_cardio_targets',
       '0017_sleep_logs',
       '0018_sleep_targets',
+      '0019_recommendations',
     ]);
     expect(await migrateToLatest(db)).toEqual([]);
     await db.destroy();

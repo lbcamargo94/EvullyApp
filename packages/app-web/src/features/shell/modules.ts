@@ -4,6 +4,7 @@ import {
   ChartLine,
   Dumbbell,
   LayoutDashboard,
+  Lightbulb,
   ListChecks,
   Moon,
   Ruler,
@@ -27,6 +28,7 @@ export const MODULES = [
   { key: 'habits', to: '/app/habits', label: m.habits, icon: ListChecks },
   { key: 'sleep', to: '/app/sleep', label: m.sleep, icon: Moon },
   { key: 'stats', to: '/app/stats', label: m.stats, icon: ChartLine },
+  { key: 'signals', to: '/app/signals', label: m.signals, icon: Lightbulb },
   { key: 'settings', to: '/app/settings', label: m.settings, icon: Settings },
 ] as const satisfies readonly { key: string; to: string; label: string; icon: LucideIcon }[];
 

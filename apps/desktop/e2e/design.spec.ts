@@ -28,9 +28,17 @@ const VIEWS: View[] = [
   { screen: 'Hábitos', tab: 'Gerenciar' },
   { screen: 'Sono' },
   { screen: 'Progresso' },
-  ...['Acompanhamento', 'Projeto', 'Nutrição', 'Treino', 'Perfil', 'Geral e backup', 'Sobre'].map(
-    (tab) => ({ screen: 'Configurações', tab }),
-  ),
+  { screen: 'Sinais' },
+  ...[
+    'Acompanhamento',
+    'Projeto',
+    'Nutrição',
+    'Treino',
+    'Sinais',
+    'Perfil',
+    'Geral e backup',
+    'Sobre',
+  ].map((tab) => ({ screen: 'Configurações', tab })),
 ];
 
 const label = (v: View) => (v.tab ? `${v.screen} › ${v.tab}` : v.screen);

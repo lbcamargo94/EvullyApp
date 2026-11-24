@@ -23,6 +23,7 @@ import { formatLongDate, shellMessages as m } from './messages.pt-BR';
 import { NextWorkoutCard } from './next-workout-card';
 import { TodayActivityCards } from './today-activity-cards';
 import { TodayCard } from './today-card';
+import { SignalsCard } from '../recommendations/signals-card';
 
 /**
  * Dashboard (README §8.5, DESIGN.md §7.1): indicators, the weight chart and
@@ -57,6 +58,7 @@ export function HomeScreen() {
       />
       <BodyOverview profileId={profileId} projectStart={project?.startDate ?? null} />
       <NextWorkoutCard profileId={profileId} />
+      <SignalsCard profileId={profileId} />
       {project ? <ProjectCard project={project} /> : <NoProjectCard />}
       <EvolutionCard profileId={profileId} />
       <TodayActivityCards profileId={profileId} />

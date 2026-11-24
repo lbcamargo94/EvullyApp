@@ -16,3 +16,4 @@ export * from './cardio';
 export * from './habits';
 export * from './sleep';
 export * from './updates';
+export * from './recommendations';

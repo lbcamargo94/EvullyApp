@@ -36,6 +36,11 @@ const HabitsScreen = lazy(() =>
 const StatsScreen = lazy(() =>
   import('./features/stats/stats-screen').then((m) => ({ default: m.StatsScreen })),
 );
+const SignalsScreen = lazy(() =>
+  import('./features/recommendations/signals-screen').then((m) => ({
+    default: m.SignalsScreen,
+  })),
+);
 const SleepScreen = lazy(() =>
   import('./features/sleep/sleep-screen').then((m) => ({ default: m.SleepScreen })),
 );
@@ -188,6 +193,14 @@ function AppRoutes({ Catalog }: { Catalog?: ComponentType | undefined }) {
           element={
             <Suspense fallback={null}>
               <WorkoutsScreen />
+            </Suspense>
+          }
+        />
+        <Route
+          path="signals"
+          element={
+            <Suspense fallback={null}>
+              <SignalsScreen />
             </Suspense>
           }
         />

@@ -25,6 +25,7 @@ export * from './features/exports/use-exports';
 export * from './features/exports/use-transfer';
 export * from './features/measurements/use-measurements';
 export * from './features/weights/use-weights';
+export * from './features/recommendations/use-recommendations';
 export * from './format/dates';
 export * from './format/numbers';
 export {

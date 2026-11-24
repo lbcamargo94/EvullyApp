@@ -1,5 +1,8 @@
 import type {
   AcceptTrackingInput,
+  DecideRecommendationInput,
+  RecommendationList,
+  RecommendationSettings,
   AppInfo,
   RecoveryStatus,
   ArchivedProfile,
@@ -274,6 +277,15 @@ export interface EvullyClient {
     day(profileId: string, date: string): Promise<HabitDay>;
     history(profileId: string, habitId: string): Promise<HabitHistory>;
     log(profileId: string, habitId: string, date: string, value: number | null): Promise<HabitDay>;
+  };
+  recommendations: {
+    list(profileId: string): Promise<RecommendationList>;
+    decide(input: DecideRecommendationInput): Promise<RecommendationList>;
+    settings(profileId: string): Promise<RecommendationSettings>;
+    setSettings(
+      profileId: string,
+      settings: RecommendationSettings,
+    ): Promise<RecommendationSettings>;
   };
   sleep: {
     list(profileId: string): Promise<SleepLogDto[]>;

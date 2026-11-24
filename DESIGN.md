@@ -201,6 +201,7 @@ dados insuficientes**, quando aplicáveis.
   | Hábitos | `ListChecks` |
   | Sono | `Moon` |
   | Progresso | `ChartLine` |
+  | Sinais | `Lightbulb` |
   | Configurações | `Settings` |
 
 - O `npm run lint` falha com ícone Lucide desenhado direto, sem `Icon`

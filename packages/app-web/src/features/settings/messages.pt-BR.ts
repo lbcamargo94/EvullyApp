@@ -69,6 +69,7 @@ export const settingsMessages = {
     project: 'Projeto',
     nutrition: 'Nutrição',
     workouts: 'Treino',
+    signals: 'Sinais',
     profile: 'Perfil',
     general: 'Geral e backup',
     about: 'Sobre',
