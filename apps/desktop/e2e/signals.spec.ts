@@ -8,6 +8,43 @@ function localDate(offset: number): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
+test('accepting a tracking suggestion starts tracking the measurement (README §20.2)', async ({
+  evully,
+}) => {
+  const { page } = evully;
+  await createProfile(page, 'Ana');
+
+  // The waist barely moves in two sessions 14 days apart.
+  await go(page, 'Medidas');
+  const session = page.getByRole('region', { name: 'Nova sessão de medidas' });
+  for (const [offset, cm] of [
+    [-16, '92'],
+    [-2, '92,2'],
+  ] as const) {
+    await session.getByRole('textbox', { name: 'Data' }).fill(localDate(offset));
+    await session.getByRole('textbox', { name: 'Cintura', exact: true }).fill(cm);
+    await session.getByRole('button', { name: 'Salvar medidas' }).click();
+    await expect(page.getByRole('region', { name: 'Histórico' })).toContainText(cm);
+  }
+  await expect(session.getByRole('textbox', { name: 'Quadril' })).toHaveCount(0);
+
+  await go(page, 'Sinais');
+  const open = page.getByRole('region', { name: 'Abertos' });
+  await expect(open).toContainText('Cintura estável; acompanhar também Quadril?');
+  await open.getByRole('button', { name: 'Aceitar' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Acompanhar Quadril?' });
+  await expect(dialog).toContainText('Seus registros não mudam');
+  await dialog.getByRole('button', { name: 'Acompanhar' }).click();
+  await expect(page.getByRole('region', { name: 'Histórico' })).toContainText('Aceito');
+
+  await go(page, 'Medidas');
+  await expect(
+    page.getByRole('region', { name: 'Nova sessão de medidas' }).getByRole('textbox', {
+      name: 'Quadril',
+    }),
+  ).toBeVisible();
+});
+
 test('a weighing 8 days old raises a signal that explains itself and can be snoozed', async ({
   evully,
 }) => {

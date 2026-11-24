@@ -809,8 +809,8 @@ alteração cria um novo registro; os anteriores nunca são editados.
 | `weight_display` | `trend`, `daily`, `hidden`. |
 | `focus_areas` | JSON, lista ordenada: `waist`, `hips`, `arms`, `legs`, `chest`. |
 | `enabled_modules` | JSON, lista de módulos opcionais ligados. Vazia na V0.1. |
-| `source` | `questionnaire`, `manual`, `template`, `professional`. |
-| `rule_version` | Ex.: `tracking-rules@1`. Nulo quando `source = manual`. |
+| `source` | `questionnaire`, `manual`, `template`, `professional`, `recommendation` (sugestão aceita, V1.3, migration 0021). |
+| `rule_version` | Ex.: `tracking-rules@1`, `tracking_suggestion@1`. Nulo quando `source = manual`. |
 | `questionnaire_id` | FK opcional para `profile_questionnaires`. |
 
 #### `profile_measurement_types`
@@ -2291,7 +2291,19 @@ acompanhar também o quadril?"). Se aceitas, geram um novo registro em
   - queda de volume (1): volume de treino cai mais de 10% em dois períodos
     seguidos de 14 dias, com pelo menos 2 treinos em cada;
   - baixa aderência (1): menos de 60% dos dias previstos dos planos ativos
-    nos últimos 14 dias, com pelo menos 4 dias previstos.
+    nos últimos 14 dias, com pelo menos 4 dias previstos;
+  - sugestão de acompanhamento (1): uma medida acompanhada varia menos de
+    0,5 cm (maior menos menor valor) nos últimos 28 dias, com 2 ou mais
+    registros num intervalo de pelo menos 14 dias; sugere uma medida
+    relacionada que o perfil não acompanha, por pares fixos: cintura ou
+    abdômen → quadril; quadril → cintura; tórax → braço direito; braço →
+    tórax; coxa → panturrilha do mesmo lado.
+- **Aceitar uma sugestão** (só esse sinal tem o botão): depois de uma
+  confirmação que diz o que muda, a medida sugerida passa a ser acompanhada
+  (no fim da lista) e um novo registro em `tracking_configs` é criado com
+  `source = recommendation`, a área da medida somada às áreas de foco e
+  `rule_version = tracking_suggestion@<versão>`, junto com a decisão, numa
+  transação. Registros anteriores não mudam.
 
 ---
 

@@ -1,9 +1,10 @@
-import { sql } from 'kysely';
+import { sql, type Kysely } from 'kysely';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { openDatabase } from '../src/database/connection';
+import * as m0021 from '../src/database/migrations/0021_tracking_source_recommendation';
 import { hasPendingMigrations, migrateToLatest } from '../src/database/migrator';
 
 describe('database', () => {
@@ -41,6 +42,7 @@ describe('database', () => {
       '0018_sleep_targets',
       '0019_recommendations',
       '0020_project_rate_band',
+      '0021_tracking_source_recommendation',
     ]);
     expect(await migrateToLatest(db)).toEqual([]);
     await db.destroy();
@@ -51,6 +53,34 @@ describe('database', () => {
     expect(await hasPendingMigrations(db)).toBe(true);
     await migrateToLatest(db);
     expect(await hasPendingMigrations(db)).toBe(false);
+    await db.destroy();
+  });
+
+  it('0021 rebuilds tracking_configs keeping every row and allows source = recommendation', async () => {
+    const db = tempDb();
+    await migrateToLatest(db);
+    const at = '2026-11-24T12:00:00.000Z';
+    const profile = '01930000-0000-7000-8000-000000000001';
+    await sql`INSERT INTO profiles (id, name, created_at, updated_at) VALUES (${profile}, 'Ana', ${at}, ${at})`.execute(
+      db,
+    );
+    const config = (id: string, source: string) =>
+      sql`INSERT INTO tracking_configs (id, profile_id, effective_from, weight_display, focus_areas, source, created_at, updated_at)
+        VALUES (${id}, ${profile}, '2026-11-24', 'trend', '["waist"]', ${source}, ${at}, ${at})`.execute(
+        db,
+      );
+    const raw = db as unknown as Kysely<unknown>;
+    await m0021.down(raw);
+    await config('01930000-0000-7000-8000-000000000002', 'manual');
+    await expect(
+      config('01930000-0000-7000-8000-000000000003', 'recommendation'),
+    ).rejects.toThrow();
+    await m0021.up(raw);
+    await config('01930000-0000-7000-8000-000000000003', 'recommendation');
+    const rows = await sql<{
+      source: string;
+    }>`SELECT source FROM tracking_configs ORDER BY id`.execute(db);
+    expect(rows.rows.map((r) => r.source)).toEqual(['manual', 'recommendation']);
     await db.destroy();
   });
 

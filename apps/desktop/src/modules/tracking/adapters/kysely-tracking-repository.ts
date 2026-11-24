@@ -11,6 +11,51 @@ import type {
 
 type Trx = Transaction<DatabaseSchema>;
 
+/** Activates the chosen measurements in order; others become inactive but keep history. */
+export async function replaceTrackedMeasurements(
+  trx: Trx,
+  ids: IdGenerator,
+  profileId: string,
+  codes: readonly string[],
+  now: string,
+): Promise<void> {
+  const types = await trx
+    .selectFrom('measurement_types')
+    .select(['id', 'code'])
+    .where('code', 'in', codes.length ? [...codes] : [''])
+    .where('is_active', '=', 1)
+    .execute();
+  const idByCode = new Map(types.map((t) => [t.code, t.id]));
+
+  await trx
+    .updateTable('profile_measurement_types')
+    .set({ is_active: 0, updated_at: now })
+    .where('profile_id', '=', profileId)
+    .execute();
+
+  for (const [index, code] of codes.entries()) {
+    const typeId = idByCode.get(code);
+    if (!typeId) throw new Error(`Unknown measurement type: ${code}`);
+    await trx
+      .insertInto('profile_measurement_types')
+      .values({
+        id: ids.next(),
+        profile_id: profileId,
+        measurement_type_id: typeId,
+        sort_order: index + 1,
+        is_active: 1,
+        created_at: now,
+        updated_at: now,
+      })
+      .onConflict((oc) =>
+        oc
+          .columns(['profile_id', 'measurement_type_id'])
+          .doUpdateSet({ sort_order: index + 1, is_active: 1, updated_at: now }),
+      )
+      .execute();
+  }
+}
+
 export class KyselyTrackingRepository implements TrackingRepository {
   constructor(
     private readonly db: Kysely<DatabaseSchema>,
@@ -58,48 +103,9 @@ export class KyselyTrackingRepository implements TrackingRepository {
       const c = setup.config;
       await trx.insertInto('tracking_configs').values(configRow(c)).execute();
 
-      await this.replaceMeasurements(trx, c.profileId, setup.measurementCodes, now);
+      await replaceTrackedMeasurements(trx, this.ids, c.profileId, setup.measurementCodes, now);
       await this.addMissingTags(trx, c.profileId, setup.tags, now);
     });
-  }
-
-  /** Activates the chosen measurements in order; others become inactive but keep history. */
-  private async replaceMeasurements(trx: Trx, profileId: string, codes: string[], now: string) {
-    const types = await trx
-      .selectFrom('measurement_types')
-      .select(['id', 'code'])
-      .where('code', 'in', codes.length ? codes : [''])
-      .where('is_active', '=', 1)
-      .execute();
-    const idByCode = new Map(types.map((t) => [t.code, t.id]));
-
-    await trx
-      .updateTable('profile_measurement_types')
-      .set({ is_active: 0, updated_at: now })
-      .where('profile_id', '=', profileId)
-      .execute();
-
-    for (const [index, code] of codes.entries()) {
-      const typeId = idByCode.get(code);
-      if (!typeId) throw new Error(`Unknown measurement type: ${code}`);
-      await trx
-        .insertInto('profile_measurement_types')
-        .values({
-          id: this.ids.next(),
-          profile_id: profileId,
-          measurement_type_id: typeId,
-          sort_order: index + 1,
-          is_active: 1,
-          created_at: now,
-          updated_at: now,
-        })
-        .onConflict((oc) =>
-          oc
-            .columns(['profile_id', 'measurement_type_id'])
-            .doUpdateSet({ sort_order: index + 1, is_active: 1, updated_at: now }),
-        )
-        .execute();
-    }
   }
 
   private async addMissingTags(trx: Trx, profileId: string, names: string[], now: string) {
@@ -173,8 +179,9 @@ export class KyselyTrackingRepository implements TrackingRepository {
         .execute();
       const codeById = new Map(rows.map((r) => [r.id, r.code]));
       // replaceMeasurements works with codes and keeps the given order.
-      await this.replaceMeasurements(
+      await replaceTrackedMeasurements(
         trx,
+        this.ids,
         profileId,
         typeIds.map((id) => codeById.get(id) ?? ''),
         now,
@@ -219,7 +226,7 @@ export class KyselyTrackingRepository implements TrackingRepository {
   }
 }
 
-const configRow = (c: TrackingConfigRecord) => ({
+export const configRow = (c: TrackingConfigRecord) => ({
   id: c.id,
   profile_id: c.profileId,
   effective_from: c.effectiveFrom,

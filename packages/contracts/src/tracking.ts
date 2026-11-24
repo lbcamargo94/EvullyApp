@@ -52,7 +52,7 @@ export const trackingConfigSchema = z.object({
   effectiveFrom: localDate,
   weightDisplay: weightDisplaySchema,
   focusAreas: z.array(focusAreaSchema),
-  source: z.enum(['questionnaire', 'manual', 'template', 'professional']),
+  source: z.enum(['questionnaire', 'manual', 'template', 'professional', 'recommendation']),
   ruleVersion: z.string().nullable(),
 });
 

@@ -2,6 +2,7 @@ import {
   recommendationRuleSchema,
   recommendationSettingsSchema,
   signalEvidenceSchema,
+  type AcceptRecommendationInput,
   type DecideRecommendationInput,
   type RecommendationDto,
   type RecommendationList,
@@ -14,8 +15,12 @@ import {
   NotFoundError,
   reconcileSignals,
   dailyWeights,
+  effectiveAt,
   sessionStats,
+  ValidationError,
   RULE_VERSIONS,
+  type FocusArea,
+  type MeasurementSeries,
   type ProgressionCandidate,
   type RecommendationRuleId,
   type RuleInputs,
@@ -27,7 +32,7 @@ import type { SettingsRepository } from '../../settings/ports/settings-repositor
 import type { Clock, IdGenerator } from '../../shared/ports';
 import type { MeasurementRepository } from '../../measurements/ports/measurement-repository';
 import type { ProjectRepository } from '../../tracking/ports/project-repository';
-import type { TrackingRepository } from '../../tracking/ports/tracking-repository';
+import type { MeasurementType, TrackingRepository } from '../../tracking/ports/tracking-repository';
 import type { WeightRepository } from '../../weights/ports/weight-repository';
 import type { ExerciseRepository } from '../../workouts/ports/exercise-repository';
 import type { SessionRepository } from '../../workouts/ports/session-repository';
@@ -35,6 +40,7 @@ import type { WorkoutPlanRepository } from '../../workouts/ports/workout-plan-re
 import type {
   RecommendationRecord,
   RecommendationRepository,
+  TrackingChange,
 } from '../ports/recommendation-repository';
 
 export interface RecommendationDeps {
@@ -93,7 +99,6 @@ async function progressionCandidates(
   return candidates;
 }
 
-/** What the rules read: latest records and the active plans (README §20.2). */
 /** Finished workouts by local date with their volume, and the active plans' weekdays. */
 async function trainingInputs(
   deps: RecommendationDeps,
@@ -127,6 +132,35 @@ async function trainingInputs(
   };
 }
 
+/** Tracked measurements with one value per day, and the catalog ones not tracked. */
+async function measurementInputs(
+  deps: RecommendationDeps,
+  profileId: string,
+  sessions: Awaited<ReturnType<MeasurementRepository['listByProfile']>>,
+  tracked: readonly MeasurementType[],
+): Promise<RuleInputs['measurements']> {
+  const catalog = await deps.tracking.listCatalog();
+  const trackedIds = new Set(tracked.map((t) => t.id));
+  const series: MeasurementSeries[] = tracked.map((type) => {
+    const byDate = new Map<string, number>();
+    for (const session of [...sessions].sort((a, b) => a.measuredAt.localeCompare(b.measuredAt))) {
+      const value = session.values.find((v) => v.measurementTypeId === type.id);
+      if (value) byDate.set(session.measuredOn, value.valueCm);
+    }
+    return {
+      code: type.code,
+      name: type.name,
+      points: [...byDate].map(([date, value]) => ({ date, value })),
+    };
+  });
+  return {
+    tracked: series,
+    untracked: catalog
+      .filter((t) => !trackedIds.has(t.id))
+      .map(({ code, name }) => ({ code, name })),
+  };
+}
+
 /** What the rules read: latest records, weights, the active project and plans (README §20.2). */
 async function ruleInputs(deps: RecommendationDeps, profileId: string): Promise<RuleInputs> {
   const [weighings, sessions, tracked, project] = await Promise.all([
@@ -147,6 +181,7 @@ async function ruleInputs(deps: RecommendationDeps, profileId: string): Promise<
     objective: project?.objective ?? null,
     rateBand: band,
     ...(await trainingInputs(deps, profileId)),
+    measurements: await measurementInputs(deps, profileId, sessions, tracked),
   };
 }
 
@@ -272,6 +307,81 @@ export class DecideRecommendation {
     await recommendations.decide(
       { id: ids.next(), profileId, eventId: id, decision, decidedAt: now },
       { id, statusOn: today, ...applyDecision(decision, today) },
+      now,
+    );
+    return toList(await recommendations.list(profileId));
+  }
+}
+
+/** The open tracking suggestion and the catalog measurement it suggests. */
+async function openSuggestion(deps: RecommendationDeps, profileId: string, id: string) {
+  const signal = await deps.recommendations.findById(profileId, id);
+  if (!signal) throw new NotFoundError('recommendation.not_found', 'Signal not found');
+  if (signal.status !== 'open') {
+    throw new ConflictError('recommendation.not_open', 'Signal is not open');
+  }
+  const parsed = signalEvidenceSchema.safeParse({
+    ruleId: signal.ruleId,
+    evidence: signal.evidence,
+  });
+  if (!parsed.success || parsed.data.ruleId !== 'tracking_suggestion') {
+    throw new ValidationError(
+      'recommendation.not_acceptable',
+      'Only tracking suggestions can be accepted',
+    );
+  }
+  const { suggestedCode } = parsed.data.evidence;
+  const type = (await deps.tracking.listCatalog()).find((t) => t.code === suggestedCode);
+  if (!type) throw new ValidationError('measurement.unknown_type', 'Unknown measurement type');
+  return { signal, type };
+}
+
+/** The tracking after accepting: the measurement at the end, its area in the focus. */
+async function trackingAfter(
+  deps: RecommendationDeps,
+  profileId: string,
+  type: MeasurementType,
+  ruleVersion: number,
+): Promise<TrackingChange> {
+  const today = deps.clock.today();
+  const codes = (await deps.tracking.listActiveMeasurementTypes(profileId)).map((t) => t.code);
+  const current = effectiveAt(await deps.tracking.listConfigs(profileId), today);
+  const focus = current?.focusAreas ?? [];
+  const region = type.bodyRegion;
+  return {
+    config: {
+      id: deps.ids.next(),
+      profileId,
+      effectiveFrom: today,
+      weightDisplay: current?.weightDisplay ?? 'trend',
+      focusAreas:
+        region === 'other' || focus.includes(region) ? focus : [...focus, region as FocusArea],
+      source: 'recommendation',
+      ruleVersion: `tracking_suggestion@${ruleVersion}`,
+      questionnaireId: null,
+      createdAt: deps.clock.nowIso(),
+    },
+    measurementCodes: codes.includes(type.code) ? codes : [...codes, type.code],
+  };
+}
+
+/**
+ * Accepts a tracking suggestion (README §20.2): the profile starts tracking the
+ * suggested measurement and a new config record (`source = recommendation`) is
+ * added, with the decision, in one transaction. Past records never change.
+ */
+export class AcceptRecommendation {
+  constructor(private readonly deps: RecommendationDeps) {}
+
+  async execute({ profileId, id }: AcceptRecommendationInput) {
+    const { recommendations, clock, ids } = this.deps;
+    const { signal, type } = await openSuggestion(this.deps, profileId, id);
+    const today = clock.today();
+    const now = clock.nowIso();
+    await recommendations.accept(
+      { id: ids.next(), profileId, eventId: id, decision: 'accepted', decidedAt: now },
+      { id, statusOn: today, ...applyDecision('accepted', today) },
+      await trackingAfter(this.deps, profileId, type, signal.ruleVersion),
       now,
     );
     return toList(await recommendations.list(profileId));

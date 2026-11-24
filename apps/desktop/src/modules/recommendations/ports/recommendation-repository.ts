@@ -1,4 +1,5 @@
 import type { RecommendationDecision, RecommendationStatus, SignalLevel } from '@evully/domain';
+import type { TrackingConfigRecord } from '../../tracking/ports/tracking-repository';
 
 export interface RecommendationRecord {
   id: string;
@@ -31,6 +32,14 @@ export interface DecisionRecord {
   decidedAt: string;
 }
 
+/** What accepting a tracking suggestion changes (README §20.2). */
+export interface TrackingChange {
+  /** New config record; earlier ones are never edited. */
+  config: TrackingConfigRecord;
+  /** Measurement codes the profile tracks afterwards, in display order. */
+  measurementCodes: string[];
+}
+
 /** Every query is scoped by profile (README §6.1). */
 export interface RecommendationRepository {
   /** Signals of the profile, oldest first. */
@@ -45,4 +54,11 @@ export interface RecommendationRepository {
   ): Promise<void>;
   /** The user's decision and the status it leads to, in one transaction. */
   decide(decision: DecisionRecord, change: StatusChange, now: string): Promise<void>;
+  /** Like `decide`, plus the tracking change, all in one transaction. */
+  accept(
+    decision: DecisionRecord,
+    change: StatusChange,
+    tracking: TrackingChange,
+    now: string,
+  ): Promise<void>;
 }

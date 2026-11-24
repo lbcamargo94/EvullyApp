@@ -32,6 +32,19 @@ export function useDecideRecommendation(profileId: string) {
   });
 }
 
+/** Accepts a tracking suggestion; the tracked measurements change with it. */
+export function useAcceptRecommendation(profileId: string) {
+  const client = useEvullyClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => client.recommendations.accept(profileId, id),
+    onSuccess: async (list: RecommendationList) => {
+      queryClient.setQueryData(keys.list(profileId), list);
+      await queryClient.invalidateQueries({ queryKey: ['tracking', profileId] });
+    },
+  });
+}
+
 export function useRecommendationSettings(profileId: string | null) {
   const client = useEvullyClient();
   return useQuery({

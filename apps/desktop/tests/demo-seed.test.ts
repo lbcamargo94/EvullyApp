@@ -38,6 +38,11 @@ describe('demo seed (npm run seed)', () => {
     expect(day.totals.consumed.caloriesKcal).toBeGreaterThan(0);
     expect(day.totals.planned.caloriesKcal).toBeGreaterThan(day.totals.consumed.caloriesKcal);
     expect(await handlers['workout-sessions:open']({ profileId })).toBeNull();
+    // The stable right thigh leaves a tracking suggestion open in Sinais.
+    const { open } = await handlers['recommendations:list']({ profileId });
+    expect(open.find((sig) => sig.ruleId === 'tracking_suggestion')).toMatchObject({
+      subjectKey: 'right_calf',
+    });
 
     // 2026-11-03 is a Tuesday: today's planned workout is already finished (Hoje).
     const stats = await handlers['workout-stats:get']({ profileId });

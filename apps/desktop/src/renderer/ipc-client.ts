@@ -180,6 +180,7 @@ export const ipcEvullyClient: EvullyClient = {
   recommendations: {
     list: (profileId) => call('recommendations:list', { profileId }),
     decide: (input) => call('recommendations:decide', input),
+    accept: (profileId, id) => call('recommendations:accept', { profileId, id }),
     settings: (profileId) => call('recommendation-settings:get', { profileId }),
     setSettings: (profileId, settings) =>
       call('recommendation-settings:set', { profileId, ...settings }),

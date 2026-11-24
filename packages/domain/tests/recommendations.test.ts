@@ -52,6 +52,7 @@ const none: RuleInputs = {
   rateBand: null,
   sessions: [],
   plans: [],
+  measurements: { tracked: [], untracked: [] },
 };
 
 describe('evaluateRules (README §20.2)', () => {

@@ -185,7 +185,13 @@ async function weighIn(ctx: Context, date: LocalDate, day: number) {
 
 async function measure(ctx: Context, date: LocalDate, day: number, types: Map<string, string>) {
   if (day % 14 !== 0) return;
-  const values = { waist: 98 - 0.045 * day, abdomen: 101 - 0.05 * day, hips: 108 - 0.025 * day };
+  // The right thigh barely moves: it raises the tracking suggestion (README §20.2).
+  const values = {
+    waist: 98 - 0.045 * day,
+    abdomen: 101 - 0.05 * day,
+    hips: 108 - 0.025 * day,
+    right_thigh: 58.4 - 0.001 * day,
+  };
   ctx.clock.set(date, '07:15');
   await ctx.handlers['measurements:register']({
     profileId: ctx.profileId,
@@ -193,8 +199,9 @@ async function measure(ctx: Context, date: LocalDate, day: number, types: Map<st
     measuredAt: ctx.clock.localToIso(date, '07:15'),
     values: Object.entries(values).flatMap(([code, cm]) => {
       const id = types.get(code);
+      const noise = code === 'right_thigh' ? 0.1 : 0.3;
       return id
-        ? [{ measurementTypeId: id, valueCm: round1(cm + ctx.rnd.between(-0.3, 0.3)) }]
+        ? [{ measurementTypeId: id, valueCm: round1(cm + ctx.rnd.between(-noise, noise)) }]
         : [];
     }),
     notes: null,
@@ -370,6 +377,14 @@ async function start(handlers: IpcHandlers, clock: SeedClock, first: LocalDate) 
       suggestion: null,
     },
   });
+  // Also tracks the right thigh, so "Sinais" can suggest the right calf.
+  const catalog = await handlers['tracking:catalog'](undefined);
+  const thigh = catalog.find((t) => t.code === 'right_thigh');
+  if (!thigh) throw new Error('Measurement catalog changed: update the seed');
+  const tracked = await handlers['tracking:set-measurements']({
+    profileId,
+    measurementTypeIds: [...state.measurementTypes.map((t) => t.id), thigh.id],
+  });
   const plan = await handlers['workout-plans:import-template']({
     profileId,
     template: 'cutting_2026',
@@ -380,7 +395,7 @@ async function start(handlers: IpcHandlers, clock: SeedClock, first: LocalDate) 
   if (!steps || !creatine) throw new Error('Habit examples changed: update the seed');
   return {
     profileId,
-    types: new Map(state.measurementTypes.map((t) => [t.code, t.id])),
+    types: new Map(tracked.measurementTypes.map((t) => [t.code, t.id])),
     trainingDays: new Map(
       plan.days.flatMap((d) =>
         d.weekday !== null && TRAINING_WEEKDAYS.includes(d.weekday)
@@ -509,11 +524,15 @@ export async function seedDemo(
 /** Days between the seed's looks at Sinais, so the history has decisions. */
 const SIGNAL_REVIEW_DAYS = 7;
 
-/** Opens Sinais in the evening and snoozes or dismisses what is open, alternately. */
+/**
+ * Opens Sinais in the evening and snoozes or dismisses what is open, alternately.
+ * The tracking suggestion stays open, so the demo can accept it.
+ */
 async function reviewSignals(ctx: Context, date: LocalDate) {
   ctx.clock.set(date, '21:00');
   const { open } = await ctx.handlers['recommendations:list']({ profileId: ctx.profileId });
-  for (const [i, signal] of open.entries()) {
+  const review = open.filter((s) => s.ruleId !== 'tracking_suggestion');
+  for (const [i, signal] of review.entries()) {
     await ctx.handlers['recommendations:decide']({
       profileId: ctx.profileId,
       id: signal.id,

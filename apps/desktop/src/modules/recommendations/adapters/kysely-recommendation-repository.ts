@@ -1,10 +1,16 @@
-import type { Kysely, Selectable } from 'kysely';
+import type { Kysely, Selectable, Transaction } from 'kysely';
 import type { DatabaseSchema, RecommendationEventsTable } from '../../../database/schema';
+import type { IdGenerator } from '../../shared/ports';
+import {
+  configRow,
+  replaceTrackedMeasurements,
+} from '../../tracking/adapters/kysely-tracking-repository';
 import type {
   DecisionRecord,
   RecommendationRecord,
   RecommendationRepository,
   StatusChange,
+  TrackingChange,
 } from '../ports/recommendation-repository';
 
 const toRecord = (row: Selectable<RecommendationEventsTable>): RecommendationRecord => ({
@@ -23,7 +29,10 @@ const toRecord = (row: Selectable<RecommendationEventsTable>): RecommendationRec
 });
 
 export class KyselyRecommendationRepository implements RecommendationRepository {
-  constructor(private readonly db: Kysely<DatabaseSchema>) {}
+  constructor(
+    private readonly db: Kysely<DatabaseSchema>,
+    private readonly ids: IdGenerator,
+  ) {}
 
   async list(profileId: string): Promise<RecommendationRecord[]> {
     const rows = await this.db
@@ -96,29 +105,55 @@ export class KyselyRecommendationRepository implements RecommendationRepository 
   }
 
   async decide(decision: DecisionRecord, change: StatusChange, now: string): Promise<void> {
+    await this.db.transaction().execute((trx) => writeDecision(trx, decision, change, now));
+  }
+
+  async accept(
+    decision: DecisionRecord,
+    change: StatusChange,
+    tracking: TrackingChange,
+    now: string,
+  ): Promise<void> {
     await this.db.transaction().execute(async (trx) => {
-      await trx
-        .insertInto('recommendation_decisions')
-        .values({
-          id: decision.id,
-          profile_id: decision.profileId,
-          event_id: decision.eventId,
-          decision: decision.decision,
-          decided_at: decision.decidedAt,
-          created_at: now,
-        })
-        .execute();
-      await trx
-        .updateTable('recommendation_events')
-        .set({
-          status: change.status,
-          status_on: change.statusOn,
-          snoozed_until: change.snoozedUntil,
-          updated_at: now,
-        })
-        .where('profile_id', '=', decision.profileId)
-        .where('id', '=', change.id)
-        .execute();
+      await replaceTrackedMeasurements(
+        trx,
+        this.ids,
+        decision.profileId,
+        tracking.measurementCodes,
+        now,
+      );
+      await trx.insertInto('tracking_configs').values(configRow(tracking.config)).execute();
+      await writeDecision(trx, decision, change, now);
     });
   }
+}
+
+async function writeDecision(
+  trx: Transaction<DatabaseSchema>,
+  decision: DecisionRecord,
+  change: StatusChange,
+  now: string,
+): Promise<void> {
+  await trx
+    .insertInto('recommendation_decisions')
+    .values({
+      id: decision.id,
+      profile_id: decision.profileId,
+      event_id: decision.eventId,
+      decision: decision.decision,
+      decided_at: decision.decidedAt,
+      created_at: now,
+    })
+    .execute();
+  await trx
+    .updateTable('recommendation_events')
+    .set({
+      status: change.status,
+      status_on: change.statusOn,
+      snoozed_until: change.snoozedUntil,
+      updated_at: now,
+    })
+    .where('profile_id', '=', decision.profileId)
+    .where('id', '=', change.id)
+    .execute();
 }
