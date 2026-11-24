@@ -6,6 +6,7 @@ import { GetActiveProject } from '../application/get-active-project';
 import { GetTrackingState } from '../application/get-tracking-state';
 import {
   CompleteProject,
+  SetProjectRateBand,
   CreateProject,
   ListProjects,
   UpdateProject,
@@ -30,7 +31,8 @@ type TrackingChannels =
   | 'projects:list'
   | 'projects:create'
   | 'projects:update'
-  | 'projects:complete';
+  | 'projects:complete'
+  | 'projects:set-rate-band';
 
 export function trackingIpcHandlers(deps: {
   profiles: ProfileRepository;
@@ -75,5 +77,7 @@ export function trackingIpcHandlers(deps: {
     'projects:create': (input) => createProject.execute(input),
     'projects:update': (input) => updateProject.execute(input),
     'projects:complete': (input) => completeProject.execute(input),
+    'projects:set-rate-band': (input) =>
+      new SetProjectRateBand(deps.projects, deps.clock).execute(input),
   };
 }

@@ -1,4 +1,4 @@
-import { ConflictError, NotFoundError, parseLocalDate } from '@evully/domain';
+import { ConflictError, NotFoundError, parseLocalDate, ValidationError } from '@evully/domain';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { Clock } from '../src/modules/shared/ports';
 import { createTestApp, must } from './helpers';
@@ -143,13 +143,75 @@ describe('recommendations (README §20.2)', () => {
     expect(open).toEqual([
       expect.objectContaining({
         ruleId: 'double_progression',
-        evidence: expect.objectContaining({
-          exerciseName: bench.exerciseName,
+        ruleVersion: 2,
+        subjectKey: '2026-11-01',
+        evidence: {
           lastDate: '2026-11-01',
-          values: [8, 8, 8],
-        }),
+          exercises: [
+            expect.objectContaining({ exerciseName: bench.exerciseName, values: [8, 8, 8] }),
+          ],
+        },
       }),
     ]);
+  });
+
+  it('flags the pace outside the project band, and only with a band', async () => {
+    const { handlers, lucas, ana, goTo } = await setup();
+    const project = await handlers['projects:create']({
+      profileId: lucas.id,
+      name: 'Verão',
+      objective: 'fat_loss',
+      startDate: '2026-11-01',
+      targetDate: '2027-01-31',
+    });
+    expect(project).toMatchObject({ weeklyRateMinKg: null, weeklyRateMaxKg: null });
+    // Losing 0.2 kg a day for 3 weeks: −1,4 kg/week.
+    for (let day = 1; day <= 21; day++) {
+      const date = `2026-11-${String(day).padStart(2, '0')}`;
+      goTo(date);
+      await handlers['weights:register']({
+        profileId: lucas.id,
+        measuredOn: date,
+        measuredAt: `${date}T07:00:00.000Z`,
+        weightKg: 90 - day * 0.2,
+        tagIds: [],
+        notes: null,
+      });
+    }
+    const rules = (list: { open: { ruleId: string }[] }) => list.open.map((s) => s.ruleId);
+    expect(rules(await handlers['recommendations:list']({ profileId: lucas.id }))).toEqual([]);
+
+    const banded = await handlers['projects:set-rate-band']({
+      profileId: lucas.id,
+      id: project.id,
+      weeklyRateMinKg: -0.754,
+      weeklyRateMaxKg: -0.25,
+    });
+    expect(banded).toMatchObject({ weeklyRateMinKg: -0.75, weeklyRateMaxKg: -0.25 });
+    const { open } = await handlers['recommendations:list']({ profileId: lucas.id });
+    expect(open).toEqual([
+      expect.objectContaining({
+        ruleId: 'weight_rate_out_of_band',
+        level: 'attention',
+        evidence: { days: 14, ratePerWeekKg: -1.4, minKg: -0.75, maxKg: -0.25 },
+      }),
+    ]);
+    await expect(
+      handlers['projects:set-rate-band']({
+        profileId: lucas.id,
+        id: project.id,
+        weeklyRateMinKg: -0.25,
+        weeklyRateMaxKg: null,
+      }),
+    ).rejects.toThrow(ValidationError);
+    await expect(
+      handlers['projects:set-rate-band']({
+        profileId: ana.id,
+        id: project.id,
+        weeklyRateMinKg: null,
+        weeklyRateMaxKg: null,
+      }),
+    ).rejects.toThrow(NotFoundError);
   });
 
   it('keeps rules the profile turned off quiet, and resolves their open signals', async () => {

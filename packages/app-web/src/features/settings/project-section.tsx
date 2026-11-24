@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router';
 import { objectiveLabels } from '../tracking/messages.pt-BR';
 import { projectSettingsMessages as m, settingsMessages } from './messages.pt-BR';
 import { ProjectForm } from './project-form';
+import { RateBandForm } from './rate-band-form';
 import { settingsError } from './settings-feedback';
 
 const DEFAULT_PROJECT_DAYS = 62;
@@ -30,7 +31,7 @@ export function ProjectSection({ profileId }: { profileId: string }) {
       {completed && !active && <CompletedCard name={completed} />}
       {active ? (
         <ActiveProjectCard
-          key={active.updatedAt}
+          key={active.id}
           profileId={profileId}
           project={active}
           onCompleted={setCompleted}
@@ -96,11 +97,13 @@ function ActiveProjectCard({
         {m.activeTitle}
       </h2>
       <ProjectForm
+        key={project.updatedAt}
         initial={project}
         submitLabel={m.save}
         busy={update.isPending}
         onSubmit={(draft) => update.mutateAsync({ id: project.id, ...draft })}
       />
+      <RateBandForm profileId={profileId} project={project} />
       <div className="flex flex-col gap-2 border-t border-border pt-4">
         <Button
           type="button"

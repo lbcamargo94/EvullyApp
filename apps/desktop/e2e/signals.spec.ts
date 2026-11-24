@@ -40,4 +40,16 @@ test('a weighing 8 days old raises a signal that explains itself and can be snoo
   await expect(rule).toBeChecked();
   await rule.uncheck();
   await expect(rule).not.toBeChecked();
+  await expect(page.getByRole('switch', { name: /Ritmo fora da faixa/ })).toBeChecked();
+
+  // The project's optional pace band (README §7.1): both ends, or an error.
+  await page.getByRole('tab', { name: 'Projeto' }).click();
+  const band = page.getByRole('form', { name: 'Faixa de ritmo (opcional)' });
+  await band.getByRole('textbox', { name: 'Mínimo (kg/semana)' }).fill('−0,75');
+  await band.getByRole('button', { name: 'Salvar faixa' }).click();
+  await expect(band.getByRole('alert')).toContainText('Preencha o mínimo e o máximo');
+  await band.getByRole('textbox', { name: 'Máximo (kg/semana)' }).fill('-0,25');
+  await band.getByRole('button', { name: 'Salvar faixa' }).click();
+  await expect(band.getByRole('status')).toContainText('Salvo.');
+  await expect(band.getByRole('button', { name: 'Remover faixa' })).toBeVisible();
 });

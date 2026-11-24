@@ -1,5 +1,15 @@
-import type { ProjectCreateInput, ProjectUpdateInput } from '@evully/contracts';
-import { ConflictError, normalizeProjectDraft, NotFoundError, type Project } from '@evully/domain';
+import type {
+  ProjectCreateInput,
+  ProjectUpdateInput,
+  SetProjectRateBandInput,
+} from '@evully/contracts';
+import {
+  ConflictError,
+  normalizeProjectDraft,
+  normalizeRateBand,
+  NotFoundError,
+  type Project,
+} from '@evully/domain';
 import { GetProfile } from '../../profiles/application/get-profile';
 import type { ProfileRepository } from '../../profiles/ports/profile-repository';
 import type { Clock, IdGenerator } from '../../shared/ports';
@@ -32,6 +42,8 @@ export class CreateProject {
       ...normalizeProjectDraft(draft),
       status: 'active',
       notes: null,
+      weeklyRateMinKg: null,
+      weeklyRateMaxKg: null,
       createdAt: now,
       updatedAt: now,
     };
@@ -82,5 +94,24 @@ export class ListProjects {
 
   execute({ profileId }: { profileId: string }): Promise<Project[]> {
     return this.projects.list(profileId);
+  }
+}
+
+/** Sets or clears the project's pace band; nothing else changes (README §7.1). */
+export class SetProjectRateBand {
+  constructor(
+    private readonly projects: ProjectRepository,
+    private readonly clock: Clock,
+  ) {}
+
+  async execute({ profileId, id, ...band }: SetProjectRateBandInput): Promise<Project> {
+    const current = await findProject(this.projects, profileId, id);
+    const updated: Project = {
+      ...current,
+      ...normalizeRateBand(band),
+      updatedAt: this.clock.nowIso(),
+    };
+    await this.projects.update(updated);
+    return updated;
   }
 }

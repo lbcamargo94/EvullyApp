@@ -146,7 +146,7 @@ export function personalRecords(
 }
 
 /** Planned days of the active plans in the range, and the workouts done on the planned stretch. */
-function adherence(
+export function planAdherence(
   sessions: readonly TrainingSession[],
   plans: readonly PlanSchedule[],
   range: DateRange,
@@ -198,7 +198,7 @@ function trainingWindow(
     workouts: inside.length,
     sets: byGroup.reduce((sum, g) => sum + g.sets, 0),
     volumeKg: round2(byGroup.reduce((sum, g) => sum + g.volumeKg, 0)),
-    adherence: adherence(sessions, plans, range),
+    adherence: planAdherence(sessions, plans, range),
     groups: byGroup,
     records: personalRecords(sessions, range),
   };

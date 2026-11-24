@@ -10,6 +10,7 @@ import {
   measurementTypeSchema,
   projectCreateInputSchema,
   projectIdInputSchema,
+  setProjectRateBandInputSchema,
   projectUpdateInputSchema,
   renameTagInputSchema,
   setTrackedMeasurementsInputSchema,
@@ -338,6 +339,7 @@ export const ipcChannels = {
   'projects:create': { input: projectCreateInputSchema, output: projectSchema },
   'projects:update': { input: projectUpdateInputSchema, output: projectSchema },
   'projects:complete': { input: projectIdInputSchema, output: projectSchema },
+  'projects:set-rate-band': { input: setProjectRateBandInputSchema, output: projectSchema },
   'tags:rename': { input: renameTagInputSchema, output: tagSchema },
   'tags:remove': { input: tagIdInputSchema, output: z.null() },
 } as const;

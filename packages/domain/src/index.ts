@@ -38,3 +38,5 @@ export * from './analytics/training';
 export * from './analytics/routine';
 export * from './recommendations/rules';
 export * from './recommendations/engine';
+export * from './recommendations/progression-rule';
+export * from './recommendations/body-training-rules';

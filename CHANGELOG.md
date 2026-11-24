@@ -6,6 +6,17 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+1.3.0-alpha.2: corpo e treino.
+
+- novos sinais: **peso estável** (média móvel parada há 3 semanas num
+  projeto de perda ou ganho), **ritmo fora da faixa** do projeto, **queda
+  de volume** de treino em dois períodos seguidos e **baixa aderência** ao
+  plano; cada um com o "por quê" e um liga/desliga em Configurações;
+- **progressão dupla** agrupada por treino: um sinal por dia de treino com
+  todos os exercícios que atingiram o critério (versão 2 da regra);
+- **faixa de ritmo** opcional no projeto, em Configurações › Projeto (kg por
+  semana, preenchida só por você); banco: migration 0020.
+
 V1.3, Recommendation Engine (1.3.0-alpha.1: o motor, a tela Sinais e as
 primeiras regras).
 

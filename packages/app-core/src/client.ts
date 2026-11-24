@@ -1,5 +1,6 @@
 import type {
   AcceptTrackingInput,
+  SetProjectRateBandInput,
   DecideRecommendationInput,
   RecommendationList,
   RecommendationSettings,
@@ -140,6 +141,7 @@ export interface EvullyClient {
     create(input: ProjectCreateInput): Promise<ProjectDto>;
     update(input: ProjectUpdateInput): Promise<ProjectDto>;
     complete(profileId: string, id: string): Promise<ProjectDto>;
+    setRateBand(input: SetProjectRateBandInput): Promise<ProjectDto>;
   };
   weights: {
     list(profileId: string): Promise<WeightEntry[]>;

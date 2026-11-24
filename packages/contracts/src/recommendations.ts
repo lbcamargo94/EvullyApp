@@ -6,6 +6,10 @@ export const recommendationRuleSchema = z.enum([
   'weight_missing',
   'measurements_missing',
   'double_progression',
+  'weight_plateau',
+  'weight_rate_out_of_band',
+  'volume_drop',
+  'low_adherence',
 ]);
 
 const missingEvidence = z.object({
@@ -14,15 +18,51 @@ const missingEvidence = z.object({
   limitDays: z.number().int(),
 });
 
-const progressionEvidence = z.object({
+const progressedExercise = z.object({
   exerciseId: z.string(),
   exerciseName: z.string(),
-  lastDate: localDate,
   targetType: z.enum(['reps', 'seconds']),
   sets: z.number().int(),
   top: z.number(),
   values: z.array(z.number()),
   incrementKg: z.number().nullable(),
+});
+
+/** Version 1 (one exercise per signal) stays readable in the history; version 2 groups a workout. */
+const progressionEvidence = z.union([
+  z.object({ lastDate: localDate, exercises: z.array(progressedExercise).min(1) }),
+  progressedExercise.extend({ lastDate: localDate }),
+]);
+
+const plateauEvidence = z.object({
+  objective: z.enum(['fat_loss', 'muscle_gain']),
+  days: z.number().int(),
+  trendStartKg: z.number(),
+  trendEndKg: z.number(),
+  changeKg: z.number(),
+  limitKg: z.number(),
+});
+
+const rateBandEvidence = z.object({
+  days: z.number().int(),
+  ratePerWeekKg: z.number(),
+  minKg: z.number(),
+  maxKg: z.number(),
+});
+
+const volumeDropEvidence = z.object({
+  days: z.number().int(),
+  volumesKg: z.tuple([z.number(), z.number(), z.number()]),
+  workouts: z.tuple([z.number().int(), z.number().int(), z.number().int()]),
+  limitPercent: z.number(),
+});
+
+const adherenceEvidence = z.object({
+  days: z.number().int(),
+  done: z.number().int(),
+  planned: z.number().int(),
+  percent: z.number(),
+  limitPercent: z.number(),
 });
 
 /**
@@ -33,6 +73,10 @@ export const signalEvidenceSchema = z.discriminatedUnion('ruleId', [
   z.object({ ruleId: z.literal('weight_missing'), evidence: missingEvidence }),
   z.object({ ruleId: z.literal('measurements_missing'), evidence: missingEvidence }),
   z.object({ ruleId: z.literal('double_progression'), evidence: progressionEvidence }),
+  z.object({ ruleId: z.literal('weight_plateau'), evidence: plateauEvidence }),
+  z.object({ ruleId: z.literal('weight_rate_out_of_band'), evidence: rateBandEvidence }),
+  z.object({ ruleId: z.literal('volume_drop'), evidence: volumeDropEvidence }),
+  z.object({ ruleId: z.literal('low_adherence'), evidence: adherenceEvidence }),
 ]);
 
 const signalFields = z.object({
