@@ -6,50 +6,41 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
-1.3.0-alpha.3: sugestões de acompanhamento.
+## [1.3.0] - 2026-11-24
 
-- novo sinal **sugestão de acompanhamento**: quando uma medida que você
-  acompanha fica estável (menos de 0,5 cm em 4 semanas), o app sugere uma
-  medida relacionada, como o quadril para a cintura;
-- botão **Aceitar** nesse sinal, com confirmação: a medida passa a ser
-  acompanhada e a mudança fica registrada na configuração de acompanhamento
-  (origem "recomendação"); seus registros não mudam;
-- banco: migration 0021 (`tracking_configs.source` aceita `recommendation`).
+V1.3, Recommendation Engine: a tela **Sinais** mostra avisos calculados a
+partir dos seus registros, com regras fixas e versionadas. Nenhum sinal muda
+os seus dados sem você.
 
-1.3.0-alpha.2: corpo e treino.
-
-- novos sinais: **peso estável** (média móvel parada há 3 semanas num
-  projeto de perda ou ganho), **ritmo fora da faixa** do projeto, **queda
-  de volume** de treino em dois períodos seguidos e **baixa aderência** ao
-  plano; cada um com o "por quê" e um liga/desliga em Configurações;
-- **progressão dupla** agrupada por treino: um sinal por dia de treino com
-  todos os exercícios que atingiram o critério (versão 2 da regra);
+- **Sinais**, nova tela no menu, e um card no Dashboard com até 3 sinais
+  abertos. Cada sinal tem "Por que estou vendo isso?" (os números, a regra e
+  a versão), um atalho para agir e as opções "Lembrar em 7 dias" e
+  "Dispensar"; o histórico mostra o que foi dispensado, adiado, aceito ou
+  resolvido;
+- **Regras:**
+  - **pesagem ausente** (7 dias) e **medidas ausentes** (21 dias, para quem
+    acompanha medidas);
+  - **progressão dupla:** os exercícios com carga de um treino que atingiram
+    o critério para aumentar a carga, num sinal por treino;
+  - **peso estável:** média móvel parada há 3 semanas num projeto de perda
+    ou ganho;
+  - **ritmo fora da faixa** do projeto, com nível "atenção";
+  - **queda de volume** de treino em dois períodos seguidos de 14 dias;
+  - **baixa aderência** ao plano (menos de 60% em 14 dias);
+  - **sugestão de acompanhamento:** uma medida estável por 4 semanas sugere
+    uma relacionada, como o quadril para a cintura;
+- **Aceitar** uma sugestão de acompanhamento, com confirmação: a medida
+  passa a ser acompanhada e a mudança fica registrada na configuração de
+  acompanhamento (origem "recomendação"); seus registros não mudam;
+- um sinal aberto não se repete, um adiado volta na data, um dispensado ou
+  aceito fica quieto por 14 dias e o que deixou de valer fica como resolvido;
+- aba **Sinais** em Configurações para ligar ou desligar cada regra;
 - **faixa de ritmo** opcional no projeto, em Configurações › Projeto (kg por
-  semana, preenchida só por você); banco: migration 0020.
-
-V1.3, Recommendation Engine (1.3.0-alpha.1: o motor, a tela Sinais e as
-primeiras regras).
-
-- **Sinais**, nova tela no menu: avisos calculados a partir dos registros,
-  cada um com "Por que estou vendo isso?" (os números, a regra e a versão),
-  um atalho para registrar e as opções "Lembrar em 7 dias" e "Dispensar";
-  o histórico mostra o que foi dispensado, adiado ou resolvido;
-- primeiras regras: **pesagem ausente** (7 dias), **medidas ausentes** (21
-  dias, para quem acompanha medidas) e **progressão dupla** (exercício dos
-  planos ativos que atingiu o critério para aumentar a carga, só com carga);
-- um sinal aberto não se repete, um adiado volta na data, um dispensado
-  fica quieto por 14 dias e o que deixou de valer fica como resolvido;
-  nenhum sinal muda os seus dados;
-- card **Sinais** no Dashboard com até 3 sinais abertos, e a aba **Sinais**
-  em Configurações para ligar ou desligar cada regra;
-- banco: tabelas `recommendation_events` e `recommendation_decisions`
-  (migration 0019), incluídas no backup, na exportação e na transferência
-  de perfil.
-
-- roadmap da V1.3: sinais com regra e versão, os números de origem no
-  próprio sinal (sem `analytics_snapshots`), limites fixos e versionados,
-  tela Sinais e card no Dashboard, faixa de ritmo opcional no projeto;
-  exames ficam para a V1.5.
+  semana, preenchida só por você);
+- banco: migrations 0019 (tabelas `recommendation_events` e
+  `recommendation_decisions`, incluídas no backup, na exportação e na
+  transferência de perfil), 0020 (faixa de ritmo no projeto) e 0021
+  (`tracking_configs.source` aceita `recommendation`).
 
 ## [1.2.0] - 2026-11-21
 

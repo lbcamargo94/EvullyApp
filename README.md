@@ -227,7 +227,7 @@ Este é o **único** roadmap do projeto.
 | **V1.0** ✓ 1.0.0 (16/11/2026) | Desktop estável + instalador Windows: aceite do §19 em testes ponta a ponta, recuperação de banco danificado, pasta de logs (§15.2) |
 | **V1.1** ✓ 1.1.0 (19/11/2026) | Design system: ilustrações, ícones, imagens e acabamento visual de todas as telas, com tokens prontos para o mobile (§15.3) |
 | **V1.2** ✓ 1.2.0 (21/11/2026) | Analytics Engine determinístico: janelas de 7 a 60 dias e "este período × anterior" em todos os módulos, calculados na hora (§20.1) |
-| V1.3 (em andamento) | Recommendation Engine determinístico: sinais com regra e versão, tela Sinais e decisão do usuário (§20.2) |
+| **V1.3** ✓ 1.3.0 (24/11/2026) | Recommendation Engine determinístico: sinais com regra e versão, tela Sinais e decisão do usuário (§20.2) |
 | V1.4 | Notificações locais / Evully Reminders |
 | V1.5 | Evully Health (estrutura local/manual) |
 | V1.6 | Evully Coach AI opcional (desenvolvimento/testes) |

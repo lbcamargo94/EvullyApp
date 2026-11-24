@@ -2,7 +2,7 @@
 
 Local-first fitness app (Electron + React + TS + SQLite), multi-profile,
 growing to web (NestJS API + React SPA/PWA + Next.js site) and native
-mobile (Expo). **Current phase: V1.3 (Recommendation Engine) in progress; 1.2.0 released. Scope and deliveries in README §20.2.**
+mobile (Expo). **Current phase: V1.3 complete; 1.3.0 released. Next: V1.4 per README §4 (not started).**
 
 ## Language
 - Talk to the user in **Portuguese (pt-BR)**. UI text in pt-BR.
