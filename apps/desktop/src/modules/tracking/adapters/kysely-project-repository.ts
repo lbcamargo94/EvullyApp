@@ -12,6 +12,8 @@ const toProject = (row: Selectable<ProjectsTable>): Project => ({
   targetDate: row.target_date as LocalDate,
   status: row.status,
   notes: row.notes,
+  weeklyRateMinKg: row.weekly_rate_min_kg,
+  weeklyRateMaxKg: row.weekly_rate_max_kg,
   createdAt: row.created_at,
   updatedAt: row.updated_at,
 });
@@ -23,6 +25,8 @@ const toRow = (p: Project) => ({
   target_date: p.targetDate,
   status: p.status,
   notes: p.notes,
+  weekly_rate_min_kg: p.weeklyRateMinKg,
+  weekly_rate_max_kg: p.weeklyRateMaxKg,
   updated_at: p.updatedAt,
 });
 

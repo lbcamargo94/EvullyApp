@@ -1,4 +1,4 @@
-import type { ProjectDraft, WeightDisplay } from '@evully/contracts';
+import type { ProjectDraft, WeightDisplay, SetProjectRateBandInput } from '@evully/contracts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEvullyClient } from '../../client-context';
 
@@ -71,6 +71,21 @@ export function useCompleteProject(profileId: string) {
   return useMutation({
     mutationFn: (id: string) => client.projects.complete(profileId, id),
     onSuccess: refresh,
+  });
+}
+
+/** The project's optional pace band (README §7.1); signals read it on their next list. */
+export function useSetProjectRateBand(profileId: string) {
+  const client = useEvullyClient();
+  const refresh = useRefreshProfile(profileId);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (band: Omit<SetProjectRateBandInput, 'profileId'>) =>
+      client.projects.setRateBand({ profileId, ...band }),
+    onSuccess: async () => {
+      await refresh();
+      await queryClient.invalidateQueries({ queryKey: ['recommendations', profileId] });
+    },
   });
 }
 

@@ -471,12 +471,19 @@ export async function seedDemo(
     const cardioDay = CARDIO_WEEKDAYS.includes(weekday);
     if (day === DAYS - PROJECT_DAYS_AGO) {
       clock.set(date, '07:00');
-      await handlers['projects:create']({
+      const project = await handlers['projects:create']({
         profileId: ctx.profileId,
         name: 'Projeto Verão',
         objective: 'fat_loss',
         startDate: date,
         targetDate: addDaysToLocalDate(date, 150),
+      });
+      // Optional pace band (README §7.1), read by the "Ritmo fora da faixa" signal.
+      await handlers['projects:set-rate-band']({
+        profileId: ctx.profileId,
+        id: project.id,
+        weeklyRateMinKg: -0.75,
+        weeklyRateMaxKg: -0.25,
       });
     }
     if (day === DAYS - TARGET_CHANGE_DAYS_AGO) await setTargets(ctx, date, 'second');

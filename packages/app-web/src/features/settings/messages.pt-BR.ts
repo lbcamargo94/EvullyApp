@@ -108,6 +108,23 @@ export const trackingSettingsMessages = {
   redo: 'Refazer questionário',
 } as const;
 
+export const rateBandMessages = {
+  title: 'Faixa de ritmo (opcional)',
+  hint: 'Quanto você quer que o peso mude por semana, em kg. Use números negativos para perda (ex.: −0,75 a −0,25). Só o sinal "Ritmo fora da faixa" usa esta faixa; o Evully não sugere valores.',
+  min: 'Mínimo (kg/semana)',
+  max: 'Máximo (kg/semana)',
+  save: 'Salvar faixa',
+  clear: 'Remover faixa',
+  invalid: 'Use números como −0,75 ou 0,25.',
+  bothEnds: 'Preencha o mínimo e o máximo, ou deixe os dois vazios.',
+  inverted: 'O mínimo precisa ser menor ou igual ao máximo.',
+  errors: {
+    'project.rate_band_incomplete': 'Preencha o mínimo e o máximo, ou deixe os dois vazios.',
+    'project.rate_band_inverted': 'O mínimo precisa ser menor ou igual ao máximo.',
+    'project.rate_band_out_of_range': 'Use valores entre −2 e +2 kg por semana.',
+  } as Record<string, string>,
+};
+
 export const projectSettingsMessages = {
   activeTitle: 'Projeto ativo',
   newTitle: 'Novo projeto',

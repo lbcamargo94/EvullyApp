@@ -70,6 +70,7 @@ export const ipcEvullyClient: EvullyClient = {
     create: (input) => call('projects:create', input),
     update: (input) => call('projects:update', input),
     complete: (profileId, id) => call('projects:complete', { profileId, id }),
+    setRateBand: (input) => call('projects:set-rate-band', input),
   },
   weights: {
     list: (profileId) => call('weights:list', { profileId }),

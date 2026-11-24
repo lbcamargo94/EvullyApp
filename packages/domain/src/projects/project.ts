@@ -13,6 +13,9 @@ export interface Project {
   targetDate: LocalDate;
   status: ProjectStatus;
   notes: string | null;
+  /** Optional weekly pace band in kg/week, set by the user (README §7.1, §20.2). */
+  weeklyRateMinKg: number | null;
+  weeklyRateMaxKg: number | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -51,4 +54,35 @@ export function normalizeProjectDraft(draft: ProjectDraft): Omit<
     throw new ValidationError('project.too_long', 'Project is longer than five years');
   }
   return { name, objective: draft.objective, startDate, targetDate };
+}
+
+/** Widest weekly pace accepted, in kg/week either way. */
+export const MAX_WEEKLY_RATE_KG = 2;
+
+export interface RateBand {
+  weeklyRateMinKg: number | null;
+  weeklyRateMaxKg: number | null;
+}
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+/**
+ * The project's optional pace band (README §7.1): both ends or none, each
+ * between −2 and +2 kg/week (negative is a loss), min not above max. Never
+ * filled by the app.
+ */
+export function normalizeRateBand(band: RateBand): RateBand {
+  const { weeklyRateMinKg: min, weeklyRateMaxKg: max } = band;
+  if (min === null && max === null) return { weeklyRateMinKg: null, weeklyRateMaxKg: null };
+  if (min === null || max === null) {
+    throw new ValidationError('project.rate_band_incomplete', 'Both ends of the band are needed');
+  }
+  const inRange = (n: number) => Number.isFinite(n) && Math.abs(n) <= MAX_WEEKLY_RATE_KG;
+  if (!inRange(min) || !inRange(max)) {
+    throw new ValidationError('project.rate_band_out_of_range', 'Pace band is out of range');
+  }
+  if (min > max) {
+    throw new ValidationError('project.rate_band_inverted', 'Band minimum is above its maximum');
+  }
+  return { weeklyRateMinKg: round2(min), weeklyRateMaxKg: round2(max) };
 }

@@ -1,5 +1,5 @@
 import { useRecommendationSettings, useSetRecommendationSettings } from '@evully/app-core';
-import type { RecommendationRule } from '@evully/contracts';
+import { recommendationRuleSchema, type RecommendationRule } from '@evully/contracts';
 import { Card, Switch } from '@evully/ui';
 import {
   ruleDescriptions,
@@ -8,11 +8,8 @@ import {
 } from '../recommendations/messages.pt-BR';
 import { useSavedToggle } from '../shared/use-saved-toggle';
 
-const RULES: RecommendationRule[] = [
-  'weight_missing',
-  'measurements_missing',
-  'double_progression',
-];
+/** Every rule, in the order the engine runs them. */
+const RULES = recommendationRuleSchema.options;
 
 function RuleToggle({
   rule,

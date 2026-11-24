@@ -13,6 +13,8 @@ import {
   evaluateRules,
   NotFoundError,
   reconcileSignals,
+  dailyWeights,
+  sessionStats,
   RULE_VERSIONS,
   type ProgressionCandidate,
   type RecommendationRuleId,
@@ -24,6 +26,7 @@ import type { ProfileRepository } from '../../profiles/ports/profile-repository'
 import type { SettingsRepository } from '../../settings/ports/settings-repository';
 import type { Clock, IdGenerator } from '../../shared/ports';
 import type { MeasurementRepository } from '../../measurements/ports/measurement-repository';
+import type { ProjectRepository } from '../../tracking/ports/project-repository';
 import type { TrackingRepository } from '../../tracking/ports/tracking-repository';
 import type { WeightRepository } from '../../weights/ports/weight-repository';
 import type { ExerciseRepository } from '../../workouts/ports/exercise-repository';
@@ -38,6 +41,7 @@ export interface RecommendationDeps {
   profiles: ProfileRepository;
   recommendations: RecommendationRepository;
   settings: SettingsRepository;
+  projects: ProjectRepository;
   weights: WeightRepository;
   measurements: MeasurementRepository;
   tracking: TrackingRepository;
@@ -90,16 +94,59 @@ async function progressionCandidates(
 }
 
 /** What the rules read: latest records and the active plans (README §20.2). */
+/** Finished workouts by local date with their volume, and the active plans' weekdays. */
+async function trainingInputs(
+  deps: RecommendationDeps,
+  profileId: string,
+): Promise<Pick<RuleInputs, 'sessions' | 'plans'>> {
+  const [finished, plans, exercises] = await Promise.all([
+    deps.sessions.finishedSessions(profileId),
+    deps.plans.list(profileId),
+    deps.exercises.listAll(profileId),
+  ]);
+  const groups = new Map(exercises.map((e) => [e.id, e.muscleGroup]));
+  return {
+    sessions: finished.map((session) => ({
+      date: deps.clock.isoToLocal(session.startedAt).date,
+      exercises: session.exercises.map(({ exerciseId, sets }) => ({
+        exerciseId,
+        name: '',
+        muscleGroup: groups.get(exerciseId) ?? 'cardio_other',
+        volumeKg: sessionStats({ sessionId: session.id, startedAt: session.startedAt, sets })
+          .volumeKg,
+        completedSets: sets.filter((set) => set.completed).length,
+        loadedSets: [],
+      })),
+    })),
+    plans: plans
+      .filter((p) => p.status === 'active')
+      .map((p) => ({
+        weekdays: p.days.flatMap((d) => (d.weekday === null ? [] : [d.weekday])),
+        since: deps.clock.isoToLocal(p.createdAt).date,
+      })),
+  };
+}
+
+/** What the rules read: latest records, weights, the active project and plans (README §20.2). */
 async function ruleInputs(deps: RecommendationDeps, profileId: string): Promise<RuleInputs> {
-  const [weighings, sessions, tracked] = await Promise.all([
+  const [weighings, sessions, tracked, project] = await Promise.all([
     deps.weights.listByProfile(profileId),
     deps.measurements.listByProfile(profileId),
     deps.tracking.listActiveMeasurementTypes(profileId),
+    deps.projects.findActive(profileId),
   ]);
+  const band =
+    project && project.weeklyRateMinKg !== null && project.weeklyRateMaxKg !== null
+      ? { minKg: project.weeklyRateMinKg, maxKg: project.weeklyRateMaxKg }
+      : null;
   return {
     lastWeighing: latestDate(weighings.map((w) => w.measuredOn)),
     lastMeasurement: tracked.length > 0 ? latestDate(sessions.map((s) => s.measuredOn)) : null,
     progressions: await progressionCandidates(deps, profileId),
+    weights: dailyWeights(weighings).map((d) => ({ date: d.date, value: d.weightKg })),
+    objective: project?.objective ?? null,
+    rateBand: band,
+    ...(await trainingInputs(deps, profileId)),
   };
 }
 

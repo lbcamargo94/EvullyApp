@@ -46,6 +46,9 @@ export interface ProjectsTable {
   target_date: string;
   status: 'active' | 'completed' | 'archived';
   notes: string | null;
+  /** Added in 0020; null when the user set no band. */
+  weekly_rate_min_kg: number | null;
+  weekly_rate_max_kg: number | null;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;

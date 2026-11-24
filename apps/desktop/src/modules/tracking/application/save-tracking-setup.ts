@@ -16,7 +16,14 @@ export async function saveTrackingSetup(
     answers: unknown;
     project: Omit<
       Project,
-      'id' | 'profileId' | 'status' | 'notes' | 'createdAt' | 'updatedAt'
+      | 'id'
+      | 'profileId'
+      | 'status'
+      | 'notes'
+      | 'weeklyRateMinKg'
+      | 'weeklyRateMaxKg'
+      | 'createdAt'
+      | 'updatedAt'
     > | null;
     proposal: TrackingProposal;
   },
@@ -38,6 +45,8 @@ export async function saveTrackingSetup(
       profileId: input.profileId,
       ...input.project,
       status: 'active',
+      weeklyRateMinKg: null,
+      weeklyRateMaxKg: null,
       notes: null,
       createdAt: now,
       updatedAt: now,

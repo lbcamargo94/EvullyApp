@@ -43,7 +43,16 @@ const candidate = (reps: number[]): ProgressionCandidate => ({
   last: { date: ago(2), sets: reps.map((r) => set(r)) },
   incrementKg: 2.5,
 });
-const none: RuleInputs = { lastWeighing: null, lastMeasurement: null, progressions: [] };
+const none: RuleInputs = {
+  lastWeighing: null,
+  lastMeasurement: null,
+  progressions: [],
+  weights: [],
+  objective: null,
+  rateBand: null,
+  sessions: [],
+  plans: [],
+};
 
 describe('evaluateRules (README §20.2)', () => {
   it('stays quiet without records: a missing record needs an earlier one', () => {
@@ -68,21 +77,38 @@ describe('evaluateRules (README §20.2)', () => {
     );
   });
 
-  it('flags an exercise that met the double progression, with the measured sets', () => {
-    const [signal] = evaluateRules({ ...none, progressions: [candidate([12, 12])] }, today);
+  it('groups the exercises of one workout that met the double progression', () => {
+    const second = {
+      ...candidate([12, 12]),
+      planExerciseId: 'pe-2',
+      exerciseId: 'ex-2',
+      exerciseName: 'Remada',
+    };
+    // The same exercise in another plan day counts once.
+    const again = { ...candidate([12, 12]), planExerciseId: 'pe-3' };
+    const [signal, ...rest] = evaluateRules(
+      { ...none, progressions: [candidate([12, 12]), second, again] },
+      today,
+    );
+    expect(rest).toEqual([]);
     expect(signal).toEqual({
       ruleId: 'double_progression',
-      subjectKey: 'pe-1',
+      subjectKey: ago(2),
       level: 'info',
       evidence: {
-        exerciseId: 'ex-1',
-        exerciseName: 'Supino reto',
         lastDate: ago(2),
-        targetType: 'reps',
-        sets: 2,
-        top: 12,
-        values: [12, 12],
-        incrementKg: 2.5,
+        exercises: [
+          {
+            exerciseId: 'ex-1',
+            exerciseName: 'Supino reto',
+            targetType: 'reps',
+            sets: 2,
+            top: 12,
+            values: [12, 12],
+            incrementKg: 2.5,
+          },
+          expect.objectContaining({ exerciseId: 'ex-2', exerciseName: 'Remada' }),
+        ],
       },
     });
     expect(evaluateRules({ ...none, progressions: [candidate([12, 11])] }, today)).toEqual([]);

@@ -191,6 +191,7 @@ export function buildApp({
       profiles,
       recommendations: new KyselyRecommendationRepository(db),
       settings,
+      projects,
       weights,
       measurements,
       tracking,

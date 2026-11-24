@@ -543,6 +543,10 @@ Todas as regras abaixo são implementadas em `packages/domain` e possuem testes.
   acompanhamento.
 - Alterar as datas de um projeto apenas recalcula os indicadores; nenhum
   registro é alterado.
+- **Faixa de ritmo** (opcional, V1.3): quanto o usuário quer que o peso
+  mude por semana, em kg (negativo é perda). As duas pontas ou nenhuma,
+  entre −2 e +2 kg/semana, mínimo ≤ máximo. O app nunca preenche nem sugere
+  a faixa; só o sinal "ritmo fora da faixa" (§20.2) a usa.
 
 #### 7.1.1 Registros retroativos
 
@@ -2275,6 +2279,19 @@ acompanhar também o quadril?"). Se aceitas, geram um novo registro em
     baixa aderência ao plano;
   - 1.3.0-alpha.3: sugestões de acompanhamento (`tracking_configs`);
   - 1.3.0.
+- **Regras e limites** (versão entre parênteses):
+  - pesagem ausente (1): 7 dias sem pesagem;
+  - medidas ausentes (1): 21 dias sem medidas, para quem acompanha alguma;
+  - progressão dupla (2): exercícios com carga que atingiram o critério do
+    §10.6, agrupados por treino (a versão 1 era um sinal por exercício);
+  - peso estável (1): média móvel de 7 dias muda menos de 0,2 kg em 21
+    dias, num projeto de perda de gordura ou ganho de massa;
+  - ritmo fora da faixa (1): variação da média móvel em 14 dias, por
+    semana, fora da faixa do projeto (§7.1); nível "atenção";
+  - queda de volume (1): volume de treino cai mais de 10% em dois períodos
+    seguidos de 14 dias, com pelo menos 2 treinos em cada;
+  - baixa aderência (1): menos de 60% dos dias previstos dos planos ativos
+    nos últimos 14 dias, com pelo menos 4 dias previstos.
 
 ---
 

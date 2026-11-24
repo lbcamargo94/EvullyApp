@@ -68,6 +68,8 @@ export const projectSchema = projectDraftSchema.extend({
   profileId: z.string(),
   status: z.enum(['active', 'completed', 'archived']),
   notes: z.string().nullable(),
+  weeklyRateMinKg: z.number().nullable(),
+  weeklyRateMaxKg: z.number().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -101,6 +103,12 @@ export const setTrackedMeasurementsInputSchema = z.object({
 export const projectCreateInputSchema = projectDraftSchema.extend({ profileId: z.uuid() });
 export const projectUpdateInputSchema = projectCreateInputSchema.extend({ id: z.uuid() });
 export const projectIdInputSchema = z.object({ profileId: z.uuid(), id: z.uuid() });
+/** Optional pace band (README §7.1): both ends or none, kg/week. */
+export const setProjectRateBandInputSchema = projectIdInputSchema.extend({
+  weeklyRateMinKg: z.number().min(-2).max(2).nullable(),
+  weeklyRateMaxKg: z.number().min(-2).max(2).nullable(),
+});
+export type SetProjectRateBandInput = z.infer<typeof setProjectRateBandInputSchema>;
 
 export type ProjectCreateInput = z.infer<typeof projectCreateInputSchema>;
 export type ProjectUpdateInput = z.infer<typeof projectUpdateInputSchema>;
