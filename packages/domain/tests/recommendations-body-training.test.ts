@@ -20,6 +20,7 @@ const none: RuleInputs = {
   rateBand: null,
   sessions: [],
   plans: [],
+  measurements: { tracked: [], untracked: [] },
 };
 /** One weighing a day for 30 days: `at(daysAgo)` kg. */
 const daily = (at: (daysAgo: number) => number): StatPoint[] =>

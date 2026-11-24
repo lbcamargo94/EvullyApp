@@ -40,6 +40,7 @@ import {
   setHabitLogInputSchema,
   updateHabitInputSchema,
   sleepIdInputSchema,
+  acceptRecommendationInputSchema,
   decideRecommendationInputSchema,
   recommendationListSchema,
   recommendationSettingsSchema,
@@ -287,6 +288,10 @@ export const ipcChannels = {
   'recommendations:list': { input: profileScopedInputSchema, output: recommendationListSchema },
   'recommendations:decide': {
     input: decideRecommendationInputSchema,
+    output: recommendationListSchema,
+  },
+  'recommendations:accept': {
+    input: acceptRecommendationInputSchema,
     output: recommendationListSchema,
   },
   'recommendation-settings:get': {

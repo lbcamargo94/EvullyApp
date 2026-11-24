@@ -76,7 +76,7 @@ export interface TrackingConfigsTable {
   focus_areas: string;
   /** JSON array text. */
   enabled_modules: string;
-  source: 'questionnaire' | 'manual' | 'template' | 'professional';
+  source: 'questionnaire' | 'manual' | 'template' | 'professional' | 'recommendation';
   rule_version: string | null;
   questionnaire_id: string | null;
   created_at: string;

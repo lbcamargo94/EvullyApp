@@ -6,7 +6,7 @@ export interface TrackingConfigRecord {
   effectiveFrom: LocalDate;
   weightDisplay: WeightDisplay;
   focusAreas: FocusArea[];
-  source: 'questionnaire' | 'manual' | 'template' | 'professional';
+  source: 'questionnaire' | 'manual' | 'template' | 'professional' | 'recommendation';
   ruleVersion: string | null;
   questionnaireId: string | null;
   createdAt: string;

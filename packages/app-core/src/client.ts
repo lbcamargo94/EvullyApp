@@ -283,6 +283,8 @@ export interface EvullyClient {
   recommendations: {
     list(profileId: string): Promise<RecommendationList>;
     decide(input: DecideRecommendationInput): Promise<RecommendationList>;
+    /** Accepts a tracking suggestion; it changes which measurements are tracked. */
+    accept(profileId: string, id: string): Promise<RecommendationList>;
     settings(profileId: string): Promise<RecommendationSettings>;
     setSettings(
       profileId: string,

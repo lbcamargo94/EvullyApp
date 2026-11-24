@@ -10,6 +10,7 @@ export const recommendationRuleSchema = z.enum([
   'weight_rate_out_of_band',
   'volume_drop',
   'low_adherence',
+  'tracking_suggestion',
 ]);
 
 const missingEvidence = z.object({
@@ -65,6 +66,20 @@ const adherenceEvidence = z.object({
   limitPercent: z.number(),
 });
 
+const trackingSuggestionEvidence = z.object({
+  sourceCode: z.string(),
+  sourceName: z.string(),
+  suggestedCode: z.string(),
+  suggestedName: z.string(),
+  firstDate: localDate,
+  lastDate: localDate,
+  values: z.number().int(),
+  changeCm: z.number(),
+  days: z.number().int(),
+  minSpanDays: z.number().int(),
+  limitCm: z.number(),
+});
+
 /**
  * The numbers that raised a signal, kept with it (README §20.2,
  * ARCHITECTURE §9). Validated on write and on read, by rule.
@@ -77,6 +92,7 @@ export const signalEvidenceSchema = z.discriminatedUnion('ruleId', [
   z.object({ ruleId: z.literal('weight_rate_out_of_band'), evidence: rateBandEvidence }),
   z.object({ ruleId: z.literal('volume_drop'), evidence: volumeDropEvidence }),
   z.object({ ruleId: z.literal('low_adherence'), evidence: adherenceEvidence }),
+  z.object({ ruleId: z.literal('tracking_suggestion'), evidence: trackingSuggestionEvidence }),
 ]);
 
 const signalFields = z.object({
@@ -105,6 +121,12 @@ export const decideRecommendationInputSchema = z.object({
   decision: z.enum(['dismissed', 'snoozed']),
 });
 
+/** Accepts a tracking suggestion: the only signal that changes settings, on the user's click. */
+export const acceptRecommendationInputSchema = z.object({
+  profileId: z.uuid(),
+  id: z.uuid(),
+});
+
 export const recommendationSettingsSchema = z.object({
   /** Rules the profile turned off; every rule is on by default. */
   disabledRules: z.array(recommendationRuleSchema),
@@ -117,4 +139,5 @@ export type RecommendationRule = z.infer<typeof recommendationRuleSchema>;
 export type RecommendationDto = z.infer<typeof recommendationSchema>;
 export type RecommendationList = z.infer<typeof recommendationListSchema>;
 export type DecideRecommendationInput = z.infer<typeof decideRecommendationInputSchema>;
+export type AcceptRecommendationInput = z.infer<typeof acceptRecommendationInputSchema>;
 export type RecommendationSettings = z.infer<typeof recommendationSettingsSchema>;

@@ -189,7 +189,7 @@ export function buildApp({
     ...habitIpcHandlers({ profiles, habits: new KyselyHabitRepository(db), clock, ids }),
     ...recommendationIpcHandlers({
       profiles,
-      recommendations: new KyselyRecommendationRepository(db),
+      recommendations: new KyselyRecommendationRepository(db, ids),
       settings,
       projects,
       weights,

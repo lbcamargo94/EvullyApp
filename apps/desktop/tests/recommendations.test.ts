@@ -233,6 +233,75 @@ describe('recommendations (README §20.2)', () => {
     });
   });
 
+  it('accepting a tracking suggestion turns the measurement on and adds a config record', async () => {
+    const { handlers, lucas, ana, goTo } = await setup();
+    const catalog = await handlers['tracking:catalog'](undefined);
+    const typeId = (code: string) => must(catalog.find((t) => t.code === code)).id;
+    await handlers['tracking:set-weight-display']({ profileId: lucas.id, weightDisplay: 'daily' });
+    await handlers['tracking:set-measurements']({
+      profileId: lucas.id,
+      measurementTypeIds: [typeId('waist')],
+    });
+    for (const [date, valueCm] of [
+      ['2026-11-01', 82],
+      ['2026-11-16', 82.2],
+    ] as const) {
+      goTo(date);
+      await handlers['measurements:register']({
+        profileId: lucas.id,
+        measuredOn: date,
+        measuredAt: `${date}T07:00:00.000Z`,
+        values: [{ measurementTypeId: typeId('waist'), valueCm }],
+        notes: null,
+      });
+    }
+    goTo('2026-11-17');
+    const { open } = await handlers['recommendations:list']({ profileId: lucas.id });
+    const signal = must(open.find((s) => s.ruleId === 'tracking_suggestion'));
+    expect(signal).toMatchObject({
+      subjectKey: 'hips',
+      evidence: { sourceCode: 'waist', suggestedName: 'Quadril', changeCm: 0.2, values: 2 },
+    });
+
+    // Another profile cannot accept it; other signals cannot be accepted.
+    await expect(
+      handlers['recommendations:accept']({ profileId: ana.id, id: signal.id }),
+    ).rejects.toThrow(NotFoundError);
+
+    const after = await handlers['recommendations:accept']({ profileId: lucas.id, id: signal.id });
+    expect(after.history.find((s) => s.id === signal.id)?.status).toBe('accepted');
+    const state = await handlers['tracking:get-state']({ profileId: lucas.id });
+    expect(state.measurementTypes.map((t) => t.code)).toEqual(['waist', 'hips']);
+    expect(state.config).toMatchObject({
+      effectiveFrom: '2026-11-17',
+      weightDisplay: 'daily',
+      focusAreas: ['waist', 'hips'],
+      source: 'recommendation',
+      ruleVersion: 'tracking_suggestion@1',
+    });
+    expect((await handlers['measurements:list']({ profileId: lucas.id })).length).toBe(2);
+    const ana2 = await handlers['tracking:get-state']({ profileId: ana.id });
+    expect(ana2.measurementTypes).toEqual([]);
+
+    await expect(
+      handlers['recommendations:accept']({ profileId: lucas.id, id: signal.id }),
+    ).rejects.toThrow(ConflictError);
+    // Hips is tracked now: the rule stays quiet.
+    goTo('2026-12-10');
+    const later = await handlers['recommendations:list']({ profileId: lucas.id });
+    expect(later.open.some((s) => s.ruleId === 'tracking_suggestion')).toBe(false);
+  });
+
+  it('accepts only tracking suggestions', async () => {
+    const { handlers, lucas, goTo, weigh } = await setup();
+    await weigh(lucas.id, '2026-11-01');
+    goTo('2026-11-08');
+    const [signal] = (await handlers['recommendations:list']({ profileId: lucas.id })).open;
+    await expect(
+      handlers['recommendations:accept']({ profileId: lucas.id, id: must(signal).id }),
+    ).rejects.toThrow(ValidationError);
+  });
+
   it('isolates profiles (README §6.1)', async () => {
     const { handlers, lucas, ana, goTo, weigh } = await setup();
     await weigh(lucas.id, '2026-11-01');

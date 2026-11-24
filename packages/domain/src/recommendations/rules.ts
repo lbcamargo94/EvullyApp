@@ -17,6 +17,11 @@ import {
   type ProgressionCandidate,
   type ProgressionEvidence,
 } from './progression-rule';
+import {
+  trackingSuggestions,
+  type TrackingSuggestionEvidence,
+  type TrackingSuggestionInputs,
+} from './tracking-rule';
 
 /**
  * Recommendation rules (README §20.2): deterministic, versioned, with fixed
@@ -31,6 +36,7 @@ export const RECOMMENDATION_RULES = [
   'weight_rate_out_of_band',
   'volume_drop',
   'low_adherence',
+  'tracking_suggestion',
 ] as const;
 export type RecommendationRuleId = (typeof RECOMMENDATION_RULES)[number];
 
@@ -46,6 +52,7 @@ export const RULE_VERSIONS: Record<RecommendationRuleId, number> = {
   weight_rate_out_of_band: 1,
   volume_drop: 1,
   low_adherence: 1,
+  tracking_suggestion: 1,
 };
 
 /** Days without a record before the "missing" rules fire. */
@@ -71,7 +78,8 @@ export type Signal =
   | SignalOf<'weight_plateau', PlateauEvidence>
   | SignalOf<'weight_rate_out_of_band', RateBandEvidence>
   | SignalOf<'volume_drop', VolumeDropEvidence>
-  | SignalOf<'low_adherence', AdherenceEvidence>;
+  | SignalOf<'low_adherence', AdherenceEvidence>
+  | SignalOf<'tracking_suggestion', TrackingSuggestionEvidence>;
 
 export interface RuleInputs {
   /** Local date of the latest weighing; null without any. */
@@ -89,6 +97,8 @@ export interface RuleInputs {
   sessions: readonly TrainingSession[];
   /** Weekdays of the active plans since each was created. */
   plans: readonly PlanSchedule[];
+  /** Tracked measurements with their values and the untracked catalog ones. */
+  measurements: TrackingSuggestionInputs;
 }
 
 function missing(last: string | null, limitDays: number, today: LocalDate): MissingEvidence | null {
@@ -139,6 +149,12 @@ function findings(inputs: RuleInputs, today: LocalDate): Signal[] {
     ),
     ...one('volume_drop', 'training', 'info', volumeDrop(inputs.sessions, today)),
     ...one('low_adherence', 'training', 'info', lowAdherence(inputs.sessions, inputs.plans, today)),
+    ...trackingSuggestions(inputs.measurements, today).map((evidence): Signal => ({
+      ruleId: 'tracking_suggestion',
+      subjectKey: evidence.suggestedCode,
+      level: 'info',
+      evidence,
+    })),
   ];
 }
 

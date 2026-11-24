@@ -2,6 +2,7 @@ import { formatLocalDate } from '@evully/app-core';
 import type { RecommendationDto, RecommendationRule } from '@evully/contracts';
 
 const kg = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
+const cm = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
 const whole = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
 const date = (d: string) => formatLocalDate(d);
 const dayMonth = (d: string) => formatLocalDate(d).slice(0, 5);
@@ -88,6 +89,13 @@ export function signalText(signal: RecommendationDto): { title: string; body: st
         body: `Nos últimos ${e.days} dias você fez ${e.done} de ${e.planned} treinos previstos nos planos ativos.`,
       };
     }
+    case 'tracking_suggestion': {
+      const e = signal.evidence;
+      return {
+        title: `${e.sourceName} estável; acompanhar também ${e.suggestedName}?`,
+        body: `De ${date(e.firstDate)} a ${date(e.lastDate)}, ${e.sourceName} variou ${cm.format(e.changeCm)} cm em ${e.values} registros. Acompanhar ${e.suggestedName} pode mostrar mudanças que ${e.sourceName} não mostra.`,
+      };
+    }
   }
 }
 
@@ -128,6 +136,11 @@ function reasons(signal: RecommendationDto): string[] {
         `Dias previstos: os dias da semana dos planos ativos, desde a criação de cada um.`,
         `Aparece abaixo de ${signal.evidence.limitPercent}%, com pelo menos 4 dias previstos.`,
       ];
+    case 'tracking_suggestion':
+      return [
+        `Variação de ${signal.evidence.sourceName} nos últimos ${signal.evidence.days} dias: ${cm.format(signal.evidence.changeCm)} cm (maior menos menor valor).`,
+        `Aparece quando a variação fica abaixo de ${cm.format(signal.evidence.limitCm)} cm, com 2 ou mais registros num intervalo de pelo menos ${signal.evidence.minSpanDays} dias, e só sugere medidas que você não acompanha.`,
+      ];
   }
 }
 
@@ -147,6 +160,7 @@ export const ruleNames: Record<RecommendationRule, string> = {
   weight_rate_out_of_band: 'Ritmo fora da faixa',
   volume_drop: 'Queda de volume',
   low_adherence: 'Baixa aderência ao plano',
+  tracking_suggestion: 'Sugestão de acompanhamento',
 };
 
 export const ruleDescriptions: Record<RecommendationRule, string> = {
@@ -160,6 +174,8 @@ export const ruleDescriptions: Record<RecommendationRule, string> = {
     'Avisa quando o ritmo dos últimos 14 dias sai da faixa definida no projeto.',
   volume_drop: 'Avisa quando o volume de treino cai mais de 10% em dois períodos de 14 dias.',
   low_adherence: 'Avisa abaixo de 60% dos treinos previstos nos últimos 14 dias.',
+  tracking_suggestion:
+    'Sugere uma medida relacionada quando uma que você acompanha fica estável por 4 semanas.',
 };
 
 /** Where the user goes to act on a signal. */
@@ -171,6 +187,7 @@ export const signalAction: Record<RecommendationRule, { label: string; to: strin
   weight_rate_out_of_band: { label: 'Ver progresso', to: '/app/stats' },
   volume_drop: { label: 'Ver progresso', to: '/app/stats' },
   low_adherence: { label: 'Abrir treinos', to: '/app/workouts' },
+  tracking_suggestion: { label: 'Ver medidas', to: '/app/measurements' },
 };
 
 export const signalsMessages = {
@@ -181,13 +198,19 @@ export const signalsMessages = {
   emptyTitle: 'Nenhum sinal aberto',
   empty: 'Quando uma regra encontrar algo nos seus registros, ele aparece aqui.',
   historyTitle: 'Histórico',
-  historyEmpty: 'Os sinais dispensados, adiados ou resolvidos aparecem aqui.',
+  historyEmpty: 'Os sinais dispensados, adiados, aceitos ou resolvidos aparecem aqui.',
   why: 'Por que estou vendo isso?',
   dismiss: 'Dispensar',
   snooze: 'Lembrar em 7 dias',
   dismissed: 'Dispensado. Volta só se continuar valendo daqui a 14 dias.',
   snoozed: 'Adiado por 7 dias.',
   failed: 'Não foi possível salvar. Tente de novo.',
+  accept: 'Aceitar',
+  acceptTitle: (name: string) => `Acompanhar ${name}?`,
+  acceptBody: (name: string) =>
+    `Você passa a acompanhar ${name} a partir de hoje, no fim da sua lista de medidas. Seus registros não mudam e você pode desligar a medida em Configurações.`,
+  acceptConfirm: 'Acompanhar',
+  cancel: 'Cancelar',
   columnDate: 'Data',
   columnSignal: 'Sinal',
   columnStatus: 'Situação',

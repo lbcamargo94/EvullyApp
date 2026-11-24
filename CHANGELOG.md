@@ -6,6 +6,16 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+1.3.0-alpha.3: sugestões de acompanhamento.
+
+- novo sinal **sugestão de acompanhamento**: quando uma medida que você
+  acompanha fica estável (menos de 0,5 cm em 4 semanas), o app sugere uma
+  medida relacionada, como o quadril para a cintura;
+- botão **Aceitar** nesse sinal, com confirmação: a medida passa a ser
+  acompanhada e a mudança fica registrada na configuração de acompanhamento
+  (origem "recomendação"); seus registros não mudam;
+- banco: migration 0021 (`tracking_configs.source` aceita `recommendation`).
+
 1.3.0-alpha.2: corpo e treino.
 
 - novos sinais: **peso estável** (média móvel parada há 3 semanas num

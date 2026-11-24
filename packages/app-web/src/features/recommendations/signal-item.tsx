@@ -1,13 +1,14 @@
-import { useDecideRecommendation } from '@evully/app-core';
+import { useAcceptRecommendation, useDecideRecommendation } from '@evully/app-core';
 import type { RecommendationDto } from '@evully/contracts';
-import { Badge, Button } from '@evully/ui';
+import { Badge, Button, ConfirmDialog } from '@evully/ui';
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { signalAction, signalText, signalWhy, signalsMessages as m } from './messages.pt-BR';
 
 /**
  * One open signal: what the records show, why it appeared (rule, version and
- * numbers), where to act, and dismiss or snooze. Nothing changes the user's
- * data (README §20.2).
+ * numbers), where to act, and dismiss or snooze. Only a tracking suggestion
+ * changes settings, after the user confirms it (README §20.2).
  */
 export function SignalItem({
   profileId,
@@ -19,6 +20,10 @@ export function SignalItem({
   compact?: boolean;
 }) {
   const decide = useDecideRecommendation(profileId);
+  const accept = useAcceptRecommendation(profileId);
+  const [confirming, setConfirming] = useState(false);
+  const suggested = signal.ruleId === 'tracking_suggestion' ? signal.evidence.suggestedName : null;
+  const busy = decide.isPending || accept.isPending;
   const { title, body } = signalText(signal);
   const action = signalAction[signal.ruleId];
   const titleId = `signal-${signal.id}`;
@@ -51,10 +56,15 @@ export function SignalItem({
         </Button>
         {!compact && (
           <>
+            {suggested !== null && (
+              <Button type="button" disabled={busy} onClick={() => setConfirming(true)}>
+                {m.accept}
+              </Button>
+            )}
             <Button
               type="button"
               variant="ghost"
-              disabled={decide.isPending}
+              disabled={busy}
               onClick={() => decide.mutate({ id: signal.id, decision: 'snoozed' })}
             >
               {m.snooze}
@@ -62,7 +72,7 @@ export function SignalItem({
             <Button
               type="button"
               variant="ghost"
-              disabled={decide.isPending}
+              disabled={busy}
               onClick={() => decide.mutate({ id: signal.id, decision: 'dismissed' })}
             >
               {m.dismiss}
@@ -70,10 +80,22 @@ export function SignalItem({
           </>
         )}
       </div>
-      {decide.isError && (
+      {(decide.isError || accept.isError) && (
         <p role="alert" className="text-caption text-danger">
           {m.failed}
         </p>
+      )}
+      {suggested !== null && (
+        <ConfirmDialog
+          open={confirming}
+          onOpenChange={setConfirming}
+          title={m.acceptTitle(suggested)}
+          description={m.acceptBody(suggested)}
+          confirmLabel={m.acceptConfirm}
+          cancelLabel={m.cancel}
+          busy={accept.isPending}
+          onConfirm={() => void accept.mutateAsync(signal.id).finally(() => setConfirming(false))}
+        />
       )}
     </li>
   );
