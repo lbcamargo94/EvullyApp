@@ -36,3 +36,5 @@ export * from './analytics/windows';
 export * from './analytics/body';
 export * from './analytics/training';
 export * from './analytics/routine';
+export * from './recommendations/rules';
+export * from './recommendations/engine';

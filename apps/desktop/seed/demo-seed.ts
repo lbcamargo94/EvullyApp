@@ -492,6 +492,25 @@ export async function seedDemo(
     }
     if (cardioDay) await cardio(ctx, date);
     await habits(ctx, date, setup.habitIds, cardioDay, false);
+    if (day % SIGNAL_REVIEW_DAYS === 0) await reviewSignals(ctx, date);
   }
+  // Today's evaluation leaves the current signals open on the Dashboard.
+  await handlers['recommendations:list']({ profileId: ctx.profileId });
   return ctx.result;
+}
+
+/** Days between the seed's looks at Sinais, so the history has decisions. */
+const SIGNAL_REVIEW_DAYS = 7;
+
+/** Opens Sinais in the evening and snoozes or dismisses what is open, alternately. */
+async function reviewSignals(ctx: Context, date: LocalDate) {
+  ctx.clock.set(date, '21:00');
+  const { open } = await ctx.handlers['recommendations:list']({ profileId: ctx.profileId });
+  for (const [i, signal] of open.entries()) {
+    await ctx.handlers['recommendations:decide']({
+      profileId: ctx.profileId,
+      id: signal.id,
+      decision: i % 2 === 0 ? 'dismissed' : 'snoozed',
+    });
+  }
 }

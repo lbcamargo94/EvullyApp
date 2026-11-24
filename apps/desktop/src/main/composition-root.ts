@@ -34,6 +34,8 @@ import {
   KyselySleepTargetRepository,
 } from '../modules/sleep/adapters/kysely-sleep-repository';
 import { sleepIpcHandlers } from '../modules/sleep/adapters/sleep-ipc-handlers';
+import { KyselyRecommendationRepository } from '../modules/recommendations/adapters/kysely-recommendation-repository';
+import { recommendationIpcHandlers } from '../modules/recommendations/adapters/recommendation-ipc-handlers';
 import { importIpcHandlers } from '../modules/imports/adapters/import-ipc-handlers';
 import { PendingImports } from '../modules/imports/application/pending-imports';
 import type { ImportFiles } from '../modules/imports/ports/import-ports';
@@ -185,6 +187,19 @@ export function buildApp({
       ids,
     }),
     ...habitIpcHandlers({ profiles, habits: new KyselyHabitRepository(db), clock, ids }),
+    ...recommendationIpcHandlers({
+      profiles,
+      recommendations: new KyselyRecommendationRepository(db),
+      settings,
+      weights,
+      measurements,
+      tracking,
+      plans: new KyselyWorkoutPlanRepository(db),
+      sessions: new KyselySessionRepository(db),
+      exercises: new KyselyExerciseRepository(db),
+      clock,
+      ids,
+    }),
     ...sleepIpcHandlers({
       profiles,
       sleep: new KyselySleepRepository(db),

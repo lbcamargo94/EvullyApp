@@ -28,6 +28,8 @@ export const PROFILE_EXPORT_TABLES = [
   'sleep_targets',
   'habit_definitions',
   'habit_logs',
+  'recommendation_events',
+  'recommendation_decisions',
 ] as const satisfies readonly (keyof DatabaseSchema)[];
 
 /** Child tables without `profile_id`, read through their parent row. */

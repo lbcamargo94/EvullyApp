@@ -29,6 +29,7 @@ export const shellMessages = {
   habits: 'Hábitos',
   sleep: 'Sono',
   stats: 'Progresso',
+  signals: 'Sinais',
   catalog: 'Catálogo de componentes (dev)',
   measurements: 'Medidas',
   settings: 'Configurações',
