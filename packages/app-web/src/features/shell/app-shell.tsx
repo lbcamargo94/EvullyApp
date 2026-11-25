@@ -18,6 +18,7 @@ import { shellMessages as m } from './messages.pt-BR';
 import { ProfileSwitcher } from './profile-switcher';
 import { QueryErrorBanner } from './query-error-banner';
 import { useInactivity } from './use-inactivity';
+import { useReminderOpen } from './use-reminder-open';
 
 // Menu item states (DESIGN.md §5): default, hover, keyboard focus and current page.
 const navItem =
@@ -48,6 +49,7 @@ export function AppShell() {
     void navigate('/profiles', { replace: true });
   }, [clear, navigate]);
   useInactivity(settings?.inactivityLockMinutes ?? 0, lock);
+  useReminderOpen(profileId);
 
   if (!profileId || isError) return <Navigate to="/profiles" replace />;
   // Profiles that never answered (or skipped) the questionnaire go through it first.

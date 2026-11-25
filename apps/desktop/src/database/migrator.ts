@@ -21,6 +21,7 @@ import * as m0018 from './migrations/0018_sleep_targets';
 import * as m0019 from './migrations/0019_recommendations';
 import * as m0020 from './migrations/0020_project_rate_band';
 import * as m0021 from './migrations/0021_tracking_source_recommendation';
+import * as m0022 from './migrations/0022_reminders';
 
 // Migrations are imported statically so they are bundled into the app.
 // Never edit a published migration; add a new one (README §6.4).
@@ -46,6 +47,7 @@ const migrations: Record<string, Migration> = {
   '0019_recommendations': m0019,
   '0020_project_rate_band': m0020,
   '0021_tracking_source_recommendation': m0021,
+  '0022_reminders': m0022,
 };
 
 /** Latest migration of this app: a backup with a newer one cannot be restored (README §14.2). */

@@ -42,6 +42,12 @@ Fora de escopo na Fase 1:
   - `OnlyLoadAppFromAsar` ligado.
 - Electron mantido em versão suportada, com atualização a cada versão do
   Evully.
+- **Lembretes (V1.4):** a notificação do Windows mostra só o nome do perfil e
+  o assunto, nunca números dos registros (ela aparece sobre outras janelas e
+  na tela de bloqueio). Clicar nela guarda a tela pedida no processo main,
+  que a janela lê uma vez; nenhuma rota ou caminho vem do renderer. Uma só
+  instância por pasta de dados. "Iniciar com o Windows" vem desligado, só o
+  app instalado se registra, e o único argumento é `--hidden`.
 
 ### 2.2 IPC
 

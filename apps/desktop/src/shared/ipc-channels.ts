@@ -1,5 +1,8 @@
 import {
   acceptTrackingInputSchema,
+  reminderOpenSchema,
+  reminderSettingsSchema,
+  setReminderSettingsInputSchema,
   createTagInputSchema,
   importPreviewSchema,
   legalDocumentsSchema,
@@ -302,6 +305,9 @@ export const ipcChannels = {
     input: setRecommendationSettingsInputSchema,
     output: recommendationSettingsSchema,
   },
+  'reminders:get': { input: profileScopedInputSchema, output: reminderSettingsSchema },
+  'reminders:set': { input: setReminderSettingsInputSchema, output: reminderSettingsSchema },
+  'reminders:take-open': { input: z.undefined(), output: reminderOpenSchema },
   'sleep:list': { input: profileScopedInputSchema, output: z.array(sleepLogSchema) },
   'sleep:register': { input: sleepInputSchema, output: sleepLogSchema },
   'sleep:update': { input: updateSleepInputSchema, output: sleepLogSchema },

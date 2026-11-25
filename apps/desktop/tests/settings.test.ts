@@ -19,6 +19,7 @@ describe('settings', () => {
       inactivityLockMinutes: 15,
       theme: 'system',
       updateChannel: 'prerelease',
+      startWithWindows: false,
     });
   });
 
@@ -30,6 +31,7 @@ describe('settings', () => {
       inactivityLockMinutes: 5,
       theme: 'system',
       updateChannel: 'prerelease',
+      startWithWindows: false,
     });
     await handlers['settings:update']({ inactivityLockMinutes: 0 });
     expect((await handlers['settings:get'](undefined)).inactivityLockMinutes).toBe(0);

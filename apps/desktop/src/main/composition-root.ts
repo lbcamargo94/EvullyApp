@@ -36,6 +36,15 @@ import {
 import { sleepIpcHandlers } from '../modules/sleep/adapters/sleep-ipc-handlers';
 import { KyselyRecommendationRepository } from '../modules/recommendations/adapters/kysely-recommendation-repository';
 import { recommendationIpcHandlers } from '../modules/recommendations/adapters/recommendation-ipc-handlers';
+import { KyselyReminderRepository } from '../modules/reminders/adapters/kysely-reminder-repository';
+import { reminderIpcHandlers } from '../modules/reminders/adapters/reminder-ipc-handlers';
+import type { ReminderOpenBox } from '../modules/reminders/adapters/reminder-open-box';
+import {
+  anyRemindersOn,
+  EvaluateReminders,
+  type ReminderDeps,
+} from '../modules/reminders/application/manage-reminders';
+import type { Notifier } from '../modules/reminders/ports/reminder-ports';
 import { importIpcHandlers } from '../modules/imports/adapters/import-ipc-handlers';
 import { PendingImports } from '../modules/imports/application/pending-imports';
 import type { ImportFiles } from '../modules/imports/ports/import-ports';
@@ -92,6 +101,12 @@ interface Dependencies {
   exportFiles: ExportFiles;
   transferFiles: TransferFiles;
   updater: Updater;
+  reminders: {
+    notifier: Notifier;
+    opens: ReminderOpenBox;
+    /** Called after the reminder settings change (the tray follows them). */
+    onChange: () => void;
+  };
 }
 
 /** Wires adapters into use cases (ARCHITECTURE.md §3). The only place that knows every module. */
@@ -107,6 +122,7 @@ export function buildApp({
   exportFiles,
   transferFiles,
   updater,
+  reminders,
 }: Dependencies) {
   const profiles = new KyselyProfileRepository(db);
   const settings = new KyselySettingsRepository(db, clock, ids);
@@ -133,6 +149,19 @@ export function buildApp({
     clock,
     appVersion: appInfo().version,
     schemaVersion: LATEST_MIGRATION,
+  };
+
+  const reminderDeps: ReminderDeps = {
+    profiles,
+    reminders: new KyselyReminderRepository(db),
+    weights,
+    measurements,
+    tracking,
+    plans: new KyselyWorkoutPlanRepository(db),
+    sessions: new KyselySessionRepository(db),
+    notifier: reminders.notifier,
+    clock,
+    ids,
   };
 
   const handlers: IpcHandlers = {
@@ -227,6 +256,11 @@ export function buildApp({
       ids,
       defaultBackupDirectory: backup.defaultDirectory,
     }),
+    ...reminderIpcHandlers({
+      ...reminderDeps,
+      opens: reminders.opens,
+      onChange: reminders.onChange,
+    }),
     ...importIpcHandlers({
       profiles,
       weights,
@@ -241,6 +275,11 @@ export function buildApp({
 
   return {
     handlers,
+    /** Run by the main process every minute (README §25). */
+    reminders: {
+      evaluate: () => new EvaluateReminders(reminderDeps).execute(),
+      anyOn: () => anyRemindersOn(reminderDeps),
+    },
     /** Lifecycle backups run by the main process (README §6.4, §8.7.2). */
     lifecycle: {
       onClose: () => new RunAutomaticBackup(backupDeps, backup.defaultDirectory).execute(),
