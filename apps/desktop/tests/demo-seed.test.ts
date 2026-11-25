@@ -44,6 +44,7 @@ describe('demo seed (npm run seed)', () => {
       'workout',
       'water',
       'habits',
+      'weekly_summary',
     ]);
     // The stable right thigh leaves a tracking suggestion open in Sinais.
     const { open } = await handlers['recommendations:list']({ profileId });

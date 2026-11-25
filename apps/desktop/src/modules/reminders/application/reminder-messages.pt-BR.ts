@@ -1,4 +1,11 @@
-import type { DueReminder } from '@evully/domain';
+import type { DueReminder, PendingRecord } from '@evully/domain';
+
+const PENDING: Record<PendingRecord, { label: string; route: string }> = {
+  open_workout: { label: 'treino em aberto', route: '/app/workouts' },
+  workout_yesterday: { label: 'treino de ontem', route: '/app/workouts' },
+  habits_yesterday: { label: 'hábitos de ontem', route: '/app/habits' },
+  food_yesterday: { label: 'alimentação de ontem', route: '/app/diet' },
+};
 
 const list = (items: readonly string[]) =>
   items.length <= 1 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} e ${items.at(-1)}`;
@@ -60,6 +67,18 @@ export function reminderText(
         title: `${profileName}: como foi a noite?`,
         body: 'Registre o sono da última noite no Evully.',
         route: '/app/sleep',
+      };
+    case 'weekly_summary':
+      return {
+        title: `${profileName}: resumo da semana`,
+        body: 'Veja como foi a sua semana no Evully.',
+        route: '/app/stats',
+      };
+    case 'pending_records':
+      return {
+        title: `${profileName}: registros pendentes`,
+        body: `Falta registrar: ${list(due.items.map((i) => PENDING[i].label))}.`,
+        route: PENDING[due.items[0] ?? 'open_workout'].route,
       };
   }
 }

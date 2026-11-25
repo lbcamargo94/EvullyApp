@@ -12,11 +12,17 @@ test('turns reminders on for the profile, with quiet hours (README §25)', async
   await weighing.check();
   await form.getByLabel('Horário (pesagem)').fill('06:45');
   await form.getByRole('switch', { name: /Medidas/ }).check();
-  await form.getByRole('combobox', { name: 'Dia da semana' }).selectOption({ label: 'Sábado' });
+  await form
+    .getByRole('combobox', { name: 'Dia da semana (medidas)' })
+    .selectOption({ label: 'Sábado' });
   await form.getByRole('switch', { name: /Horário silencioso/ }).check();
   await form.getByLabel('Início').fill('23:00');
   await form.getByRole('switch', { name: /Água/ }).check();
   await form.getByLabel('Horário (água)').fill('16:30');
+  await form.getByRole('switch', { name: /Resumo semanal/ }).check();
+  await form
+    .getByRole('combobox', { name: 'Dia da semana (resumo semanal)' })
+    .selectOption({ label: 'Sexta' });
   await form.getByRole('button', { name: 'Salvar lembretes' }).click();
   await expect(form.getByRole('status')).toContainText('Salvo.');
   await expect(page.getByRole('switch', { name: /Iniciar com o Windows/ })).not.toBeChecked();
@@ -27,9 +33,12 @@ test('turns reminders on for the profile, with quiet hours (README §25)', async
   await page.getByRole('tab', { name: 'Lembretes' }).click();
   await expect(form.getByRole('switch', { name: /Pesagem/ })).toBeChecked();
   await expect(form.getByLabel('Horário (pesagem)')).toHaveValue('06:45');
-  await expect(form.getByRole('combobox', { name: 'Dia da semana' })).toHaveValue('6');
+  await expect(form.getByRole('combobox', { name: 'Dia da semana (medidas)' })).toHaveValue('6');
   await expect(form.getByLabel('Início')).toHaveValue('23:00');
   await expect(form.getByLabel('Horário (água)')).toHaveValue('16:30');
   await expect(form.getByRole('switch', { name: /Treino/ })).not.toBeChecked();
+  await expect(form.getByRole('combobox', { name: 'Dia da semana (resumo semanal)' })).toHaveValue(
+    '5',
+  );
   await expect(form.getByRole('switch', { name: /Sono/ })).not.toBeChecked();
 });

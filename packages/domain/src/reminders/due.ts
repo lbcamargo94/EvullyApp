@@ -14,15 +14,29 @@ export const REMINDER_TYPES = [
   'water',
   'habits',
   'sleep',
+  'weekly_summary',
+  'pending_records',
 ] as const;
 export type ReminderType = (typeof REMINDER_TYPES)[number];
+
+/** Reminders that show on one chosen weekday only. */
+export const WEEKLY_REMINDER_TYPES: readonly ReminderType[] = ['measurements', 'weekly_summary'];
+
+/** Something left open on earlier days (README §25), in the order shown. */
+export const PENDING_RECORDS = [
+  'open_workout',
+  'workout_yesterday',
+  'habits_yesterday',
+  'food_yesterday',
+] as const;
+export type PendingRecord = (typeof PENDING_RECORDS)[number];
 
 export interface ReminderPreference {
   type: ReminderType;
   enabled: boolean;
   /** Local `HH:mm`. */
   time: string;
-  /** ISO weekday; measurements only. */
+  /** ISO weekday; weekly reminders only. */
   weekday: number | null;
 }
 
@@ -44,6 +58,8 @@ export const DEFAULT_REMINDER_PREFERENCES: readonly ReminderPreference[] = [
   { type: 'water', enabled: false, time: '15:00', weekday: null },
   { type: 'habits', enabled: false, time: '21:00', weekday: null },
   { type: 'sleep', enabled: false, time: '09:00', weekday: null },
+  { type: 'weekly_summary', enabled: false, time: '19:00', weekday: 7 },
+  { type: 'pending_records', enabled: false, time: '10:00', weekday: null },
 ];
 
 /** What the records say today; null where the profile has nothing to go on. */
@@ -66,10 +82,16 @@ export interface ReminderFacts {
   pendingHabits: boolean;
   /** Last night (the one that ended today) was logged. */
   sleepLoggedToday: boolean;
+  /** Something was recorded in the 7 days ending today. */
+  recordedLastWeek: boolean;
+  /** What earlier days left open, in PENDING_RECORDS order. */
+  pending: readonly PendingRecord[];
 }
 
 export type DueReminder =
-  { type: Exclude<ReminderType, 'workout'> } | { type: 'workout'; dayNames: string[] };
+  | { type: Exclude<ReminderType, 'workout' | 'pending_records'> }
+  | { type: 'workout'; dayNames: string[] }
+  | { type: 'pending_records'; items: PendingRecord[] };
 
 export interface DueInput {
   preferences: readonly ReminderPreference[];
@@ -92,7 +114,7 @@ export function inQuietHours(time: string, quiet: QuietHours | null): boolean {
 
 /** True while today's record for a reminder without extra details is still missing. */
 const missing: Record<
-  Exclude<ReminderType, 'workout' | 'measurements'>,
+  Exclude<ReminderType, 'workout' | 'measurements' | 'pending_records'>,
   (f: ReminderFacts) => boolean
 > = {
   weighing: (f) => !f.weighedToday,
@@ -101,6 +123,7 @@ const missing: Record<
   water: (f) => f.waterBelowTarget,
   habits: (f) => f.pendingHabits,
   sleep: (f) => !f.sleepLoggedToday,
+  weekly_summary: (f) => f.recordedLastWeek,
 };
 
 /** The reminder when its record is still missing today; null otherwise. */
@@ -120,6 +143,8 @@ function stillUseful(
       return facts.plannedToday.length > 0 && !facts.trainedToday
         ? { type, dayNames: [...facts.plannedToday] }
         : null;
+    case 'pending_records':
+      return facts.pending.length > 0 ? { type, items: [...facts.pending] } : null;
     default:
       return missing[type](facts) ? { type } : null;
   }
@@ -131,7 +156,7 @@ export function dueReminders(input: DueInput): DueReminder[] {
   const weekday = isoWeekday(input.today);
   return input.preferences.flatMap((p) => {
     if (!p.enabled || p.time > input.now || input.shownToday.includes(p.type)) return [];
-    if (p.type === 'measurements' && p.weekday !== weekday) return [];
+    if (WEEKLY_REMINDER_TYPES.includes(p.type) && p.weekday !== weekday) return [];
     const due = stillUseful(p.type, input.facts, input.today);
     return due ? [due] : [];
   });

@@ -7,7 +7,13 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 ## [Unreleased]
 
 V1.4, Evully Reminders (1.4.0-alpha.1: o motor, a bandeja e os primeiros
-lembretes; 1.4.0-alpha.2: dieta, água, hábitos e sono).
+lembretes; 1.4.0-alpha.2: dieta, água, hábitos e sono; 1.4.0-alpha.3:
+resumo semanal e registros pendentes).
+
+- **1.4.0-alpha.3:** **resumo semanal** (no dia e horário escolhidos, se a
+  semana teve registros; abre Progresso) e **registros pendentes** (treino em
+  aberto, treino planejado ontem, hábitos ou alimentação de ontem, sem
+  números); o dia da semana de cada lembrete semanal tem rótulo próprio;
 
 - **1.4.0-alpha.2:** lembretes de **refeições** (nada registrado hoje),
   **proteína** (com meta e alimentos hoje, abaixo da meta), **água** (abaixo

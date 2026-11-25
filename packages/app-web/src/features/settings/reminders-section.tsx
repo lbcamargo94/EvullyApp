@@ -12,6 +12,8 @@ import { useSaveFeedback } from './settings-feedback';
 import { useSavedToggle } from '../shared/use-saved-toggle';
 
 const DEFAULT_QUIET = { start: '22:00', end: '07:00' };
+/** Reminders that show on one chosen weekday (README §25). */
+const WEEKLY: readonly ReminderType[] = ['measurements', 'weekly_summary'];
 
 function PreferenceRow({
   preference,
@@ -37,8 +39,8 @@ function PreferenceRow({
       </div>
       {preference.enabled && (
         <div className="grid gap-4 sm:grid-cols-2">
-          {type === 'measurements' && (
-            <Field id={`${id}-weekday`} label={m.weekday}>
+          {WEEKLY.includes(type) && (
+            <Field id={`${id}-weekday`} label={m.weekdayOf(m.names[type])}>
               <NativeSelect
                 id={`${id}-weekday`}
                 value={preference.weekday ?? 1}

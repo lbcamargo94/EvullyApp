@@ -2492,8 +2492,18 @@ Preferências por perfil: `channel`, `event_type`, `enabled`,
     se nada foi registrado hoje;
   - hábitos: se algum hábito ativo ainda não foi marcado hoje;
   - sono: se a noite que terminou hoje (§7.7) não foi registrada;
+  - resumo semanal: no dia da semana e horário escolhidos, se houve algum
+    registro (peso, medidas, treino, alimento consumido, hábito ou sono) nos
+    últimos 7 dias; abre Progresso;
+  - registros pendentes: se dias anteriores deixaram algo em aberto, listado
+    sem números ("Falta registrar: treino em aberto e hábitos de ontem"):
+    treino iniciado num dia anterior e não concluído; dia de plano ativo
+    ontem (plano criado até ontem) sem treino; nenhum hábito marcado ontem ou
+    nenhum alimento consumido ontem, estes dois só para quem os registrou em
+    algum dos 7 dias anteriores. O sono de ontem fica com o lembrete de sono;
   - horários padrão: pesagem 07:00, medidas 07:30 (segunda), sono 09:00,
-    refeições 13:00, água 15:00, treino 18:00, proteína 20:00, hábitos 21:00;
+    registros pendentes 10:00, refeições 13:00, água 15:00, treino 18:00,
+    resumo semanal 19:00 (domingo), proteína 20:00, hábitos 21:00;
   - horário silencioso (opcional, pode passar da meia-noite): nada aparece
     dentro dele; o que vencer aparece quando ele termina, se ainda valer no
     dia. Um lembrete atrasado (app aberto depois do horário) aparece no mesmo
