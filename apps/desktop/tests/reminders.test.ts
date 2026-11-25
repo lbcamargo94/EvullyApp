@@ -29,10 +29,14 @@ describe('reminders (README §25)', () => {
     const lucas = await app.handlers['profiles:create']({ ...person, name: 'Lucas' });
     const ana = await app.handlers['profiles:create']({ ...person, name: 'Ana' });
     const settings = await app.handlers['reminders:get']({ profileId: lucas.id });
-    const turnOn = (profileId: string, quietHours: { start: string; end: string } | null = null) =>
+    const turnOn = (
+      profileId: string,
+      quietHours: { start: string; end: string } | null = null,
+      types: readonly string[] = ['weighing', 'measurements', 'workout'],
+    ) =>
       app.handlers['reminders:set']({
         profileId,
-        preferences: settings.preferences.map((p) => ({ ...p, enabled: true })),
+        preferences: settings.preferences.map((p) => ({ ...p, enabled: types.includes(p.type) })),
         quietHours,
       });
     return { ...app, lucas, ana, settings, turnOn, goTo };
@@ -44,6 +48,11 @@ describe('reminders (README §25)', () => {
       ['weighing', false],
       ['measurements', false],
       ['workout', false],
+      ['meal', false],
+      ['protein', false],
+      ['water', false],
+      ['habits', false],
+      ['sleep', false],
     ]);
     expect(await reminders.anyOn()).toBe(false);
     goTo('2026-11-30', '23:00');
@@ -72,7 +81,7 @@ describe('reminders (README §25)', () => {
     await turnOn(lucas.id);
     await turnOn(lucas.id, { start: '22:00', end: '07:00' });
     const rows = await db.selectFrom('notification_preferences').select('profile_id').execute();
-    expect(rows.filter((r) => r.profile_id === lucas.id)).toHaveLength(6);
+    expect(rows.filter((r) => r.profile_id === lucas.id)).toHaveLength(16);
     expect(await handlers['reminders:get']({ profileId: ana.id })).toMatchObject({
       quietHours: null,
     });
@@ -131,5 +140,81 @@ describe('reminders (README §25)', () => {
   it('a clicked reminder is read once', async () => {
     const { handlers } = await setup();
     expect(await handlers['reminders:take-open'](undefined)).toBeNull();
+  });
+
+  it('diet, water, habits and sleep stay quiet once their records are in (README §25)', async () => {
+    const { handlers, lucas, turnOn, reminders, notices, goTo } = await setup();
+    const all = ['meal', 'protein', 'water', 'habits', 'sleep'];
+    await turnOn(lucas.id, null, all);
+    const food = await handlers['foods:create']({
+      name: 'Ovo',
+      brand: null,
+      referenceAmount: 100,
+      referenceUnit: 'g',
+      caloriesKcal: 150,
+      proteinG: 13,
+      carbohydrateG: 1,
+      fatG: 10,
+      fiberG: null,
+      sodiumMg: null,
+      source: null,
+    });
+    const habit = await handlers['habits:create']({
+      profileId: lucas.id,
+      name: 'Alongar',
+      type: 'boolean',
+      unit: null,
+      targetValue: null,
+    });
+
+    // No target and nothing logged: protein says nothing, the rest show.
+    goTo('2026-11-30', '22:00');
+    expect(await reminders.evaluate()).toBe(4);
+    expect(notices.map((n) => [n.title, n.route]).sort()).toEqual([
+      ['Lucas: como foi a noite?', '/app/sleep'],
+      ['Lucas: hora da água', '/app/diet'],
+      ['Lucas: hábitos de hoje', '/app/habits'],
+      ['Lucas: refeições de hoje', '/app/diet'],
+    ]);
+    expect(notices.every((n) => !/[0-9]/.test(n.title + n.body))).toBe(true);
+
+    // Next day: target set, records in; only protein under target shows.
+    goTo('2026-12-01', '06:00');
+    await handlers['nutrition-targets:set']({
+      profileId: lucas.id,
+      caloriesKcal: 2000,
+      proteinG: 120,
+      carbohydrateG: null,
+      fatG: null,
+      waterMl: 500,
+    });
+    await handlers['nutrition:add']({
+      profileId: lucas.id,
+      logDate: '2026-12-01',
+      mealType: 'breakfast',
+      mealName: null,
+      foodId: food.id,
+      quantity: 100,
+    });
+    await handlers['water:add']({ profileId: lucas.id, date: '2026-12-01', amountMl: 500 });
+    await handlers['habits:log']({
+      profileId: lucas.id,
+      date: '2026-12-01',
+      habitId: habit.id,
+      value: 1,
+    });
+    await handlers['sleep:register']({
+      profileId: lucas.id,
+      sleepDate: '2026-12-01',
+      bedTime: '2026-11-30T23:00:00.000Z',
+      sleepTime: null,
+      wakeTime: '2026-12-01T06:00:00.000Z',
+      quality: null,
+      notes: null,
+    });
+    notices.length = 0;
+    goTo('2026-12-01', '22:00');
+    expect(await reminders.evaluate()).toBe(1);
+    expect(notices.map((n) => n.title)).toEqual(['Lucas: proteína do dia']);
   });
 });

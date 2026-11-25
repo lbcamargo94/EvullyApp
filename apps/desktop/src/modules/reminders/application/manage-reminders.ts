@@ -2,6 +2,7 @@ import type { ReminderSettings, SetReminderSettingsInput } from '@evully/contrac
 import {
   DEFAULT_REMINDER_PREFERENCES,
   dueReminders,
+  effectiveAt,
   isoWeekday,
   ValidationError,
   type LocalDate,
@@ -9,9 +10,16 @@ import {
   type ReminderPreference,
 } from '@evully/domain';
 import { GetProfile } from '../../profiles/application/get-profile';
+import type { HabitRepository } from '../../habits/ports/habit-repository';
+import type { FoodLogRepository } from '../../nutrition/ports/food-log-repository';
+import type {
+  NutritionTargetRepository,
+  WaterLogRepository,
+} from '../../nutrition/ports/targets-water-repository';
 import type { ProfileRepository } from '../../profiles/ports/profile-repository';
 import type { MeasurementRepository } from '../../measurements/ports/measurement-repository';
 import type { Clock, IdGenerator } from '../../shared/ports';
+import type { SleepRepository } from '../../sleep/ports/sleep-repository';
 import type { TrackingRepository } from '../../tracking/ports/tracking-repository';
 import type { WeightRepository } from '../../weights/ports/weight-repository';
 import type { SessionRepository } from '../../workouts/ports/session-repository';
@@ -27,6 +35,11 @@ export interface ReminderDeps {
   tracking: TrackingRepository;
   plans: WorkoutPlanRepository;
   sessions: SessionRepository;
+  foodLogs: FoodLogRepository;
+  targets: NutritionTargetRepository;
+  water: WaterLogRepository;
+  habits: HabitRepository;
+  sleep: SleepRepository;
   notifier: Notifier;
   clock: Clock;
   ids: IdGenerator;
@@ -93,16 +106,41 @@ export class SetReminderSettings {
   }
 }
 
+/** Diet, water, habits and sleep today; never guessed without a target or a log. */
+async function dailyFacts(deps: ReminderDeps, profileId: string, today: LocalDate) {
+  const [foods, targets, water, habits, habitLogs, night] = await Promise.all([
+    deps.foodLogs.listDay(profileId, today),
+    deps.targets.list(profileId),
+    deps.water.listDay(profileId, today),
+    deps.habits.listActive(profileId),
+    deps.habits.logsBetween(profileId, today, today),
+    deps.sleep.findByDate(profileId, today),
+  ]);
+  const target = effectiveAt(targets, today);
+  const protein = foods.reduce((sum, f) => sum + f.nutrients.proteinG, 0);
+  const waterMl = water.reduce((sum, w) => sum + w.amountMl, 0);
+  const logged = new Set(habitLogs.map((l) => l.habitId));
+  return {
+    loggedFoodToday: foods.length > 0,
+    proteinBelowTarget:
+      target && target.proteinG > 0 && foods.length > 0 ? protein < target.proteinG : null,
+    waterBelowTarget: target?.waterMl ? waterMl < target.waterMl : water.length === 0,
+    pendingHabits: habits.some((h) => !logged.has(h.id)),
+    sleepLoggedToday: night !== null,
+  };
+}
+
 /** What the records say today, for the redundancy rules. */
 async function factsOf(deps: ReminderDeps, profileId: string, today: LocalDate) {
   const local = (iso: string) => deps.clock.isoToLocal(iso).date;
-  const [weighings, sessions, tracked, plans, open, finished] = await Promise.all([
+  const [weighings, sessions, tracked, plans, open, finished, daily] = await Promise.all([
     deps.weights.listByProfile(profileId),
     deps.measurements.listByProfile(profileId),
     deps.tracking.listActiveMeasurementTypes(profileId),
     deps.plans.list(profileId),
     deps.sessions.findOpen(profileId),
     deps.sessions.finishedSessions(profileId),
+    dailyFacts(deps, profileId, today),
   ]);
   const weekday = isoWeekday(today);
   const facts: ReminderFacts = {
@@ -118,6 +156,7 @@ async function factsOf(deps: ReminderDeps, profileId: string, today: LocalDate) 
     trainedToday:
       (open !== null && local(open.startedAt) === today) ||
       finished.some((s) => local(s.startedAt) === today),
+    ...daily,
   };
   return facts;
 }
