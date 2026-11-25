@@ -265,6 +265,8 @@ export const remindersMessages = {
     water: 'Água',
     habits: 'Hábitos',
     sleep: 'Sono',
+    weekly_summary: 'Resumo semanal',
+    pending_records: 'Registros pendentes',
   },
   descriptions: {
     weighing: 'No horário escolhido, se você ainda não se pesou hoje.',
@@ -278,8 +280,11 @@ export const remindersMessages = {
       'No horário escolhido, se a água de hoje está abaixo da meta (sem meta: se nada foi registrado).',
     habits: 'No horário escolhido, se algum hábito ativo ainda não foi marcado hoje.',
     sleep: 'No horário escolhido, se a noite que terminou hoje ainda não foi registrada.',
+    weekly_summary: 'No dia e horário escolhidos, se houve algum registro nos últimos 7 dias.',
+    pending_records:
+      'No horário escolhido, se ficou algo de dias anteriores: treino em aberto, treino planejado ontem, hábitos ou alimentação de ontem.',
   },
-  weekday: 'Dia da semana',
+  weekdayOf: (name: string) => `Dia da semana (${name.toLowerCase()})`,
   weekdays: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
   timeOf: (name: string) => `Horário (${name.toLowerCase()})`,
   quietTitle: 'Horário silencioso',

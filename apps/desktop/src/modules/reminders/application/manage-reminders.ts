@@ -1,11 +1,14 @@
 import type { ReminderSettings, SetReminderSettingsInput } from '@evully/contracts';
 import {
+  addDaysToLocalDate,
   DEFAULT_REMINDER_PREFERENCES,
   dueReminders,
   effectiveAt,
   isoWeekday,
   ValidationError,
+  WEEKLY_REMINDER_TYPES,
   type LocalDate,
+  type PendingRecord,
   type ReminderFacts,
   type ReminderPreference,
 } from '@evully/domain';
@@ -64,15 +67,16 @@ export class GetReminderSettings {
   }
 }
 
-/** Measurements need a weekday; the other reminders take none. */
+/** Weekly reminders need a weekday; the other reminders take none. */
 function normalized(preferences: readonly ReminderPreference[]): ReminderPreference[] {
   const byType = new Map(preferences.map((p) => [p.type, p]));
   return DEFAULT_REMINDER_PREFERENCES.map((d) => {
     const p = byType.get(d.type) ?? d;
-    if (p.type === 'measurements' && p.weekday === null) {
-      throw new ValidationError('reminder.weekday_required', 'Measurements need a weekday');
+    const weekly = WEEKLY_REMINDER_TYPES.includes(p.type);
+    if (weekly && p.weekday === null) {
+      throw new ValidationError('reminder.weekday_required', 'Weekly reminders need a weekday');
     }
-    return { ...p, weekday: p.type === 'measurements' ? p.weekday : null };
+    return { ...p, weekday: weekly ? p.weekday : null };
   });
 }
 
@@ -130,6 +134,56 @@ async function dailyFacts(deps: ReminderDeps, profileId: string, today: LocalDat
   };
 }
 
+type Loaded = {
+  weighings: { measuredOn: LocalDate }[];
+  sessions: { measuredOn: LocalDate }[];
+  plans: { status: string; createdAt: string; days: { weekday: number | null }[] }[];
+  open: { startedAt: string } | null;
+  finished: { startedAt: string }[];
+};
+
+/**
+ * What the last 8 days say (README §25): a week with records for the summary,
+ * and what earlier days left open. Food and habits count as pending only for a
+ * profile that logged them in the 7 days before yesterday.
+ */
+async function weekFacts(deps: ReminderDeps, profileId: string, today: LocalDate, l: Loaded) {
+  const local = (iso: string) => deps.clock.isoToLocal(iso).date;
+  const yesterday = addDaysToLocalDate(today, -1);
+  const weekAgo = addDaysToLocalDate(today, -6);
+  const before = addDaysToLocalDate(yesterday, -7);
+  const inWeek = (d: string) => d >= weekAgo && d <= today;
+  const [foodDays, habitLogs, nights] = await Promise.all([
+    deps.foodLogs.dailyConsumed(profileId),
+    deps.habits.logsBetween(profileId, before, today),
+    deps.sleep.list(profileId),
+  ]);
+  const foodDates = foodDays.map((d) => d.date);
+  const habitDates = habitLogs.map((h) => h.logDate);
+  const trainedDates = [...l.finished, ...(l.open ? [l.open] : [])].map((s) => local(s.startedAt));
+  const usedBefore = (dates: string[]) => dates.some((d) => d >= before && d < yesterday);
+  const plannedYesterday = l.plans.some(
+    (p) =>
+      p.status === 'active' &&
+      local(p.createdAt) <= yesterday &&
+      p.days.some((d) => d.weekday === isoWeekday(yesterday)),
+  );
+  const pending: PendingRecord[] = [];
+  if (l.open && local(l.open.startedAt) < today) pending.push('open_workout');
+  if (plannedYesterday && !trainedDates.includes(yesterday)) pending.push('workout_yesterday');
+  if (usedBefore(habitDates) && !habitDates.includes(yesterday)) pending.push('habits_yesterday');
+  if (usedBefore(foodDates) && !foodDates.includes(yesterday)) pending.push('food_yesterday');
+  const recordedLastWeek = [
+    ...l.weighings.map((w) => w.measuredOn),
+    ...l.sessions.map((s) => s.measuredOn),
+    ...trainedDates,
+    ...foodDates,
+    ...habitDates,
+    ...nights.map((n) => n.sleepDate),
+  ].some(inWeek);
+  return { recordedLastWeek, pending };
+}
+
 /** What the records say today, for the redundancy rules. */
 async function factsOf(deps: ReminderDeps, profileId: string, today: LocalDate) {
   const local = (iso: string) => deps.clock.isoToLocal(iso).date;
@@ -157,6 +211,7 @@ async function factsOf(deps: ReminderDeps, profileId: string, today: LocalDate) 
       (open !== null && local(open.startedAt) === today) ||
       finished.some((s) => local(s.startedAt) === today),
     ...daily,
+    ...(await weekFacts(deps, profileId, today, { weighings, sessions, plans, open, finished })),
   };
   return facts;
 }

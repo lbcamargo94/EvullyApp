@@ -53,6 +53,8 @@ describe('reminders (README §25)', () => {
       ['water', false],
       ['habits', false],
       ['sleep', false],
+      ['weekly_summary', false],
+      ['pending_records', false],
     ]);
     expect(await reminders.anyOn()).toBe(false);
     goTo('2026-11-30', '23:00');
@@ -81,7 +83,7 @@ describe('reminders (README §25)', () => {
     await turnOn(lucas.id);
     await turnOn(lucas.id, { start: '22:00', end: '07:00' });
     const rows = await db.selectFrom('notification_preferences').select('profile_id').execute();
-    expect(rows.filter((r) => r.profile_id === lucas.id)).toHaveLength(16);
+    expect(rows.filter((r) => r.profile_id === lucas.id)).toHaveLength(20);
     expect(await handlers['reminders:get']({ profileId: ana.id })).toMatchObject({
       quietHours: null,
     });
@@ -216,5 +218,73 @@ describe('reminders (README §25)', () => {
     goTo('2026-12-01', '22:00');
     expect(await reminders.evaluate()).toBe(1);
     expect(notices.map((n) => n.title)).toEqual(['Lucas: proteína do dia']);
+  });
+
+  it('weekly summary and pending records, only for a profile with records (README §25)', async () => {
+    const { handlers, lucas, ana, turnOn, reminders, notices, goTo } = await setup();
+    const types = ['weekly_summary', 'pending_records'];
+    await turnOn(lucas.id, null, types);
+    await turnOn(ana.id, null, types);
+    const food = await handlers['foods:create']({
+      name: 'Arroz',
+      brand: null,
+      referenceAmount: 100,
+      referenceUnit: 'g',
+      caloriesKcal: 130,
+      proteinG: 3,
+      carbohydrateG: 28,
+      fatG: 0,
+      fiberG: null,
+      sodiumMg: null,
+      source: null,
+    });
+    const habit = await handlers['habits:create']({
+      profileId: lucas.id,
+      name: 'Alongar',
+      type: 'boolean',
+      unit: null,
+      targetValue: null,
+    });
+    await handlers['habits:log']({
+      profileId: lucas.id,
+      date: '2026-11-30',
+      habitId: habit.id,
+      value: 1,
+    });
+    const day = await handlers['nutrition:add']({
+      profileId: lucas.id,
+      logDate: '2026-11-30',
+      mealType: 'lunch',
+      mealName: null,
+      foodId: food.id,
+      quantity: 100,
+    });
+    // Only food marked as eaten counts.
+    await handlers['nutrition:set-consumed']({
+      profileId: lucas.id,
+      id: day.logs[0]?.id ?? '',
+      consumed: true,
+    });
+
+    // Nothing logged on Dec 1st: on the 2nd both are pending.
+    goTo('2026-12-02', '10:30');
+    expect(await reminders.evaluate()).toBe(1);
+    expect(notices).toEqual([
+      {
+        profileId: lucas.id,
+        title: 'Lucas: registros pendentes',
+        body: 'Falta registrar: hábitos de ontem e alimentação de ontem.',
+        route: '/app/habits',
+      },
+    ]);
+
+    // Sunday: the week had records, so the summary shows; Ana has none.
+    notices.length = 0;
+    goTo('2026-12-06', '19:30');
+    await reminders.evaluate();
+    expect(notices.map((n) => [n.profileId, n.title, n.route]).sort()).toEqual([
+      [lucas.id, 'Lucas: registros pendentes', '/app/habits'],
+      [lucas.id, 'Lucas: resumo da semana', '/app/stats'],
+    ]);
   });
 });

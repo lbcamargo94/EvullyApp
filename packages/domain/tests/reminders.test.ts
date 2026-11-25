@@ -22,6 +22,8 @@ const facts: ReminderFacts = {
   waterBelowTarget: true,
   pendingHabits: true,
   sleepLoggedToday: false,
+  recordedLastWeek: true,
+  pending: [],
 };
 const NEW_TYPES = ['meal', 'protein', 'water', 'habits', 'sleep'] as const;
 const allOn = DEFAULT_REMINDER_PREFERENCES.map((p) => ({
@@ -68,6 +70,8 @@ describe('dueReminders (README §25)', () => {
       waterBelowTarget: false,
       pendingHabits: false,
       sleepLoggedToday: true,
+      recordedLastWeek: true,
+      pending: [],
     };
     expect(dueReminders(input({ facts: done, preferences: everyOn }))).toEqual([]);
     const nothing: ReminderFacts = {
@@ -81,6 +85,8 @@ describe('dueReminders (README §25)', () => {
       waterBelowTarget: true,
       pendingHabits: false,
       sleepLoggedToday: false,
+      recordedLastWeek: false,
+      pending: [],
     };
     expect(dueReminders(input({ facts: nothing, preferences: everyOn }))).toEqual([
       { type: 'weighing' },
@@ -127,5 +133,29 @@ describe('dueReminders (README §25)', () => {
     expect(
       dueReminders({ ...on, facts: fed }).some((r) => ['meal', 'protein'].includes(r.type)),
     ).toBe(false);
+  });
+
+  it('weekly summary on its weekday, only after a week with records', () => {
+    const sunday = addDaysToLocalDate(today, 6);
+    const on = input({ preferences: everyOn, today: sunday, now: '19:30' });
+    expect(dueReminders(on).some((r) => r.type === 'weekly_summary')).toBe(true);
+    expect(dueReminders({ ...on, now: '18:59' }).some((r) => r.type === 'weekly_summary')).toBe(
+      false,
+    );
+    const empty = { ...on, facts: { ...facts, recordedLastWeek: false } };
+    expect(dueReminders(empty).some((r) => r.type === 'weekly_summary')).toBe(false);
+    expect(
+      dueReminders(input({ preferences: everyOn })).some((r) => r.type === 'weekly_summary'),
+    ).toBe(false);
+  });
+
+  it('pending records list what earlier days left open, and nothing when all is done', () => {
+    const pending = ['open_workout', 'habits_yesterday'] as const;
+    const on = input({ preferences: everyOn, now: '10:00', facts: { ...facts, pending } });
+    expect(dueReminders(on).find((r) => r.type === 'pending_records')).toEqual({
+      type: 'pending_records',
+      items: ['open_workout', 'habits_yesterday'],
+    });
+    expect(dueReminders({ ...on, facts }).some((r) => r.type === 'pending_records')).toBe(false);
   });
 });

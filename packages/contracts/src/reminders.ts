@@ -12,6 +12,8 @@ export const reminderTypeSchema = z.enum([
   'water',
   'habits',
   'sleep',
+  'weekly_summary',
+  'pending_records',
 ]);
 
 export const reminderPreferenceSchema = z.object({
@@ -19,7 +21,7 @@ export const reminderPreferenceSchema = z.object({
   enabled: z.boolean(),
   /** Local time, `HH:mm`. */
   time,
-  /** ISO weekday (1 = Monday … 7 = Sunday); only measurements use it. */
+  /** ISO weekday (1 = Monday … 7 = Sunday); only weekly reminders (measurements, weekly summary) use it. */
   weekday: z.number().int().min(1).max(7).nullable(),
 });
 
