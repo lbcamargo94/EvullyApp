@@ -6,6 +6,28 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+V1.4, Evully Reminders (1.4.0-alpha.1: o motor, a bandeja e os primeiros
+lembretes).
+
+- **Lembretes** em Configurações › Lembretes, por perfil, todos desligados
+  no início: **pesagem** (no horário escolhido, se você ainda não se pesou),
+  **medidas** (no dia da semana e horário escolhidos, sem medidas nos últimos
+  6 dias) e **treino** (nos dias do plano ativo, se ainda não treinou);
+- notificações do Windows com o nome do perfil e o assunto, nunca números;
+  clicar abre o app na tela do lembrete;
+- **horário silencioso** opcional: o que vencer nele aparece quando terminar;
+- com algum lembrete ligado, fechar a janela deixa o Evully na **bandeja**;
+  **Iniciar com o Windows** opcional, desligado por padrão, abre na bandeja;
+  abrir o app de novo traz a janela já aberta; na bandeja, o backup
+  automático diário continua;
+- banco: tabelas `notification_preferences` (com histórico) e
+  `notification_events` (migration 0022), incluídas no backup, na exportação
+  e na transferência de perfil.
+
+- roadmap: Google Agenda como canal de lembretes na Fase 2 (agenda própria
+  do Evully, títulos sem números, autorização revogável); login com Google
+  na V2.0, junto com a conta.
+
 ## [1.3.0] - 2026-11-24
 
 V1.3, Recommendation Engine: a tela **Sinais** mostra avisos calculados a

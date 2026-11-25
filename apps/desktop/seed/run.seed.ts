@@ -9,6 +9,7 @@ import {
   noDialogs,
   noExportFiles,
   noImportFiles,
+  noReminders,
   noTransferFiles,
   noUpdates,
 } from '../tests/helpers';
@@ -47,6 +48,7 @@ test('seed the development database', { timeout: 600_000 }, async () => {
       exportFiles: noExportFiles,
       transferFiles: noTransferFiles,
       updater: noUpdates,
+      reminders: noReminders(),
     });
     const { days, weights, workouts, cardio, nights } = await seedDemo(handlers, clock, today);
     console.log(`Demo profile created in ${folder}:`, { days, weights, workouts, cardio, nights });

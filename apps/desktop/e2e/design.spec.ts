@@ -35,6 +35,7 @@ const VIEWS: View[] = [
     'Nutrição',
     'Treino',
     'Sinais',
+    'Lembretes',
     'Perfil',
     'Geral e backup',
     'Sobre',

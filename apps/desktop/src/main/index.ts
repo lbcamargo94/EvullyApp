@@ -12,12 +12,23 @@ import { buildApp } from './composition-root';
 import { readLegalDocuments } from './legal';
 import { openLogFolder } from './logs';
 import { withNativeTheme } from './native-theme';
+import { withStartWithWindows } from './start-with-windows';
 import { electronDialogs } from './electron-dialogs';
 import { electronExportFiles } from './electron-export-files';
 import { electronImportFiles } from './electron-import-files';
 import { electronTransferFiles } from './electron-transfer-files';
 import { registerIpcHandlers } from './ipc-router';
 import { buildRecovery } from './recovery-root';
+import { ReminderOpenBox } from '../modules/reminders/adapters/reminder-open-box';
+import {
+  APP_USER_MODEL_ID,
+  applyStartWithWindows,
+  electronNotifier,
+  ReminderTray,
+  showWindow,
+  startedHidden,
+  startReminderScheduler,
+} from './reminders-shell';
 import {
   backupsDirectory,
   configureDataDirectory,
@@ -28,6 +39,12 @@ import {
 
 configureDataDirectory();
 log.initialize();
+app.setAppUserModelId(APP_USER_MODEL_ID);
+// One Evully per data folder: opening it again brings the running window back
+// (the tray keeps it running, README §25).
+if (!app.requestSingleInstanceLock()) app.exit(0);
+let mainWindow: BrowserWindow | undefined;
+app.on('second-instance', () => showWindow(mainWindow));
 // Unexpected failures are recorded (README §8.10, criterion 14); messages carry no user data.
 process.on('uncaughtException', (error) => log.error('uncaught exception', error));
 process.on('unhandledRejection', (reason) => log.error('unhandled rejection', reason));
@@ -42,7 +59,7 @@ const isTrustedSender = (url: string) =>
  */
 const devIcon = app.isPackaged ? undefined : join(app.getAppPath(), 'build', 'icon.ico');
 
-function createWindow(): void {
+function createWindow(hidden = false): BrowserWindow {
   const window = new BrowserWindow({
     ...(devIcon && existsSync(devIcon) ? { icon: devIcon } : {}),
     width: 1280,
@@ -62,7 +79,9 @@ function createWindow(): void {
     },
   });
 
-  window.once('ready-to-show', () => window.show());
+  window.once('ready-to-show', () => {
+    if (!hidden) window.show();
+  });
   window.webContents.on('render-process-gone', (_event, details) => {
     if (details.reason !== 'clean-exit') {
       log.error(`renderer gone: ${details.reason} (exit ${details.exitCode})`);
@@ -75,6 +94,8 @@ function createWindow(): void {
 
   if (rendererUrl) void window.loadURL(rendererUrl);
   else void window.loadFile(join(import.meta.dirname, '../renderer/index.html'));
+  mainWindow = window;
+  return window;
 }
 
 const appInfo = () => ({
@@ -142,6 +163,17 @@ async function start(): Promise<void> {
     beforeInstall: shutdown,
   });
 
+  const opens = new ReminderOpenBox();
+  const tray = new ReminderTray(
+    () => showWindow(mainWindow ?? createWindow()),
+    () => app.quit(),
+  );
+  const syncTray = () =>
+    void evully.reminders
+      .anyOn()
+      .then((on) => tray.update(on))
+      .catch((error: unknown) => log.error('tray update failed', error));
+
   const evully = buildApp({
     db,
     clock: systemClock,
@@ -154,6 +186,11 @@ async function start(): Promise<void> {
     exportFiles: electronExportFiles,
     transferFiles: electronTransferFiles,
     updater,
+    reminders: {
+      notifier: electronNotifier(opens, () => showWindow(mainWindow ?? createWindow())),
+      opens,
+      onChange: syncTray,
+    },
   });
 
   // Back up an existing database before changing its schema (README §6.4).
@@ -166,10 +203,24 @@ async function start(): Promise<void> {
   const applied = await migrateToLatest(db);
   if (applied.length) log.info(`migrations applied: ${applied.join(', ')}`);
 
-  const handlers = withNativeTheme(evully.handlers);
-  await handlers['settings:get'](undefined); // applies the saved theme before the window opens
+  const handlers = withStartWithWindows(withNativeTheme(evully.handlers));
+  // Applies the saved theme before the window opens, and the login item.
+  applyStartWithWindows((await handlers['settings:get'](undefined)).startWithWindows);
   registerIpcHandlers(handlers, isTrustedSender);
-  createWindow();
+  await tray.update(await evully.reminders.anyOn());
+  // Started by Windows with reminders on: stay in the tray (README §25).
+  const window = createWindow(startedHidden() && tray.active);
+  // With a reminder on, closing the window keeps Evully in the tray.
+  window.on('close', (event) => {
+    if (closing || !tray.active) return;
+    event.preventDefault();
+    window.hide();
+  });
+  startReminderScheduler({
+    evaluate: () => evully.reminders.evaluate(),
+    backupWhileHidden: () => evully.lifecycle.onClose(),
+    isHidden: () => !window.isVisible(),
+  });
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });

@@ -10,6 +10,8 @@ import type { ExportFiles } from '../src/modules/exports/ports/export-ports';
 import type { TransferFiles } from '../src/modules/transfer/ports/transfer-ports';
 import type { ImportFiles } from '../src/modules/imports/ports/import-ports';
 import type { Updater } from '../src/modules/updates/ports/updater';
+import { ReminderOpenBox } from '../src/modules/reminders/adapters/reminder-open-box';
+import type { ReminderNotice } from '../src/modules/reminders/ports/reminder-ports';
 import type { Clock, IdGenerator } from '../src/modules/shared/ports';
 
 export const fixedClock = (
@@ -58,6 +60,13 @@ export const noTransferFiles: TransferFiles = {
   open: async () => null,
 };
 
+/** Reminders that are never shown (seed). */
+export const noReminders = () => ({
+  notifier: { show: () => undefined },
+  opens: new ReminderOpenBox(),
+  onChange: () => undefined,
+});
+
 /** Updates are disabled in tests. */
 export const noUpdates: Updater = {
   status: () => ({
@@ -85,7 +94,8 @@ export async function createTestApp(
   const db = openDatabase(join(dir, 'evully.db'));
   await migrateToLatest(db);
   const ids = sequentialIds();
-  const { handlers, lifecycle } = buildApp({
+  const notices: ReminderNotice[] = [];
+  const { handlers, lifecycle, reminders } = buildApp({
     db,
     clock,
     ids,
@@ -103,12 +113,17 @@ export async function createTestApp(
     exportFiles,
     transferFiles,
     updater: noUpdates,
+    reminders: {
+      notifier: { show: (notice) => notices.push(notice) },
+      opens: new ReminderOpenBox(),
+      onChange: () => undefined,
+    },
   });
   const dispose = async () => {
     await db.destroy();
     rmSync(dir, { recursive: true, force: true });
   };
-  return { db, dir, handlers, lifecycle, ids, dispose };
+  return { db, dir, handlers, lifecycle, reminders, notices, ids, dispose };
 }
 
 /** Narrows an optional test value, failing the test with a clear message when it is missing. */

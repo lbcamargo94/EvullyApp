@@ -12,10 +12,12 @@ export const appSettingsSchema = z.object({
   inactivityLockMinutes: z.union(inactivityLockOptions.map((m) => z.literal(m))),
   theme: themeSchema,
   updateChannel: updateChannelSchema,
+  /** Opens Evully in the tray when Windows starts (README §25); off by default. */
+  startWithWindows: z.boolean(),
 });
 
 export const updateAppSettingsInputSchema = appSettingsSchema
-  .pick({ inactivityLockMinutes: true, theme: true, updateChannel: true })
+  .pick({ inactivityLockMinutes: true, theme: true, updateChannel: true, startWithWindows: true })
   .partial();
 
 export type Theme = z.infer<typeof themeSchema>;

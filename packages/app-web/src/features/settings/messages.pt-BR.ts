@@ -70,6 +70,7 @@ export const settingsMessages = {
     nutrition: 'Nutrição',
     workouts: 'Treino',
     signals: 'Sinais',
+    reminders: 'Lembretes',
     profile: 'Perfil',
     general: 'Geral e backup',
     about: 'Sobre',
@@ -248,4 +249,31 @@ export const updateMessages = {
   bannerTitle: (v: string) => `Nova versão ${v} pronta`,
   bannerBody: 'Reinicie agora ou ela será instalada quando você fechar o Evully.',
   later: 'Depois',
+} as const;
+
+/** Settings › Lembretes (README §25). */
+export const remindersMessages = {
+  title: 'Lembretes',
+  description:
+    'Notificações do Windows para este perfil. Todas começam desligadas e nunca mostram números, só o assunto.',
+  names: { weighing: 'Pesagem', measurements: 'Medidas', workout: 'Treino' },
+  descriptions: {
+    weighing: 'No horário escolhido, se você ainda não se pesou hoje.',
+    measurements:
+      'No dia e horário escolhidos, se você acompanha medidas e não mediu nos últimos 6 dias.',
+    workout: 'Nos dias da semana dos planos ativos, se você ainda não treinou hoje.',
+  },
+  weekday: 'Dia da semana',
+  weekdays: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+  timeOf: (name: string) => `Horário (${name.toLowerCase()})`,
+  quietTitle: 'Horário silencioso',
+  quietHint:
+    'Nenhum lembrete aparece nesse intervalo; o que vencer nele aparece quando ele terminar.',
+  quietStart: 'Início',
+  quietEnd: 'Fim',
+  invalidTime: 'Use horários no formato HH:MM.',
+  save: 'Salvar lembretes',
+  startTitle: 'Iniciar com o Windows',
+  startHint:
+    'Vale para todos os perfis. O Evully abre na bandeja ao ligar o computador, para os lembretes funcionarem sem abrir a janela.',
 } as const;

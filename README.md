@@ -228,15 +228,15 @@ Este é o **único** roadmap do projeto.
 | **V1.1** ✓ 1.1.0 (19/11/2026) | Design system: ilustrações, ícones, imagens e acabamento visual de todas as telas, com tokens prontos para o mobile (§15.3) |
 | **V1.2** ✓ 1.2.0 (21/11/2026) | Analytics Engine determinístico: janelas de 7 a 60 dias e "este período × anterior" em todos os módulos, calculados na hora (§20.1) |
 | **V1.3** ✓ 1.3.0 (24/11/2026) | Recommendation Engine determinístico: sinais com regra e versão, tela Sinais e decisão do usuário (§20.2) |
-| V1.4 | Notificações locais / Evully Reminders |
+| V1.4 (em andamento) | Notificações locais / Evully Reminders: lembretes por perfil, horário silencioso e bandeja (§25) |
 | V1.5 | Evully Health (estrutura local/manual) |
 | V1.6 | Evully Coach AI opcional (desenvolvimento/testes) |
-| V2.0 | API NestJS + PostgreSQL + conta e login + sincronização do desktop (todos os módulos da Fase 1) + páginas públicas de termos e privacidade + exclusão de conta |
+| V2.0 | API NestJS + PostgreSQL + conta e login (e-mail, Google, Apple) + sincronização do desktop (todos os módulos da Fase 1) + páginas públicas de termos e privacidade + exclusão de conta |
 | V2.1 | App Android (React Native com Expo) na Google Play: dados locais com sincronização |
 | V2.2 | App iPhone na App Store (o mesmo app) |
 | V2.3 | App web (PWA) + site completo |
 | V2.x | Evully Cloud + IA server-side |
-| V2.x | WhatsApp oficial / push / e-mail |
+| V2.x | WhatsApp oficial / push / e-mail / Google Agenda (§25) |
 | V3.x | SaaS comercial + planos + billing (assinaturas nas lojas e na web) |
 
 O celular vem antes do app web (decidido em 16/11/2026): o registro diário
@@ -2440,8 +2440,17 @@ profissional recomendada**. Sem linguagem alarmista.
 
 Sistema unificado de lembretes (V1.4 local; demais canais na Fase 2).
 
-Canais: notificações do Windows; push web/mobile, e-mail e WhatsApp no
-futuro.
+Canais: notificações do Windows; push web/mobile, e-mail, WhatsApp e
+Google Agenda no futuro.
+
+**Google Agenda** (Fase 2, decidido em 24/11/2026): os lembretes viram
+eventos numa agenda própria do Evully, criada e gerenciada só por ele (os
+outros eventos da pessoa não são lidos nem alterados), para avisar no
+celular com o app fechado. Exige autorização explícita da conta Google,
+aviso de que os títulos saem do aparelho (§27), títulos sem números
+("Pesagem", "Treino: Peito e tríceps"), token protegido fora do banco e do
+backup, e desconexão em Configurações. O login com Google fica na V2.0,
+junto com a conta ([BACKEND.md](BACKEND.md), §4).
 
 Tipos: pesagem, medidas, treino, refeição, proteína/macros, hidratação,
 hábitos, sono, resumo semanal, registros pendentes.
@@ -2451,6 +2460,44 @@ lembrete de treino) e não inventa estado quando faltam dados.
 
 Preferências por perfil: `channel`, `event_type`, `enabled`,
 `preferred_time`, `quiet_hours_start`, `quiet_hours_end`, `timezone`.
+
+**Escopo da V1.4** (decidido em 24/11/2026):
+
+- **Canal:** notificações do Windows (`channel = desktop`; `timezone` nulo,
+  segue o fuso do computador).
+- **Por perfil:** todos os lembretes começam desligados; cada perfil liga os
+  seus. Perfis arquivados não recebem lembretes.
+- **Conteúdo:** o nome do perfil e o assunto, nunca números dos registros
+  ("Ana: hora da pesagem", "Ana: treino de hoje" com o nome do dia do plano).
+  Clicar abre o app; se o perfil aberto for o do lembrete, abre a tela dele.
+- **Bandeja:** com algum lembrete ligado num perfil ativo, fechar a janela
+  deixa o Evully na bandeja (Abrir o Evully / Sair); sem nenhum, fechar
+  encerra o app. **Iniciar com o Windows** (Configurações › Lembretes, vale
+  para o app todo) vem desligado e abre direto na bandeja. Abrir o app de
+  novo traz a janela que já está aberta.
+- **Backup:** na bandeja, o backup automático diário (§8.7.2) é tentado a
+  cada hora; ao sair, a regra de sempre.
+- **Regras** (verificadas a cada minuto; no máximo uma vez por tipo, perfil
+  e dia, registrada em `notification_events`):
+  - pesagem: no horário escolhido, se não houve pesagem hoje;
+  - medidas: no dia da semana e horário escolhidos, se o perfil acompanha
+    medidas e não mediu nos últimos 6 dias;
+  - treino: no horário escolhido, nos dias da semana de um plano ativo, se
+    não houve treino hoje (iniciado ou concluído);
+  - horário silencioso (opcional, pode passar da meia-noite): nada aparece
+    dentro dele; o que vencer aparece quando ele termina, se ainda valer no
+    dia. Um lembrete atrasado (app aberto depois do horário) aparece no mesmo
+    dia, se ainda valer.
+- **Histórico:** salvar uma mudança grava uma linha por tipo em
+  `notification_preferences` (§28); a mais recente de cada tipo vale.
+  Salvar os mesmos valores não grava nada. As duas tabelas entram no backup,
+  na exportação e na transferência de perfil (migration 0022).
+- **Entregas:**
+  - 1.4.0-alpha.1: motor, preferências, horário silencioso, bandeja e os
+    lembretes de pesagem, medidas e treino;
+  - 1.4.0-alpha.2: refeição, proteína/macros, água, hábitos e sono;
+  - 1.4.0-alpha.3: resumo semanal e registros pendentes;
+  - 1.4.0.
 
 ---
 

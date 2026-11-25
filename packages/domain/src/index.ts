@@ -41,3 +41,4 @@ export * from './recommendations/engine';
 export * from './recommendations/progression-rule';
 export * from './recommendations/body-training-rules';
 export * from './recommendations/tracking-rule';
+export * from './reminders/due';

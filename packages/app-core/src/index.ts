@@ -78,3 +78,4 @@ export {
   type WeekAverage,
   type TrackingProposal,
 } from '@evully/domain';
+export * from './features/reminders/use-reminders';

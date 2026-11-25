@@ -11,6 +11,7 @@ import { ProfileSection } from './profile-section';
 import { WorkoutPreferencesSection } from './workout-preferences-section';
 import { ProjectSection } from './project-section';
 import { RecommendationsSection } from './recommendations-section';
+import { RemindersSection } from './reminders-section';
 import { TrackingSection } from './tracking-section';
 
 const TABS = [
@@ -19,6 +20,7 @@ const TABS = [
   'nutrition',
   'workouts',
   'signals',
+  'reminders',
   'profile',
   'general',
   'about',
@@ -62,6 +64,9 @@ export function SettingsScreen() {
         </TabsContent>
         <TabsContent value="signals">
           {profileId && <RecommendationsSection profileId={profileId} />}
+        </TabsContent>
+        <TabsContent value="reminders">
+          {profileId && <RemindersSection profileId={profileId} />}
         </TabsContent>
         <TabsContent value="profile">
           {profileId && <ProfileSection profileId={profileId} />}

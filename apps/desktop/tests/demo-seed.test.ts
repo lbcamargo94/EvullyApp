@@ -38,6 +38,11 @@ describe('demo seed (npm run seed)', () => {
     expect(day.totals.consumed.caloriesKcal).toBeGreaterThan(0);
     expect(day.totals.planned.caloriesKcal).toBeGreaterThan(day.totals.consumed.caloriesKcal);
     expect(await handlers['workout-sessions:open']({ profileId })).toBeNull();
+    const reminders = await handlers['reminders:get']({ profileId });
+    expect(reminders.preferences.filter((p) => p.enabled).map((p) => p.type)).toEqual([
+      'weighing',
+      'workout',
+    ]);
     // The stable right thigh leaves a tracking suggestion open in Sinais.
     const { open } = await handlers['recommendations:list']({ profileId });
     expect(open.find((sig) => sig.ruleId === 'tracking_suggestion')).toMatchObject({

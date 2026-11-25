@@ -5,6 +5,7 @@ export const SETTING_KEYS = {
   inactivityLockMinutes: 'inactivity_lock_minutes',
   theme: 'theme',
   updateChannel: 'update_channel',
+  startWithWindows: 'start_with_windows',
 } as const satisfies Record<keyof AppSettings, string>;
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -13,4 +14,5 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   theme: 'system',
   // Pre-releases while the app is in active development (README §33).
   updateChannel: 'prerelease',
+  startWithWindows: false,
 };

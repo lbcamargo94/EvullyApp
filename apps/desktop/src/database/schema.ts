@@ -384,6 +384,30 @@ export interface RecommendationDecisionsTable {
   created_at: string;
 }
 
+export interface NotificationPreferencesTable {
+  id: string;
+  profile_id: string;
+  channel: string;
+  event_type: string;
+  enabled: number;
+  preferred_time: string;
+  weekday: number | null;
+  quiet_hours_start: string | null;
+  quiet_hours_end: string | null;
+  timezone: string | null;
+  created_at: string;
+}
+
+export interface NotificationEventsTable {
+  id: string;
+  profile_id: string;
+  channel: string;
+  event_type: string;
+  local_date: string;
+  shown_at: string;
+  created_at: string;
+}
+
 export interface HabitDefinitionsTable {
   id: string;
   profile_id: string;
@@ -492,4 +516,6 @@ export interface DatabaseSchema {
   sleep_targets: SleepTargetsTable;
   recommendation_events: RecommendationEventsTable;
   recommendation_decisions: RecommendationDecisionsTable;
+  notification_preferences: NotificationPreferencesTable;
+  notification_events: NotificationEventsTable;
 }

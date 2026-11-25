@@ -89,6 +89,8 @@ import type {
   SleepTargetInput,
   UpdateSleepInput,
   UpdateStatus,
+  ReminderOpen,
+  ReminderSettings,
 } from '@evully/contracts';
 
 /**
@@ -279,6 +281,12 @@ export interface EvullyClient {
     day(profileId: string, date: string): Promise<HabitDay>;
     history(profileId: string, habitId: string): Promise<HabitHistory>;
     log(profileId: string, habitId: string, date: string, value: number | null): Promise<HabitDay>;
+  };
+  reminders: {
+    settings(profileId: string): Promise<ReminderSettings>;
+    setSettings(profileId: string, settings: ReminderSettings): Promise<ReminderSettings>;
+    /** The screen a clicked notification asked for, once; null otherwise. */
+    takeOpen(): Promise<ReminderOpen>;
   };
   recommendations: {
     list(profileId: string): Promise<RecommendationList>;
