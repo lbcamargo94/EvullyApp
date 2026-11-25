@@ -6,36 +6,32 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
-V1.4, Evully Reminders (1.4.0-alpha.1: o motor, a bandeja e os primeiros
-lembretes; 1.4.0-alpha.2: dieta, água, hábitos e sono; 1.4.0-alpha.3:
-resumo semanal e registros pendentes).
+## [1.4.0] - 2026-11-25
 
-- **1.4.0-alpha.3:** **resumo semanal** (no dia e horário escolhidos, se a
-  semana teve registros; abre Progresso) e **registros pendentes** (treino em
-  aberto, treino planejado ontem, hábitos ou alimentação de ontem, sem
-  números); o dia da semana de cada lembrete semanal tem rótulo próprio;
+V1.4, Evully Reminders: lembretes locais do Windows, por perfil, que só
+aparecem quando ainda falta o registro e nunca mostram números.
 
-- **1.4.0-alpha.2:** lembretes de **refeições** (nada registrado hoje),
-  **proteína** (com meta e alimentos hoje, abaixo da meta), **água** (abaixo
-  da meta ou, sem meta, nada registrado), **hábitos** (algum ainda não
-  marcado) e **sono** (a última noite não registrada), cada um com seu
-  horário e desligado no início;
-
-- **Lembretes** em Configurações › Lembretes, por perfil, todos desligados
-  no início: **pesagem** (no horário escolhido, se você ainda não se pesou),
-  **medidas** (no dia da semana e horário escolhidos, sem medidas nos últimos
-  6 dias) e **treino** (nos dias do plano ativo, se ainda não treinou);
-- notificações do Windows com o nome do perfil e o assunto, nunca números;
-  clicar abre o app na tela do lembrete;
-- **horário silencioso** opcional: o que vencer nele aparece quando terminar;
-- com algum lembrete ligado, fechar a janela deixa o Evully na **bandeja**;
-  **Iniciar com o Windows** opcional, desligado por padrão, abre na bandeja;
-  abrir o app de novo traz a janela já aberta; na bandeja, o backup
-  automático diário continua;
+- **Lembretes** em Configurações › Lembretes, todos desligados no início,
+  cada um com seu horário: **pesagem** (se você ainda não se pesou hoje),
+  **medidas** (no dia da semana escolhido, sem medidas nos últimos 6 dias),
+  **treino** (nos dias do plano ativo, se ainda não treinou), **refeições**
+  (nada registrado hoje), **proteína** (com meta e alimentos hoje, abaixo da
+  meta), **água** (abaixo da meta ou, sem meta, nada registrado), **hábitos**
+  (algum ainda não marcado), **sono** (a última noite não registrada),
+  **resumo semanal** (no dia escolhido, se a semana teve registros; abre
+  Progresso) e **registros pendentes** (treino em aberto, treino planejado
+  ontem, hábitos ou alimentação de ontem);
+- notificações com o nome do perfil e o assunto; clicar abre o app na tela
+  do lembrete; perfis arquivados não recebem lembretes;
+- **horário silencioso** opcional (pode passar da meia-noite): o que vencer
+  nele aparece quando terminar;
+- com algum lembrete ligado, fechar a janela deixa o Evully na **bandeja**
+  (Abrir o Evully / Sair); **Iniciar com o Windows** opcional, desligado por
+  padrão, abre na bandeja; abrir o app de novo traz a janela já aberta; na
+  bandeja, o backup automático diário continua;
 - banco: tabelas `notification_preferences` (com histórico) e
   `notification_events` (migration 0022), incluídas no backup, na exportação
-  e na transferência de perfil.
-
+  e na transferência de perfil;
 - roadmap: Google Agenda como canal de lembretes na Fase 2 (agenda própria
   do Evully, títulos sem números, autorização revogável); login com Google
   na V2.0, junto com a conta.
