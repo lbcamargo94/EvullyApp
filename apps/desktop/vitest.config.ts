@@ -7,5 +7,7 @@ export default defineConfig({
     include: ['tests/**/*.test.ts'],
     environment: 'node',
     pool: 'forks',
+    // Each test migrates a real SQLite database; shared CI runners are slower.
+    testTimeout: 15_000,
   },
 });
