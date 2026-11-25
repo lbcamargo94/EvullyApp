@@ -385,11 +385,14 @@ async function start(handlers: IpcHandlers, clock: SeedClock, first: LocalDate) 
     profileId,
     measurementTypeIds: [...state.measurementTypes.map((t) => t.id), thigh.id],
   });
-  // The weighing and workout reminders are on (README §25), with quiet hours at night.
+  // Weighing, workout, water and habit reminders are on (README §25), with quiet hours at night.
   const reminders = await handlers['reminders:get']({ profileId });
   await handlers['reminders:set']({
     profileId,
-    preferences: reminders.preferences.map((p) => ({ ...p, enabled: p.type !== 'measurements' })),
+    preferences: reminders.preferences.map((p) => ({
+      ...p,
+      enabled: ['weighing', 'workout', 'water', 'habits'].includes(p.type),
+    })),
     quietHours: { start: '22:00', end: '06:30' },
   });
   const plan = await handlers['workout-plans:import-template']({

@@ -31,5 +31,35 @@ export function reminderText(
         body: `${list(due.dayNames)}.`,
         route: '/app/workouts',
       };
+    case 'meal':
+      return {
+        title: `${profileName}: refeições de hoje`,
+        body: 'Registre o que você comeu hoje no Evully.',
+        route: '/app/diet',
+      };
+    case 'protein':
+      return {
+        title: `${profileName}: proteína do dia`,
+        body: 'A proteína de hoje ainda está abaixo da meta.',
+        route: '/app/diet',
+      };
+    case 'water':
+      return {
+        title: `${profileName}: hora da água`,
+        body: 'Registre a água de hoje no Evully.',
+        route: '/app/diet',
+      };
+    case 'habits':
+      return {
+        title: `${profileName}: hábitos de hoje`,
+        body: 'Ainda há hábitos para marcar hoje.',
+        route: '/app/habits',
+      };
+    case 'sleep':
+      return {
+        title: `${profileName}: como foi a noite?`,
+        body: 'Registre o sono da última noite no Evully.',
+        route: '/app/sleep',
+      };
   }
 }

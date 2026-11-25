@@ -7,7 +7,13 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 ## [Unreleased]
 
 V1.4, Evully Reminders (1.4.0-alpha.1: o motor, a bandeja e os primeiros
-lembretes).
+lembretes; 1.4.0-alpha.2: dieta, água, hábitos e sono).
+
+- **1.4.0-alpha.2:** lembretes de **refeições** (nada registrado hoje),
+  **proteína** (com meta e alimentos hoje, abaixo da meta), **água** (abaixo
+  da meta ou, sem meta, nada registrado), **hábitos** (algum ainda não
+  marcado) e **sono** (a última noite não registrada), cada um com seu
+  horário e desligado no início;
 
 - **Lembretes** em Configurações › Lembretes, por perfil, todos desligados
   no início: **pesagem** (no horário escolhido, se você ainda não se pesou),

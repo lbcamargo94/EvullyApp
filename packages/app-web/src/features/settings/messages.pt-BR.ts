@@ -256,12 +256,28 @@ export const remindersMessages = {
   title: 'Lembretes',
   description:
     'Notificações do Windows para este perfil. Todas começam desligadas e nunca mostram números, só o assunto.',
-  names: { weighing: 'Pesagem', measurements: 'Medidas', workout: 'Treino' },
+  names: {
+    weighing: 'Pesagem',
+    measurements: 'Medidas',
+    workout: 'Treino',
+    meal: 'Refeições',
+    protein: 'Proteína',
+    water: 'Água',
+    habits: 'Hábitos',
+    sleep: 'Sono',
+  },
   descriptions: {
     weighing: 'No horário escolhido, se você ainda não se pesou hoje.',
     measurements:
       'No dia e horário escolhidos, se você acompanha medidas e não mediu nos últimos 6 dias.',
     workout: 'Nos dias da semana dos planos ativos, se você ainda não treinou hoje.',
+    meal: 'No horário escolhido, se nenhum alimento foi registrado hoje.',
+    protein:
+      'No horário escolhido, se há meta de proteína, já há alimentos hoje e a proteína ainda está abaixo dela.',
+    water:
+      'No horário escolhido, se a água de hoje está abaixo da meta (sem meta: se nada foi registrado).',
+    habits: 'No horário escolhido, se algum hábito ativo ainda não foi marcado hoje.',
+    sleep: 'No horário escolhido, se a noite que terminou hoje ainda não foi registrada.',
   },
   weekday: 'Dia da semana',
   weekdays: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],

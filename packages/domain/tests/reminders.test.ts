@@ -17,8 +17,18 @@ const facts: ReminderFacts = {
   tracksMeasurements: true,
   plannedToday: ['Peito e tríceps'],
   trainedToday: false,
+  loggedFoodToday: false,
+  proteinBelowTarget: true,
+  waterBelowTarget: true,
+  pendingHabits: true,
+  sleepLoggedToday: false,
 };
-const allOn = DEFAULT_REMINDER_PREFERENCES.map((p) => ({ ...p, enabled: true }));
+const NEW_TYPES = ['meal', 'protein', 'water', 'habits', 'sleep'] as const;
+const allOn = DEFAULT_REMINDER_PREFERENCES.map((p) => ({
+  ...p,
+  enabled: !(NEW_TYPES as readonly string[]).includes(p.type),
+}));
+const everyOn = DEFAULT_REMINDER_PREFERENCES.map((p) => ({ ...p, enabled: true }));
 const input = (over: Partial<DueInput> = {}): DueInput => ({
   preferences: allOn,
   quietHours: null,
@@ -53,16 +63,31 @@ describe('dueReminders (README §25)', () => {
       tracksMeasurements: true,
       plannedToday: ['Peito e tríceps'],
       trainedToday: true,
+      loggedFoodToday: true,
+      proteinBelowTarget: false,
+      waterBelowTarget: false,
+      pendingHabits: false,
+      sleepLoggedToday: true,
     };
-    expect(dueReminders(input({ facts: done }))).toEqual([]);
+    expect(dueReminders(input({ facts: done, preferences: everyOn }))).toEqual([]);
     const nothing: ReminderFacts = {
       weighedToday: false,
       lastMeasurement: null,
       tracksMeasurements: false,
       plannedToday: [],
       trainedToday: false,
+      loggedFoodToday: false,
+      proteinBelowTarget: null,
+      waterBelowTarget: true,
+      pendingHabits: false,
+      sleepLoggedToday: false,
     };
-    expect(dueReminders(input({ facts: nothing }))).toEqual([{ type: 'weighing' }]);
+    expect(dueReminders(input({ facts: nothing, preferences: everyOn }))).toEqual([
+      { type: 'weighing' },
+      { type: 'meal' },
+      { type: 'water' },
+      { type: 'sleep' },
+    ]);
   });
 
   it('measurements only on the chosen weekday', () => {
@@ -82,5 +107,25 @@ describe('dueReminders (README §25)', () => {
     expect(inQuietHours('23:00', quietHours)).toBe(true);
     expect(inQuietHours('12:00', { start: '12:00', end: '14:00' })).toBe(true);
     expect(inQuietHours('14:00', { start: '12:00', end: '14:00' })).toBe(false);
+  });
+
+  it('nutrition, water, habits and sleep, each at its own time', () => {
+    const on = input({ preferences: everyOn, now: '23:00' });
+    expect(dueReminders(on).map((r) => r.type)).toEqual([
+      'weighing',
+      'measurements',
+      'workout',
+      ...NEW_TYPES,
+    ]);
+    expect(dueReminders({ ...on, now: '09:30' }).map((r) => r.type)).toEqual([
+      'weighing',
+      'measurements',
+      'sleep',
+    ]);
+    // Protein only says something when there is a target and food logged today.
+    const fed = { ...facts, loggedFoodToday: true, proteinBelowTarget: false };
+    expect(
+      dueReminders({ ...on, facts: fed }).some((r) => ['meal', 'protein'].includes(r.type)),
+    ).toBe(false);
   });
 });

@@ -42,6 +42,8 @@ describe('demo seed (npm run seed)', () => {
     expect(reminders.preferences.filter((p) => p.enabled).map((p) => p.type)).toEqual([
       'weighing',
       'workout',
+      'water',
+      'habits',
     ]);
     // The stable right thigh leaves a tracking suggestion open in Sinais.
     const { open } = await handlers['recommendations:list']({ profileId });

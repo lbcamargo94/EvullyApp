@@ -5,7 +5,16 @@ import { isoWeekday } from '../workouts/session';
  * Local reminders (README §25): deterministic, once per type and day, never
  * redundant and never made up when data is missing.
  */
-export const REMINDER_TYPES = ['weighing', 'measurements', 'workout'] as const;
+export const REMINDER_TYPES = [
+  'weighing',
+  'measurements',
+  'workout',
+  'meal',
+  'protein',
+  'water',
+  'habits',
+  'sleep',
+] as const;
 export type ReminderType = (typeof REMINDER_TYPES)[number];
 
 export interface ReminderPreference {
@@ -30,6 +39,11 @@ export const DEFAULT_REMINDER_PREFERENCES: readonly ReminderPreference[] = [
   { type: 'weighing', enabled: false, time: '07:00', weekday: null },
   { type: 'measurements', enabled: false, time: '07:30', weekday: 1 },
   { type: 'workout', enabled: false, time: '18:00', weekday: null },
+  { type: 'meal', enabled: false, time: '13:00', weekday: null },
+  { type: 'protein', enabled: false, time: '20:00', weekday: null },
+  { type: 'water', enabled: false, time: '15:00', weekday: null },
+  { type: 'habits', enabled: false, time: '21:00', weekday: null },
+  { type: 'sleep', enabled: false, time: '09:00', weekday: null },
 ];
 
 /** What the records say today; null where the profile has nothing to go on. */
@@ -42,10 +56,20 @@ export interface ReminderFacts {
   plannedToday: readonly string[];
   /** A workout was started or finished today. */
   trainedToday: boolean;
+  /** Some food was logged today. */
+  loggedFoodToday: boolean;
+  /** Today's protein is under the target in force; null without a target or a food log today. */
+  proteinBelowTarget: boolean | null;
+  /** Today's water is under the target in force; without one, true when nothing was logged. */
+  waterBelowTarget: boolean;
+  /** Some active habit has no log today. */
+  pendingHabits: boolean;
+  /** Last night (the one that ended today) was logged. */
+  sleepLoggedToday: boolean;
 }
 
 export type DueReminder =
-  { type: 'weighing' } | { type: 'measurements' } | { type: 'workout'; dayNames: string[] };
+  { type: Exclude<ReminderType, 'workout'> } | { type: 'workout'; dayNames: string[] };
 
 export interface DueInput {
   preferences: readonly ReminderPreference[];
@@ -66,11 +90,26 @@ export function inQuietHours(time: string, quiet: QuietHours | null): boolean {
     : time >= quiet.start || time < quiet.end;
 }
 
+/** True while today's record for a reminder without extra details is still missing. */
+const missing: Record<
+  Exclude<ReminderType, 'workout' | 'measurements'>,
+  (f: ReminderFacts) => boolean
+> = {
+  weighing: (f) => !f.weighedToday,
+  meal: (f) => !f.loggedFoodToday,
+  protein: (f) => f.proteinBelowTarget === true,
+  water: (f) => f.waterBelowTarget,
+  habits: (f) => f.pendingHabits,
+  sleep: (f) => !f.sleepLoggedToday,
+};
+
 /** The reminder when its record is still missing today; null otherwise. */
-function stillUseful(type: ReminderType, facts: ReminderFacts, today: LocalDate) {
+function stillUseful(
+  type: ReminderType,
+  facts: ReminderFacts,
+  today: LocalDate,
+): DueReminder | null {
   switch (type) {
-    case 'weighing':
-      return facts.weighedToday ? null : { type };
     case 'measurements':
       return facts.tracksMeasurements &&
         (facts.lastMeasurement === null ||
@@ -81,6 +120,8 @@ function stillUseful(type: ReminderType, facts: ReminderFacts, today: LocalDate)
       return facts.plannedToday.length > 0 && !facts.trainedToday
         ? { type, dayNames: [...facts.plannedToday] }
         : null;
+    default:
+      return missing[type](facts) ? { type } : null;
   }
 }
 

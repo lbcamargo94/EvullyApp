@@ -2,8 +2,17 @@ import { z } from 'zod';
 
 const time = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Use o formato HH:MM');
 
-/** Reminder types of this version (README §25); more arrive in later alphas. */
-export const reminderTypeSchema = z.enum(['weighing', 'measurements', 'workout']);
+/** Reminder types (README §25). */
+export const reminderTypeSchema = z.enum([
+  'weighing',
+  'measurements',
+  'workout',
+  'meal',
+  'protein',
+  'water',
+  'habits',
+  'sleep',
+]);
 
 export const reminderPreferenceSchema = z.object({
   type: reminderTypeSchema,

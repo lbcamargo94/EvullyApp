@@ -2484,6 +2484,16 @@ Preferências por perfil: `channel`, `event_type`, `enabled`,
     medidas e não mediu nos últimos 6 dias;
   - treino: no horário escolhido, nos dias da semana de um plano ativo, se
     não houve treino hoje (iniciado ou concluído);
+  - refeições: se nenhum alimento foi registrado hoje;
+  - proteína: só com meta de proteína em vigor e algum alimento registrado
+    hoje, se a proteína do dia está abaixo da meta (carboidrato e gordura
+    não geram lembrete);
+  - água: com meta de água, se o total de hoje está abaixo dela; sem meta,
+    se nada foi registrado hoje;
+  - hábitos: se algum hábito ativo ainda não foi marcado hoje;
+  - sono: se a noite que terminou hoje (§7.7) não foi registrada;
+  - horários padrão: pesagem 07:00, medidas 07:30 (segunda), sono 09:00,
+    refeições 13:00, água 15:00, treino 18:00, proteína 20:00, hábitos 21:00;
   - horário silencioso (opcional, pode passar da meia-noite): nada aparece
     dentro dele; o que vencer aparece quando ele termina, se ainda valer no
     dia. Um lembrete atrasado (app aberto depois do horário) aparece no mesmo
