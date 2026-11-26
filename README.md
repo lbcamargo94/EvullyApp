@@ -2453,6 +2453,27 @@ fora da referência informada, tendências, explicação informativa do que
 um marcador representa, perguntas para levar ao profissional e relações
 temporais apresentadas como hipóteses, sem causalidade clínica.
 
+Regras do 1.5.0-alpha.2, calculadas no domínio a partir dos exames lançados
+(nenhum número é estimado):
+
+- **Mesmo marcador:** pelo código do catálogo; um nome digitado se junta pelo
+  texto, sem diferenciar maiúsculas e acentos (e entra no marcador do
+  catálogo de mesmo nome). Num mesmo exame vale o primeiro resultado.
+- **Tendência:** o último valor contra o anterior — subiu, desceu ou igual;
+  com unidades diferentes, não compara. O gráfico mostra só os resultados na
+  unidade do último, com as linhas da faixa do último laudo.
+- **Níveis (§24.4):** Informativo quando o último resultado está dentro da
+  faixa ou sem faixa; Atenção quando está fora; Avaliação profissional
+  recomendada quando os dois últimos estão fora, do mesmo lado. Nenhum nível
+  usa cor de alarme.
+- **Frase informativa:** uma por marcador do catálogo, sobre o que ele mede,
+  sem dizer o que o valor significa para a pessoa.
+- **Perguntas para levar ao profissional:** textos fixos conforme o nível e a
+  tendência.
+- **Comparação:** dois exames escolhidos, o mais antigo primeiro; a diferença
+  aparece só na mesma unidade.
+- As relações temporais como hipóteses ficam fora da V1.5.
+
 ### 24.4 Vitaminas e suplementos
 
 1. **Suplementação esportiva/nutricional geral** — informações baseadas

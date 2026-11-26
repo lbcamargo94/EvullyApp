@@ -6,11 +6,25 @@ import {
   useHealthSettings,
 } from '@evully/app-core';
 import type { HealthExamDto, HealthResultDto } from '@evully/contracts';
-import { Badge, Card, ConfirmDialog, EmptyState, Icon, IconButton, ScreenHeader } from '@evully/ui';
+import {
+  Badge,
+  Card,
+  ConfirmDialog,
+  EmptyState,
+  Icon,
+  IconButton,
+  ScreenHeader,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@evully/ui';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate } from 'react-router';
+import { ExamComparison } from './exam-comparison';
 import { HealthExamForm } from './health-exam-form';
+import { HealthMarkers } from './health-markers';
 import {
   flagLabels,
   formatExamDate,
@@ -18,6 +32,8 @@ import {
   formatValue,
   healthErrorByCode,
   healthMessages as m,
+  healthTabs,
+  type HealthTab,
 } from './messages.pt-BR';
 
 const outOfRange = (r: HealthResultDto) => r.flag === 'below' || r.flag === 'above';
@@ -28,6 +44,7 @@ export function HealthScreen() {
   const settings = useHealthSettings(profileId).data;
   const { data: exams } = useHealthExams(profileId);
   const [editing, setEditing] = useState<HealthExamDto | null>(null);
+  const [tab, setTab] = useState<HealthTab>('exams');
   if (!profileId || !settings || !exams) return null;
   if (!settings.enabled) return <Navigate to="/app/settings?tab=health" replace />;
 
@@ -37,13 +54,34 @@ export function HealthScreen() {
       <p role="note" className="max-w-2xl text-caption text-text-muted">
         {m.notice}
       </p>
-      <HealthExamForm
-        key={editing?.id ?? 'new'}
-        profileId={profileId}
-        editing={editing}
-        onDone={() => setEditing(null)}
-      />
-      <ExamList profileId={profileId} exams={exams} onEdit={setEditing} />
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(value as HealthTab)}
+        className="flex flex-col gap-4"
+      >
+        <TabsList aria-label={m.title}>
+          {(Object.keys(healthTabs) as HealthTab[]).map((t) => (
+            <TabsTrigger key={t} value={t}>
+              {healthTabs[t]}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        <TabsContent value="exams" className="flex flex-col gap-4">
+          <HealthExamForm
+            key={editing?.id ?? 'new'}
+            profileId={profileId}
+            editing={editing}
+            onDone={() => setEditing(null)}
+          />
+          <ExamList profileId={profileId} exams={exams} onEdit={setEditing} />
+        </TabsContent>
+        <TabsContent value="markers">
+          <HealthMarkers exams={exams} />
+        </TabsContent>
+        <TabsContent value="compare">
+          <ExamComparison exams={exams} />
+        </TabsContent>
+      </Tabs>
     </>
   );
 }

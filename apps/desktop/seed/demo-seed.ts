@@ -552,8 +552,10 @@ const lab = (
 });
 
 /**
- * The Saúde area is on with three exams; vitamin D starts under the laboratory
- * range and comes back into it, so "Atenção" shows on the first one only.
+ * The Saúde area is on with three exams showing the three levels (README §24.4):
+ * vitamin D starts under the laboratory range and comes back (Informativo),
+ * glucose is above it only in the last exam (Atenção) and ferritin is under it
+ * in the last two (Avaliação profissional recomendada).
  */
 async function healthExams(ctx: Context, today: LocalDate) {
   const { handlers, profileId } = ctx;
@@ -562,8 +564,8 @@ async function healthExams(ctx: Context, today: LocalDate) {
   const exams: [number, number, number, number][] = [
     // days ago, vitamin D, ferritin, fasting glucose
     [110, 18, 85, 94],
-    [60, 27, 92, 91],
-    [12, 34, 101, 88],
+    [60, 27, 28, 91],
+    [12, 34, 24, 102],
   ];
   for (const [daysAgo, vitaminD, ferritin, glucose] of exams) {
     await handlers['health:register']({
