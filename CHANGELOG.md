@@ -6,7 +6,8 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
-V1.5, Evully Health (1.5.0-alpha.1: a área Saúde e os exames digitados).
+V1.5, Evully Health (1.5.0-alpha.1: a área Saúde e os exames digitados;
+1.5.0-alpha.2: marcadores e comparação).
 
 - **Saúde**, nova área para guardar exames laboratoriais, escondida até o
   perfil ligar em Configurações › Saúde, depois do aviso de que o Evully não
@@ -22,7 +23,16 @@ V1.5, Evully Health (1.5.0-alpha.1: a área Saúde e os exames digitados).
   os levam;
 - banco: tabelas `health_exams` e `health_exam_results` (migration 0023);
 - sem criptografia própria do banco nesta versão, decisão registrada no
-  README §24 e no SECURITY §2.4.
+  README §24 e no SECURITY §2.4;
+- **Marcadores** (alpha.2): cada marcador com gráfico, todos os resultados,
+  uma frase neutra sobre o que ele mede e a tendência em relação ao exame
+  anterior (só na mesma unidade); nomes digitados se juntam ignorando
+  maiúsculas e acentos;
+- **níveis** Informativo, Atenção (último resultado fora da faixa) e
+  Avaliação profissional recomendada (dois últimos fora da faixa, do mesmo
+  lado), com **perguntas para levar ao profissional**;
+- **Comparar** dois exames lado a lado, com a diferença só quando a unidade
+  é a mesma.
 
 ## [1.4.0] - 2026-11-25
 

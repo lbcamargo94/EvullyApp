@@ -44,3 +44,4 @@ export * from './recommendations/tracking-rule';
 export * from './reminders/due';
 export * from './health/analytes';
 export * from './health/exams';
+export * from './health/markers';

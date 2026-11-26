@@ -1,3 +1,4 @@
+import type { MarkerLevel, MarkerTrend } from '@evully/app-core';
 import type { HealthResultFlag } from '@evully/contracts';
 
 const fullDate = new Intl.DateTimeFormat('pt-BR', {
@@ -84,3 +85,96 @@ export const healthErrorByCode: Record<string, string> = {
   'health.unknown_analyte': 'Marcador desconhecido. Escolha outro ou digite o nome.',
   'health.not_found': 'Este exame não existe mais.',
 };
+
+export const healthTabs = { exams: 'Exames', markers: 'Marcadores', compare: 'Comparar' } as const;
+export type HealthTab = keyof typeof healthTabs;
+
+export const formatShortDate = (date: string) =>
+  `${date.slice(8, 10)}/${date.slice(5, 7)}/${date.slice(2, 4)}`;
+
+/** Signed difference, never colored as good or bad (README §24.4). */
+export const formatDifference = (value: number) =>
+  value > 0 ? `+${formatValue(value)}` : formatValue(value);
+
+export const markerMessages = {
+  title: 'Marcadores',
+  list: 'Seus marcadores',
+  emptyTitle: 'Nenhum marcador ainda',
+  empty: 'Os marcadores aparecem aqui depois do primeiro exame.',
+  chartTitle: (name: string) => `Histórico de ${name}`,
+  chartAlt: (name: string, count: number, first: string, last: string) =>
+    `${name}: ${count} resultados, de ${first} a ${last}.`,
+  chartOnlyUnit: (unit: string) => `O gráfico mostra só os resultados em ${unit}.`,
+  referenceMin: 'Mínimo da referência',
+  referenceMax: 'Máximo da referência',
+  about: 'O que é',
+  aboutCustom: 'Marcador digitado por você. O Evully não tem uma descrição para ele.',
+  historyTable: 'Resultados',
+  date: 'Data',
+  value: 'Valor',
+  reference: 'Referência',
+  position: 'Posição',
+  questions: 'Perguntas para levar ao profissional',
+  questionsHint: 'Sugestões para a consulta. Só quem acompanha você pode avaliar os resultados.',
+  last: (value: string, date: string) => `Último: ${value} em ${date}`,
+} as const;
+
+export const levelLabels: Record<MarkerLevel, string> = {
+  informative: 'Informativo',
+  attention: 'Atenção',
+  professional: 'Avaliação profissional recomendada',
+};
+
+export const levelHints: Record<MarkerLevel, string> = {
+  informative: 'O último resultado está dentro da faixa do laboratório, ou o laudo não traz faixa.',
+  attention: 'O último resultado está fora da faixa do laboratório.',
+  professional: 'Os dois últimos resultados estão fora da faixa do laboratório, do mesmo lado.',
+};
+
+export const trendLabels: Record<MarkerTrend, string | null> = {
+  up: 'Subiu desde o exame anterior',
+  down: 'Desceu desde o exame anterior',
+  same: 'Igual ao exame anterior',
+  unit_changed: 'Unidades diferentes, sem comparação',
+  single: null,
+};
+
+/** Fixed questions per situation; no number is computed for the person. */
+export function markerQuestions(name: string, level: MarkerLevel, trend: MarkerTrend): string[] {
+  const questions: string[] = [];
+  if (level === 'professional')
+    questions.push(
+      `${name} ficou fora da faixa nos dois últimos exames. Vale investigar o motivo?`,
+      'Preciso repetir este exame? Em quanto tempo?',
+    );
+  if (level === 'attention')
+    questions.push(
+      `${name} veio fora da faixa do laboratório. Este resultado pede algum acompanhamento?`,
+    );
+  if (level !== 'informative')
+    questions.push(
+      'Algo da minha rotina (alimentação, treino, sono, medicamentos ou suplementos) pode ter influenciado este resultado?',
+    );
+  if (trend === 'up' || trend === 'down')
+    questions.push(
+      `${name} ${trend === 'up' ? 'subiu' : 'desceu'} desde o exame anterior. Essa variação é esperada?`,
+    );
+  if (trend === 'unit_changed')
+    questions.push('Os dois últimos laudos usam unidades diferentes. Como comparar os resultados?');
+  questions.push('Com que frequência vale repetir este exame no meu caso?');
+  return questions;
+}
+
+export const compareMessages = {
+  title: 'Comparar exames',
+  needTwoTitle: 'Comparação precisa de dois exames',
+  needTwo: 'Lance mais um exame para ver os resultados lado a lado.',
+  first: 'Exame anterior',
+  second: 'Exame mais recente',
+  marker: 'Marcador',
+  difference: 'Diferença',
+  missing: '—',
+  noDifference: 'sem comparação',
+  hint: 'A diferença aparece só quando os dois resultados usam a mesma unidade.',
+  sameExam: 'Escolha dois exames diferentes.',
+} as const;
