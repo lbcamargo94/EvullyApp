@@ -81,36 +81,43 @@ ficam no desktop.
 
 ```text
 apps/desktop/src/
-  main/                  bootstrap do Electron, janelas, composition root,
-                         roteador IPC, logs, caminhos
+  main/                  bootstrap do Electron, janela, composition root,
+                         roteador IPC, logs, caminhos, atualização automática,
+                         recuperação, bandeja e lembretes (reminders-shell.ts)
   preload/               ponte segura (contextBridge)
-  database/              conexão SQLite, migrations, seed
+  database/              conexão SQLite, migrations, integridade
   shared/                mapa de canais IPC
-  modules/
-    profiles/
-    tracking/
-    body/
+  modules/               um por área; cada um com application/, ports/, adapters/
+    profiles/  tracking/  weights/  measurements/  nutrition/  workouts/
+    cardio/  sleep/  habits/  recommendations/  reminders/
+    backup/  exports/  imports/  transfer/  settings/  updates/
+    shared/              portas comuns (Clock, IdGenerator) e adaptadores do sistema
+    weights/             exemplo:
       application/
         register-weight.ts
-        import-weights-csv.ts
+        manage-tags.ts
       ports/
         weight-repository.ts
       adapters/
         kysely-weight-repository.ts
         weight-ipc-handlers.ts
-    backup/
-    settings/
   renderer/              shell: monta packages/app-web com o IpcEvullyClient
+apps/desktop/seed/       perfil de demonstração no banco de desenvolvimento (npm run seed)
+
+packages/domain/src/      regras puras por módulo (weights, reminders, recommendations…)
+packages/contracts/src/   schemas zod de entrada e saída, compartilhados
 
 packages/app-core/src/
-  features/              hooks, view models e fluxos por módulo (body, tracking…)
-  client/                interface EvullyClient (port de dados da interface)
-  i18n/, format/         textos pt-BR e formatação (Intl)
+  features/              hooks, view models e fluxos por módulo (weights, reminders…)
+  client.ts              interface EvullyClient (port de dados da interface)
+  format/                formatação pt-BR (Intl)
 
 packages/app-web/src/
+  app.tsx                rotas (React Router), TanStack Query, perfil atual, tema
   features/              telas web por módulo, desenhando o que o app-core entrega
     shared/              hooks de interface comuns às telas (ex.: useSavedToggle)
-  routes/, providers/    React Router, TanStack Query, perfil atual, tema
+
+packages/ui/, packages/tokens/   componentes e design tokens (DESIGN.md)
 ```
 
 ### 4.2 API (Fase 2)
@@ -267,6 +274,7 @@ licenças e `npm audit`.
 | 24/11/2026 | V1.3 grava cada sinal em `recommendation_events` com os números que o originaram num JSON validado por zod (`evidence`), a regra e a versão; as decisões ficam em `recommendation_decisions`. `analytics_snapshots` sai do plano. Limites das regras fixos no domínio, versionados | A evidência só faz sentido junto do sinal que ela explica; uma tabela de snapshots separada traria migrations e junções sem consulta que a use. Limites no código mantêm as regras testáveis e reproduzíveis; mudar um limite é uma nova versão |
 | 24/11/2026 | Aceitar uma sugestão de acompanhamento (V1.3) grava, numa transação do repositório de recomendações, a medida ligada, um novo `tracking_configs` com `source = recommendation` e a decisão; a migration 0021 recria `tracking_configs` para o novo valor do CHECK, sem perder linhas. Canal próprio `recommendations:accept`, só para essa regra | A origem fica no próprio registro de configuração, como as outras (§7.5), sem depender da tabela de decisões; a transação única evita uma medida ligada sem decisão. SQLite não altera CHECK sem recriar a tabela, e nenhuma tabela referencia `tracking_configs` |
 | 24/11/2026 | Lembretes da V1.4: a regra de quando avisar é uma função pura no domínio (`dueReminders`); o processo main verifica a cada minuto e mostra pela porta `Notifier` (adaptador: `Notification` do Electron). `notification_preferences` e `notification_events` sem CHECK em `event_type` e `channel`, validados por zod; um índice único garante um aviso por tipo, perfil e dia. Bandeja e "iniciar com o Windows" ficam no main (`reminders-shell.ts`), fora de `application/` | Os próximos alphas e a Fase 2 (Google Agenda, push) acrescentam tipos e canais; com CHECK, cada um exigiria recriar a tabela, como na migration 0021. A regra pura fica testável sem Electron, e o índice único impede aviso repetido mesmo com duas verificações ao mesmo tempo |
+| 25/11/2026 | Os lembretes dos alphas 2 e 3 (dieta, água, hábitos, sono, resumo semanal, registros pendentes) leem o estado do dia pelos repositórios que já existem, montado em `ReminderFacts`; a regra continua só em `dueReminders`. Tipos semanais em `WEEKLY_REMINDER_TYPES`. Pendências de alimentação e hábitos só contam para quem os registrou nos 7 dias anteriores | Nenhuma porta ou migration nova; um único lugar decide quando avisar. Sem o histórico recente, avisar sobre dieta ou hábitos inventaria um uso que a pessoa não tem (README §25) |
 
 Novas decisões arquiteturais são adicionadas a esta tabela com data e
 motivo.

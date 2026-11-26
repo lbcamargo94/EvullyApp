@@ -2515,9 +2515,9 @@ Preferências por perfil: `channel`, `event_type`, `enabled`,
 - **Entregas:**
   - 1.4.0-alpha.1: motor, preferências, horário silencioso, bandeja e os
     lembretes de pesagem, medidas e treino;
-  - 1.4.0-alpha.2: refeição, proteína/macros, água, hábitos e sono;
+  - 1.4.0-alpha.2: refeições, proteína, água, hábitos e sono;
   - 1.4.0-alpha.3: resumo semanal e registros pendentes;
-  - 1.4.0.
+  - 1.4.0 (lançado em 25/11/2026).
 
 ---
 
