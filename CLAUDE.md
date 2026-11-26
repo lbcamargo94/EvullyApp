@@ -2,7 +2,7 @@
 
 Local-first fitness app (Electron + React + TS + SQLite), multi-profile,
 growing to web (NestJS API + React SPA/PWA + Next.js site) and native
-mobile (Expo). **Current phase: V1.4 (Evully Reminders) in progress; 1.3.0 released. Scope and deliveries in README §25.**
+mobile (Expo). **Current phase: V1.4 complete; 1.4.0 released. Next: V1.5 per README §4 (not started).**
 
 ## Language
 - Talk to the user in **Portuguese (pt-BR)**. UI text in pt-BR.
