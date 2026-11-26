@@ -2,6 +2,7 @@ import {
   useAppInfo,
   useAppSettings,
   useCurrentProfile,
+  useHealthSettings,
   useProfile,
   useTrackingState,
 } from '@evully/app-core';
@@ -31,6 +32,7 @@ export function AppShell() {
   const { data: settings } = useAppSettings();
   const { data: info } = useAppInfo();
   const { data: tracking } = useTrackingState(profileId);
+  const { data: health } = useHealthSettings(profileId);
   const navigate = useNavigate();
   const catalog = useCatalogAvailable();
   const mainRef = useRef<HTMLElement>(null);
@@ -73,7 +75,7 @@ export function AppShell() {
           <Logo />
         </div>
         <div className="flex flex-col gap-1">
-          {MODULES.map((mod) => (
+          {MODULES.filter((mod) => mod.key !== 'health' || health?.enabled).map((mod) => (
             <NavLink key={mod.key} to={mod.to} end={mod.to === '/app'} className={navItem}>
               <Icon icon={mod.icon} size="md" />
               {mod.label}

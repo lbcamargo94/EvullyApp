@@ -147,6 +147,7 @@ export interface SeedResult {
   workouts: number;
   cardio: number;
   nights: number;
+  exams: number;
 }
 
 interface Context {
@@ -484,6 +485,7 @@ export async function seedDemo(
       workouts: 0,
       cardio: 0,
       nights: 0,
+      exams: 0,
     },
   };
   await setTargets(ctx, first, 'first');
@@ -526,9 +528,60 @@ export async function seedDemo(
     await habits(ctx, date, setup.habitIds, cardioDay, false);
     if (day % SIGNAL_REVIEW_DAYS === 0) await reviewSignals(ctx, date);
   }
+  await healthExams(ctx, today);
   // Today's evaluation leaves the current signals open on the Dashboard.
   await handlers['recommendations:list']({ profileId: ctx.profileId });
   return ctx.result;
+}
+
+/** Lab-style result with the laboratory's own range (README §24.2). */
+const lab = (
+  analyteCode: string,
+  unit: string,
+  value: number,
+  min: number | null,
+  max: number | null,
+) => ({
+  analyteCode,
+  analyteName: '',
+  value,
+  unit,
+  referenceMin: min,
+  referenceMax: max,
+  referenceText: null,
+});
+
+/**
+ * The Saúde area is on with three exams; vitamin D starts under the laboratory
+ * range and comes back into it, so "Atenção" shows on the first one only.
+ */
+async function healthExams(ctx: Context, today: LocalDate) {
+  const { handlers, profileId } = ctx;
+  ctx.clock.set(today, '12:00');
+  await handlers['health:set-settings']({ profileId, enabled: true });
+  const exams: [number, number, number, number][] = [
+    // days ago, vitamin D, ferritin, fasting glucose
+    [110, 18, 85, 94],
+    [60, 27, 92, 91],
+    [12, 34, 101, 88],
+  ];
+  for (const [daysAgo, vitaminD, ferritin, glucose] of exams) {
+    await handlers['health:register']({
+      profileId,
+      collectedOn: addDaysToLocalDate(today, -daysAgo),
+      laboratory: 'Laboratório Exemplo',
+      notes: null,
+      results: [
+        lab('vitamin_d', 'ng/mL', vitaminD, 20, 60),
+        lab('ferritin', 'ng/mL', ferritin, 30, 400),
+        lab('fasting_glucose', 'mg/dL', glucose, 70, 99),
+        lab('total_cholesterol', 'mg/dL', 178, null, 190),
+        lab('hdl', 'mg/dL', 52, 40, null),
+        lab('tsh', 'µUI/mL', 2.1, 0.4, 4.5),
+      ],
+    });
+  }
+  ctx.result.exams = exams.length;
 }
 
 /** Days between the seed's looks at Sinais, so the history has decisions. */

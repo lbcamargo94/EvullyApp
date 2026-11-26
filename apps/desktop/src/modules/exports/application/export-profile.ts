@@ -36,11 +36,17 @@ export class ExportProfile {
   async execute({
     profileId,
     format,
+    includeHealth = false,
   }: {
     profileId: string;
     format: ExportFormat;
+    includeHealth?: boolean | undefined;
   }): Promise<ExportResult> {
-    const document = await this.document(profileId);
+    const full = await this.document(profileId);
+    // Health exams leave the device only when asked (README §27); the transfer keeps them.
+    const document = includeHealth
+      ? full
+      : { ...full, data: { ...full.data, health_exams: [], health_exam_results: [] } };
     const name = exportFileName(document.profile.name, this.deps.clock.today(), format);
     const saved =
       format === 'json'

@@ -1,13 +1,16 @@
-import { useExportAvailable, useExportProfile } from '@evully/app-core';
+import { useExportAvailable, useExportProfile, useHealthSettings } from '@evully/app-core';
 import type { ExportFormat } from '@evully/contracts';
-import { Button, Card } from '@evully/ui';
+import { Button, Card, Checkbox } from '@evully/ui';
 import { useState } from 'react';
 import { exportMessages as m } from './messages.pt-BR';
 
 /** "Exportar dados" (README §14.3): the current profile as JSON or as a zip of CSVs. */
 export function ExportCard({ profileId }: { profileId: string }) {
   const available = useExportAvailable();
-  const exportProfile = useExportProfile(profileId);
+  const health = useHealthSettings(profileId).data;
+  // Exams leave the device only when this is ticked (README §27); off on every visit.
+  const [includeHealth, setIncludeHealth] = useState(false);
+  const exportProfile = useExportProfile(profileId, includeHealth);
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null);
   if (!available) return null;
 
@@ -31,6 +34,19 @@ export function ExportCard({ profileId }: { profileId: string }) {
         <p className="max-w-xl text-caption text-text-muted">{m.hint}</p>
       </div>
       <div className="flex flex-col gap-3">
+        {health?.enabled && (
+          <div className="flex items-start gap-3 text-body">
+            <Checkbox
+              id="export-include-health"
+              checked={includeHealth}
+              onChange={(e) => setIncludeHealth(e.target.checked)}
+            />
+            <label htmlFor="export-include-health" className="flex flex-col gap-0.5">
+              <span>{m.includeHealth}</span>
+              <span className="text-caption text-text-muted">{m.includeHealthHint}</span>
+            </label>
+          </div>
+        )}
         <ExportOption
           label={pending === 'json' ? m.exporting : m.json}
           description={m.jsonHint}

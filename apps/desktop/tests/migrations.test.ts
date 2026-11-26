@@ -44,6 +44,7 @@ describe('database', () => {
       '0020_project_rate_band',
       '0021_tracking_source_recommendation',
       '0022_reminders',
+      '0023_health',
     ]);
     expect(await migrateToLatest(db)).toEqual([]);
     await db.destroy();

@@ -408,6 +408,35 @@ export interface NotificationEventsTable {
   created_at: string;
 }
 
+/** Evully Health (README §24): exams typed by hand. */
+export interface HealthExamsTable {
+  id: string;
+  profile_id: string;
+  collected_on: string;
+  laboratory: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+/** The laboratory's own range per result (README §24.2); the flag is derived on read. */
+export interface HealthExamResultsTable {
+  id: string;
+  profile_id: string;
+  exam_id: string;
+  sort_order: number;
+  analyte_code: string | null;
+  analyte_name: string;
+  value: number;
+  unit: string;
+  reference_min: number | null;
+  reference_max: number | null;
+  reference_text: string | null;
+  created_at: string;
+  deleted_at: string | null;
+}
+
 export interface HabitDefinitionsTable {
   id: string;
   profile_id: string;
@@ -518,4 +547,6 @@ export interface DatabaseSchema {
   recommendation_decisions: RecommendationDecisionsTable;
   notification_preferences: NotificationPreferencesTable;
   notification_events: NotificationEventsTable;
+  health_exams: HealthExamsTable;
+  health_exam_results: HealthExamResultsTable;
 }

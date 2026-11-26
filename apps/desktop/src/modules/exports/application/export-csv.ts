@@ -75,6 +75,45 @@ export function buildCsvFiles(data: ExportTables, clock: Clock): Record<string, 
     ),
     'cardio.csv': cardioCsv(data, time),
     'habits.csv': habitsCsv(data),
+    ...healthCsv(data),
+  };
+}
+
+/** Exams only when the export includes them (README §24, §27). */
+function healthCsv(data: ExportTables): Record<string, string> {
+  if (data.health_exams.length === 0) return {};
+  const exams = new Map(data.health_exams.map((e) => [e.id, e]));
+  const rows = data.health_exam_results.flatMap((r) => {
+    const exam = exams.get(r.exam_id);
+    return exam ? [{ exam, r }] : [];
+  });
+  rows.sort(
+    (a, b) =>
+      a.exam.collected_on.localeCompare(b.exam.collected_on) || a.r.sort_order - b.r.sort_order,
+  );
+  return {
+    'health.csv': writeCsv(
+      [
+        'data_coleta',
+        'laboratorio',
+        'marcador',
+        'valor',
+        'unidade',
+        'ref_min',
+        'ref_max',
+        'ref_texto',
+      ],
+      rows.map(({ exam, r }) => [
+        formatCsvDate(exam.collected_on),
+        exam.laboratory,
+        r.analyte_name,
+        r.value,
+        r.unit,
+        r.reference_min,
+        r.reference_max,
+        r.reference_text,
+      ]),
+    ),
   };
 }
 

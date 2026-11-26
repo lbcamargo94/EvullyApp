@@ -9,6 +9,7 @@ export * from './features/nutrition/use-foods';
 export * from './features/nutrition/use-nutrition-day';
 export * from './features/cardio/use-cardio';
 export * from './features/sleep/use-sleep';
+export * from './features/health/use-health';
 export * from './features/habits/use-habits';
 export * from './features/settings/use-app-settings';
 export * from './features/settings/use-updates';
@@ -52,6 +53,9 @@ export {
   type TrainingSession,
   weightComparison,
   ANALYTICS_WINDOWS,
+  ANALYTES,
+  analyteByCode,
+  type Analyte,
   type AnalyticsWindow,
   type MeasurementWindow,
   type WeightWindow,
