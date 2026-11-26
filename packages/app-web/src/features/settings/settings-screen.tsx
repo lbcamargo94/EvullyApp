@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router';
 import { AboutSection } from './about-section';
 import { BackupSection } from './backup-section';
 import { GeneralSection } from './general-section';
+import { HealthSection } from './health-section';
 import { settingsMessages as m } from './messages.pt-BR';
 import { NutritionPreferencesSection } from './nutrition-preferences-section';
 import { NutritionTargetsSection } from './nutrition-targets-section';
@@ -21,6 +22,7 @@ const TABS = [
   'workouts',
   'signals',
   'reminders',
+  'health',
   'profile',
   'general',
   'about',
@@ -67,6 +69,9 @@ export function SettingsScreen() {
         </TabsContent>
         <TabsContent value="reminders">
           {profileId && <RemindersSection profileId={profileId} />}
+        </TabsContent>
+        <TabsContent value="health">
+          {profileId && <HealthSection profileId={profileId} />}
         </TabsContent>
         <TabsContent value="profile">
           {profileId && <ProfileSection profileId={profileId} />}

@@ -32,6 +32,8 @@ export const PROFILE_EXPORT_TABLES = [
   'recommendation_decisions',
   'notification_preferences',
   'notification_events',
+  'health_exams',
+  'health_exam_results',
 ] as const satisfies readonly (keyof DatabaseSchema)[];
 
 /** Child tables without `profile_id`, read through their parent row. */

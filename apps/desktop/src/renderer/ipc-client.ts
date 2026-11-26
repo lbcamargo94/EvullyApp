@@ -198,6 +198,14 @@ export const ipcEvullyClient: EvullyClient = {
     target: (profileId) => call('sleep-target:get', { profileId }),
     setTarget: (input) => call('sleep-target:set', input),
   },
+  health: {
+    settings: (profileId) => call('health:settings', { profileId }),
+    setEnabled: (profileId, enabled) => call('health:set-settings', { profileId, enabled }),
+    list: (profileId) => call('health:list', { profileId }),
+    register: (input) => call('health:register', input),
+    update: (input) => call('health:update', input),
+    remove: (profileId, id) => call('health:delete', { profileId, id }),
+  },
   habits: {
     list: (profileId) => call('habits:list', { profileId }),
     create: (input) => call('habits:create', input),
@@ -223,7 +231,8 @@ export const ipcEvullyClient: EvullyClient = {
     saveTemplate: (profileId, kind) => call('import:template', { profileId, kind }),
   },
   exports: {
-    create: (profileId, format) => call('exports:create', { profileId, format }),
+    create: (profileId, format, includeHealth) =>
+      call('exports:create', { profileId, format, includeHealth }),
   },
   transfer: {
     exportProfile: (profileId) => call('transfer:export', { profileId }),

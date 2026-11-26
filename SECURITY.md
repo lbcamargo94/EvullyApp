@@ -102,8 +102,14 @@ Fora de escopo na Fase 1:
 
 - V0.1: dados em `%APPDATA%\Evully`, protegidos pelas permissões da conta
   do Windows, sem criptografia própria.
-- Antes do Evully Health (V1.5) ou de fotos de progresso, decidir sobre
-  criptografia do banco (ex.: SQLCipher) e dos arquivos de fotos.
+- Evully Health (V1.5, decidido em 26/11/2026): sem criptografia própria do
+  banco nesta versão, como o resto dos dados; a área começa desligada em
+  cada perfil, os exames ficam fora dos logs e da telemetria e só saem na
+  exportação com a opção "Incluir exames de saúde" marcada (o backup e a
+  transferência de perfil os levam). A criptografia (ex.: SQLCipher, com a
+  chave protegida pelo Windows) volta a ser avaliada na Fase 2, quando o
+  backup e a transferência puderem ter senha. Fotos de progresso: decidir
+  antes de implementá-las ([README.md](README.md), §24).
 
 ### 2.5 Segredos
 

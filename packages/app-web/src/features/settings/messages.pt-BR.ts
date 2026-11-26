@@ -71,6 +71,7 @@ export const settingsMessages = {
     workouts: 'Treino',
     signals: 'Sinais',
     reminders: 'Lembretes',
+    health: 'Saúde',
     profile: 'Perfil',
     general: 'Geral e backup',
     about: 'Sobre',
@@ -209,6 +210,22 @@ export const exportMessages = {
   exporting: 'Exportando…',
   done: (fileName: string) => `Dados exportados: ${fileName}`,
   failed: 'Não foi possível exportar. Tente outra pasta.',
+  includeHealth: 'Incluir exames de saúde',
+  includeHealthHint:
+    'Exames são dados sensíveis: só entram no arquivo com esta opção marcada. O backup e a transferência de perfil sempre os levam.',
+} as const;
+
+export const healthSettingsMessages = {
+  title: 'Saúde',
+  description:
+    'Área para guardar os seus exames laboratoriais, digitados por você. Começa desligada em cada perfil.',
+  enable: 'Mostrar a área Saúde',
+  enableHint: 'Desligar só esconde a área: os exames continuam guardados.',
+  noticeTitle: 'Antes de ligar a área Saúde',
+  noticeBody:
+    'O Evully guarda e organiza os seus exames, mas não diagnostica, não indica tratamento e não substitui a avaliação de um profissional de saúde. Leve os resultados a quem acompanha você.',
+  noticeConfirm: 'Entendi, ligar',
+  cancel: 'Cancelar',
 } as const;
 
 export const aboutMessages = {

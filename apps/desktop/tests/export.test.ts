@@ -97,6 +97,32 @@ describe('profile export (README §14.3)', () => {
     expect(doc.data.food_logs.every((l) => foodIds.has(l.food_id))).toBe(true);
     const exerciseIds = new Set(doc.data.exercises.map((e) => e.id));
     expect(doc.data.exercise_performances.every((p) => exerciseIds.has(p.exercise_id))).toBe(true);
+
+    // Health exams stay out unless asked (README §27).
+    expect(doc.data.health_exams).toEqual([]);
+    expect(doc.data.health_exam_results).toEqual([]);
+  });
+
+  it('includes the health exams only when asked, in JSON and CSV (README §24, §27)', async () => {
+    const { handlers, demo } = seeded;
+    const profileId = demo.profileId;
+    await handlers['exports:create']({ profileId, format: 'json', includeHealth: true });
+    const doc = JSON.parse(must(saved.json, 'json')) as ProfileExportDocument;
+    expect(doc.data.health_exams).toHaveLength(demo.exams);
+    expect(doc.data.health_exam_results.length).toBeGreaterThan(demo.exams);
+    await handlers['exports:create']({ profileId, format: 'csv', includeHealth: true });
+    const health = parseCsv(must(must(saved.zip, 'zip')['health.csv'], 'health'));
+    expect(health.header).toEqual([
+      'data_coleta',
+      'laboratorio',
+      'marcador',
+      'valor',
+      'unidade',
+      'ref_min',
+      'ref_max',
+      'ref_texto',
+    ]);
+    expect(health.rows).toHaveLength(doc.data.health_exam_results.length);
   });
 
   it('classifies every table of the database (new tables must be added to the export)', async () => {

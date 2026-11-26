@@ -2052,7 +2052,7 @@ No topo: `Perfil atual: Lucas ▼`.
 | Sono | `sleep_logs` | V0.5 |
 | Inteligência | `recommendation_events`, `recommendation_decisions` | V1.3 (os dados de origem ficam no próprio sinal, sem `analytics_snapshots`; ARCHITECTURE §9) |
 | Lembretes | `notification_preferences`, `notification_events` | V1.4 |
-| Saúde | `health_exams`, `health_exam_results`, `health_reference_ranges`, `health_documents` | V1.5 |
+| Saúde | `health_exams`, `health_exam_results`, `health_documents` (§24.2) | V1.5 |
 | IA | `ai_conversations`, `ai_messages`, `ai_usage_logs` | V1.6 |
 | Contato | `contact_channels`, `consent_records` | V2.x |
 | Controle | tabela de controle de migrations (gerenciada pelo Kysely) | V0.1 |
@@ -2402,17 +2402,49 @@ interpretado corretamente sem validação do usuário quando houver dúvida.
 ### 24.2 Estrutura
 
 ```text
-health_exams
-  profile_id, collected_at, laboratory, document_id nulo, notes
+health_exams                                   (migration 0023)
+  profile_id, collected_on, laboratory nulo, notes nulo, soft delete
+  (document_id chega no 1.5.0-alpha.3)
 
 health_exam_results
-  exam_id, analyte_code nulo, analyte_name, value, unit,
-  reference_min nulo, reference_max nulo, reference_text nulo,
-  flag nulo, method nulo
+  profile_id, exam_id, sort_order, analyte_code nulo, analyte_name,
+  value, unit, reference_min nulo, reference_max nulo,
+  reference_text nulo, soft delete
 ```
 
 Preservar o intervalo de referência do laboratório em vez de aplicar um
-intervalo global.
+intervalo global. Por isso não existe `health_reference_ranges`: a faixa
+fica em cada resultado, e o catálogo de marcadores (código, nome e unidade
+usual, para preencher o formulário) é código fixo no domínio. A posição do
+valor em relação à faixa (abaixo, dentro, acima ou sem faixa) é calculada
+na leitura, nunca gravada; uma faixa só com mínimo ou só com máximo marca
+aquele lado, e a referência em texto não é interpretada.
+
+**Escopo da V1.5** (decidido em 26/11/2026):
+
+- **Ativação por perfil:** a área Saúde começa escondida; o perfil liga em
+  Configurações › Saúde depois do aviso de que o Evully não diagnostica nem
+  substitui a avaliação profissional (fica registrado quando o aviso foi
+  aceito). Desligar só esconde: os exames continuam guardados.
+- **Entrada:** lançamento manual e anexo do PDF do laboratório, guardado
+  numa pasta própria do app; o conteúdo do PDF não é lido. OCR e importação
+  automática ficam para depois.
+- **Sem criptografia própria na V1.5** (resolve a questão do §33): os dados
+  seguem protegidos pela conta do Windows, ficam fora dos logs e da
+  telemetria, e a exportação de dados só leva os exames com a opção
+  "Incluir exames de saúde" marcada. O backup e a transferência de perfil
+  sempre os levam. A criptografia volta a ser avaliada na Fase 2.
+- **Sinalização:** fora da faixa do laboratório aparece "Atenção", sem
+  linguagem alarmista (§24.4).
+- **Entregas:**
+  - 1.5.0-alpha.1: ativação, exames e resultados manuais com a marca
+    Atenção, exportação opcional;
+  - 1.5.0-alpha.2: histórico por marcador, comparação entre exames,
+    tendência, catálogo com frase informativa, níveis e perguntas para levar
+    ao profissional;
+  - 1.5.0-alpha.3: PDF anexado (`health_documents`), incluído no backup e na
+    transferência;
+  - 1.5.0.
 
 ### 24.3 Análises
 
@@ -2815,7 +2847,6 @@ recursos futuros é coletado pelos passos 6 e 7 e pelo uso real (§33.1).
 | Questão | Versão |
 |---|---|
 | Fotos de progresso são criptografadas em disco? | futuro |
-| Criptografar o banco (ex.: SQLCipher) antes do Evully Health? | V1.5 |
 | Confirmar Better Auth como solução de autenticação. | Início da Fase 2 |
 | Provedor de hospedagem e de pagamentos. | Início da Fase 2 / Fase 3 |
 | Tipos de medida personalizados por perfil. | futuro |

@@ -18,3 +18,4 @@ export * from './sleep';
 export * from './updates';
 export * from './recommendations';
 export * from './reminders';
+export * from './health';

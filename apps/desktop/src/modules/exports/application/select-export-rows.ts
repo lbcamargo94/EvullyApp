@@ -52,6 +52,7 @@ export function selectExportRows(all: ProfileTables): ProfileTables {
   const weightTags = withParent(all.body_weight_tags, (t) => t.body_weight_id, idsOf(weights));
   const measurements = live(all.body_measurements);
   const templates = live(all.meal_templates);
+  const exams = live(all.health_exams);
 
   return {
     ...all,
@@ -90,6 +91,8 @@ export function selectExportRows(all: ProfileTables): ProfileTables {
     cardio_sessions: live(all.cardio_sessions),
     sleep_logs: live(all.sleep_logs),
     habit_logs: live(all.habit_logs),
+    health_exams: exams,
+    health_exam_results: withParent(live(all.health_exam_results), (r) => r.exam_id, idsOf(exams)),
   };
 }
 

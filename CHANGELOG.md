@@ -6,6 +6,24 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
+V1.5, Evully Health (1.5.0-alpha.1: a área Saúde e os exames digitados).
+
+- **Saúde**, nova área para guardar exames laboratoriais, escondida até o
+  perfil ligar em Configurações › Saúde, depois do aviso de que o Evully não
+  diagnostica nem substitui a avaliação profissional; desligar só esconde;
+- **exames** com data da coleta, laboratório e observações, e **resultados**
+  com marcador (de um catálogo de 32 ou com nome livre), valor, unidade e a
+  faixa de referência do próprio laboratório; editar e excluir com
+  confirmação;
+- fora da faixa do laboratório aparece **Atenção** (abaixo ou acima), sem
+  alarme; sem faixa, nada é marcado;
+- **exportação de dados:** os exames só entram com "Incluir exames de saúde"
+  marcado (JSON e `health.csv`); o backup e a transferência de perfil sempre
+  os levam;
+- banco: tabelas `health_exams` e `health_exam_results` (migration 0023);
+- sem criptografia própria do banco nesta versão, decisão registrada no
+  README §24 e no SECURITY §2.4.
+
 ## [1.4.0] - 2026-11-25
 
 V1.4, Evully Reminders: lembretes locais do Windows, por perfil, que só

@@ -3,7 +3,12 @@ import { z } from 'zod';
 /** Export of the current profile (README §14.3): full JSON or a zip of CSVs. */
 export const exportFormatSchema = z.enum(['json', 'csv']);
 
-export const exportInputSchema = z.object({ profileId: z.uuid(), format: exportFormatSchema });
+export const exportInputSchema = z.object({
+  profileId: z.uuid(),
+  format: exportFormatSchema,
+  /** Health exams leave the device only by an explicit choice (README §27). */
+  includeHealth: z.boolean().optional(),
+});
 
 /** Name of the saved file; null when the user cancelled the save dialog. */
 export const exportResultSchema = z.object({ fileName: z.string() }).nullable();

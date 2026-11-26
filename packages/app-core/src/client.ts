@@ -87,6 +87,10 @@ import type {
   SleepLogDto,
   SleepTargetDto,
   SleepTargetInput,
+  HealthExamDto,
+  HealthExamInput,
+  HealthSettings,
+  UpdateHealthExamInput,
   UpdateSleepInput,
   UpdateStatus,
   ReminderOpen,
@@ -307,6 +311,15 @@ export interface EvullyClient {
     target(profileId: string): Promise<SleepTargetDto | null>;
     setTarget(input: SleepTargetInput): Promise<SleepTargetDto | null>;
   };
+  /** Evully Health (README §24): exams typed by hand, hidden until the profile turns it on. */
+  health: {
+    settings(profileId: string): Promise<HealthSettings>;
+    setEnabled(profileId: string, enabled: boolean): Promise<HealthSettings>;
+    list(profileId: string): Promise<HealthExamDto[]>;
+    register(input: HealthExamInput): Promise<HealthExamDto>;
+    update(input: UpdateHealthExamInput): Promise<HealthExamDto>;
+    remove(profileId: string, id: string): Promise<null>;
+  };
   mealTemplates: {
     list(profileId: string): Promise<MealTemplateDto[]>;
     save(input: SaveMealTemplateInput): Promise<MealTemplateDto>;
@@ -321,7 +334,8 @@ export interface EvullyClient {
   };
   /** Export of one profile (README §14.3); absent where files cannot be saved. */
   exports?: {
-    create(profileId: string, format: ExportFormat): Promise<ExportResult>;
+    /** Health exams go in only when `includeHealth` is true (README §27). */
+    create(profileId: string, format: ExportFormat, includeHealth: boolean): Promise<ExportResult>;
   };
   /** Profile transfer between computers (README §14.4); desktop only. */
   transfer?: {

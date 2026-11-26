@@ -28,6 +28,7 @@ export const shellMessages = {
   cardio: 'Cardio',
   habits: 'Hábitos',
   sleep: 'Sono',
+  health: 'Saúde',
   stats: 'Progresso',
   signals: 'Sinais',
   catalog: 'Catálogo de componentes (dev)',

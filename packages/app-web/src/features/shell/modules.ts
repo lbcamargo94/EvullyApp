@@ -3,6 +3,7 @@ import {
   Apple,
   ChartLine,
   Dumbbell,
+  HeartPulse,
   LayoutDashboard,
   Lightbulb,
   ListChecks,
@@ -27,6 +28,8 @@ export const MODULES = [
   { key: 'cardio', to: '/app/cardio', label: m.cardio, icon: Activity },
   { key: 'habits', to: '/app/habits', label: m.habits, icon: ListChecks },
   { key: 'sleep', to: '/app/sleep', label: m.sleep, icon: Moon },
+  // Only for profiles that turned the area on (README §24).
+  { key: 'health', to: '/app/health', label: m.health, icon: HeartPulse },
   { key: 'stats', to: '/app/stats', label: m.stats, icon: ChartLine },
   { key: 'signals', to: '/app/signals', label: m.signals, icon: Lightbulb },
   { key: 'settings', to: '/app/settings', label: m.settings, icon: Settings },
