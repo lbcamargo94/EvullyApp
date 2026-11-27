@@ -6,40 +6,35 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 
 ## [Unreleased]
 
-V1.5, Evully Health (1.5.0-alpha.1: a área Saúde e os exames digitados;
-1.5.0-alpha.2: marcadores e comparação; 1.5.0-alpha.3: PDF do laudo).
+## [1.5.0] - 2026-11-27
 
-- **Saúde**, nova área para guardar exames laboratoriais, escondida até o
-  perfil ligar em Configurações › Saúde, depois do aviso de que o Evully não
-  diagnostica nem substitui a avaliação profissional; desligar só esconde;
+V1.5, Evully Health: exames laboratoriais digitados à mão, comparados só com
+a faixa do próprio laboratório, sem diagnóstico nem números calculados por IA.
+
+- **Saúde**, área nova escondida até o perfil ligar em Configurações › Saúde,
+  depois do aviso de que o Evully não diagnostica nem substitui a avaliação
+  profissional; desligar só esconde, os exames continuam guardados;
 - **exames** com data da coleta, laboratório e observações, e **resultados**
   com marcador (de um catálogo de 32 ou com nome livre), valor, unidade e a
-  faixa de referência do próprio laboratório; editar e excluir com
-  confirmação;
-- fora da faixa do laboratório aparece **Atenção** (abaixo ou acima), sem
-  alarme; sem faixa, nada é marcado;
-- **exportação de dados:** os exames só entram com "Incluir exames de saúde"
-  marcado (JSON e `health.csv`); o backup e a transferência de perfil sempre
-  os levam;
-- banco: tabelas `health_exams` e `health_exam_results` (migration 0023);
-- sem criptografia própria do banco nesta versão, decisão registrada no
-  README §24 e no SECURITY §2.4;
-- **Marcadores** (alpha.2): cada marcador com gráfico, todos os resultados,
-  uma frase neutra sobre o que ele mede e a tendência em relação ao exame
-  anterior (só na mesma unidade); nomes digitados se juntam ignorando
-  maiúsculas e acentos;
+  faixa de referência do laudo; editar e excluir com confirmação;
+- fora da faixa do laboratório aparece **Atenção** (abaixo ou acima), sem cor
+  de alarme; sem faixa, nada é marcado;
+- **Marcadores:** gráfico com a faixa do último laudo, todos os resultados,
+  uma frase neutra sobre o que o marcador mede, a tendência em relação ao
+  exame anterior (só na mesma unidade) e **perguntas para levar ao
+  profissional**; nomes digitados se juntam ignorando maiúsculas e acentos;
 - **níveis** Informativo, Atenção (último resultado fora da faixa) e
-  Avaliação profissional recomendada (dois últimos fora da faixa, do mesmo
-  lado), com **perguntas para levar ao profissional**;
-- **Comparar** dois exames lado a lado, com a diferença só quando a unidade
-  é a mesma;
-- **PDF do laudo** (alpha.3): anexar um PDF de até 10 MB a cada exame, abrir
-  no leitor do Windows (por uma cópia temporária, apagada ao fechar o app),
-  salvar uma cópia, trocar ou remover com confirmação; o Evully não lê o
-  conteúdo;
-- o PDF fica dentro do banco (migration 0024, `health_documents`): o backup o
-  leva sem mudar de formato, a transferência de perfil o leva conferido, e a
-  exportação de dados nunca o inclui.
+  Avaliação profissional recomendada (os dois últimos fora, do mesmo lado);
+- **Comparar** dois exames lado a lado, com a diferença só na mesma unidade;
+- **PDF do laudo:** anexar um PDF de até 10 MB a cada exame, abrir no leitor
+  do Windows (por uma cópia temporária apagada ao fechar o app), salvar uma
+  cópia, trocar ou remover com confirmação; o Evully não lê o conteúdo;
+- **dados:** tabelas `health_exams`, `health_exam_results` e
+  `health_documents` (migrations 0023 e 0024); o PDF fica dentro do banco;
+  backup e transferência de perfil levam exames e PDFs (a transferência
+  confere o PDF); a exportação de dados só leva os exames com "Incluir exames
+  de saúde" e nunca o PDF;
+- sem criptografia própria do banco nesta versão (README §24, SECURITY §2.4).
 
 ## [1.4.0] - 2026-11-25
 

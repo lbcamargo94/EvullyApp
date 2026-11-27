@@ -229,7 +229,7 @@ Este é o **único** roadmap do projeto.
 | **V1.2** ✓ 1.2.0 (21/11/2026) | Analytics Engine determinístico: janelas de 7 a 60 dias e "este período × anterior" em todos os módulos, calculados na hora (§20.1) |
 | **V1.3** ✓ 1.3.0 (24/11/2026) | Recommendation Engine determinístico: sinais com regra e versão, tela Sinais e decisão do usuário (§20.2) |
 | **V1.4** ✓ 1.4.0 (25/11/2026) | Notificações locais / Evully Reminders: lembretes por perfil, horário silencioso e bandeja (§25) |
-| V1.5 | Evully Health (estrutura local/manual) |
+| **V1.5** ✓ 1.5.0 (27/11/2026) | Evully Health: exames manuais com a faixa do laboratório, marcadores, comparação e PDF do laudo (§24) |
 | V1.6 | Evully Coach AI opcional (desenvolvimento/testes) |
 | V2.0 | API NestJS + PostgreSQL + conta e login (e-mail, Google, Apple) + sincronização do desktop (todos os módulos da Fase 1) + páginas públicas de termos e privacidade + exclusão de conta |
 | V2.1 | App Android (React Native com Expo) na Google Play: dados locais com sincronização |
@@ -2456,7 +2456,7 @@ aquele lado, e a referência em texto não é interpretada.
     ao profissional;
   - 1.5.0-alpha.3: PDF anexado (`health_documents`), incluído no backup e na
     transferência;
-  - 1.5.0.
+  - 1.5.0 (lançado em 27/11/2026).
 
 ### 24.3 Análises
 
