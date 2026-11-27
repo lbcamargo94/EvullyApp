@@ -63,3 +63,28 @@ export function useDeleteHealthExam(profileId: string) {
   const client = useEvullyClient();
   return useExamMutation(profileId, (id: string) => client.health.remove(profileId, id));
 }
+
+/** The laboratory PDF (README §24.2); resolves to null when the dialog is cancelled. */
+export function useAttachHealthDocument(profileId: string) {
+  const client = useEvullyClient();
+  return useExamMutation(profileId, (examId: string) =>
+    client.health.attachDocument(profileId, examId),
+  );
+}
+
+export function useRemoveHealthDocument(profileId: string) {
+  const client = useEvullyClient();
+  return useExamMutation(profileId, (id: string) => client.health.removeDocument(profileId, id));
+}
+
+/** Opens a temporary copy in the system PDF viewer. */
+export function useOpenHealthDocument(profileId: string) {
+  const client = useEvullyClient();
+  return useMutation({ mutationFn: (id: string) => client.health.openDocument(profileId, id) });
+}
+
+/** Resolves to false when the save dialog is cancelled. */
+export function useSaveHealthDocument(profileId: string) {
+  const client = useEvullyClient();
+  return useMutation({ mutationFn: (id: string) => client.health.saveDocument(profileId, id) });
+}

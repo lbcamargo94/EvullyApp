@@ -1,4 +1,5 @@
 import type {
+  HealthDocumentDto,
   HealthExamDto,
   HealthExamInput,
   HealthSettings,
@@ -10,11 +11,19 @@ import { GetProfile } from '../../profiles/application/get-profile';
 import type { ProfileRepository } from '../../profiles/ports/profile-repository';
 import type { SettingsRepository } from '../../settings/ports/settings-repository';
 import type { Clock, IdGenerator } from '../../shared/ports';
-import type { HealthExamRecord, HealthExamRepository } from '../ports/health-repository';
+import type {
+  HealthDocumentFiles,
+  HealthDocumentRecord,
+  HealthDocumentRepository,
+  HealthExamRecord,
+  HealthExamRepository,
+} from '../ports/health-repository';
 
 export interface HealthDeps {
   profiles: ProfileRepository;
   exams: HealthExamRepository;
+  documents: HealthDocumentRepository;
+  files: HealthDocumentFiles;
   settings: SettingsRepository;
   clock: Clock;
   ids: IdGenerator;
@@ -24,12 +33,24 @@ export interface HealthDeps {
 export const HEALTH_ENABLED_KEY = 'health_enabled';
 export const HEALTH_NOTICE_KEY = 'health_notice_accepted_at';
 
-const toDto = (e: HealthExamRecord): HealthExamDto => ({
+export const toDocumentDto = (d: HealthDocumentRecord): HealthDocumentDto => ({
+  id: d.id,
+  examId: d.examId,
+  fileName: d.fileName,
+  sizeBytes: d.sizeBytes,
+  createdAt: d.createdAt,
+});
+
+const toDto = (
+  e: HealthExamRecord,
+  document: HealthDocumentRecord | null = null,
+): HealthExamDto => ({
   id: e.id,
   collectedOn: e.collectedOn,
   laboratory: e.laboratory,
   notes: e.notes,
   results: e.results.map((r) => ({ ...r, flag: resultFlag(r) })),
+  document: document ? toDocumentDto(document) : null,
   createdAt: e.createdAt,
   updatedAt: e.updatedAt,
 });
@@ -81,7 +102,12 @@ export class ListHealthExams {
 
   async execute({ profileId }: { profileId: string }): Promise<HealthExamDto[]> {
     await new GetProfile(this.deps.profiles).execute({ id: profileId });
-    return (await this.deps.exams.list(profileId)).map(toDto);
+    const [exams, documents] = await Promise.all([
+      this.deps.exams.list(profileId),
+      this.deps.documents.list(profileId),
+    ]);
+    const byExam = new Map(documents.map((d) => [d.examId, d]));
+    return exams.map((e) => toDto(e, byExam.get(e.id)));
   }
 }
 
@@ -123,7 +149,11 @@ export class UpdateHealthExam {
       updatedAt: this.deps.clock.nowIso(),
     };
     await this.deps.exams.update(record);
-    return toDto(record);
+    const documents = await this.deps.documents.list(profileId);
+    return toDto(
+      record,
+      documents.find((d) => d.examId === id),
+    );
   }
 }
 

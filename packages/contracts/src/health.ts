@@ -37,12 +37,28 @@ export const healthResultSchema = healthResultValuesSchema.extend({
   flag: healthResultFlagSchema,
 });
 
+/** The laboratory PDF kept with an exam (README §24.2); the content stays in main. */
+export const healthDocumentSchema = z.object({
+  id: z.string(),
+  examId: z.string(),
+  fileName: z.string(),
+  sizeBytes: z.number().int().nonnegative(),
+  createdAt: z.string(),
+});
+
+export const healthDocumentIdInputSchema = z.object({ profileId: z.uuid(), id: z.uuid() });
+export const attachHealthDocumentInputSchema = z.object({
+  profileId: z.uuid(),
+  examId: z.uuid(),
+});
+
 export const healthExamSchema = z.object({
   id: z.string(),
   collectedOn: localDate,
   laboratory: z.string().nullable(),
   notes: z.string().nullable(),
   results: z.array(healthResultSchema),
+  document: healthDocumentSchema.nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -65,5 +81,7 @@ export type UpdateHealthExamInput = z.infer<typeof updateHealthExamInputSchema>;
 export type HealthResultFlag = z.infer<typeof healthResultFlagSchema>;
 export type HealthResultDto = z.infer<typeof healthResultSchema>;
 export type HealthExamDto = z.infer<typeof healthExamSchema>;
+export type HealthDocumentDto = z.infer<typeof healthDocumentSchema>;
+export type AttachHealthDocumentInput = z.infer<typeof attachHealthDocumentInputSchema>;
 export type HealthSettings = z.infer<typeof healthSettingsSchema>;
 export type SetHealthSettingsInput = z.infer<typeof setHealthSettingsInputSchema>;

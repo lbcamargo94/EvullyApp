@@ -13,7 +13,7 @@ import {
   noTransferFiles,
   noUpdates,
 } from '../tests/helpers';
-import { seedClock, seedDemo } from './demo-seed';
+import { seedClock, seedDemo, seedHealthFiles } from './demo-seed';
 
 /**
  * `npm run seed`: adds the demo profile to the development database only
@@ -47,6 +47,7 @@ test('seed the development database', { timeout: 600_000 }, async () => {
       importFiles: noImportFiles,
       exportFiles: noExportFiles,
       transferFiles: noTransferFiles,
+      healthFiles: seedHealthFiles,
       updater: noUpdates,
       reminders: noReminders(),
     });

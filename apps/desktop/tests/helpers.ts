@@ -8,6 +8,7 @@ import { buildApp } from '../src/main/composition-root';
 import type { AppRestart, BackupDialogs } from '../src/modules/backup/ports/backup-ports';
 import type { ExportFiles } from '../src/modules/exports/ports/export-ports';
 import type { TransferFiles } from '../src/modules/transfer/ports/transfer-ports';
+import type { HealthDocumentFiles } from '../src/modules/health/ports/health-repository';
 import type { ImportFiles } from '../src/modules/imports/ports/import-ports';
 import type { Updater } from '../src/modules/updates/ports/updater';
 import { ReminderOpenBox } from '../src/modules/reminders/adapters/reminder-open-box';
@@ -60,6 +61,13 @@ export const noTransferFiles: TransferFiles = {
   open: async () => null,
 };
 
+/** Exam PDF dialogs that are always cancelled; nothing is opened. */
+export const noHealthFiles: HealthDocumentFiles = {
+  choosePdf: async () => null,
+  saveCopy: async () => false,
+  open: async () => undefined,
+};
+
 /** Reminders that are never shown (seed). */
 export const noReminders = () => ({
   notifier: { show: () => undefined },
@@ -89,6 +97,7 @@ export async function createTestApp(
   restart: AppRestart = { restart: () => undefined },
   exportFiles: ExportFiles = noExportFiles,
   transferFiles: TransferFiles = noTransferFiles,
+  healthFiles: HealthDocumentFiles = noHealthFiles,
 ) {
   const dir = mkdtempSync(join(tmpdir(), 'evully-test-'));
   const db = openDatabase(join(dir, 'evully.db'));
@@ -112,6 +121,7 @@ export async function createTestApp(
     importFiles,
     exportFiles,
     transferFiles,
+    healthFiles,
     updater: noUpdates,
     reminders: {
       notifier: { show: (notice) => notices.push(notice) },

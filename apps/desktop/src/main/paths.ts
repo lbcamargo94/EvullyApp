@@ -30,3 +30,8 @@ export function pendingRestoreFile(): string {
 export function scratchDirectory(): string {
   return join(app.getPath('userData'), 'tmp');
 }
+
+/** Copies of exam PDFs opened in the system viewer (README §24.2); emptied on start and close. */
+export function healthViewerDirectory(): string {
+  return join(scratchDirectory(), 'health-viewer');
+}

@@ -16,6 +16,7 @@ import { withStartWithWindows } from './start-with-windows';
 import { electronDialogs } from './electron-dialogs';
 import { electronExportFiles } from './electron-export-files';
 import { electronImportFiles } from './electron-import-files';
+import { clearHealthViewerCopies, electronHealthFiles } from './electron-health-files';
 import { electronTransferFiles } from './electron-transfer-files';
 import { registerIpcHandlers } from './ipc-router';
 import { buildRecovery } from './recovery-root';
@@ -34,6 +35,7 @@ import {
   configureDataDirectory,
   databaseFile,
   pendingRestoreFile,
+  healthViewerDirectory,
   scratchDirectory,
 } from './paths';
 
@@ -146,6 +148,7 @@ async function start(): Promise<void> {
   // A confirmed restore replaces the database before it opens (README §14.2).
   if (applyPendingRestore(file, pendingRestoreFile())) log.info('backup restored');
   if (checkDatabase(file) === 'damaged') return startRecovery(file);
+  await clearHealthViewerCopies(healthViewerDirectory());
   const existed = existsSync(file);
   const db = openDatabase(file);
 
@@ -153,6 +156,7 @@ async function start(): Promise<void> {
   let closing = false;
   const shutdown = async () => {
     closing = true;
+    await clearHealthViewerCopies(healthViewerDirectory());
     await evully.lifecycle
       .onClose()
       .then((result) => log.info(`automatic backup: ${result}`))
@@ -185,6 +189,7 @@ async function start(): Promise<void> {
     importFiles: electronImportFiles,
     exportFiles: electronExportFiles,
     transferFiles: electronTransferFiles,
+    healthFiles: electronHealthFiles(healthViewerDirectory()),
     updater,
     reminders: {
       notifier: electronNotifier(opens, () => showWindow(mainWindow ?? createWindow())),

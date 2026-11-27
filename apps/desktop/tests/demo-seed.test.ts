@@ -1,7 +1,7 @@
 import { ConflictError, evolutionSummary, parseLocalDate } from '@evully/domain';
 import { afterEach, describe, expect, it } from 'vitest';
-import { seedClock, seedDemo } from '../seed/demo-seed';
-import { createTestApp } from './helpers';
+import { seedClock, seedDemo, seedHealthFiles } from '../seed/demo-seed';
+import { createTestApp, noDialogs, noExportFiles, noImportFiles, noTransferFiles } from './helpers';
 
 const today = parseLocalDate('2026-11-03');
 
@@ -11,7 +11,15 @@ describe('demo seed (npm run seed)', () => {
 
   it('builds a history in every module, leaves other profiles alone and runs once', async () => {
     const clock = seedClock(today);
-    const app = await createTestApp(clock);
+    const app = await createTestApp(
+      clock,
+      noDialogs,
+      noImportFiles,
+      { restart: () => undefined },
+      noExportFiles,
+      noTransferFiles,
+      seedHealthFiles,
+    );
     dispose = app.dispose;
     const { handlers } = app;
     const ana = await handlers['profiles:create']({
@@ -28,6 +36,9 @@ describe('demo seed (npm run seed)', () => {
     expect((await handlers['weights:list']({ profileId })).length).toBe(result.weights);
     expect((await handlers['workout-stats:get']({ profileId })).length).toBe(result.workouts);
     expect((await handlers['sleep:list']({ profileId })).length).toBe(result.nights);
+    const exams = await handlers['health:list']({ profileId });
+    expect(exams.length).toBe(result.exams);
+    expect(exams[0]?.document?.fileName).toBe('laudo-exemplo.pdf');
     expect((await handlers['measurements:list']({ profileId })).length).toBe(9);
     expect((await handlers['nutrition:history']({ profileId })).length).toBeGreaterThan(100);
     expect((await handlers['cardio:overview']({ profileId })).target?.minutesPerWeek).toBe(150);

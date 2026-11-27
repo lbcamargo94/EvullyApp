@@ -45,3 +45,4 @@ export * from './reminders/due';
 export * from './health/analytes';
 export * from './health/exams';
 export * from './health/markers';
+export * from './health/documents';

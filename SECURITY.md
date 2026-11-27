@@ -80,6 +80,13 @@ Fora de escopo na Fase 1:
   (README, §14.2.1).
 - "Abrir pasta de logs" abre só a pasta do log do app, calculada no processo
   principal; a tela não envia caminhos.
+- PDF dos exames (V1.5): escolhido no diálogo do sistema e lido no processo
+  principal (recusado acima de 10 MB antes da leitura e se não começar com
+  `%PDF-`), guardado no banco e nunca interpretado. "Abrir" grava a cópia
+  numa subpasta da pasta temporária privada do app, apagada ao iniciar e ao
+  fechar; o nome do arquivo perde pastas e caracteres inválidos. Na
+  transferência, o PDF em base64 precisa bater com tamanho e `sha256` antes
+  da prévia (README, §24.2).
 - Backups nunca sobrescrevem arquivos sem confirmação.
 - Exportação (V0.7): só o perfil pedido (consultas por `profile_id` ou pelo
   registro pai, com teste de isolamento); o caminho vem do diálogo de salvar
@@ -106,7 +113,8 @@ Fora de escopo na Fase 1:
   banco nesta versão, como o resto dos dados; a área começa desligada em
   cada perfil, os exames ficam fora dos logs e da telemetria e só saem na
   exportação com a opção "Incluir exames de saúde" marcada (o backup e a
-  transferência de perfil os levam). A criptografia (ex.: SQLCipher, com a
+  transferência de perfil os levam). O PDF do laudo fica dentro do banco e
+  nunca sai na exportação de dados. A criptografia (ex.: SQLCipher, com a
   chave protegida pelo Windows) volta a ser avaliada na Fase 2, quando o
   backup e a transferência puderem ter senha. Fotos de progresso: decidir
   antes de implementá-las ([README.md](README.md), §24).

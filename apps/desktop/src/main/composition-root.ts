@@ -35,7 +35,9 @@ import {
 } from '../modules/sleep/adapters/kysely-sleep-repository';
 import { sleepIpcHandlers } from '../modules/sleep/adapters/sleep-ipc-handlers';
 import { healthIpcHandlers } from '../modules/health/adapters/health-ipc-handlers';
+import { KyselyHealthDocumentRepository } from '../modules/health/adapters/kysely-health-document-repository';
 import { KyselyHealthExamRepository } from '../modules/health/adapters/kysely-health-repository';
+import type { HealthDocumentFiles } from '../modules/health/ports/health-repository';
 import { KyselyRecommendationRepository } from '../modules/recommendations/adapters/kysely-recommendation-repository';
 import { recommendationIpcHandlers } from '../modules/recommendations/adapters/recommendation-ipc-handlers';
 import { KyselyReminderRepository } from '../modules/reminders/adapters/kysely-reminder-repository';
@@ -102,6 +104,8 @@ interface Dependencies {
   importFiles: ImportFiles;
   exportFiles: ExportFiles;
   transferFiles: TransferFiles;
+  /** Dialogs and the PDF viewer for exam documents (README §24.2). */
+  healthFiles: HealthDocumentFiles;
   updater: Updater;
   reminders: {
     notifier: Notifier;
@@ -123,6 +127,7 @@ export function buildApp({
   importFiles,
   exportFiles,
   transferFiles,
+  healthFiles,
   updater,
   reminders,
 }: Dependencies) {
@@ -240,6 +245,8 @@ export function buildApp({
     ...healthIpcHandlers({
       profiles,
       exams: new KyselyHealthExamRepository(db),
+      documents: new KyselyHealthDocumentRepository(db),
+      files: healthFiles,
       settings,
       clock,
       ids,

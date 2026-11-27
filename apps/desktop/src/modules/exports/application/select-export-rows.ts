@@ -93,6 +93,7 @@ export function selectExportRows(all: ProfileTables): ProfileTables {
     habit_logs: live(all.habit_logs),
     health_exams: exams,
     health_exam_results: withParent(live(all.health_exam_results), (r) => r.exam_id, idsOf(exams)),
+    health_documents: withParent(live(all.health_documents), (d) => d.exam_id, idsOf(exams)),
   };
 }
 

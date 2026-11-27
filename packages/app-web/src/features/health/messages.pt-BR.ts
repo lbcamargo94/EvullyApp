@@ -178,3 +178,36 @@ export const compareMessages = {
   hint: 'A diferença aparece só quando os dois resultados usam a mesma unidade.',
   sameExam: 'Escolha dois exames diferentes.',
 } as const;
+
+const size = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
+/** "820 KB" or "2,4 MB". */
+export const formatFileSize = (bytes: number) =>
+  bytes < 1024 * 1024
+    ? `${size.format(Math.max(1, Math.round(bytes / 1024)))} KB`
+    : `${size.format(bytes / (1024 * 1024))} MB`;
+
+export const documentMessages = {
+  label: 'PDF do laudo',
+  attach: (date: string) => `Anexar PDF ao exame de ${date}`,
+  attachShort: 'Anexar PDF',
+  replace: 'Trocar PDF',
+  open: 'Abrir',
+  saveCopy: 'Salvar cópia',
+  remove: 'Remover anexo',
+  removeTitle: 'Remover o PDF deste exame?',
+  removeBody:
+    'O PDF sai do exame; os valores lançados continuam. Um backup feito antes ainda o tem.',
+  removeConfirm: 'Remover',
+  saved: 'Cópia salva.',
+  hint: 'O Evully guarda o PDF como está, sem ler o conteúdo. Até 10 MB.',
+} as const;
+
+export const documentErrorByCode: Record<string, string> = {
+  'health.document_too_large': 'O PDF passa de 10 MB. Escolha um arquivo menor.',
+  'health.document_not_pdf': 'Este arquivo não é um PDF.',
+  'health.document_empty': 'O arquivo está vazio.',
+  'health.document_not_found': 'Este PDF não existe mais.',
+  'health.document_open_failed':
+    'Não há um leitor de PDF para abrir o arquivo. Use "Salvar cópia".',
+  'health.not_found': 'Este exame não existe mais.',
+};

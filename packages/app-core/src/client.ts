@@ -87,6 +87,7 @@ import type {
   SleepLogDto,
   SleepTargetDto,
   SleepTargetInput,
+  HealthDocumentDto,
   HealthExamDto,
   HealthExamInput,
   HealthSettings,
@@ -319,6 +320,12 @@ export interface EvullyClient {
     register(input: HealthExamInput): Promise<HealthExamDto>;
     update(input: UpdateHealthExamInput): Promise<HealthExamDto>;
     remove(profileId: string, id: string): Promise<null>;
+    /** The laboratory PDF (README §24.2); null when the dialog is cancelled. */
+    attachDocument(profileId: string, examId: string): Promise<HealthDocumentDto | null>;
+    openDocument(profileId: string, id: string): Promise<null>;
+    /** False when the save dialog is cancelled. */
+    saveDocument(profileId: string, id: string): Promise<boolean>;
+    removeDocument(profileId: string, id: string): Promise<null>;
   };
   mealTemplates: {
     list(profileId: string): Promise<MealTemplateDto[]>;

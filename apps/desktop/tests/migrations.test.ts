@@ -45,6 +45,7 @@ describe('database', () => {
       '0021_tracking_source_recommendation',
       '0022_reminders',
       '0023_health',
+      '0024_health_documents',
     ]);
     expect(await migrateToLatest(db)).toEqual([]);
     await db.destroy();

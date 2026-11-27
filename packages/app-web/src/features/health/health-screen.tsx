@@ -23,6 +23,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate } from 'react-router';
 import { ExamComparison } from './exam-comparison';
+import { ExamDocument } from './exam-document';
 import { HealthExamForm } from './health-exam-form';
 import { HealthMarkers } from './health-markers';
 import {
@@ -171,6 +172,7 @@ function ExamList({
               ))}
             </ul>
             {exam.notes && <p className="text-caption text-text-muted">{exam.notes}</p>}
+            <ExamDocument profileId={profileId} exam={exam} />
           </section>
         );
       })}

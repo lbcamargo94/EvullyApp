@@ -4,7 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { seedClock, seedDemo } from '../seed/demo-seed';
+import { seedClock, seedDemo, seedHealthFiles } from '../seed/demo-seed';
 import type { ProfileExportDocument } from '../src/modules/exports/application/export-profile';
 import type { ExportFiles } from '../src/modules/exports/ports/export-ports';
 import { readTransferZip, writeTransferZip } from '../src/modules/transfer/adapters/transfer-zip';
@@ -42,7 +42,15 @@ function jsonCapture() {
 }
 
 const app = (transfer: TransferFiles, exports: ExportFiles) =>
-  createTestApp(seedClock(today), noDialogs, noImportFiles, undefined, exports, transfer);
+  createTestApp(
+    seedClock(today),
+    noDialogs,
+    noImportFiles,
+    undefined,
+    exports,
+    transfer,
+    seedHealthFiles,
+  );
 
 async function exportData(
   handlers: Awaited<ReturnType<typeof app>>['handlers'],
@@ -148,6 +156,14 @@ describe('profile transfer between computers (README §14.4)', () => {
       demo.workouts,
     );
     expect(await handlers['weights:list']({ profileId: bia.id })).toEqual([]);
+    // The exam PDF travels as base64 and comes back byte for byte (README §24.2).
+    const pdfOf = (db: typeof target.db) =>
+      db.selectFrom('health_documents').select(['sha256', 'content']).execute();
+    const copied = await pdfOf(target.db);
+    expect(copied).toHaveLength(1);
+    expect(copied).toEqual(await pdfOf(source.db));
+    const [exam] = await handlers['health:list']({ profileId: demo.profileId });
+    expect(exam?.document?.fileName).toBe('laudo-exemplo.pdf');
   });
 
   it('replaces the profile with the same id only after a backup', async () => {
@@ -259,6 +275,23 @@ describe('profile transfer between computers (README §14.4)', () => {
         'table.zip',
         withDoc((d) => {
           d.data.app_secrets = [];
+        }),
+      ),
+    ).toBe('transfer.invalid');
+    const pdf = (d: typeof doc) => must(d.data.health_documents?.[0], 'pdf');
+    expect(
+      await attempt(
+        'pdf-checksum.zip',
+        withDoc((d) => {
+          pdf(d).content = Buffer.from('%PDF-1.4 other').toString('base64');
+        }),
+      ),
+    ).toBe('transfer.invalid');
+    expect(
+      await attempt(
+        'pdf-not-pdf.zip',
+        withDoc((d) => {
+          pdf(d).content = Buffer.from('MZ not a pdf').toString('base64');
         }),
       ),
     ).toBe('transfer.invalid');

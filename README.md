@@ -2404,13 +2404,25 @@ interpretado corretamente sem validação do usuário quando houver dúvida.
 ```text
 health_exams                                   (migration 0023)
   profile_id, collected_on, laboratory nulo, notes nulo, soft delete
-  (document_id chega no 1.5.0-alpha.3)
 
 health_exam_results
   profile_id, exam_id, sort_order, analyte_code nulo, analyte_name,
   value, unit, reference_min nulo, reference_max nulo,
   reference_text nulo, soft delete
+
+health_documents                               (migration 0024)
+  profile_id, exam_id, file_name, size_bytes, sha256, content (BLOB),
+  soft delete; zero ou um ativo por exame
 ```
+
+O PDF do laudo fica **dentro do banco** (decidido em 26/11/2026), e não numa
+pasta: o backup o leva sem mudar o formato do zip (§14.2), e a transferência
+o leva em base64 no `profile.json`, conferido (é PDF, tamanho e sha256) antes
+da prévia (§14.4). Limite de 10 MB; o arquivo precisa começar com `%PDF-`.
+"Abrir" grava uma cópia na pasta temporária privada do app e abre no leitor
+de PDF do Windows (as cópias são apagadas ao abrir e ao fechar o app);
+"Salvar cópia" usa o diálogo do sistema. A exportação de dados nunca leva o
+PDF, nem com "Incluir exames de saúde".
 
 Preservar o intervalo de referência do laboratório em vez de aplicar um
 intervalo global. Por isso não existe `health_reference_ranges`: a faixa
@@ -2427,7 +2439,7 @@ aquele lado, e a referência em texto não é interpretada.
   substitui a avaliação profissional (fica registrado quando o aviso foi
   aceito). Desligar só esconde: os exames continuam guardados.
 - **Entrada:** lançamento manual e anexo do PDF do laboratório, guardado
-  numa pasta própria do app; o conteúdo do PDF não é lido. OCR e importação
+  dentro do banco (§24.2); o conteúdo do PDF não é lido. OCR e importação
   automática ficam para depois.
 - **Sem criptografia própria na V1.5** (resolve a questão do §33): os dados
   seguem protegidos pela conta do Windows, ficam fora dos logs e da
