@@ -7,7 +7,7 @@ Todas as mudanças relevantes do Evully. Formato baseado em
 ## [Unreleased]
 
 V1.5, Evully Health (1.5.0-alpha.1: a área Saúde e os exames digitados;
-1.5.0-alpha.2: marcadores e comparação).
+1.5.0-alpha.2: marcadores e comparação; 1.5.0-alpha.3: PDF do laudo).
 
 - **Saúde**, nova área para guardar exames laboratoriais, escondida até o
   perfil ligar em Configurações › Saúde, depois do aviso de que o Evully não
@@ -32,7 +32,14 @@ V1.5, Evully Health (1.5.0-alpha.1: a área Saúde e os exames digitados;
   Avaliação profissional recomendada (dois últimos fora da faixa, do mesmo
   lado), com **perguntas para levar ao profissional**;
 - **Comparar** dois exames lado a lado, com a diferença só quando a unidade
-  é a mesma.
+  é a mesma;
+- **PDF do laudo** (alpha.3): anexar um PDF de até 10 MB a cada exame, abrir
+  no leitor do Windows (por uma cópia temporária, apagada ao fechar o app),
+  salvar uma cópia, trocar ou remover com confirmação; o Evully não lê o
+  conteúdo;
+- o PDF fica dentro do banco (migration 0024, `health_documents`): o backup o
+  leva sem mudar de formato, a transferência de perfil o leva conferido, e a
+  exportação de dados nunca o inclui.
 
 ## [1.4.0] - 2026-11-25
 

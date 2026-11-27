@@ -155,13 +155,14 @@ export class KyselyHealthExamRepository implements HealthExamRepository {
         .where('deleted_at', 'is', null)
         .executeTakeFirst();
       if (result.numUpdatedRows === 0n) return false;
-      await trx
-        .updateTable('health_exam_results')
-        .set({ deleted_at: now })
-        .where('exam_id', '=', id)
-        .where('profile_id', '=', profileId)
-        .where('deleted_at', 'is', null)
-        .execute();
+      for (const table of ['health_exam_results', 'health_documents'] as const)
+        await trx
+          .updateTable(table)
+          .set({ deleted_at: now })
+          .where('exam_id', '=', id)
+          .where('profile_id', '=', profileId)
+          .where('deleted_at', 'is', null)
+          .execute();
       return true;
     });
   }

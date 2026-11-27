@@ -43,10 +43,10 @@ export class ExportProfile {
     includeHealth?: boolean | undefined;
   }): Promise<ExportResult> {
     const full = await this.document(profileId);
-    // Health exams leave the device only when asked (README §27); the transfer keeps them.
-    const document = includeHealth
-      ? full
-      : { ...full, data: { ...full.data, health_exams: [], health_exam_results: [] } };
+    // Health exams leave the device only when asked (README §27) and the exam
+    // PDFs never do in a data export; the transfer keeps both (§24.2).
+    const health = includeHealth ? {} : { health_exams: [], health_exam_results: [] };
+    const document = { ...full, data: { ...full.data, ...health, health_documents: [] } };
     const name = exportFileName(document.profile.name, this.deps.clock.today(), format);
     const saved =
       format === 'json'

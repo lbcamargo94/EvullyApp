@@ -1,4 +1,4 @@
-import type { DatabaseSchema, ProfilesTable } from '../../../database/schema';
+import type { DatabaseSchema, HealthDocumentsTable, ProfilesTable } from '../../../database/schema';
 
 /** Tables with a `profile_id` column, exported as rows of the profile (README §14.3). */
 export const PROFILE_EXPORT_TABLES = [
@@ -34,6 +34,7 @@ export const PROFILE_EXPORT_TABLES = [
   'notification_events',
   'health_exams',
   'health_exam_results',
+  'health_documents',
 ] as const satisfies readonly (keyof DatabaseSchema)[];
 
 /** Child tables without `profile_id`, read through their parent row. */
@@ -61,12 +62,17 @@ export type ExportTable =
   | (typeof CHILD_EXPORT_TABLES)[number]
   | (typeof SHARED_EXPORT_TABLES)[number];
 
-export type ExportTables = { [K in ExportTable]: DatabaseSchema[K][] };
+/** A row as exported: BLOB columns (the exam PDFs) travel as base64 text (README §14.4). */
+export type ExportRow<K extends ExportTable> = K extends 'health_documents'
+  ? Omit<HealthDocumentsTable, 'content'> & { content: string }
+  : DatabaseSchema[K];
+
+export type ExportTables = { [K in ExportTable]: ExportRow<K>[] };
 
 export type ProfileTables = {
   [
     K in (typeof PROFILE_EXPORT_TABLES)[number] | (typeof CHILD_EXPORT_TABLES)[number]
-  ]: DatabaseSchema[K][];
+  ]: ExportRow<K>[];
 };
 
 export interface SharedIds {

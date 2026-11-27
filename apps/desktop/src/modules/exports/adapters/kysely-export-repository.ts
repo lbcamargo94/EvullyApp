@@ -8,6 +8,12 @@ import {
   type SharedIds,
 } from '../ports/export-ports';
 
+/** The PDF bytes as base64, so the transfer's `profile.json` can carry them (README §14.4). */
+const withBase64Content = (row: Record<string, unknown>) => ({
+  ...row,
+  content: Buffer.from(row.content as Uint8Array).toString('base64'),
+});
+
 export class KyselyExportRepository implements ExportRepository {
   constructor(private readonly db: Kysely<DatabaseSchema>) {}
 
@@ -28,7 +34,7 @@ export class KyselyExportRepository implements ExportRepository {
       const { rows } = await sql<Record<string, unknown>>`
         SELECT * FROM ${sql.table(table)} WHERE profile_id = ${profileId} ORDER BY id
       `.execute(this.db);
-      tables[table] = rows;
+      tables[table] = table === 'health_documents' ? rows.map(withBase64Content) : rows;
     }
     for (const [table, { parent, column }] of Object.entries(CHILD_PARENT)) {
       const { rows } = await sql<Record<string, unknown>>`

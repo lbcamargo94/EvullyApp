@@ -23,6 +23,7 @@ import * as m0020 from './migrations/0020_project_rate_band';
 import * as m0021 from './migrations/0021_tracking_source_recommendation';
 import * as m0022 from './migrations/0022_reminders';
 import * as m0023 from './migrations/0023_health';
+import * as m0024 from './migrations/0024_health_documents';
 
 // Migrations are imported statically so they are bundled into the app.
 // Never edit a published migration; add a new one (README §6.4).
@@ -50,6 +51,7 @@ const migrations: Record<string, Migration> = {
   '0021_tracking_source_recommendation': m0021,
   '0022_reminders': m0022,
   '0023_health': m0023,
+  '0024_health_documents': m0024,
 };
 
 /** Latest migration of this app: a backup with a newer one cannot be restored (README §14.2). */

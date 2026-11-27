@@ -1,7 +1,7 @@
 import { parseCsv, parseLocalDate } from '@evully/domain';
 import { sql } from 'kysely';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { seedClock, seedDemo } from '../seed/demo-seed';
+import { seedClock, seedDemo, seedHealthFiles } from '../seed/demo-seed';
 import type { ProfileExportDocument } from '../src/modules/exports/application/export-profile';
 import {
   CHILD_EXPORT_TABLES,
@@ -34,7 +34,15 @@ async function seededApp(files: ExportFiles, csvToImport?: () => string) {
   const importFiles = csvToImport
     ? { ...noImportFiles, chooseCsv: async () => ({ fileName: 'x.csv', text: csvToImport() }) }
     : noImportFiles;
-  const app = await createTestApp(clock, noDialogs, importFiles, undefined, files);
+  const app = await createTestApp(
+    clock,
+    noDialogs,
+    importFiles,
+    undefined,
+    files,
+    undefined,
+    seedHealthFiles,
+  );
   const { handlers } = app;
   const ana = await handlers['profiles:create']({
     name: 'Ana',
@@ -110,6 +118,8 @@ describe('profile export (README §14.3)', () => {
     const doc = JSON.parse(must(saved.json, 'json')) as ProfileExportDocument;
     expect(doc.data.health_exams).toHaveLength(demo.exams);
     expect(doc.data.health_exam_results.length).toBeGreaterThan(demo.exams);
+    // The exam PDF never leaves in a data export (README §24.2), only in a transfer.
+    expect(doc.data.health_documents).toEqual([]);
     await handlers['exports:create']({ profileId, format: 'csv', includeHealth: true });
     const health = parseCsv(must(must(saved.zip, 'zip')['health.csv'], 'health'));
     expect(health.header).toEqual([

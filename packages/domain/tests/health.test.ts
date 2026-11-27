@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   analyteByCode,
+  checkHealthPdf,
+  HEALTH_PDF_MAX_BYTES,
+  healthDocumentFileName,
   ANALYTES,
   normalizeHealthExam,
   parseLocalDate,
@@ -95,5 +98,36 @@ describe('health exams (README §24)', () => {
     expect(ANALYTES.length).toBeGreaterThanOrEqual(30);
     expect(analyteByCode('vitamin_d')).toMatchObject({ name: 'Vitamina D (25-OH)' });
     expect(analyteByCode('nope')).toBeNull();
+  });
+});
+
+describe('health documents (README §24.2)', () => {
+  const pdf = (size = 20) => {
+    const bytes = new Uint8Array(size);
+    bytes.set([0x25, 0x50, 0x44, 0x46, 0x2d]);
+    return bytes;
+  };
+  const code = (bytes: Uint8Array) => {
+    try {
+      checkHealthPdf(bytes);
+      return null;
+    } catch (e) {
+      return e instanceof ValidationError ? e.code : 'other';
+    }
+  };
+
+  it('accepts a PDF up to 10 MB and refuses anything else', () => {
+    expect(code(pdf())).toBeNull();
+    expect(code(pdf(HEALTH_PDF_MAX_BYTES))).toBeNull();
+    expect(code(pdf(HEALTH_PDF_MAX_BYTES + 1))).toBe('health.document_too_large');
+    expect(code(new Uint8Array())).toBe('health.document_empty');
+    expect(code(Uint8Array.from([0x50, 0x4b, 0x03, 0x04, 0x20]))).toBe('health.document_not_pdf');
+  });
+
+  it('keeps only a safe file name ending in .pdf', () => {
+    expect(healthDocumentFileName('C:\\Users\\x\\Laudo março.pdf')).toBe('Laudo março.pdf');
+    expect(healthDocumentFileName('../a:b?.PDF')).toBe('a_b_.PDF');
+    expect(healthDocumentFileName('laudo')).toBe('laudo.pdf');
+    expect(healthDocumentFileName('')).toBe('exame.pdf');
   });
 });

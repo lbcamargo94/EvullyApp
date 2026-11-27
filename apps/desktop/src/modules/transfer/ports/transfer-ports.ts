@@ -46,6 +46,11 @@ export interface TransferRepository {
   columns(table: string): Promise<Set<string>>;
   /** The profile with this id on this computer (in use or archived), or null. */
   existing(profileId: string): Promise<{ name: string; archived: boolean } | null>;
+  /**
+   * Checks the exam PDFs of the plan (base64 of a PDF with the stated size and
+   * SHA-256); throws `transfer.invalid` otherwise. Runs before the preview.
+   */
+  checkDocuments(plan: TransferPlan): void;
   /** One transaction: removes the profile when `replace`, then writes the plan. */
   write(plan: TransferPlan, replace: boolean): Promise<void>;
 }

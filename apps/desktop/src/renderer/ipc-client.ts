@@ -205,6 +205,10 @@ export const ipcEvullyClient: EvullyClient = {
     register: (input) => call('health:register', input),
     update: (input) => call('health:update', input),
     remove: (profileId, id) => call('health:delete', { profileId, id }),
+    attachDocument: (profileId, examId) => call('health:attach-document', { profileId, examId }),
+    openDocument: (profileId, id) => call('health:open-document', { profileId, id }),
+    saveDocument: (profileId, id) => call('health:save-document', { profileId, id }),
+    removeDocument: (profileId, id) => call('health:remove-document', { profileId, id }),
   },
   habits: {
     list: (profileId) => call('habits:list', { profileId }),

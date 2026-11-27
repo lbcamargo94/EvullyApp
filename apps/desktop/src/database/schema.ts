@@ -437,6 +437,19 @@ export interface HealthExamResultsTable {
   deleted_at: string | null;
 }
 
+/** The laboratory PDF of an exam, stored as it is (README §24.2). */
+export interface HealthDocumentsTable {
+  id: string;
+  profile_id: string;
+  exam_id: string;
+  file_name: string;
+  size_bytes: number;
+  sha256: string;
+  content: Uint8Array;
+  created_at: string;
+  deleted_at: string | null;
+}
+
 export interface HabitDefinitionsTable {
   id: string;
   profile_id: string;
@@ -549,4 +562,5 @@ export interface DatabaseSchema {
   notification_events: NotificationEventsTable;
   health_exams: HealthExamsTable;
   health_exam_results: HealthExamResultsTable;
+  health_documents: HealthDocumentsTable;
 }

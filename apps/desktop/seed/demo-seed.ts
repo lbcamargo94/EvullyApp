@@ -5,6 +5,8 @@ import {
   ConflictError,
   type LocalDate,
 } from '@evully/domain';
+import { createHash } from 'node:crypto';
+import type { HealthDocumentFiles } from '../src/modules/health/ports/health-repository';
 import type { Clock } from '../src/modules/shared/ports';
 import { localParts } from '../src/modules/shared/system-adapters';
 import type { IpcHandlers } from '../src/shared/ipc-channels';
@@ -567,8 +569,9 @@ async function healthExams(ctx: Context, today: LocalDate) {
     [60, 27, 28, 91],
     [12, 34, 24, 102],
   ];
+  let lastExamId: string | null = null;
   for (const [daysAgo, vitaminD, ferritin, glucose] of exams) {
-    await handlers['health:register']({
+    ({ id: lastExamId } = await handlers['health:register']({
       profileId,
       collectedOn: addDaysToLocalDate(today, -daysAgo),
       laboratory: 'Laboratório Exemplo',
@@ -581,8 +584,10 @@ async function healthExams(ctx: Context, today: LocalDate) {
         lab('hdl', 'mg/dL', 52, 40, null),
         lab('tsh', 'µUI/mL', 2.1, 0.4, 4.5),
       ],
-    });
+    }));
   }
+  // The most recent exam has its laboratory PDF (seedHealthFiles answers the dialog).
+  if (lastExamId) await handlers['health:attach-document']({ profileId, examId: lastExamId });
   ctx.result.exams = exams.length;
 }
 
@@ -605,3 +610,26 @@ async function reviewSignals(ctx: Context, date: LocalDate) {
     });
   }
 }
+
+/** A one-page PDF with no personal data, generated here so the repo holds no binary. */
+const DEMO_PDF = new TextEncoder().encode(
+  [
+    '%PDF-1.4',
+    '1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj',
+    '2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj',
+    '3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] >> endobj',
+    'trailer << /Root 1 0 R >>',
+    '%%EOF',
+  ].join('\n'),
+);
+
+/** Answers the PDF dialog of the demo seed with DEMO_PDF; nothing is opened or saved. */
+export const seedHealthFiles: HealthDocumentFiles = {
+  choosePdf: async () => ({
+    fileName: 'laudo-exemplo.pdf',
+    bytes: DEMO_PDF,
+    sha256: createHash('sha256').update(DEMO_PDF).digest('hex'),
+  }),
+  saveCopy: async () => false,
+  open: async () => undefined,
+};

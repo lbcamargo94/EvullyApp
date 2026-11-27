@@ -112,6 +112,7 @@ export class PrepareProfileImport {
     if (doc.profile.id !== manifest.data.profileId) throw invalid();
     const { repository } = this.deps;
     const plan = await buildTransferPlan(doc, (table) => repository.columns(table));
+    repository.checkDocuments(plan);
     const token = this.deps.ids.next();
     this.pending.put(token, plan);
     return {
